@@ -2,6 +2,7 @@
 
 This is a plugin for [Godot Engine](https://godotengine.org) to create and edit graphs of cutscenes and dialogue resources.
 
+Only Godot version 4 is supported by this incarnation of the plugin. An earlier version of this plugin that supported Godot 3 is available in [this repository](https://github.com/khoulihan/godot-cutscene-graph).
 
 ## Installation
 
