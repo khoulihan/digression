@@ -1,0 +1,60 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://addons/hyh.cutscene_graph/icon_remove.svg" type="Texture2D" id=1]
+[ext_resource path="res://addons/hyh.cutscene_graph/scripts/BranchValue.gd" type="Script" id=2]
+[ext_resource path="res://addons/hyh.cutscene_graph/scenes/VariableValueEdit.tscn" type="PackedScene" id=3]
+
+[node name="BranchValue" type="MarginContainer"]
+offset_right = 245.0
+offset_bottom = 66.0
+mouse_filter = 1
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_left = 10.0
+offset_right = 235.0
+offset_bottom = 56.0
+theme_override_constants/separation = 9
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+offset_right = 225.0
+offset_bottom = 4.0
+
+[node name="HorizontalLayout" type="HBoxContainer" parent="VBoxContainer"]
+offset_top = 13.0
+offset_right = 225.0
+offset_bottom = 37.0
+theme_override_constants/separation = 10
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer/HorizontalLayout"]
+offset_right = 187.0
+offset_bottom = 24.0
+size_flags_horizontal = 3
+columns = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HorizontalLayout/GridContainer"]
+offset_top = 5.0
+offset_right = 39.0
+offset_bottom = 19.0
+text = "Value:"
+
+[node name="ValueEdit" parent="VBoxContainer/HorizontalLayout/GridContainer" instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 43.0
+offset_right = 187.0
+offset_bottom = 24.0
+
+[node name="RemoveButton" type="Button" parent="VBoxContainer/HorizontalLayout"]
+offset_left = 197.0
+offset_right = 225.0
+offset_bottom = 24.0
+icon = ExtResource( 1 )
+[connection signal="value_changed" from="VBoxContainer/HorizontalLayout/GridContainer/ValueEdit" to="." method="_on_ValueEdit_value_changed"]
+[connection signal="pressed" from="VBoxContainer/HorizontalLayout/RemoveButton" to="." method="_on_RemoveButton_pressed"]
