@@ -58,6 +58,11 @@ enum ConfirmationActions {
 	CLOSE_GRAPH
 }
 
+enum NodeCreationMode {
+	NORMAL,
+	CONNECTED
+}
+
 var _open_graphs
 
 var _edited
@@ -75,6 +80,9 @@ var _open_character_dialog
 @onready var _error_dialog = $ErrorDialog
 
 var _last_popup_position
+var _pending_connection_from
+var _pending_connection_from_port
+var _node_creation_mode
 var _confirmation_action
 var _node_to_remove
 var _node_for_popup
@@ -201,10 +209,9 @@ func _configure_sub_graph_node(editor_node, res):
 
 func _graph_popup_requested(p_position):
 	if _edited:
+		_node_creation_mode = NodeCreationMode.NORMAL
 		var global_rect = get_global_rect()
-		# This works pretty well - node appears slightly below and to the right of the click location
-		# so much like where a popup menu would appear.
-		_last_popup_position = (p_position / _graph_edit.zoom) + (_graph_edit.scroll_offset / _graph_edit.zoom)
+		_last_popup_position = _convert_popup_position(p_position)
 		_graph_popup.position = get_screen_transform() * p_position
 		_graph_popup.popup()
 
@@ -260,7 +267,17 @@ func _graph_popup_index_pressed(index):
 	if new_editor_node.is_root:
 		_edited.graph.root_node = new_graph_node
 	_connect_node_signals(new_editor_node)
+	if _node_creation_mode == NodeCreationMode.CONNECTED:
+		Logger.debug("Auto-connecting new node from %s, %s" % [_pending_connection_from, _pending_connection_from_port])
+		_graph_edit.emit_signal(
+			"connection_request",
+			_pending_connection_from,
+			_pending_connection_from_port,
+			new_editor_node.name,
+			0
+		)
 	_set_dirty(true)
+	perform_save()
 
 
 func _node_popup_index_pressed(index):
@@ -594,3 +611,20 @@ func _on_graph_edit_scroll_offset_changed(offset):
 				_edited.zoom
 			]
 		)
+
+
+func _convert_popup_position(release_position):
+	# This works pretty well - node appears slightly below and to the right of the click location
+	# so much like where a popup menu would appear.
+	return (release_position / _graph_edit.zoom) + (_graph_edit.scroll_offset / _graph_edit.zoom)
+
+
+func _on_graph_edit_connection_to_empty(from_node, from_port, release_position):
+	if _edited:
+		_node_creation_mode = NodeCreationMode.CONNECTED
+		_pending_connection_from = from_node
+		_pending_connection_from_port = from_port
+		var global_rect = get_global_rect()
+		_last_popup_position = _convert_popup_position(release_position)
+		_graph_popup.position = get_screen_transform() * release_position
+		_graph_popup.popup()
