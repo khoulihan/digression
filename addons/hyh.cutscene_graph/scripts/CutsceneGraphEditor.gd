@@ -312,23 +312,33 @@ func _removing_slot(slot, node_name):
 func _node_close_request(node_name):
 	_confirmation_action = ConfirmationActions.REMOVE_NODE
 	_node_to_remove = node_name
-	_confirmation_dialog.dialog_text = "Are you sure you want to remove this node? This action cannot be undone."
+	var nodes_text = "this node"
+	if _node_to_remove is Array:
+		nodes_text = "these nodes"
+	_confirmation_dialog.dialog_text = "Are you sure you want to remove %s? This action cannot be undone." % nodes_text
 	_confirmation_dialog.popup_centered()
 
 
 func _action_confirmed():
 	match _confirmation_action:
 		ConfirmationActions.REMOVE_NODE:
-			Logger.debug("Removal of node " + _node_to_remove + " confirmed.")
+			if not _node_to_remove is Array:
+				_node_to_remove = [_node_to_remove]
+			Logger.debug(
+				"Removal of node(s) {nodes} confirmed.".format({
+					"nodes": _node_to_remove
+				})
+			)
 			var connections = _graph_edit.get_connection_list()
-			for connection in connections:
-				if connection.from == _node_to_remove or connection.to == _node_to_remove:
-					# This one just gets removed
-					_graph_edit.disconnect_node(connection.from, connection.from_port, connection.to, connection.to_port)
-			# This line is throwing an error now - cannot convert from StringName to NodePath
-			var node = _graph_edit.get_node(NodePath(_node_to_remove))
-			_edited.graph.nodes.erase(node.node_resource.id)
-			_graph_edit.remove_child(node)
+			for n in _node_to_remove:
+				for connection in connections:
+					if connection.from == n or connection.to == n:
+						# This one just gets removed
+						_graph_edit.disconnect_node(connection.from, connection.from_port, connection.to, connection.to_port)
+				# This line is throwing an error now - cannot convert from StringName to NodePath
+				var node = _graph_edit.get_node(NodePath(n))
+				_edited.graph.nodes.erase(node.node_resource.id)
+				_graph_edit.remove_child(node)
 			_set_dirty(true)
 		ConfirmationActions.CLOSE_GRAPH:
 			_close_graph()
