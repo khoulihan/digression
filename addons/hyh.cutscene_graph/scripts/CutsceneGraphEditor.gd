@@ -60,7 +60,8 @@ enum ConfirmationActions {
 
 enum NodeCreationMode {
 	NORMAL,
-	CONNECTED
+	CONNECTED,
+	DUPLICATION
 }
 
 var _open_graphs
@@ -87,6 +88,9 @@ var _confirmation_action
 var _node_to_remove
 var _node_for_popup
 var _sub_graph_editor_node_for_assignment
+
+# Copy & paste
+var _copied_nodes
 
 var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
 
@@ -231,9 +235,25 @@ func _node_popup_request(p_position, node_name):
 
 
 func _graph_popup_index_pressed(index):
+	_create_node(
+		index,
+		_node_creation_mode,
+		_last_popup_position
+	)
+	_set_dirty(true)
+	perform_save()
+
+
+func _create_node(
+	node_type,
+	node_creation_mode,
+	editor_position,
+	initial_state = {}
+):
 	var new_editor_node
 	var new_graph_node
-	match index:
+	
+	match node_type:
 		GraphPopupMenuItems.ADD_TEXT_NODE:
 			new_editor_node = EditorTextNode.instantiate()
 			new_graph_node = DialogueTextNode.new()
@@ -255,8 +275,13 @@ func _graph_popup_index_pressed(index):
 		GraphPopupMenuItems.ADD_RANDOM_NODE:
 			new_editor_node = EditorRandomNode.instantiate()
 			new_graph_node = RandomNode.new()
+			
 	new_graph_node.id = _edited.graph.get_next_id()
-	new_graph_node.offset = _last_popup_position
+	new_graph_node.offset = editor_position
+	for property in initial_state:
+		if property in new_graph_node:
+			new_graph_node.set(property, initial_state[property])
+	
 	_graph_edit.add_child(new_editor_node)
 	if _graph_edit.get_child_count() == 1:
 		new_editor_node.is_root = true
@@ -267,7 +292,7 @@ func _graph_popup_index_pressed(index):
 	if new_editor_node.is_root:
 		_edited.graph.root_node = new_graph_node
 	_connect_node_signals(new_editor_node)
-	if _node_creation_mode == NodeCreationMode.CONNECTED:
+	if node_creation_mode == NodeCreationMode.CONNECTED:
 		Logger.debug("Auto-connecting new node from %s, %s" % [_pending_connection_from, _pending_connection_from_port])
 		_graph_edit.emit_signal(
 			"connection_request",
@@ -276,8 +301,7 @@ func _graph_popup_index_pressed(index):
 			new_editor_node.name,
 			0
 		)
-	_set_dirty(true)
-	perform_save()
+	return new_editor_node
 
 
 func _node_popup_index_pressed(index):
@@ -312,8 +336,10 @@ func _removing_slot(slot, node_name):
 func _node_close_request(node_name):
 	_confirmation_action = ConfirmationActions.REMOVE_NODE
 	_node_to_remove = node_name
+	if not _node_to_remove is Array:
+		_node_to_remove = [_node_to_remove]
 	var nodes_text = "this node"
-	if _node_to_remove is Array:
+	if len(_node_to_remove) > 1:
 		nodes_text = "these nodes"
 	_confirmation_dialog.dialog_text = "Are you sure you want to remove %s? This action cannot be undone." % nodes_text
 	_confirmation_dialog.popup_centered()
@@ -322,8 +348,6 @@ func _node_close_request(node_name):
 func _action_confirmed():
 	match _confirmation_action:
 		ConfirmationActions.REMOVE_NODE:
-			if not _node_to_remove is Array:
-				_node_to_remove = [_node_to_remove]
 			Logger.debug(
 				"Removal of node(s) {nodes} confirmed.".format({
 					"nodes": _node_to_remove
@@ -625,7 +649,7 @@ func _on_graph_edit_scroll_offset_changed(offset):
 
 func _convert_popup_position(release_position):
 	# This works pretty well - node appears slightly below and to the right of the click location
-	# so much like where a popup menu would appear.
+	# so much like where a popup menu would appear. It was determined by trial and error.
 	return (release_position / _graph_edit.zoom) + (_graph_edit.scroll_offset / _graph_edit.zoom)
 
 
@@ -638,3 +662,84 @@ func _on_graph_edit_connection_to_empty(from_node, from_port, release_position):
 		_last_popup_position = _convert_popup_position(release_position)
 		_graph_popup.position = get_screen_transform() * release_position
 		_graph_popup.popup()
+
+
+func _on_graph_edit_copy_nodes_request():
+	# TODO: I think this may suffer from storing references to the nodes -
+	# when they are pasted their state at that time will be used, not their
+	# state when the copy occurs...
+	_copied_nodes = _get_selected_nodes()
+
+
+func _get_selected_nodes():
+	var selected_nodes = []
+	for node in _graph_edit.get_children():
+		if node.selected:
+			selected_nodes.append(node)
+	return selected_nodes
+
+
+func _on_graph_edit_paste_nodes_request():
+	if _copied_nodes != null:
+		_create_duplicate_nodes(_copied_nodes)
+
+
+func _create_duplicate_nodes(nodes_to_duplicate):
+	# TODO: Need to duplicate the connections as well
+	var new_nodes = []
+	for n in nodes_to_duplicate:
+		new_nodes.append(
+			_create_node(
+				_node_type_for_node(n),
+				NodeCreationMode.DUPLICATION,
+				n.position_offset + Vector2(150, 150),
+				_get_node_state(n)
+			)
+		)
+	_deselect_all()
+	_select_nodes(new_nodes)
+
+
+func _deselect_all():
+	for node in _graph_edit.get_children():
+		node.selected = false
+
+
+func _select_nodes(nodes):
+	for node in nodes:
+		node.selected = true
+
+
+# TODO: The enum used here is now misnamed or inappropriate.
+func _node_type_for_node(node):
+	if node is EditorActionNodeClass:
+		return GraphPopupMenuItems.ADD_ACTION_NODE
+	elif node is EditorBranchNodeClass:
+		return GraphPopupMenuItems.ADD_BRANCH_NODE
+	elif node is EditorTextNodeClass:
+		return GraphPopupMenuItems.ADD_TEXT_NODE
+	elif node is EditorSetNodeClass:
+		return GraphPopupMenuItems.ADD_SET_NODE
+	elif node is EditorSubGraphNodeClass:
+		return GraphPopupMenuItems.ADD_SUB_GRAPH_NODE
+	elif node is EditorChoiceNodeClass:
+		return GraphPopupMenuItems.ADD_CHOICE_NODE
+	elif node is EditorRandomNodeClass:
+		return GraphPopupMenuItems.ADD_RANDOM_NODE
+	return GraphPopupMenuItems.ADD_TEXT_NODE
+
+
+func _get_node_state(node):
+	var initial_state = {}
+	var graph_node = node.node_resource
+	var properties = graph_node.get_property_list()
+	
+	for property in properties:
+		if property["name"] not in ["id", "offset"]:
+			initial_state[property["name"]] = graph_node.get(property["name"])
+		
+	return initial_state
+
+
+func _on_graph_edit_duplicate_nodes_request():
+	_create_duplicate_nodes(_get_selected_nodes())
