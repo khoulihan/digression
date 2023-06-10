@@ -61,7 +61,8 @@ enum ConfirmationActions {
 enum NodeCreationMode {
 	NORMAL,
 	CONNECTED,
-	DUPLICATION
+	DUPLICATION,
+	PASTE
 }
 
 var _open_graphs
@@ -91,6 +92,7 @@ var _sub_graph_editor_node_for_assignment
 
 # Copy & paste
 var _copied_nodes
+var _scroll_on_copy
 
 var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
 
@@ -277,10 +279,13 @@ func _create_node(
 			new_graph_node = RandomNode.new()
 			
 	new_graph_node.id = _edited.graph.get_next_id()
-	new_graph_node.offset = editor_position
 	for property in initial_state:
-		if property in new_graph_node:
-			new_graph_node.set(property, initial_state[property])
+		if property in new_graph_node and property not in ["offset"]:
+			new_graph_node.set(
+				property, 
+				_deep_copy(initial_state[property])
+			)
+	new_graph_node.offset = editor_position
 	
 	_graph_edit.add_child(new_editor_node)
 	if _graph_edit.get_child_count() == 1:
@@ -427,10 +432,18 @@ func _on_save_as():
 		_get_resource_path()
 
 
-func _draw_edited_graph():
-	"""
-	Updated the UI to reflect changes in the underlying graph resource
-	"""
+## Update the UI to reflect changes in the underlying graph resource
+func _draw_edited_graph(retain_selection=false):
+	# Store the selection. Storing the editor nodes is no good as they are
+	# about to be destroyed, so we need to get the Ids of the underlying
+	# resources. This is skipped when switching graphs otherwise the selection
+	# is inappropriate.
+	var selected_node_ids = []
+	if _edited != null and retain_selection:
+		var selected_nodes = _get_selected_nodes()
+		for n in selected_nodes:
+			selected_node_ids.append(n.node_resource.id)
+
 	# Clear the existing graph
 	_clear_displayed_graph()
 
@@ -461,6 +474,9 @@ func _draw_edited_graph():
 			if node == _edited.graph.root_node:
 				editor_node.is_root = true
 			_connect_node_signals(editor_node)
+			
+			if node.id in selected_node_ids:
+				editor_node.selected = true
 
 		# Second pass to create connections
 		for node in _edited.graph.nodes.values():
@@ -665,10 +681,12 @@ func _on_graph_edit_connection_to_empty(from_node, from_port, release_position):
 
 
 func _on_graph_edit_copy_nodes_request():
-	# TODO: I think this may suffer from storing references to the nodes -
-	# when they are pasted their state at that time will be used, not their
-	# state when the copy occurs...
-	_copied_nodes = _get_selected_nodes()
+	var copied_nodes = _get_selected_nodes()
+	_copied_nodes = _get_node_states(copied_nodes)
+	_scroll_on_copy = {
+		"offset": _graph_edit.scroll_offset,
+		"zoom": _graph_edit.zoom
+	}
 
 
 func _get_selected_nodes():
@@ -681,23 +699,69 @@ func _get_selected_nodes():
 
 func _on_graph_edit_paste_nodes_request():
 	if _copied_nodes != null:
-		_create_duplicate_nodes(_copied_nodes)
+		_paste_nodes(_copied_nodes)
 
 
 func _create_duplicate_nodes(nodes_to_duplicate):
-	# TODO: Need to duplicate the connections as well
-	var new_nodes = []
+	var new_nodes = {}
 	for n in nodes_to_duplicate:
-		new_nodes.append(
-			_create_node(
-				_node_type_for_node(n),
-				NodeCreationMode.DUPLICATION,
-				n.position_offset + Vector2(150, 150),
-				_get_node_state(n)
-			)
+		var node_state = _get_node_state(n)
+		var duplicated_node = _create_node(
+			node_state["_node_type"],
+			NodeCreationMode.DUPLICATION,
+			n.position_offset + Vector2(150, 150),
+			node_state
 		)
+		new_nodes[node_state["_original_id"]] = duplicated_node
+	
+	_create_connections_for_copied_nodes(new_nodes)
+	
 	_deselect_all()
-	_select_nodes(new_nodes)
+	_select_nodes(new_nodes.values())
+	# Redraw the graph while retaining the selection
+	_draw_edited_graph(true)
+
+
+# The difference between this method and the duplication method is that this
+# one has to work with node state dictionaries that were saved earlier, while
+# the duplication method works directly from the nodes.
+func _paste_nodes(nodes_to_paste):
+	var new_nodes = {}
+	for n in nodes_to_paste:
+		# TODO: Need a new way to determine position
+		var pasted_node = _create_node(
+			n["_node_type"],
+			NodeCreationMode.PASTE,
+			n["offset"] + Vector2(200, 200),
+			n
+		)
+		new_nodes[n["_original_id"]] = pasted_node
+	
+	_create_connections_for_copied_nodes(new_nodes)
+	
+	_deselect_all()
+	_select_nodes(new_nodes.values())
+	# Redraw the graph while retaining the selection
+	_draw_edited_graph(true)
+
+
+func _create_connections_for_copied_nodes(new_nodes):
+	# Need to find any references to this id in the next and branches
+	# properties of the new nodes.
+	for original_id in new_nodes.keys():
+		for pasted in new_nodes.values():
+			var id = new_nodes[original_id].node_resource.id
+			var pasted_res = pasted.node_resource
+			if pasted_res.next == original_id:
+				Logger.debug("Updating next link for copied node %s from %s to %s" % [pasted_res.id, pasted_res.next, id])
+				# Update to the new id.
+				pasted_res.next = id
+				
+			if "branches" in pasted_res:
+				for b in range(len(pasted_res.branches)):
+					if pasted_res.branches[b] == original_id:
+						Logger.debug("Updating branch link for copied node %s from %s to %s" % [pasted_res.id, original_id, id])
+						pasted_res.branches[b] = id
 
 
 func _deselect_all():
@@ -729,16 +793,43 @@ func _node_type_for_node(node):
 	return GraphPopupMenuItems.ADD_TEXT_NODE
 
 
+func _get_node_states(nodes):
+	var node_states = []
+	for node in nodes:
+		node_states.append(
+			_get_node_state(
+				node
+			)
+		)
+	return node_states
+
+
 func _get_node_state(node):
 	var initial_state = {}
 	var graph_node = node.node_resource
 	var properties = graph_node.get_property_list()
 	
 	for property in properties:
-		if property["name"] not in ["id", "offset"]:
-			initial_state[property["name"]] = graph_node.get(property["name"])
-		
+		if property["name"] not in ["id"]: # Previously omitted "offset" as well...
+			initial_state[property["name"]] = _deep_copy(
+				graph_node.get(property["name"])
+			)
+	
+	# Also need to store the node type
+	initial_state["_node_type"] = _node_type_for_node(node)
+	# Required for duplicating the connections
+	initial_state["_original_id"] = graph_node.id
+	
 	return initial_state
+
+
+## Deep copies arrays and dictionaries. Just returns anything else.
+func _deep_copy(obj):
+	if obj == null:
+		return obj
+	if obj is Array or obj is Dictionary:
+		return obj.duplicate(true)
+	return obj
 
 
 func _on_graph_edit_duplicate_nodes_request():
