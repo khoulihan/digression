@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://cmr3aolsr6l35"]
 
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/scripts/ChoiceValue.gd" id="1"]
-[ext_resource type="PackedScene" uid="uid://c1584iplg8kg5" path="res://addons/hyh.cutscene_graph/scenes/VariableValueEdit.tscn" id="2"]
 [ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.cutscene_graph/icon_remove.svg" id="3_ly1j1"]
+[ext_resource type="PackedScene" uid="uid://mvafher5yr07" path="res://addons/hyh.cutscene_graph/scenes/ConditionControl.tscn" id="3_mavi1"]
 
 [node name="ChoiceValue" type="MarginContainer"]
 offset_right = 306.0
@@ -47,61 +47,16 @@ text = "Translation Key:"
 [node name="TranslationKeyEdit" type="LineEdit" parent="HBoxContainer/VariableContainer/DisplayContainer"]
 layout_mode = 2
 
-[node name="Label3" type="Label" parent="HBoxContainer/VariableContainer/DisplayContainer"]
-layout_mode = 2
-text = "Variable:"
-
-[node name="VariableEdit" type="LineEdit" parent="HBoxContainer/VariableContainer/DisplayContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Label5" type="Label" parent="HBoxContainer/VariableContainer/DisplayContainer"]
-layout_mode = 2
-text = "Scope:"
-
-[node name="ScopeSelect" type="OptionButton" parent="HBoxContainer/VariableContainer/DisplayContainer"]
-layout_mode = 2
-item_count = 3
-selected = 0
-popup/item_0/text = "Dialogue"
-popup/item_0/id = 0
-popup/item_1/text = "Scene"
-popup/item_1/id = 1
-popup/item_2/text = "Global"
-popup/item_2/id = 2
-
-[node name="Label6" type="Label" parent="HBoxContainer/VariableContainer/DisplayContainer"]
-layout_mode = 2
-text = "Type:"
-
-[node name="TypeSelect" type="OptionButton" parent="HBoxContainer/VariableContainer/DisplayContainer"]
-layout_mode = 2
-item_count = 4
-selected = 0
-popup/item_0/text = "Boolean"
-popup/item_0/id = 1
-popup/item_1/text = "Integer"
-popup/item_1/id = 2
-popup/item_2/text = "Float"
-popup/item_2/id = 3
-popup/item_3/text = "String"
-popup/item_3/id = 4
-
-[node name="Label4" type="Label" parent="HBoxContainer/VariableContainer/DisplayContainer"]
-layout_mode = 2
-text = "Value:"
-
-[node name="ValueEdit" parent="HBoxContainer/VariableContainer/DisplayContainer" instance=ExtResource("2")]
-layout_mode = 2
-
 [node name="RemoveButton" type="Button" parent="HBoxContainer/VariableContainer"]
 layout_mode = 2
+size_flags_vertical = 0
 icon = ExtResource("3_ly1j1")
+flat = true
+
+[node name="ConditionControl" parent="HBoxContainer" instance=ExtResource("3_mavi1")]
+layout_mode = 2
 
 [connection signal="text_changed" from="HBoxContainer/VariableContainer/DisplayContainer/DisplayEdit" to="." method="_on_DisplayEdit_text_changed"]
 [connection signal="text_changed" from="HBoxContainer/VariableContainer/DisplayContainer/TranslationKeyEdit" to="." method="_on_TranslationKeyEdit_text_changed"]
-[connection signal="text_changed" from="HBoxContainer/VariableContainer/DisplayContainer/VariableEdit" to="." method="_on_VariableEdit_text_changed"]
-[connection signal="item_selected" from="HBoxContainer/VariableContainer/DisplayContainer/ScopeSelect" to="." method="_on_ScopeSelect_item_selected"]
-[connection signal="item_selected" from="HBoxContainer/VariableContainer/DisplayContainer/TypeSelect" to="." method="_on_TypeSelect_item_selected"]
-[connection signal="value_changed" from="HBoxContainer/VariableContainer/DisplayContainer/ValueEdit" to="." method="_on_ValueEdit_value_changed"]
 [connection signal="pressed" from="HBoxContainer/VariableContainer/RemoveButton" to="." method="_on_RemoveButton_pressed"]
+[connection signal="set_condition_requested" from="HBoxContainer/ConditionControl" to="." method="_on_conditional_control_set_condition_requested"]

@@ -15,6 +15,11 @@ const ActionNode = preload("../resources/ActionNode.gd")
 const SubGraph = preload("../resources/SubGraph.gd")
 const RandomNode = preload("../resources/RandomNode.gd")
 
+# Condition resource types
+const BooleanCondition = preload("../resources/conditions/BooleanCondition.gd")
+const ValueCondition = preload("../resources/conditions/ValueCondition.gd")
+const BooleanType = BooleanCondition.BooleanType
+
 signal cutscene_started(cutscene_name, graph_type)
 signal sub_graph_entered(cutscene_name, graph_type)
 signal cutscene_resumed(cutscene_name, graph_type)
@@ -134,7 +139,7 @@ func _await_response():
 
 
 func _get_node_by_id(id):
-	if id != null:
+	if id != null and id != -1:
 		return _current_graph.nodes.get(id)
 	return null
 
@@ -272,25 +277,26 @@ func _process_choice_node():
 	Logger.debug("Processing choice node \"%s\"." % _current_node)
 	
 	var choices = {}
-	for i in range(len(_current_node.branches)):
+	for i in range(len(_current_node.choices)):
+		var choice = _current_node.choices[i]
 		var valid = true
-		var variable = _current_node.variables[i]
-		if variable != null and variable != "":
-			var val = _get_variable(variable, _current_node.scopes[i])
-			var expected_val = _current_node.get_value(i)
-			valid = (val == expected_val)
+		
+		if choice.condition != null:
+			valid = _evaluate_condition(choice.condition)
+		
 		if valid:
 			var text = null
 			# Try the translation first
-			var tr_key = _current_node.display_translation_keys[i]
+			var tr_key = choice.display_translation_key
 			if tr_key != null and tr_key != "":
 				text = tr(tr_key)
 				if text == tr_key:
 					text = null
 			# Still no text, so use the default
 			if text == null:
-				text = _current_node.display[i]
+				text = choice.display
 			choices[i] = text
+	
 	if !choices.is_empty():
 		var process = _await_response()
 		call_deferred(
@@ -299,7 +305,7 @@ func _process_choice_node():
 			process
 		)
 		var choice = await process.ready_to_proceed
-		_current_node = _get_node_by_id(_current_node.branches[choice])
+		_current_node = _get_node_by_id(_current_node.choices[choice].next)
 	else:
 		_current_node = _get_node_by_id(_current_node.next)
 
@@ -373,15 +379,36 @@ func _process_random_node():
 	
 	var viable = []
 	for i in range(len(_current_node.branches)):
-		var variable = _current_node.variables[i]
-		if variable == null or variable == "":
-			viable.append(_current_node.branches[i])
-		else:
-			var val = _current_node.get_value(i)
-			var stored = _get_variable(variable, _current_node.scopes[i])
-			if val == stored:
-				viable.append(_current_node.branches[i])
+		var branch = _current_node.branches[i]
+		
+		if _evaluate_condition(branch.condition):
+			viable.append(branch.next)
+
 	if len(viable) == 0:
 		_current_node = _get_node_by_id(_current_node.next)
 	else:
 		_current_node = _get_node_by_id(viable[randi() % len(viable)])
+
+
+func _evaluate_condition(condition) -> bool:
+	if condition == null:
+		return true
+	
+	if condition is ValueCondition:
+		return condition.evaluate(
+			_get_variable(
+				condition.variable,
+				condition.scope
+			)
+		)
+	var result: bool = (condition.operator == BooleanType.BOOLEAN_AND)
+	for child in condition.children:
+		if condition.operator == BooleanType.BOOLEAN_AND:
+			result = result and _evaluate_condition(child)
+			if not result:
+				return result
+		else:
+			result = result or _evaluate_condition(child)
+			if result:
+				return result
+	return result

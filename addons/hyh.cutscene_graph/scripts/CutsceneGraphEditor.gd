@@ -486,12 +486,28 @@ func _draw_edited_graph(retain_selection=false):
 					_edited.graph.nodes[node.next]
 				)
 				_graph_edit.connect_node(from.name, 0, to.name, 0)
-			if node is DialogueChoiceNode or node is BranchNode or node is RandomNode:
+			if node is BranchNode:
 				var from = _get_editor_node_for_graph_node(node)
 				for index in range(0, node.branches.size()):
 					if node.branches[index]:
 						var to = _get_editor_node_for_graph_node(
 							_edited.graph.nodes[node.branches[index]]
+						)
+						_graph_edit.connect_node(from.name, index + 1, to.name, 0)
+			elif node is RandomNode:
+				var from = _get_editor_node_for_graph_node(node)
+				for index in range(0, node.branches.size()):
+					if node.branches[index].next != -1:
+						var to = _get_editor_node_for_graph_node(
+							_edited.graph.nodes[node.branches[index].next]
+						)
+						_graph_edit.connect_node(from.name, index + 1, to.name, 0)
+			elif node is DialogueChoiceNode:
+				var from = _get_editor_node_for_graph_node(node)
+				for index in range(0, node.choices.size()):
+					if node.choices[index].next != -1:
+						var to = _get_editor_node_for_graph_node(
+							_edited.graph.nodes[node.choices[index].next]
 						)
 						_graph_edit.connect_node(from.name, index + 1, to.name, 0)
 		
@@ -582,11 +598,21 @@ func _update_edited_graph():
 			var to_dialogue_node = to.node_resource
 			if from_dialogue_node is DialogueTextNode or from_dialogue_node is VariableSetNode or from_dialogue_node is ActionNode or from_dialogue_node is SubGraph:
 				from_dialogue_node.next = to_dialogue_node.id
-			elif from_dialogue_node is DialogueChoiceNode or from_dialogue_node is BranchNode or from_dialogue_node is RandomNode:
+			elif from_dialogue_node is BranchNode:
 				if from_slot == 0:
 					from_dialogue_node.next = to_dialogue_node.id
 				else:
 					from_dialogue_node.branches[from_slot - 1] = to_dialogue_node.id
+			elif from_dialogue_node is RandomNode:
+				if from_slot == 0:
+					from_dialogue_node.next = to_dialogue_node.id
+				else:
+					from_dialogue_node.branches[from_slot - 1].next = to_dialogue_node.id
+			elif from_dialogue_node is DialogueChoiceNode:
+				if from_slot == 0:
+					from_dialogue_node.next = to_dialogue_node.id
+				else:
+					from_dialogue_node.choices[from_slot - 1].next = to_dialogue_node.id
 
 
 func _update_node_characters():
@@ -762,6 +788,11 @@ func _create_connections_for_copied_nodes(new_nodes):
 					if pasted_res.branches[b] == original_id:
 						Logger.debug("Updating branch link for copied node %s from %s to %s" % [pasted_res.id, original_id, id])
 						pasted_res.branches[b] = id
+			elif "choices" in pasted_res:
+				for b in range(len(pasted_res.choices)):
+					if pasted_res.choices[b].next == original_id:
+						Logger.debug("Updating choice link for copied node %s from %s to %s" % [pasted_res.id, original_id, id])
+						pasted_res.choices[b].next = id
 
 
 func _deselect_all():

@@ -1,0 +1,52 @@
+[gd_scene load_steps=4 format=3 uid="uid://mvafher5yr07"]
+
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/scenes/ConditionControl.gd" id="1_tfkgk"]
+[ext_resource type="Texture2D" uid="uid://cokaiidw4802f" path="res://addons/hyh.cutscene_graph/icon_edit.svg" id="2_add5l"]
+[ext_resource type="Texture2D" uid="uid://bta3jvd470c36" path="res://addons/hyh.cutscene_graph/icon_close.svg" id="3_hasyr"]
+
+[node name="ConditionControl" type="MarginContainer"]
+theme_override_constants/margin_right = 20
+script = ExtResource("1_tfkgk")
+
+[node name="SetConditionButton" type="LinkButton" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.364706, 0.882353, 1)
+theme_override_font_sizes/font_size = 14
+text = "Set condition..."
+
+[node name="Condition" type="HBoxContainer" parent="."]
+visible = false
+layout_mode = 2
+
+[node name="EditButton" type="Button" parent="Condition"]
+layout_mode = 2
+icon = ExtResource("2_add5l")
+flat = true
+
+[node name="ClearButton" type="Button" parent="Condition"]
+layout_mode = 2
+theme_override_colors/icon_normal_color = Color(1, 0, 0, 1)
+icon = ExtResource("3_hasyr")
+flat = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Condition"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 9
+
+[node name="ConditionLabel" type="RichTextLabel" parent="Condition/MarginContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/default_color = Color(0.803922, 0.811765, 0.823529, 1)
+theme_override_constants/line_separation = -3
+theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/mono_font_size = 14
+bbcode_enabled = true
+text = "[code][color=#ff7085]if[/color] [color=#abc9ff]([/color]var_a [color=#abc9ff]==[/color] [color=#ffeda1]\"example\"[/color] [color=#ff7085]and[/color] var_b [color=#abc9ff]==[/color] [color=#8fffdb]49[/color][color=#abc9ff])[/color] [color=#ff7085]or[/color] always_true[/code]"
+fit_content = true
+scroll_active = false
+
+[connection signal="pressed" from="SetConditionButton" to="." method="_on_set_condition_button_pressed"]
+[connection signal="pressed" from="Condition/EditButton" to="." method="_on_edit_button_pressed"]
+[connection signal="pressed" from="Condition/ClearButton" to="." method="_on_clear_button_pressed"]

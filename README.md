@@ -9,3 +9,4 @@ Only Godot version 4 is supported by this incarnation of the plugin. An earlier 
 Download the source and move/copy the contents of the addons directory to the addons directory of your Godot project.
 
 This plugin is still very much a work in progress, so more documentation will follow when it is more fully developed.
+

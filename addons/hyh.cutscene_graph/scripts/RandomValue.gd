@@ -4,54 +4,33 @@ extends MarginContainer
 
 signal remove_requested()
 signal modified()
+signal set_condition_requested()
+signal edit_condition_requested()
+signal clear_condition_requested()
 
 
-@onready var VariableEdit = get_node("VBoxContainer/HBoxContainer/VariableContainer/VariableEdit")
-@onready var ValueEdit = get_node("VBoxContainer/HBoxContainer/VariableContainer/ValueEdit")
-@onready var ScopeSelect = get_node("VBoxContainer/HBoxContainer/VariableContainer/ScopeSelect")
-@onready var TypeSelect = get_node("VBoxContainer/HBoxContainer/VariableContainer/TypeSelect")
+const RandomBranch = preload("../resources/RandomBranch.gd")
 
 
-func get_variable():
-	return VariableEdit.text
+@onready var ConditionControl = get_node("VBoxContainer/HBoxContainer/VariableContainer/ConditionControl")
 
 
-func get_type():
-	return TypeSelect.get_selected_id()
+var branch_resource
 
 
-func get_value():
-	return ValueEdit.get_value()
+func get_branch():
+	branch_resource.condition = ConditionControl.condition_resource
+	return branch_resource
 
 
-func get_scope():
-	return ScopeSelect.selected
-
-
-func set_random(variable, variable_type, scope, value):
-	TypeSelect.select(TypeSelect.get_item_index(variable_type))
-	VariableEdit.text = variable
-	ValueEdit.set_variable_type(variable_type)
-	ValueEdit.set_value(value)
-	ScopeSelect.select(scope)
+func set_branch(branch):
+	self.branch_resource = branch
+	ConditionControl.condition_resource = self.branch_resource.condition
 
 
 func _on_RemoveButton_pressed():
 	emit_signal("remove_requested")
 
 
-func _on_VariableEdit_text_changed(new_text):
-	emit_signal("modified")
-
-
-func _on_ScopeSelect_item_selected(index):
-	emit_signal("modified")
-
-
-func _on_ValueEdit_value_changed():
-	emit_signal("modified")
-
-
-func _on_TypeSelect_item_selected(index):
-	ValueEdit.set_variable_type(TypeSelect.get_item_id(index))
-	emit_signal("modified")
+func _on_condition_control_set_condition_requested():
+	emit_signal("set_condition_requested")

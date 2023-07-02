@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://dq2f3dnmyuokp"]
+
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/scripts/ConditionalsEditDialog.gd" id="1_ew3e1"]
+[ext_resource type="PackedScene" uid="uid://defjgqmhpeol0" path="res://addons/hyh.cutscene_graph/scenes/conditionals_edit/ConditionsEditDialogContents.tscn" id="2_lbkla"]
+
+[node name="ConditionsEditDialog" type="Window"]
+initial_position = 1
+title = "Edit Conditions"
+size = Vector2i(700, 600)
+min_size = Vector2i(300, 300)
+script = ExtResource("1_ew3e1")
+
+[node name="ConditionsEditDialogContents" parent="." instance=ExtResource("2_lbkla")]
+offset_right = 700.0
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="cancelled" from="ConditionsEditDialogContents" to="." method="_on_conditions_edit_dialog_contents_cancelled"]
+[connection signal="saved" from="ConditionsEditDialogContents" to="." method="_on_conditions_edit_dialog_contents_saved"]

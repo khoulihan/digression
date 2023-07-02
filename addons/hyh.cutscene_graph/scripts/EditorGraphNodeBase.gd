@@ -30,6 +30,7 @@ func persist_changes_to_node():
 	"""
 	Persist changes from the editor node's controls into the graph node's properties
 	"""
+	Logger.debug("Persisting changes to node")
 	node_resource.offset = position_offset
 
 

@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://fdx2ta64kptk"]
+
+[ext_resource type="PackedScene" uid="uid://c1584iplg8kg5" path="res://addons/hyh.cutscene_graph/scenes/VariableValueEdit.tscn" id="1_xsina"]
+
+[node name="RangeEdit" type="GridContainer"]
+columns = 2
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+text = "Minimum Value:   "
+
+[node name="MinValueEdit" parent="." instance=ExtResource("1_xsina")]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 2
+text = "Maximum Value:"
+
+[node name="MaxValueEdit" parent="." instance=ExtResource("1_xsina")]
+layout_mode = 2

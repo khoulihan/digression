@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://f44ru47mc3pp"]
+
+[ext_resource type="Texture2D" uid="uid://mksqvoqy2yi4" path="res://addons/hyh.cutscene_graph/icon_node_warning.svg" id="1_kv6p3"]
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/scenes/validation/ValidationWarning.gd" id="2_avuc0"]
+
+[node name="ValidationWarning" type="TextureRect"]
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("1_kv6p3")
+script = ExtResource("2_avuc0")

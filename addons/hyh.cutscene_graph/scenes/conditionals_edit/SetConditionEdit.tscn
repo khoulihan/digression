@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://btpywglw7xeo1"]
+
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/scenes/conditionals_edit/SetConditionEdit.gd" id="1_m5nep"]
+[ext_resource type="PackedScene" uid="uid://c1584iplg8kg5" path="res://addons/hyh.cutscene_graph/scenes/VariableValueEdit.tscn" id="2_3ntul"]
+[ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.cutscene_graph/icon_remove.svg" id="3_d28wr"]
+
+[node name="SetConditionEdit" type="MarginContainer"]
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+script = ExtResource("1_m5nep")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="VariableValueEdit" parent="HBoxContainer" instance=ExtResource("2_3ntul")]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+icon = ExtResource("3_d28wr")
+flat = true

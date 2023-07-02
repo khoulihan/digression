@@ -10,38 +10,53 @@ const VariableType = preload("../resources/VariableSetNode.gd").VariableType
 signal value_changed()
 
 
-@onready var LineEditControl = get_node("LineEdit")
-@onready var SpinBoxControl = get_node("SpinBox")
-@onready var CheckBoxControl = get_node("CheckBox")
+@onready var LineEditControl = get_node("HBoxContainer/EditContainer/LineEdit")
+@onready var SpinBoxControl = get_node("HBoxContainer/EditContainer/SpinBox")
+@onready var CheckBoxControl = get_node("HBoxContainer/EditContainer/CheckBox")
+@onready var ValidationWarning = get_node("HBoxContainer/ValidationWarning")
 
-
-var _variable_type = VariableType.TYPE_BOOL
+# TODO: Setting this in the inspector does not work because the controls are not
+# ready when it is set at runtime
+@export var variable_type: VariableType = VariableType.TYPE_BOOL:
+	get:
+		return variable_type
+	set(t):
+		variable_type = t
+		_configure_for_type()
 
 
 func _ready():
 	_configure_for_type()
+	clear_validation_warning()
 
 
 func set_variable_type(t):
-	_variable_type = t
+	variable_type = t
 	_configure_for_type()
 
 
 func _configure_for_type():
-	LineEditControl.visible = _variable_type == VariableType.TYPE_STRING
-	SpinBoxControl.visible = _variable_type == VariableType.TYPE_INT or _variable_type == VariableType.TYPE_FLOAT
-	CheckBoxControl.visible = _variable_type == VariableType.TYPE_BOOL
-	if _variable_type == VariableType.TYPE_INT or _variable_type == VariableType.TYPE_FLOAT:
-		SpinBoxControl.rounded = (_variable_type == VariableType.TYPE_INT)
-		if _variable_type == VariableType.TYPE_INT:
+	LineEditControl.visible = variable_type == VariableType.TYPE_STRING
+	SpinBoxControl.visible = variable_type == VariableType.TYPE_INT or variable_type == VariableType.TYPE_FLOAT
+	CheckBoxControl.visible = variable_type == VariableType.TYPE_BOOL
+	if variable_type == VariableType.TYPE_INT or variable_type == VariableType.TYPE_FLOAT:
+		SpinBoxControl.rounded = (variable_type == VariableType.TYPE_INT)
+		if variable_type == VariableType.TYPE_INT:
 			SpinBoxControl.step = 1
 			SpinBoxControl.value = SpinBoxControl.value as int
 		else:
 			SpinBoxControl.step = 0.0001
 
 
+func _clear_values():
+	CheckBoxControl.button_pressed = true
+	LineEditControl.text = ""
+	SpinBoxControl.value = 0
+
+
 func set_value(val):
-	match _variable_type:
+	_clear_values()
+	match variable_type:
 		VariableType.TYPE_BOOL:
 			if val == null:
 				CheckBoxControl.button_pressed = true
@@ -60,7 +75,7 @@ func set_value(val):
 
 
 func get_value():
-	match _variable_type:
+	match variable_type:
 		VariableType.TYPE_BOOL:
 			return CheckBoxControl.button_pressed
 		VariableType.TYPE_STRING:
@@ -71,6 +86,14 @@ func get_value():
 		VariableType.TYPE_FLOAT:
 			Logger.debug("Variable float value: %s" % (SpinBoxControl.value as float))
 			return SpinBoxControl.value as float
+
+
+func set_validation_warning(t):
+	ValidationWarning.set_warning(t)
+
+
+func clear_validation_warning():
+	ValidationWarning.clear_warning()
 
 
 func _on_CheckBox_pressed():
