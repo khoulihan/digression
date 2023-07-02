@@ -4,8 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://c0pw3rdictm2v" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorGraphNodeBase.tscn" id="2"]
 
 [node name="EditorTextNode" instance=ExtResource("2")]
-offset_right = 404.0
-offset_bottom = 304.0
+offset_right = 545.0
+offset_bottom = 342.0
 title = "Dialogue"
 resizable = true
 slot/0/left_enabled = true
@@ -57,7 +57,7 @@ size_flags_horizontal = 3
 toggle_mode = false
 
 [node name="TextEdit" type="TextEdit" parent="RootContainer/VerticalLayout" index="1"]
-custom_minimum_size = Vector2(0, 160)
+custom_minimum_size = Vector2(0, 31)
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0

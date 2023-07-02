@@ -28,8 +28,8 @@ func set_sub_graph_path(sub_graph):
 		_get_remove_button().disabled = false
 
 
-func configure_for_node(n):
-	super.configure_for_node(n)
+func configure_for_node(g, n):
+	super.configure_for_node(g, n)
 	set_sub_graph_path(n.sub_graph)
 
 

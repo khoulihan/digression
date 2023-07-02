@@ -21,8 +21,8 @@ func _get_translation_key_edit():
 	return get_node("RootContainer/VerticalLayout/TranslationContainer/TranslationKeyEdit")
 
 
-func configure_for_node(n):
-	super.configure_for_node(n)
+func configure_for_node(g, n):
+	super.configure_for_node(g, n)
 	if n.size != Vector2.ZERO:
 		size = n.size
 	set_text(n.text)

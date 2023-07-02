@@ -1,6 +1,8 @@
 @tool
 extends "EditorGraphNodeBase.gd"
 
+const TranslationKey = preload("../../utility/TranslationKey.gd")
+
 const ChoiceBranch = preload("../../resources/graph/branches/ChoiceBranch.gd")
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
@@ -56,6 +58,10 @@ func _add_choice(
 func _create_line():
 	var new_value_line = _choice_value_scene.instantiate()
 	var choice_resource = ChoiceBranch.new()
+	choice_resource.display_translation_key = TranslationKey.generate(
+		graph.name,
+		"choice"
+	)
 	new_value_line.choice_resource = choice_resource
 	add_child(new_value_line)
 	new_value_line.connect("remove_requested", Callable(self, "_value_remove_requested").bind(get_child_count() - 1))
@@ -64,8 +70,8 @@ func _create_line():
 	return new_value_line
 
 
-func configure_for_node(n):
-	super.configure_for_node(n)
+func configure_for_node(g, n):
+	super.configure_for_node(g, n)
 	# We want to retain the original width, but the original height
 	# includes sample choices which are not yet removed.
 	_original_size = Vector2(size.x, 0.0)

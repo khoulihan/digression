@@ -13,15 +13,18 @@ signal modified()
 @export var is_root : bool : set = set_root
 @export var node_resource: GraphNodeBase
 
+var graph
+
 
 func _ready():
 	pass
 
 
-func configure_for_node(n):
+func configure_for_node(g, n):
 	"""
 	Configure the editor node for a given graph node.
 	"""
+	graph = g
 	node_resource = n
 	position_offset = n.offset
 

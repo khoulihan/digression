@@ -95,8 +95,8 @@ func _create_branch():
 	return new_value_line
 
 
-func configure_for_node(n):
-	super.configure_for_node(n)
+func configure_for_node(g, n):
+	super.configure_for_node(g, n)
 	# We want to retain the original width, but the original height
 	# includes sample branches which are not yet removed.
 	_original_size = Vector2(size.x, 0.0)

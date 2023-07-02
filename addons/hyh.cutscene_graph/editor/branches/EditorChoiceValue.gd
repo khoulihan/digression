@@ -21,6 +21,11 @@ signal clear_condition_requested()
 var choice_resource
 
 
+func _ready():
+	if choice_resource != null:
+		set_choice(choice_resource)
+
+
 func get_choice():
 	choice_resource.display = DisplayEdit.text
 	choice_resource.display_translation_key = TranslationKeyEdit.text

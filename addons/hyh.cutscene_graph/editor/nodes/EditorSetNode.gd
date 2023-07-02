@@ -8,8 +8,8 @@ extends "EditorGraphNodeBase.gd"
 @onready var TypeSelect = get_node("MarginContainer/GridContainer/TypeSelect")
 
 
-func configure_for_node(n):
-	super.configure_for_node(n)
+func configure_for_node(g, n):
+	super.configure_for_node(g, n)
 	set_variable(n.variable)
 	set_type(n.variable_type)
 	set_value(n.get_value())

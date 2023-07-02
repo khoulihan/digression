@@ -25,8 +25,8 @@ func _get_action_name_edit():
 	return get_node("RootContainer/GridContainer/ActionNameEdit")
 
 
-func configure_for_node(n):
-	super.configure_for_node(n)
+func configure_for_node(g, n):
+	super.configure_for_node(g, n)
 	set_action_name(n.action_name)
 	set_argument(n.argument)
 	select_character(n.character)

@@ -4,6 +4,7 @@ extends VBoxContainer
 signal save_requested(object, path)
 
 const Logging = preload("../utility/Logging.gd")
+const TranslationKey = preload("../utility/TranslationKey.gd")
 
 const DialogueTextNode = preload("../resources/graph/DialogueTextNode.gd")
 const BranchNode = preload("../resources/graph/BranchNode.gd")
@@ -30,6 +31,7 @@ const EditorGraphNodeBase = preload("./nodes/EditorGraphNodeBase.tscn")
 const EditorActionNode = preload("./nodes/EditorActionNode.tscn")
 const EditorSubGraphNode = preload("./nodes/EditorSubGraphNode.tscn")
 const EditorRandomNode = preload("./nodes/EditorRandomNode.tscn")
+
 
 class OpenGraph:
 	var graph
@@ -259,6 +261,10 @@ func _create_node(
 		GraphPopupMenuItems.ADD_TEXT_NODE:
 			new_editor_node = EditorTextNode.instantiate()
 			new_graph_node = DialogueTextNode.new()
+			new_graph_node.text_translation_key = TranslationKey.generate(
+				_edited.graph.name,
+				"dialogue"
+			)
 		GraphPopupMenuItems.ADD_BRANCH_NODE:
 			new_editor_node = EditorBranchNode.instantiate()
 			new_graph_node = BranchNode.new()
@@ -292,7 +298,7 @@ func _create_node(
 		new_editor_node.is_root = true
 	if new_editor_node.has_method("populate_characters"):
 		new_editor_node.populate_characters(_edited.graph.characters)
-	new_editor_node.configure_for_node(new_graph_node)
+	new_editor_node.configure_for_node(_edited.graph, new_graph_node)
 	_edited.graph.nodes[new_graph_node.id] = new_graph_node
 	if new_editor_node.is_root:
 		_edited.graph.root_node = new_graph_node
@@ -470,7 +476,7 @@ func _draw_edited_graph(retain_selection=false):
 			elif node is RandomNode:
 				editor_node = EditorRandomNode.instantiate()
 			_graph_edit.add_child(editor_node)
-			editor_node.configure_for_node(node)
+			editor_node.configure_for_node(_edited.graph, node)
 			if node == _edited.graph.root_node:
 				editor_node.is_root = true
 			_connect_node_signals(editor_node)
