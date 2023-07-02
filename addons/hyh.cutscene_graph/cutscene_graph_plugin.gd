@@ -1,9 +1,9 @@
 @tool
 extends EditorPlugin
 
-const Logging = preload("scripts/Logging.gd")
-const CutsceneGraphEditor = preload("scenes/CutsceneGraphEditor.tscn")
-const Cutscene = preload("scripts/Cutscene.gd")
+const Logging = preload("utility/Logging.gd")
+const CutsceneGraphEditor = preload("editor/CutsceneGraphEditor.tscn")
+const Cutscene = preload("editor/Cutscene.gd")
 #const CutsceneGraph = preload("resources/CutsceneGraph.gd")
 
 var editor
@@ -16,14 +16,14 @@ func _enter_tree():
 	#add_custom_type("Character", "Resource", preload("resources/Character.gd"), preload("icon_sprite.svg"))
 	#add_custom_type("CharacterVariant", "Resource", preload("resources/CharacterVariant.gd"), preload("icon_texture_rect.svg"))
 	# TODO: Need a new icon for these - should be white at the very least, like other Node-derived types
-	add_custom_type("CutsceneController", "Node", preload("scripts/CutsceneController.gd"), preload("icon_graph_node.svg"))
-	add_custom_type("Cutscene", "Node", preload("scripts/Cutscene.gd"), preload("icon_graph_node.svg"))
+	add_custom_type("CutsceneController", "Node", preload("editor/CutsceneController.gd"), preload("icons/icon_graph_node.svg"))
+	add_custom_type("Cutscene", "Node", preload("editor/Cutscene.gd"), preload("icons/icon_graph_node.svg"))
 	
 	_create_editor()
 
 
 func _create_editor():
-	editor = preload("scenes/CutsceneGraphEditor.tscn").instantiate()
+	editor = preload("editor/CutsceneGraphEditor.tscn").instantiate()
 	editor.connect("save_requested", Callable(self, "_save_requested"))
 	editor_button = add_control_to_bottom_panel(editor, _get_plugin_name())
 
@@ -91,7 +91,7 @@ func _get_plugin_name():
 
 
 func _get_plugin_icon():
-	return preload("icon_graph_edit.svg")
+	return preload("icons/icon_graph_edit.svg")
 
 
 func handles(object: Object) -> bool:

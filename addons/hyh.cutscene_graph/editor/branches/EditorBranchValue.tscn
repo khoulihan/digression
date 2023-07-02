@@ -1,0 +1,44 @@
+[gd_scene load_steps=4 format=3 uid="uid://blu15ehhb5avh"]
+
+[ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.cutscene_graph/icons/icon_remove.svg" id="1"]
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/branches/EditorBranchValue.gd" id="2"]
+[ext_resource type="PackedScene" uid="uid://c1584iplg8kg5" path="res://addons/hyh.cutscene_graph/editor/controls/VariableValueEditControl.tscn" id="3"]
+
+[node name="BranchValue" type="MarginContainer"]
+offset_right = 245.0
+offset_bottom = 66.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 9
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="HorizontalLayout" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer/HorizontalLayout"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HorizontalLayout/GridContainer"]
+layout_mode = 2
+text = "Value:"
+
+[node name="ValueEdit" parent="VBoxContainer/HorizontalLayout/GridContainer" instance=ExtResource("3")]
+layout_mode = 2
+
+[node name="RemoveButton" type="Button" parent="VBoxContainer/HorizontalLayout"]
+layout_mode = 2
+icon = ExtResource("1")
+flat = true
+
+[connection signal="value_changed" from="VBoxContainer/HorizontalLayout/GridContainer/ValueEdit" to="." method="_on_ValueEdit_value_changed"]
+[connection signal="pressed" from="VBoxContainer/HorizontalLayout/RemoveButton" to="." method="_on_RemoveButton_pressed"]

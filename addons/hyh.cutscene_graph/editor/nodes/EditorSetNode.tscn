@@ -1,0 +1,86 @@
+[gd_scene load_steps=4 format=3 uid="uid://oaxce7kcotie"]
+
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorSetNode.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://c0pw3rdictm2v" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorGraphNodeBase.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://c1584iplg8kg5" path="res://addons/hyh.cutscene_graph/editor/controls/VariableValueEditControl.tscn" id="3"]
+
+[node name="EditorSetNode" instance=ExtResource("2")]
+offset_bottom = 137.0
+title = "Set Variable"
+slot/0/left_enabled = true
+slot/0/left_type = 0
+slot/0/left_color = Color(0.949219, 0.274384, 0.479997, 1)
+slot/0/left_icon = null
+slot/0/right_enabled = true
+slot/0/right_type = 0
+slot/0/right_color = Color(0.813103, 0.957031, 0.299072, 1)
+slot/0/right_icon = null
+slot/0/draw_stylebox = true
+script = ExtResource("1")
+
+[node name="MarginContainer" type="MarginContainer" parent="." index="0"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer" index="0"]
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="Label3" type="Label" parent="MarginContainer/GridContainer" index="0"]
+layout_mode = 2
+text = "Scope:"
+
+[node name="ScopeSelect" type="OptionButton" parent="MarginContainer/GridContainer" index="1"]
+layout_mode = 2
+toggle_mode = false
+item_count = 3
+selected = 0
+popup/item_0/text = "Dialogue"
+popup/item_0/id = 0
+popup/item_1/text = "Scene"
+popup/item_1/id = 1
+popup/item_2/text = "Global"
+popup/item_2/id = 2
+
+[node name="Label" type="Label" parent="MarginContainer/GridContainer" index="2"]
+layout_mode = 2
+text = "Variable:"
+
+[node name="VariableEdit" type="LineEdit" parent="MarginContainer/GridContainer" index="3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label4" type="Label" parent="MarginContainer/GridContainer" index="4"]
+layout_mode = 2
+text = "Type:"
+
+[node name="TypeSelect" type="OptionButton" parent="MarginContainer/GridContainer" index="5"]
+layout_mode = 2
+toggle_mode = false
+item_count = 4
+popup/item_0/text = "Boolean"
+popup/item_0/id = 1
+popup/item_1/text = "Integer"
+popup/item_1/id = 2
+popup/item_2/text = "Float"
+popup/item_2/id = 3
+popup/item_3/text = "String"
+popup/item_3/id = 4
+
+[node name="Label2" type="Label" parent="MarginContainer/GridContainer" index="6"]
+layout_mode = 2
+text = "Value:"
+
+[node name="ValueEdit" parent="MarginContainer/GridContainer" index="7" instance=ExtResource("3")]
+layout_mode = 2
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="item_selected" from="MarginContainer/GridContainer/ScopeSelect" to="." method="_on_ScopeSelect_item_selected"]
+[connection signal="text_changed" from="MarginContainer/GridContainer/VariableEdit" to="." method="_on_VariableEdit_text_changed"]
+[connection signal="item_selected" from="MarginContainer/GridContainer/TypeSelect" to="." method="_on_TypeSelect_item_selected"]
+[connection signal="value_changed" from="MarginContainer/GridContainer/ValueEdit" to="." method="_on_ValueEdit_value_changed"]

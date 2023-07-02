@@ -1,0 +1,170 @@
+[gd_scene load_steps=6 format=3 uid="uid://b5nafvowyicoe"]
+
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/conditionals_edit/ValueConditionNodeEdit.gd" id="1_urhbu"]
+[ext_resource type="PackedScene" uid="uid://f44ru47mc3pp" path="res://addons/hyh.cutscene_graph/editor/validation/ValidationWarning.tscn" id="1_vopkx"]
+[ext_resource type="PackedScene" uid="uid://c1584iplg8kg5" path="res://addons/hyh.cutscene_graph/editor/controls/VariableValueEditControl.tscn" id="2_rl286"]
+[ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.cutscene_graph/icons/icon_add.svg" id="3_3iui2"]
+[ext_resource type="PackedScene" uid="uid://btpywglw7xeo1" path="res://addons/hyh.cutscene_graph/editor/conditionals_edit/SetConditionMemberEdit.tscn" id="4_pngka"]
+
+[node name="ValueNodeEdit" type="VBoxContainer"]
+script = ExtResource("1_urhbu")
+
+[node name="ValueNodeHeader" type="GridContainer" parent="."]
+layout_mode = 2
+columns = 2
+
+[node name="Label2" type="Label" parent="ValueNodeHeader"]
+layout_mode = 2
+text = "Scope:"
+
+[node name="VariableScopeOption" type="OptionButton" parent="ValueNodeHeader"]
+layout_mode = 2
+item_count = 3
+selected = 0
+popup/item_0/text = "Dialogue"
+popup/item_0/id = 0
+popup/item_1/text = "Scene"
+popup/item_1/id = 1
+popup/item_2/text = "Global"
+popup/item_2/id = 2
+
+[node name="Label4" type="Label" parent="ValueNodeHeader"]
+layout_mode = 2
+text = "Variable:"
+
+[node name="VariableNameContainer" type="HBoxContainer" parent="ValueNodeHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VariableNameEdit" type="LineEdit" parent="ValueNodeHeader/VariableNameContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VariableNameValidationWarning" parent="ValueNodeHeader/VariableNameContainer" instance=ExtResource("1_vopkx")]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="ValueNodeHeader"]
+layout_mode = 2
+text = "Variable Type:"
+
+[node name="VariableTypeContainer" type="HBoxContainer" parent="ValueNodeHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VariableTypeOption" type="OptionButton" parent="ValueNodeHeader/VariableTypeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+item_count = 4
+popup/item_0/text = "Boolean"
+popup/item_0/id = 1
+popup/item_1/text = "Integer"
+popup/item_1/id = 2
+popup/item_2/text = "Float"
+popup/item_2/id = 3
+popup/item_3/text = "String"
+popup/item_3/id = 4
+
+[node name="VariableTypeValidationWarning" parent="ValueNodeHeader/VariableTypeContainer" instance=ExtResource("1_vopkx")]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ValueNodeHeader"]
+layout_mode = 2
+text = "Comparison Type:"
+
+[node name="ComparisonTypeOption" type="OptionButton" parent="ValueNodeHeader"]
+layout_mode = 2
+item_count = 7
+selected = 0
+popup/item_0/text = "Equals"
+popup/item_0/id = 0
+popup/item_1/text = "Greater Than"
+popup/item_1/id = 1
+popup/item_2/text = "Greater Than or Equal"
+popup/item_2/id = 2
+popup/item_3/text = "Less Than"
+popup/item_3/id = 3
+popup/item_4/text = "Less Than or Equal"
+popup/item_4/id = 4
+popup/item_5/text = "Within Range"
+popup/item_5/id = 5
+popup/item_6/text = "Set"
+popup/item_6/id = 6
+
+[node name="HSeparator" type="HSeparator" parent="."]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SingleValueEdit" type="GridContainer" parent="MarginContainer"]
+visible = false
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="MarginContainer/SingleValueEdit"]
+layout_mode = 2
+text = "Value:                      "
+
+[node name="VariableValueEdit" parent="MarginContainer/SingleValueEdit" instance=ExtResource("2_rl286")]
+layout_mode = 2
+
+[node name="RangeEdit" type="GridContainer" parent="MarginContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="MarginContainer/RangeEdit"]
+layout_mode = 2
+text = "Minimum Value:   "
+
+[node name="MinValueEdit" parent="MarginContainer/RangeEdit" instance=ExtResource("2_rl286")]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="MarginContainer/RangeEdit"]
+layout_mode = 2
+text = "Maximum Value:"
+
+[node name="MaxValueEdit" parent="MarginContainer/RangeEdit" instance=ExtResource("2_rl286")]
+layout_mode = 2
+
+[node name="SetEdit" type="GridContainer" parent="MarginContainer"]
+visible = false
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/SetEdit"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AddSetValueButton" type="Button" parent="MarginContainer/SetEdit/HBoxContainer"]
+layout_mode = 2
+icon = ExtResource("3_3iui2")
+flat = true
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/SetEdit"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/SetEdit/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="SetConditionContainer" type="VBoxContainer" parent="MarginContainer/SetEdit/ScrollContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="SetConditionEdit" parent="MarginContainer/SetEdit/ScrollContainer/PanelContainer/SetConditionContainer" instance=ExtResource("4_pngka")]
+layout_mode = 2
+
+[node name="SetConditionEdit2" parent="MarginContainer/SetEdit/ScrollContainer/PanelContainer/SetConditionContainer" instance=ExtResource("4_pngka")]
+layout_mode = 2
+
+[connection signal="item_selected" from="ValueNodeHeader/VariableScopeOption" to="." method="_on_variable_scope_option_item_selected"]
+[connection signal="text_changed" from="ValueNodeHeader/VariableNameContainer/VariableNameEdit" to="." method="_on_variable_name_edit_text_changed"]
+[connection signal="item_selected" from="ValueNodeHeader/VariableTypeContainer/VariableTypeOption" to="." method="_on_variable_type_option_item_selected"]
+[connection signal="item_selected" from="ValueNodeHeader/ComparisonTypeOption" to="." method="_on_comparison_type_option_item_selected"]
+[connection signal="value_changed" from="MarginContainer/SingleValueEdit/VariableValueEdit" to="." method="_on_single_value_edit_value_changed"]
+[connection signal="value_changed" from="MarginContainer/RangeEdit/MinValueEdit" to="." method="_on_min_value_edit_value_changed"]
+[connection signal="value_changed" from="MarginContainer/RangeEdit/MaxValueEdit" to="." method="_on_max_value_edit_value_changed"]
+[connection signal="pressed" from="MarginContainer/SetEdit/HBoxContainer/AddSetValueButton" to="." method="_on_add_set_value_button_pressed"]

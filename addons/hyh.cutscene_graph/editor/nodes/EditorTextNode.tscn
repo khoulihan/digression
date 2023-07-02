@@ -1,0 +1,87 @@
+[gd_scene load_steps=3 format=3 uid="uid://ddh2fuxyvnktp"]
+
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorTextNode.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://c0pw3rdictm2v" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorGraphNodeBase.tscn" id="2"]
+
+[node name="EditorTextNode" instance=ExtResource("2")]
+offset_right = 404.0
+offset_bottom = 304.0
+title = "Dialogue"
+resizable = true
+slot/0/left_enabled = true
+slot/0/left_type = 0
+slot/0/left_color = Color(0.94902, 0.27451, 0.478431, 1)
+slot/0/left_icon = null
+slot/0/right_enabled = true
+slot/0/right_type = 0
+slot/0/right_color = Color(0.811765, 0.956863, 0.298039, 1)
+slot/0/right_icon = null
+slot/0/draw_stylebox = true
+script = ExtResource("1")
+
+[node name="RootContainer" type="MarginContainer" parent="." index="0"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VerticalLayout" type="VBoxContainer" parent="RootContainer" index="0"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="OptionsContainer" type="GridContainer" parent="RootContainer/VerticalLayout" index="0"]
+layout_mode = 2
+theme_override_constants/h_separation = 25
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="Label" type="Label" parent="RootContainer/VerticalLayout/OptionsContainer" index="0"]
+layout_mode = 2
+text = "Character:"
+
+[node name="CharacterSelect" type="OptionButton" parent="RootContainer/VerticalLayout/OptionsContainer" index="1"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = false
+
+[node name="Label2" type="Label" parent="RootContainer/VerticalLayout/OptionsContainer" index="2"]
+layout_mode = 2
+text = "Variant:"
+
+[node name="VariantSelect" type="OptionButton" parent="RootContainer/VerticalLayout/OptionsContainer" index="3"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = false
+
+[node name="TextEdit" type="TextEdit" parent="RootContainer/VerticalLayout" index="1"]
+custom_minimum_size = Vector2(0, 160)
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+mouse_default_cursor_shape = 0
+theme_override_constants/line_spacing = 8
+wrap_mode = 1
+
+[node name="TranslationContainer" type="GridContainer" parent="RootContainer/VerticalLayout" index="2"]
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="Label" type="Label" parent="RootContainer/VerticalLayout/TranslationContainer" index="0"]
+layout_mode = 2
+text = "Translation Key:"
+
+[node name="TranslationKeyEdit" type="LineEdit" parent="RootContainer/VerticalLayout/TranslationContainer" index="1"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="resize_request" from="." to="." method="_on_resize_request"]
+[connection signal="item_selected" from="RootContainer/VerticalLayout/OptionsContainer/CharacterSelect" to="." method="_on_CharacterSelect_item_selected"]
+[connection signal="item_selected" from="RootContainer/VerticalLayout/OptionsContainer/VariantSelect" to="." method="_on_VariantSelect_item_selected"]
+[connection signal="text_changed" from="RootContainer/VerticalLayout/TextEdit" to="." method="_on_TextEdit_text_changed"]
+[connection signal="text_changed" from="RootContainer/VerticalLayout/TranslationContainer/TranslationKeyEdit" to="." method="_on_translation_key_edit_text_changed"]
