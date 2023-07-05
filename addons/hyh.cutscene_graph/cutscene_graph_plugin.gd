@@ -4,12 +4,21 @@ extends EditorPlugin
 const Logging = preload("utility/Logging.gd")
 const CutsceneGraphEditor = preload("editor/CutsceneGraphEditor.tscn")
 const Cutscene = preload("editor/Cutscene.gd")
+const GraphTypeEditDialog = preload("editor/graph_types_edit/GraphTypeEditDialog.tscn")
+const GraphTypeEditDialogClass = preload("editor/graph_types_edit/GraphTypeEditDialog.gd")
 #const CutsceneGraph = preload("resources/CutsceneGraph.gd")
 
 var editor
 var editor_button
+var menu
 
 var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
+
+
+enum ToolMenuItems {
+	EDIT_GRAPH_TYPES
+}
+
 
 func _enter_tree():
 	#add_custom_type("CutsceneGraph", "Resource", preload("resources/CutsceneGraph.gd"), preload("icon_graph_node.svg"))
@@ -19,13 +28,57 @@ func _enter_tree():
 	add_custom_type("CutsceneController", "Node", preload("editor/CutsceneController.gd"), preload("icons/icon_graph_node.svg"))
 	add_custom_type("Cutscene", "Node", preload("editor/Cutscene.gd"), preload("icons/icon_graph_node.svg"))
 	
+	# Check if the settings exist, and create some defaults if necessary
+	if not ProjectSettings.has_setting("cutscene_graph_editor/graph_types"):
+		ProjectSettings.set_setting(
+			"cutscene_graph_editor/graph_types",
+			[
+				{
+					"name": "dialogue",
+					"split_dialogue": true,
+					"default": true
+				},
+				{
+					"name": "cutscene",
+					"split_dialogue": true,
+					"default": false
+				}
+			]
+		)
+	
 	_create_editor()
+	_create_menu()
 
 
 func _create_editor():
 	editor = preload("editor/CutsceneGraphEditor.tscn").instantiate()
 	editor.connect("save_requested", Callable(self, "_save_requested"))
 	editor_button = add_control_to_bottom_panel(editor, _get_plugin_name())
+
+
+func _create_menu():
+	menu = PopupMenu.new()
+	menu.add_item("Edit Graph Types...", ToolMenuItems.EDIT_GRAPH_TYPES)
+	menu.id_pressed.connect(_tool_menu_item_selected)
+	
+	add_tool_submenu_item("Cutscene Graph Editor", menu)
+
+
+func _tool_menu_item_selected(id):
+	match id:
+		ToolMenuItems.EDIT_GRAPH_TYPES:
+			_show_edit_graph_types_dialog()
+
+
+func _show_edit_graph_types_dialog():
+	var dialog = GraphTypeEditDialog.instantiate()
+	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_ABSOLUTE
+	dialog.position = get_tree().root.position + Vector2i(300, 300)
+	self.add_child(dialog)
+	dialog.popup()
+	await (dialog as GraphTypeEditDialogClass).closing
+	dialog.hide()
+	dialog.queue_free()
 
 
 # Not sure the cause of this issue, but the editor member is being cleared after
@@ -82,6 +135,8 @@ func _exit_tree():
 	remove_custom_type("CutsceneController")
 	remove_custom_type("Cutscene")
 	remove_control_from_bottom_panel(editor)
+	menu.id_pressed.disconnect(_tool_menu_item_selected)
+	remove_tool_menu_item("Cutscene Graph Editor")
 	if editor != null:
 		editor.free()
 

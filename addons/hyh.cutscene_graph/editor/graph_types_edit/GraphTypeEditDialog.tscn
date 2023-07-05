@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://0ait4dcdapj3"]
+
+[ext_resource type="PackedScene" uid="uid://bqesqojgpo7q2" path="res://addons/hyh.cutscene_graph/editor/graph_types_edit/GraphTypeEditDialogContents.tscn" id="1_vb075"]
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/graph_types_edit/GraphTypeEditDialog.gd" id="1_w7iyb"]
+
+[node name="GraphTypeEditDialog" type="Window"]
+title = "Graph Types"
+size = Vector2i(480, 380)
+unresizable = true
+script = ExtResource("1_w7iyb")
+
+[node name="GraphTypeEditDialogContents" parent="." instance=ExtResource("1_vb075")]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="closing" from="GraphTypeEditDialogContents" to="." method="_on_graph_type_edit_dialog_contents_closing"]

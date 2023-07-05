@@ -62,6 +62,7 @@ var _scene_store : Node
 var _graph_stack
 var _current_graph
 var _current_node
+var _split_dialogue
 
 
 func register_global_store(store):
@@ -150,6 +151,7 @@ func process_cutscene(cutscene):
 	_current_graph = cutscene
 	_current_node = _current_graph.root_node
 	Logger.info("Processing cutscene \"%s\"" % _current_graph.name)
+	_split_dialogue = _get_split_dialogue_from_type(_current_graph.graph_type)
 	emit_signal("cutscene_started", _current_graph.name, _current_graph.graph_type)
 	
 	while _current_node != null:
@@ -183,6 +185,18 @@ func process_cutscene(cutscene):
 	
 	Logger.info("Cutscene \"%s\" completed." % _current_graph.name)
 	emit_signal("cutscene_completed")
+
+
+func _get_split_dialogue_from_type(graph_type):
+	if graph_type != null and graph_type != '':
+		var graph_types = ProjectSettings.get_setting(
+			"cutscene_graph_editor/graph_types",
+			[]
+		)
+		for gt in graph_types:
+			if gt['name'] == _current_graph.graph_type:
+				return gt['split_dialogue']
+	return true
 
 
 func _emit_dialogue_signal(
@@ -222,7 +236,7 @@ func _process_dialogue_node():
 	if _current_node.character_variant != null:
 		variant_name = _current_node.character_variant.variant_name
 	
-	if _current_graph.split_dialogue:
+	if _split_dialogue:
 		var lines = text.split("\n")
 		for line in lines:
 			# Just in case there are blank lines

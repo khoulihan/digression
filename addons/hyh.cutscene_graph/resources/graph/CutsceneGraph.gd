@@ -11,11 +11,7 @@ class_name CutsceneGraph
 @export var display_name: String
 
 ## An arbitrary identifier for the type of cutscene.
-@export var graph_type: String
-
-## If true, dialogue nodes with multiple lines will be split and each line
-## treated separately. Otherwise the entire dialogue is returned at once.
-@export var split_dialogue = true
+var graph_type: String
 
 ## The characters that are involved in this cutscene.
 @export var characters: Array[Character]
@@ -43,6 +39,23 @@ func _get_property_list():
 		"type": Resource,
 		"usage": PROPERTY_USAGE_STORAGE,
 	})
+	
+	var graph_types = ProjectSettings.get_setting(
+		"cutscene_graph_editor/graph_types",
+		[]
+	)
+	var graph_type_names = []
+	for gt in graph_types:
+		graph_type_names.append(gt["name"])
+	var graph_types_hint: String = ",".join(graph_type_names)
+	
+	properties.append({
+		"name": "graph_type",
+		"type": TYPE_STRING,
+		"usage": PROPERTY_USAGE_DEFAULT,
+		"hint": PROPERTY_HINT_ENUM,
+		"hint_string": graph_types_hint,
+	})
 	return properties
 
 
@@ -59,3 +72,13 @@ func get_next_id():
 func _init():
 	self.nodes = {}
 	self.characters = []
+	var graph_types = ProjectSettings.get_setting(
+		"cutscene_graph_editor/graph_types",
+		""
+	)
+	var default_graph_type = ""
+	for gt in graph_types:
+		if gt["default"]:
+			default_graph_type = gt["name"]
+			break
+	self.graph_type = default_graph_type
