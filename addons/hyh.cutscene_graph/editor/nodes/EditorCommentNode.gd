@@ -7,11 +7,14 @@ extends "EditorGraphNodeBase.gd"
 
 func configure_for_node(g, n):
 	super.configure_for_node(g, n)
+	if n.size != Vector2.ZERO:
+		size = n.size
 	self.set_comment(n.comment)
 
 
 func persist_changes_to_node():
 	super.persist_changes_to_node()
+	node_resource.size = self.size
 	node_resource.comment = self.get_comment()
 
 
