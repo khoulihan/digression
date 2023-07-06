@@ -13,6 +13,7 @@ const VariableSetNode = preload("../resources/graph/VariableSetNode.gd")
 const ActionNode = preload("../resources/graph/ActionNode.gd")
 const SubGraph = preload("../resources/graph/SubGraph.gd")
 const RandomNode = preload("../resources/graph/RandomNode.gd")
+const CommentNode = preload("../resources/graph/CommentNode.gd")
 
 const EditorTextNodeClass = preload("./nodes/EditorTextNode.gd")
 const EditorBranchNodeClass = preload("./nodes/EditorBranchNode.gd")
@@ -22,6 +23,7 @@ const EditorGraphNodeBaseClass = preload("./nodes/EditorGraphNodeBase.gd")
 const EditorActionNodeClass = preload("./nodes/EditorActionNode.gd")
 const EditorSubGraphNodeClass = preload("./nodes/EditorSubGraphNode.gd")
 const EditorRandomNodeClass = preload("./nodes/EditorRandomNode.gd")
+const EditorCommentNodeClass = preload("./nodes/EditorCommentNode.gd")
 
 const EditorTextNode = preload("./nodes/EditorTextNode.tscn")
 const EditorBranchNode = preload("./nodes/EditorBranchNode.tscn")
@@ -31,6 +33,7 @@ const EditorGraphNodeBase = preload("./nodes/EditorGraphNodeBase.tscn")
 const EditorActionNode = preload("./nodes/EditorActionNode.tscn")
 const EditorSubGraphNode = preload("./nodes/EditorSubGraphNode.tscn")
 const EditorRandomNode = preload("./nodes/EditorRandomNode.tscn")
+const EditorCommentNode = preload("./nodes/EditorCommentNode.tscn")
 
 
 class OpenGraph:
@@ -47,7 +50,8 @@ enum GraphPopupMenuItems {
 	ADD_SET_NODE,
 	ADD_ACTION_NODE,
 	ADD_SUB_GRAPH_NODE,
-	ADD_RANDOM_NODE
+	ADD_RANDOM_NODE,
+	ADD_COMMENT_NODE,
 }
 
 enum NodePopupMenuItems {
@@ -283,6 +287,9 @@ func _create_node(
 		GraphPopupMenuItems.ADD_RANDOM_NODE:
 			new_editor_node = EditorRandomNode.instantiate()
 			new_graph_node = RandomNode.new()
+		GraphPopupMenuItems.ADD_COMMENT_NODE:
+			new_editor_node = EditorCommentNode.instantiate()
+			new_graph_node = CommentNode.new()
 			
 	new_graph_node.id = _edited.graph.get_next_id()
 	for property in initial_state:
@@ -475,6 +482,8 @@ func _draw_edited_graph(retain_selection=false):
 				editor_node = EditorSubGraphNode.instantiate()
 			elif node is RandomNode:
 				editor_node = EditorRandomNode.instantiate()
+			elif node is CommentNode:
+				editor_node = EditorCommentNode.instantiate()
 			_graph_edit.add_child(editor_node)
 			editor_node.configure_for_node(_edited.graph, node)
 			if node == _edited.graph.root_node:
@@ -827,6 +836,8 @@ func _node_type_for_node(node):
 		return GraphPopupMenuItems.ADD_CHOICE_NODE
 	elif node is EditorRandomNodeClass:
 		return GraphPopupMenuItems.ADD_RANDOM_NODE
+	elif node is EditorCommentNodeClass:
+		return GraphPopupMenuItems.ADD_COMMENT_NODE
 	return GraphPopupMenuItems.ADD_TEXT_NODE
 
 
