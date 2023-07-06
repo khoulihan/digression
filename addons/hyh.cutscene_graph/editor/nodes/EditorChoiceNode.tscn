@@ -1,22 +1,28 @@
-[gd_scene load_steps=5 format=3 uid="uid://bygmop6vopi43"]
+[gd_scene load_steps=8 format=3 uid="uid://bygmop6vopi43"]
 
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.cutscene_graph/icons/icon_add.svg" id="1"]
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorChoiceNode.gd" id="2"]
+[ext_resource type="StyleBox" uid="uid://ctwtf715dqq7e" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/dialogue_node.tres" id="2_5jsf0"]
 [ext_resource type="PackedScene" uid="uid://cmr3aolsr6l35" path="res://addons/hyh.cutscene_graph/editor/branches/EditorChoiceValue.tscn" id="3"]
+[ext_resource type="StyleBox" uid="uid://boibm7ylgjwcg" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/dialogue_node_selected.tres" id="3_0gmow"]
 [ext_resource type="PackedScene" uid="uid://c0pw3rdictm2v" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorGraphNodeBase.tscn" id="4"]
+[ext_resource type="StyleBox" uid="uid://bcn0xekidb13s" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/position_overlay.tres" id="5_0bfdo"]
 
 [node name="EditorChoiceNode" instance=ExtResource("4")]
 offset_right = 540.0
 offset_bottom = 376.0
+theme_override_styles/frame = ExtResource("2_5jsf0")
+theme_override_styles/selected_frame = ExtResource("3_0gmow")
+theme_override_styles/position = ExtResource("5_0bfdo")
 title = "Choice"
 resizable = true
 slot/0/left_enabled = true
 slot/0/left_type = 0
-slot/0/left_color = Color(0.949219, 0.274384, 0.479997, 1)
+slot/0/left_color = Color(0.945098, 0.788235, 0.823529, 0.929412)
 slot/0/left_icon = null
 slot/0/right_enabled = true
 slot/0/right_type = 0
-slot/0/right_color = Color(0.813103, 0.957031, 0.299072, 1)
+slot/0/right_color = Color(0.733333, 0.886275, 0.701961, 0.929412)
 slot/0/right_icon = null
 slot/0/draw_stylebox = true
 slot/1/left_enabled = false

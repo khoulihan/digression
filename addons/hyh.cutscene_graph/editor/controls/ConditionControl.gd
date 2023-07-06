@@ -47,7 +47,7 @@ func _on_set_condition_button_pressed():
 		_condition_window.initial_position = Window.WINDOW_INITIAL_POSITION_ABSOLUTE
 		_condition_window.position = get_tree().root.position + Vector2i(300, 300)
 		_condition_window.configure(condition_resource)
-		self.add_child(_condition_window)
+		self.get_tree().root.add_child(_condition_window)
 		_condition_window.cancelled.connect(
 			_edit_condition_window_cancelled
 		)
@@ -61,7 +61,7 @@ func _on_set_condition_button_pressed():
 func _edit_condition_window_cancelled():
 	Logger.debug("Edit condition cancelled")
 	_condition_window.hide()
-	self.remove_child(_condition_window)
+	self.get_tree().root.remove_child(_condition_window)
 	_condition_window.cancelled.disconnect(_edit_condition_window_cancelled)
 	_condition_window.saved.disconnect(_edit_condition_window_saved)
 	_condition_window.queue_free()

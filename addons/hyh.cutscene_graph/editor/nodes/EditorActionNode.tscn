@@ -1,19 +1,25 @@
-[gd_scene load_steps=2 format=3 uid="uid://cbist3rdatmmi"]
+[gd_scene load_steps=5 format=3 uid="uid://cbist3rdatmmi"]
 
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorActionNode.gd" id="1"]
+[ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/node_theme.tres" id="1_q2xpx"]
+[ext_resource type="StyleBox" uid="uid://bs3gx5vg1nqrp" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/action_node.tres" id="2_wbvcw"]
+[ext_resource type="StyleBox" uid="uid://cl5gqrfrvnxdr" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/action_node_selected.tres" id="3_4j8w5"]
 
 [node name="EditorActionNode" type="GraphNode"]
 offset_right = 416.0
 offset_bottom = 121.0
+theme = ExtResource("1_q2xpx")
+theme_override_styles/frame = ExtResource("2_wbvcw")
+theme_override_styles/selected_frame = ExtResource("3_4j8w5")
 title = "Action"
 show_close = true
 slot/0/left_enabled = true
 slot/0/left_type = 0
-slot/0/left_color = Color(0.94902, 0.27451, 0.478431, 1)
+slot/0/left_color = Color(0.945098, 0.788235, 0.823529, 0.929412)
 slot/0/left_icon = null
 slot/0/right_enabled = true
 slot/0/right_type = 0
-slot/0/right_color = Color(0.811765, 0.956863, 0.298039, 1)
+slot/0/right_color = Color(0.733333, 0.886275, 0.701961, 0.929412)
 slot/0/right_icon = null
 slot/0/draw_stylebox = true
 script = ExtResource("1")

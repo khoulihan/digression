@@ -1,10 +1,12 @@
-[gd_scene load_steps=2 format=3 uid="uid://c0pw3rdictm2v"]
+[gd_scene load_steps=3 format=3 uid="uid://c0pw3rdictm2v"]
 
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorGraphNodeBase.gd" id="1"]
+[ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/node_theme.tres" id="1_4dntx"]
 
 [node name="EditorGraphNodeBase" type="GraphNode"]
 offset_right = 304.0
 offset_bottom = 159.0
+theme = ExtResource("1_4dntx")
 title = "Node"
 show_close = true
 script = ExtResource("1")

@@ -1,68 +1,65 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=8 format=3 uid="uid://b27r2amkie2lx"]
 
 [ext_resource type="Texture2D" uid="uid://diha2tu2btpap" path="res://addons/hyh.cutscene_graph/icons/icon_graph_edit.svg" id="1"]
+[ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/node_theme.tres" id="1_alste"]
 [ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.cutscene_graph/icons/icon_remove.svg" id="2"]
+[ext_resource type="StyleBox" uid="uid://bie6450rn7l44" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node.tres" id="2_0600f"]
 [ext_resource type="Texture2D" uid="uid://biuwtdwnfsd6s" path="res://addons/hyh.cutscene_graph/icons/icon_folder.svg" id="3"]
+[ext_resource type="StyleBox" uid="uid://oujfit2l7l4s" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node_selected.tres" id="3_uso30"]
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorSubGraphNode.gd" id="4"]
 
 [node name="EditorSubGraphNode" type="GraphNode"]
 offset_right = 536.0
 offset_bottom = 74.0
+theme = ExtResource("1_alste")
+theme_override_styles/frame = ExtResource("2_0600f")
+theme_override_styles/selected_frame = ExtResource("3_uso30")
 title = "Sub-graph"
 show_close = true
 slot/0/left_enabled = true
 slot/0/left_type = 0
-slot/0/left_color = Color( 0.94902, 0.27451, 0.478431, 1 )
+slot/0/left_color = Color(0.945098, 0.788235, 0.823529, 0.929412)
+slot/0/left_icon = null
 slot/0/right_enabled = true
 slot/0/right_type = 0
-slot/0/right_color = Color( 0.811765, 0.956863, 0.298039, 1 )
-script = ExtResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+slot/0/right_color = Color(0.733333, 0.886275, 0.701961, 0.929412)
+slot/0/right_icon = null
+slot/0/draw_stylebox = true
+script = ExtResource("4")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-offset_left = 16.0
-offset_top = 24.0
-offset_right = 520.0
-offset_bottom = 68.0
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_top = 10
+layout_mode = 2
 theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 494.0
-offset_bottom = 34.0
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
 [node name="SubGraphPath" type="LineEdit" parent="MarginContainer/HBoxContainer"]
-offset_right = 370.0
-offset_bottom = 24.0
-mouse_default_cursor_shape = 0
+layout_mode = 2
 size_flags_horizontal = 3
+mouse_default_cursor_shape = 0
 editable = false
 
 [node name="OpenButton" type="Button" parent="MarginContainer/HBoxContainer"]
-offset_left = 380.0
-offset_right = 408.0
-offset_bottom = 24.0
-icon = ExtResource( 3 )
+layout_mode = 2
+icon = ExtResource("3")
+flat = true
 
 [node name="EditButton" type="Button" parent="MarginContainer/HBoxContainer"]
-offset_left = 418.0
-offset_right = 446.0
-offset_bottom = 24.0
-icon = ExtResource( 1 )
+layout_mode = 2
+icon = ExtResource("1")
+flat = true
 
 [node name="RemoveButton" type="Button" parent="MarginContainer/HBoxContainer"]
-offset_left = 456.0
-offset_right = 484.0
-offset_bottom = 24.0
-icon = ExtResource( 2 )
+layout_mode = 2
+icon = ExtResource("2")
+flat = true
+
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="gui_input" from="MarginContainer/HBoxContainer/SubGraphPath" to="." method="_on_SubGraphPath_gui_input"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/OpenButton" to="." method="_on_OpenButton_pressed"]

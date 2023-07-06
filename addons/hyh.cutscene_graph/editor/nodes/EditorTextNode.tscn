@@ -1,20 +1,29 @@
-[gd_scene load_steps=3 format=3 uid="uid://ddh2fuxyvnktp"]
+[gd_scene load_steps=6 format=3 uid="uid://ddh2fuxyvnktp"]
 
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorTextNode.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://c0pw3rdictm2v" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorGraphNodeBase.tscn" id="2"]
+[ext_resource type="StyleBox" uid="uid://ctwtf715dqq7e" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/dialogue_node.tres" id="2_47ux3"]
+[ext_resource type="StyleBox" uid="uid://boibm7ylgjwcg" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/dialogue_node_selected.tres" id="3_abjfv"]
+[ext_resource type="StyleBox" uid="uid://bcn0xekidb13s" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/position_overlay.tres" id="5_utegb"]
 
 [node name="EditorTextNode" instance=ExtResource("2")]
 offset_right = 545.0
 offset_bottom = 342.0
+theme_override_colors/title_color = Color(0, 0, 0, 1)
+theme_override_colors/close_color = Color(0, 0, 0, 1)
+theme_override_colors/resizer_color = Color(0, 0, 0, 1)
+theme_override_styles/frame = ExtResource("2_47ux3")
+theme_override_styles/selected_frame = ExtResource("3_abjfv")
+theme_override_styles/position = ExtResource("5_utegb")
 title = "Dialogue"
 resizable = true
 slot/0/left_enabled = true
 slot/0/left_type = 0
-slot/0/left_color = Color(0.94902, 0.27451, 0.478431, 1)
+slot/0/left_color = Color(0.945098, 0.788235, 0.823529, 0.929412)
 slot/0/left_icon = null
 slot/0/right_enabled = true
 slot/0/right_type = 0
-slot/0/right_color = Color(0.811765, 0.956863, 0.298039, 1)
+slot/0/right_color = Color(0.733333, 0.886275, 0.701961, 0.929412)
 slot/0/right_icon = null
 slot/0/draw_stylebox = true
 script = ExtResource("1")

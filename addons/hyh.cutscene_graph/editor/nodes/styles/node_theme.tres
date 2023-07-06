@@ -1,0 +1,77 @@
+[gd_resource type="Theme" load_steps=13 format=3 uid="uid://1cbvg04l0616"]
+
+[ext_resource type="StyleBox" uid="uid://cbblvk1p1p0ya" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/default_node.tres" id="1_hf5xb"]
+[ext_resource type="StyleBox" uid="uid://bcn0xekidb13s" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/position_overlay.tres" id="2_ivvps"]
+[ext_resource type="StyleBox" uid="uid://by6i3vljisybj" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/selected_node.tres" id="3_8fqg3"]
+[ext_resource type="StyleBox" uid="uid://bbs8mcq8bqvs7" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/separator.tres" id="4_m2sej"]
+[ext_resource type="StyleBox" uid="uid://veioyemgo5ud" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_focused_style.tres" id="5_4e4bm"]
+[ext_resource type="StyleBox" uid="uid://dk2b3up38f6a7" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_style.tres" id="6_0o5wo"]
+[ext_resource type="StyleBox" uid="uid://0ig5ym882ulr" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_style_hover.tres" id="7_m6im3"]
+[ext_resource type="StyleBox" uid="uid://c2xkw3yqjtaqg" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_style_pressed.tres" id="8_q58wk"]
+[ext_resource type="StyleBox" uid="uid://cyop04d3vvwwe" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_style_menu_panel.tres" id="9_mbt7k"]
+[ext_resource type="StyleBox" uid="uid://dnm2yvf0aukig" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_style_read_only.tres" id="9_yprw3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aphw5"]
+content_margin_left = 5.0
+content_margin_top = 4.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.211765, 0.211765, 0.211765, 0.882353)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+shadow_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a0x8g"]
+bg_color = Color(0.211765, 0.211765, 0.211765, 0)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[resource]
+Button/colors/font_color = Color(0.137255, 0.137255, 0.137255, 1)
+Button/colors/icon_disabled_color = Color(0.32549, 0.32549, 0.32549, 0.643137)
+Button/colors/icon_focus_color = Color(0.141176, 0.141176, 0.141176, 1)
+Button/colors/icon_hover_color = Color(0.141176, 0.141176, 0.141176, 1)
+Button/colors/icon_hover_pressed_color = Color(1, 1, 1, 1)
+Button/colors/icon_normal_color = Color(0.141176, 0.141176, 0.141176, 0.784314)
+Button/colors/icon_pressed_color = Color(0.137255, 0.137255, 0.137255, 1)
+Button/styles/focus = ExtResource("5_4e4bm")
+Button/styles/hover = ExtResource("7_m6im3")
+Button/styles/normal = ExtResource("6_0o5wo")
+Button/styles/pressed = ExtResource("8_q58wk")
+GraphNode/colors/close_color = Color(0.141176, 0.141176, 0.141176, 1)
+GraphNode/colors/resizer_color = Color(0.141176, 0.141176, 0.141176, 1)
+GraphNode/colors/title_color = Color(0.141176, 0.141176, 0.141176, 1)
+GraphNode/styles/frame = ExtResource("1_hf5xb")
+GraphNode/styles/position = ExtResource("2_ivvps")
+GraphNode/styles/selected_frame = ExtResource("3_8fqg3")
+HSeparator/styles/separator = ExtResource("4_m2sej")
+Label/colors/font_color = Color(0.141176, 0.141176, 0.141176, 1)
+LineEdit/colors/caret_color = Color(0.137255, 0.137255, 0.137255, 1)
+LineEdit/colors/font_color = Color(0.141176, 0.141176, 0.141176, 1)
+LineEdit/colors/font_uneditable_color = Color(0.180392, 0.180392, 0.180392, 0.501961)
+LineEdit/styles/focus = ExtResource("5_4e4bm")
+LineEdit/styles/normal = ExtResource("6_0o5wo")
+LineEdit/styles/read_only = ExtResource("9_yprw3")
+OptionButton/colors/font_color = Color(0.152941, 0.152941, 0.152941, 1)
+OptionButton/colors/font_focus_color = Color(0.141176, 0.141176, 0.141176, 1)
+OptionButton/colors/font_hover_color = Color(0.141176, 0.141176, 0.141176, 1)
+OptionButton/colors/font_hover_pressed_color = Color(0.141176, 0.141176, 0.141176, 1)
+OptionButton/colors/font_pressed_color = Color(0.141176, 0.141176, 0.141176, 1)
+OptionButton/styles/focus = ExtResource("5_4e4bm")
+OptionButton/styles/hover = ExtResource("7_m6im3")
+OptionButton/styles/normal = ExtResource("6_0o5wo")
+OptionButton/styles/pressed = ExtResource("8_q58wk")
+PopupMenu/colors/font_color = Color(0.152941, 0.152941, 0.152941, 1)
+PopupMenu/colors/font_hover_color = Color(0.141176, 0.141176, 0.141176, 1)
+PopupMenu/styles/hover = ExtResource("7_m6im3")
+PopupMenu/styles/panel = ExtResource("9_mbt7k")
+RichTextLabel/styles/normal = SubResource("StyleBoxFlat_aphw5")
+TextEdit/colors/caret_color = Color(0.137255, 0.137255, 0.137255, 1)
+TextEdit/colors/font_color = Color(0.141176, 0.141176, 0.141176, 1)
+TextEdit/styles/focus = ExtResource("5_4e4bm")
+TextEdit/styles/normal = ExtResource("6_0o5wo")
+TextEdit/styles/read_only = SubResource("StyleBoxFlat_a0x8g")
