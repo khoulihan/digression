@@ -14,6 +14,8 @@ const VariableSetNode = preload("../resources/graph/VariableSetNode.gd")
 const ActionNode = preload("../resources/graph/ActionNode.gd")
 const SubGraph = preload("../resources/graph/SubGraph.gd")
 const RandomNode = preload("../resources/graph/RandomNode.gd")
+const AnchorNode = preload("../resources/graph/AnchorNode.gd")
+const JumpNode = preload("../resources/graph/JumpNode.gd")
 
 # Condition resource types
 const BooleanCondition = preload("../resources/graph/branches/conditions/BooleanCondition.gd")
@@ -53,7 +55,7 @@ class ProceedSignal:
 
 ## A node that can store variables for the scope of the entire game
 @export var global_store: NodePath
-## A node that can store variables fo rthe scope of the current level/scene
+## A node that can store variables for the scope of the current level/scene
 @export var scene_store: NodePath
 var _local_store : Dictionary
 var _global_store : Node
@@ -170,6 +172,10 @@ func process_cutscene(cutscene):
 			_process_subgraph_node()
 		elif _current_node is RandomNode:
 			_process_random_node()
+		elif _current_node is JumpNode:
+			_process_passthrough_node()
+		elif _current_node is AnchorNode:
+			_process_passthrough_node()
 		
 		if _current_node == null:
 			if len(_graph_stack) > 0:
@@ -212,6 +218,11 @@ func _emit_dialogue_signal(
 		character_variant,
 		process
 	)
+
+
+## Process any type of node that just involves moving directly to the next node.
+func _process_passthrough_node():
+	_current_node = _get_node_by_id(_current_node.next)
 
 
 func _process_dialogue_node():
