@@ -30,7 +30,8 @@ size_flags_vertical = 3
 [node name="GraphEdit" type="GraphEdit" parent="MarginContainer"]
 layout_mode = 2
 right_disconnects = true
-connection_lines_thickness = 1.0
+connection_lines_curvature = 1.0
+zoom_max = 1.0
 show_zoom_label = true
 arrange_nodes_button_hidden = true
 

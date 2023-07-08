@@ -6,6 +6,8 @@ var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
 
 const GraphNodeBase = preload("../../resources/graph/GraphNodeBase.gd")
 
+const CONNECTOR_COLOUR = Color("#f2f2f2e1")
+
 signal removing_slot(slot)
 signal popup_request(p_position)
 signal modified()

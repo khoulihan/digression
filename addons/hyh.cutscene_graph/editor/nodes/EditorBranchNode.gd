@@ -91,7 +91,7 @@ func _create_branch():
 	new_value_line.set_type(node_resource.variable_type)
 	new_value_line.connect("remove_requested", Callable(self, "_value_remove_requested").bind(get_child_count() - 1))
 	new_value_line.connect("modified", Callable(self, "_value_modified").bind(get_child_count() - 1))
-	set_slot(get_child_count() - 1, false, 0, Color("#bbe2b3ed"), true, 0, Color("#bbe2b3ed"))
+	set_slot(get_child_count() - 1, false, 0, CONNECTOR_COLOUR, true, 0, CONNECTOR_COLOUR)
 	return new_value_line
 
 
