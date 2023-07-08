@@ -9,4 +9,3 @@
 !.gitattributes
 # Godot generated files
 /.import/*
-*.import
