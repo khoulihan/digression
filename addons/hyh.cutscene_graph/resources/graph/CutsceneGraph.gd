@@ -4,6 +4,12 @@ extends Resource
 
 class_name CutsceneGraph
 
+
+const AnchorNode = preload("AnchorNode.gd")
+
+const NEW_ANCHOR_PREFIX = "destination_"
+
+
 ## An identifier for this cutscene to represent it in code.
 @export var name: String
 
@@ -66,7 +72,36 @@ func get_next_id():
 		if !(id in existing):
 			return id
 		id += 1
-		
+
+
+## Get a count + 1 of the teleport destination nodes in the graph
+## for automatic naming purposes.
+func get_next_anchor_number():
+	var number = 1
+	for n in nodes.values():
+		if n is AnchorNode:
+			if n.name.begins_with(NEW_ANCHOR_PREFIX):
+				var node_number = n.name.substr(12)
+				if node_number.is_valid_int():
+					var converted = node_number.to_int()
+					if converted >= number:
+						number = converted
+			number += 1
+	return number
+
+
+## Build maps of the anchor nodes
+## name -> id and id -> name
+func get_anchor_maps():
+	var by_name = {}
+	var by_id = {}
+	
+	for n in nodes.values():
+		if n is AnchorNode:
+			by_name[n.name] = n.id
+			by_id[n.id] = n.name
+	
+	return [by_name, by_id]
 
 
 func _init():

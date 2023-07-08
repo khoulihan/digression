@@ -1,0 +1,49 @@
+[gd_scene load_steps=5 format=3 uid="uid://bsdivdkongt4j"]
+
+[ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/node_theme.tres" id="1_2eskj"]
+[ext_resource type="StyleBox" uid="uid://bie6450rn7l44" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node.tres" id="2_usj6s"]
+[ext_resource type="StyleBox" uid="uid://oujfit2l7l4s" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node_selected.tres" id="3_0q74d"]
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorAnchorNode.gd" id="4_wb78j"]
+
+[node name="EditorAnchorNode" type="GraphNode"]
+offset_right = 384.0
+offset_bottom = 74.0
+theme = ExtResource("1_2eskj")
+theme_override_styles/frame = ExtResource("2_usj6s")
+theme_override_styles/selected_frame = ExtResource("3_0q74d")
+title = "Anchor"
+show_close = true
+slot/0/left_enabled = true
+slot/0/left_type = 1
+slot/0/left_color = Color(0.968627, 0.858824, 0.976471, 0.196078)
+slot/0/left_icon = null
+slot/0/right_enabled = true
+slot/0/right_type = 0
+slot/0/right_color = Color(0.733333, 0.886275, 0.701961, 0.929412)
+slot/0/right_icon = null
+slot/0/draw_stylebox = true
+script = ExtResource("4_wb78j")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="MarginContainer/GridContainer"]
+layout_mode = 2
+text = "Name:"
+
+[node name="NameLineEdit" type="LineEdit" parent="MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+flat = true
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="text_changed" from="MarginContainer/GridContainer/NameLineEdit" to="." method="_on_name_line_edit_text_changed"]
