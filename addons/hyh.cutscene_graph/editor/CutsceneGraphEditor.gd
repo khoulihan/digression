@@ -16,6 +16,7 @@ const RandomNode = preload("../resources/graph/RandomNode.gd")
 const CommentNode = preload("../resources/graph/CommentNode.gd")
 const JumpNode = preload("../resources/graph/JumpNode.gd")
 const AnchorNode = preload("../resources/graph/AnchorNode.gd")
+const RoutingNode = preload("../resources/graph/RoutingNode.gd")
 
 const EditorTextNodeClass = preload("./nodes/EditorTextNode.gd")
 const EditorBranchNodeClass = preload("./nodes/EditorBranchNode.gd")
@@ -28,6 +29,7 @@ const EditorRandomNodeClass = preload("./nodes/EditorRandomNode.gd")
 const EditorCommentNodeClass = preload("./nodes/EditorCommentNode.gd")
 const EditorJumpNodeClass = preload("./nodes/EditorJumpNode.gd")
 const EditorAnchorNodeClass = preload("./nodes/EditorAnchorNode.gd")
+const EditorRoutingNodeClass = preload("./nodes/EditorRoutingNode.gd")
 
 const EditorTextNode = preload("./nodes/EditorTextNode.tscn")
 const EditorBranchNode = preload("./nodes/EditorBranchNode.tscn")
@@ -40,6 +42,7 @@ const EditorRandomNode = preload("./nodes/EditorRandomNode.tscn")
 const EditorCommentNode = preload("./nodes/EditorCommentNode.tscn")
 const EditorJumpNode = preload("./nodes/EditorJumpNode.tscn")
 const EditorAnchorNode = preload("./nodes/EditorAnchorNode.tscn")
+const EditorRoutingNode = preload("./nodes/EditorRoutingNode.tscn")
 
 
 class OpenGraph:
@@ -62,11 +65,12 @@ enum GraphPopupMenuItems {
 	SEPARATOR_2,
 	ADD_JUMP_NODE,
 	ADD_ANCHOR_NODE,
+	ADD_ROUTING_NODE,
 }
 
 enum GraphPopupMenuBounds {
 	LOWER_BOUND = GraphPopupMenuItems.ADD_TEXT_NODE,
-	UPPER_BOUND = GraphPopupMenuItems.ADD_ANCHOR_NODE + 1
+	UPPER_BOUND = GraphPopupMenuItems.ADD_ROUTING_NODE
 }
 
 enum NodePopupMenuItems {
@@ -338,7 +342,10 @@ func _create_node(
 			new_editor_node = EditorAnchorNode.instantiate()
 			new_graph_node = AnchorNode.new()
 			new_graph_node.name = _generate_anchor_name()
-				
+		GraphPopupMenuItems.ADD_ROUTING_NODE:
+			new_editor_node = EditorRoutingNode.instantiate()
+			new_graph_node = RoutingNode.new()
+		
 	new_graph_node.id = _edited.graph.get_next_id()
 	for property in initial_state:
 		if property in new_graph_node and property not in ["offset"]:
@@ -559,6 +566,8 @@ func _draw_edited_graph(retain_selection=false):
 				#editor_node.set_destination(node.next)
 			elif node is AnchorNode:
 				editor_node = EditorAnchorNode.instantiate()
+			elif node is RoutingNode:
+				editor_node = EditorRoutingNode.instantiate()
 			_graph_edit.add_child(editor_node)
 			editor_node.configure_for_node(_edited.graph, node)
 			if node == _edited.graph.root_node:
@@ -865,7 +874,7 @@ func _set_all_graph_popup_disabled(state):
 	# TODO: Not great to use the current first and last elements here.
 	for option in range(
 		GraphPopupMenuBounds.LOWER_BOUND,
-		GraphPopupMenuBounds.UPPER_BOUND
+		GraphPopupMenuBounds.UPPER_BOUND + 1
 	):
 		_graph_popup.set_item_disabled(option, state)
 
@@ -995,6 +1004,8 @@ func _node_type_for_node(node):
 		return GraphPopupMenuItems.ADD_JUMP_NODE
 	elif node is EditorAnchorNodeClass:
 		return GraphPopupMenuItems.ADD_ANCHOR_NODE
+	elif node is EditorRoutingNodeClass:
+		return GraphPopupMenuItems.ADD_ROUTING_NODE
 	return GraphPopupMenuItems.ADD_TEXT_NODE
 
 

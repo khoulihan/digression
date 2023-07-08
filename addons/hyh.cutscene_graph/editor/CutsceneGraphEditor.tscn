@@ -36,9 +36,9 @@ show_zoom_label = true
 arrange_nodes_button_hidden = true
 
 [node name="GraphContextMenu" type="PopupMenu" parent="."]
-size = Vector2i(222, 358)
+size = Vector2i(222, 391)
 theme_override_constants/v_separation = 10
-item_count = 12
+item_count = 13
 item_0/text = "Add Text Node"
 item_0/id = 0
 item_1/text = "Add Branch Node"
@@ -65,6 +65,8 @@ item_10/text = "Add Jump To Node"
 item_10/id = 10
 item_11/text = "Add Anchor Node"
 item_11/id = 11
+item_12/text = "Add Routing Node"
+item_12/id = 12
 
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
 

@@ -16,6 +16,7 @@ const SubGraph = preload("../resources/graph/SubGraph.gd")
 const RandomNode = preload("../resources/graph/RandomNode.gd")
 const AnchorNode = preload("../resources/graph/AnchorNode.gd")
 const JumpNode = preload("../resources/graph/JumpNode.gd")
+const RoutingNode = preload("../resources/graph/RoutingNode.gd")
 
 # Condition resource types
 const BooleanCondition = preload("../resources/graph/branches/conditions/BooleanCondition.gd")
@@ -175,6 +176,8 @@ func process_cutscene(cutscene):
 		elif _current_node is JumpNode:
 			_process_passthrough_node()
 		elif _current_node is AnchorNode:
+			_process_passthrough_node()
+		elif _current_node is RoutingNode:
 			_process_passthrough_node()
 		
 		if _current_node == null:
