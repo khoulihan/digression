@@ -17,6 +17,7 @@ const RandomNode = preload("../resources/graph/RandomNode.gd")
 const AnchorNode = preload("../resources/graph/AnchorNode.gd")
 const JumpNode = preload("../resources/graph/JumpNode.gd")
 const RoutingNode = preload("../resources/graph/RoutingNode.gd")
+const RepeatNode = preload("../resources/graph/RepeatNode.gd")
 
 # Condition resource types
 const BooleanCondition = preload("../resources/graph/branches/conditions/BooleanCondition.gd")
@@ -46,6 +47,7 @@ signal choice_display_requested(choices, process)
 class GraphState:
 	var graph
 	var current_node
+	var last_choice_node_id
 
 
 class ProceedSignal:
@@ -66,6 +68,7 @@ var _graph_stack
 var _current_graph
 var _current_node
 var _split_dialogue
+var _last_choice_node_id
 
 
 func register_global_store(store):
@@ -179,11 +182,14 @@ func process_cutscene(cutscene):
 			_process_passthrough_node()
 		elif _current_node is RoutingNode:
 			_process_passthrough_node()
+		elif _current_node is RepeatNode:
+			_process_repeat_node()
 		
 		if _current_node == null:
 			if len(_graph_stack) > 0:
 				var graph_state = _graph_stack.pop_back()
 				_current_graph = graph_state.graph
+				_last_choice_node_id = graph_state.last_choice_node_id
 				_current_node = _get_node_by_id(graph_state.current_node.next)
 				Logger.info("Resuming cutscene \"%s\"." % _current_graph.name)
 				emit_signal(
@@ -221,6 +227,13 @@ func _emit_dialogue_signal(
 		character_variant,
 		process
 	)
+
+
+func _process_repeat_node():
+	if _last_choice_node_id == null:
+		_current_node = null
+		return
+	_current_node = _get_node_by_id(_last_choice_node_id)
 
 
 ## Process any type of node that just involves moving directly to the next node.
@@ -303,6 +316,8 @@ func _emit_choices_signal(
 
 func _process_choice_node():
 	Logger.debug("Processing choice node \"%s\"." % _current_node)
+	
+	_last_choice_node_id = _current_node.id
 	
 	var choices = {}
 	for i in range(len(_current_node.choices)):
@@ -396,6 +411,7 @@ func _process_subgraph_node():
 	var graph_state = GraphState.new()
 	graph_state.graph = _current_graph
 	graph_state.current_node = _current_node
+	graph_state.last_choice_node_id = _last_choice_node_id
 	_graph_stack.push_back(graph_state)
 	_current_graph = _current_node.sub_graph
 	_current_node = _current_graph.root_node

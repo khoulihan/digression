@@ -17,6 +17,7 @@ const CommentNode = preload("../resources/graph/CommentNode.gd")
 const JumpNode = preload("../resources/graph/JumpNode.gd")
 const AnchorNode = preload("../resources/graph/AnchorNode.gd")
 const RoutingNode = preload("../resources/graph/RoutingNode.gd")
+const RepeatNode = preload("../resources/graph/RepeatNode.gd")
 
 const EditorTextNodeClass = preload("./nodes/EditorTextNode.gd")
 const EditorBranchNodeClass = preload("./nodes/EditorBranchNode.gd")
@@ -30,6 +31,7 @@ const EditorCommentNodeClass = preload("./nodes/EditorCommentNode.gd")
 const EditorJumpNodeClass = preload("./nodes/EditorJumpNode.gd")
 const EditorAnchorNodeClass = preload("./nodes/EditorAnchorNode.gd")
 const EditorRoutingNodeClass = preload("./nodes/EditorRoutingNode.gd")
+const EditorRepeatNodeClass = preload("./nodes/EditorRepeatNode.gd")
 
 const EditorTextNode = preload("./nodes/EditorTextNode.tscn")
 const EditorBranchNode = preload("./nodes/EditorBranchNode.tscn")
@@ -43,6 +45,7 @@ const EditorCommentNode = preload("./nodes/EditorCommentNode.tscn")
 const EditorJumpNode = preload("./nodes/EditorJumpNode.tscn")
 const EditorAnchorNode = preload("./nodes/EditorAnchorNode.tscn")
 const EditorRoutingNode = preload("./nodes/EditorRoutingNode.tscn")
+const EditorRepeatNode = preload("./nodes/EditorRepeatNode.tscn")
 
 
 class OpenGraph:
@@ -66,11 +69,12 @@ enum GraphPopupMenuItems {
 	ADD_JUMP_NODE,
 	ADD_ANCHOR_NODE,
 	ADD_ROUTING_NODE,
+	ADD_REPEAT_NODE,
 }
 
 enum GraphPopupMenuBounds {
 	LOWER_BOUND = GraphPopupMenuItems.ADD_TEXT_NODE,
-	UPPER_BOUND = GraphPopupMenuItems.ADD_ROUTING_NODE
+	UPPER_BOUND = GraphPopupMenuItems.ADD_REPEAT_NODE
 }
 
 enum NodePopupMenuItems {
@@ -274,6 +278,10 @@ func _graph_gui_input(event: InputEvent):
 
 func _node_popup_request(p_position, node_name):
 	_node_for_popup = node_name
+	var node = _graph_edit.get_node(NodePath(node_name))
+	# The repeat node would be a ridiculous place to start, so disallow setting
+	# one as the root.
+	_node_popup.set_item_disabled(0, node is EditorRepeatNodeClass)
 	_node_popup.position = p_position
 	_node_popup.popup()
 
@@ -345,6 +353,9 @@ func _create_node(
 		GraphPopupMenuItems.ADD_ROUTING_NODE:
 			new_editor_node = EditorRoutingNode.instantiate()
 			new_graph_node = RoutingNode.new()
+		GraphPopupMenuItems.ADD_REPEAT_NODE:
+			new_editor_node = EditorRepeatNode.instantiate()
+			new_graph_node = RepeatNode.new()
 		
 	new_graph_node.id = _edited.graph.get_next_id()
 	for property in initial_state:
@@ -568,6 +579,8 @@ func _draw_edited_graph(retain_selection=false):
 				editor_node = EditorAnchorNode.instantiate()
 			elif node is RoutingNode:
 				editor_node = EditorRoutingNode.instantiate()
+			elif node is RepeatNode:
+				editor_node = EditorRepeatNode.instantiate()
 			_graph_edit.add_child(editor_node)
 			editor_node.configure_for_node(_edited.graph, node)
 			if node == _edited.graph.root_node:
@@ -1006,6 +1019,8 @@ func _node_type_for_node(node):
 		return GraphPopupMenuItems.ADD_ANCHOR_NODE
 	elif node is EditorRoutingNodeClass:
 		return GraphPopupMenuItems.ADD_ROUTING_NODE
+	elif node is EditorRepeatNodeClass:
+		return GraphPopupMenuItems.ADD_REPEAT_NODE
 	return GraphPopupMenuItems.ADD_TEXT_NODE
 
 
