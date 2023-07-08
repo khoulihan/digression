@@ -64,6 +64,11 @@ enum GraphPopupMenuItems {
 	ADD_ANCHOR_NODE,
 }
 
+enum GraphPopupMenuBounds {
+	LOWER_BOUND = GraphPopupMenuItems.ADD_TEXT_NODE,
+	UPPER_BOUND = GraphPopupMenuItems.ADD_ANCHOR_NODE + 1
+}
+
 enum NodePopupMenuItems {
 	SET_ROOT
 }
@@ -859,8 +864,8 @@ func _set_graph_popup_option_states_for_connected_creation():
 func _set_all_graph_popup_disabled(state):
 	# TODO: Not great to use the current first and last elements here.
 	for option in range(
-		GraphPopupMenuItems.ADD_TEXT_NODE,
-		GraphPopupMenuItems.ADD_ANCHOR_NODE
+		GraphPopupMenuBounds.LOWER_BOUND,
+		GraphPopupMenuBounds.UPPER_BOUND
 	):
 		_graph_popup.set_item_disabled(option, state)
 
