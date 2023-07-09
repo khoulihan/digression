@@ -3,6 +3,7 @@ extends VBoxContainer
 
 ## Emitted when saving the graph has been requested.
 signal save_requested(object, path)
+signal expand_button_toggled(button_pressed)
 
 # Utility classes.
 const Logging = preload("../utility/Logging.gd")
@@ -1280,3 +1281,7 @@ func _on_graph_edit_duplicate_nodes_request():
 	_create_duplicate_nodes(
 		_get_selected_nodes()
 	)
+
+
+func _on_expand_button_toggled(button_pressed):
+	expand_button_toggled.emit(button_pressed)

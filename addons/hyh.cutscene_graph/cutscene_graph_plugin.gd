@@ -10,6 +10,7 @@ const GraphTypeEditDialogClass = preload("editor/graph_types_edit/GraphTypeEditD
 
 var editor
 var editor_button
+var expand_button
 var menu
 
 var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
@@ -52,8 +53,21 @@ func _enter_tree():
 
 func _create_editor():
 	editor = preload("editor/CutsceneGraphEditor.tscn").instantiate()
-	editor.connect("save_requested", Callable(self, "_save_requested"))
+	editor.save_requested.connect(
+		_save_requested
+	)
+	editor.expand_button_toggled.connect(
+		_editor_expand_button_toggled
+	)
 	editor_button = add_control_to_bottom_panel(editor, _get_plugin_name())
+	var button_parent = editor_button.get_parent().get_parent()
+	# Caution: this method of obtaining the expand button could break at any time
+	expand_button = button_parent.get_child(button_parent.get_child_count() - 1)
+
+
+func _editor_expand_button_toggled(button_pressed):
+	get_editor_interface().distraction_free_mode = button_pressed
+	expand_button.set_pressed(button_pressed)
 
 
 func _create_menu():
@@ -134,6 +148,12 @@ func _exit_tree():
 	#remove_custom_type("CharacterVariant")
 	remove_custom_type("CutsceneController")
 	remove_custom_type("Cutscene")
+	editor.expand_button_toggled.disconnect(
+		_editor_expand_button_toggled
+	)
+	editor.save_requested.disconnect(
+		_save_requested
+	)
 	remove_control_from_bottom_panel(editor)
 	menu.id_pressed.disconnect(_tool_menu_item_selected)
 	remove_tool_menu_item("Cutscene Graph Editor")
