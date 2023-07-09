@@ -1,11 +1,14 @@
 @tool
 extends VBoxContainer
 
+## Emitted when saving the graph has been requested.
 signal save_requested(object, path)
 
+# Utility classes.
 const Logging = preload("../utility/Logging.gd")
 const TranslationKey = preload("../utility/TranslationKey.gd")
 
+# Resource graph nodes.
 const DialogueTextNode = preload("../resources/graph/DialogueTextNode.gd")
 const BranchNode = preload("../resources/graph/BranchNode.gd")
 const DialogueChoiceNode = preload("../resources/graph/DialogueChoiceNode.gd")
@@ -19,6 +22,7 @@ const AnchorNode = preload("../resources/graph/AnchorNode.gd")
 const RoutingNode = preload("../resources/graph/RoutingNode.gd")
 const RepeatNode = preload("../resources/graph/RepeatNode.gd")
 
+# Editor node classes.
 const EditorTextNodeClass = preload("./nodes/EditorTextNode.gd")
 const EditorBranchNodeClass = preload("./nodes/EditorBranchNode.gd")
 const EditorChoiceNodeClass = preload("./nodes/EditorChoiceNode.gd")
@@ -33,6 +37,7 @@ const EditorAnchorNodeClass = preload("./nodes/EditorAnchorNode.gd")
 const EditorRoutingNodeClass = preload("./nodes/EditorRoutingNode.gd")
 const EditorRepeatNodeClass = preload("./nodes/EditorRepeatNode.gd")
 
+# Editor node scenes.
 const EditorTextNode = preload("./nodes/EditorTextNode.tscn")
 const EditorBranchNode = preload("./nodes/EditorBranchNode.tscn")
 const EditorChoiceNode = preload("./nodes/EditorChoiceNode.tscn")
@@ -54,6 +59,7 @@ class OpenGraph:
 	var dirty
 	var zoom
 	var scroll_offset
+
 
 enum GraphPopupMenuItems {
 	ADD_TEXT_NODE,
@@ -115,6 +121,7 @@ var _open_character_dialog
 @onready var _confirmation_dialog = $ConfirmationDialog
 @onready var _error_dialog = $ErrorDialog
 
+# State variables for carrying out user actions.
 var _last_popup_position
 var _pending_connection_from
 var _pending_connection_from_port
@@ -124,6 +131,8 @@ var _node_to_remove
 var _node_for_popup
 var _sub_graph_editor_node_for_assignment
 
+# Anchor maps
+# TODO: One of these is not actually required.
 var _anchors_by_name = {}
 var _anchor_names_by_id = {}
 
@@ -133,27 +142,40 @@ var _scroll_on_copy
 
 var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
 
+
 func _init():
 	_open_graphs = Array()
 
 
 func _ready():
 	# Set up editor
-	_graph_edit.connect("popup_request", Callable(self, "_graph_popup_requested"))
+	_graph_edit.popup_request.connect(
+		_graph_popup_requested
+	)
 	
 	# Refresh the graph when we receive input focus, in case the resource
 	# has been changed externally
-	_graph_edit.connect("focus_entered", Callable(self, "_edited_resource_changed"))
+	_graph_edit.focus_entered.connect(
+		_edited_resource_changed
+	)
 	
 	_graph_edit.gui_input.connect(_graph_gui_input)
 
 	# Context menu
-	_graph_popup.connect("index_pressed", Callable(self, "_graph_popup_index_pressed"))
-	_graph_popup.popup_hide.connect(_graph_popup_hidden)
-	_node_popup.connect("index_pressed", Callable(self, "_node_popup_index_pressed"))
+	_graph_popup.index_pressed.connect(
+		_graph_popup_index_pressed
+	)
+	_graph_popup.popup_hide.connect(
+		_graph_popup_hidden
+	)
+	_node_popup.index_pressed.connect(
+		_node_popup_index_pressed
+	)
 
 	# Confirmation dialog
-	_confirmation_dialog.connect("confirmed", Callable(self, "_action_confirmed"))
+	_confirmation_dialog.confirmed.connect(
+		_action_confirmed
+	)
 
 	# Set up save dialog
 	_save_dialog = EditorFileDialog.new()
@@ -161,7 +183,9 @@ func _ready():
 	_save_dialog.access = EditorFileDialog.ACCESS_RESOURCES
 	_save_dialog.mode = EditorFileDialog.FILE_MODE_SAVE_FILE
 	self.add_child(_save_dialog)
-	_save_dialog.connect("file_selected", Callable(self, "_file_selected"))
+	_save_dialog.file_selected.connect(
+		_file_selected
+	)
 
 	# Set up Open dialogs
 	_open_graph_dialog = EditorFileDialog.new()
@@ -169,22 +193,28 @@ func _ready():
 	_open_graph_dialog.access = EditorFileDialog.ACCESS_RESOURCES
 	_open_graph_dialog.mode = EditorFileDialog.FILE_MODE_OPEN_FILE
 	self.add_child(_open_graph_dialog)
-	_open_graph_dialog.connect("file_selected", Callable(self, "_graph_file_selected_for_opening"))
+	_open_graph_dialog.file_selected.connect(
+		_graph_file_selected_for_opening
+	)
 
 	_open_sub_graph_dialog = EditorFileDialog.new()
 	_open_sub_graph_dialog.add_filter("*.tres")
 	_open_sub_graph_dialog.access = EditorFileDialog.ACCESS_RESOURCES
 	_open_sub_graph_dialog.mode = EditorFileDialog.FILE_MODE_OPEN_FILE
 	self.add_child(_open_sub_graph_dialog)
-	_open_sub_graph_dialog.connect("file_selected", Callable(self, "_sub_graph_file_selected_for_opening"))
+	_open_sub_graph_dialog.file_selected.connect(
+		_sub_graph_file_selected_for_opening
+	)
 
 	# TODO: I think this is not required any more...
-	_open_character_dialog = EditorFileDialog.new()
-	_open_character_dialog.add_filter("*.tres")
-	_open_character_dialog.access = EditorFileDialog.ACCESS_RESOURCES
-	_open_character_dialog.mode = EditorFileDialog.FILE_MODE_OPEN_FILE
-	self.add_child(_open_character_dialog)
-	_open_character_dialog.connect("file_selected", Callable(self, "_character_file_selected_for_opening"))
+	#_open_character_dialog = EditorFileDialog.new()
+	#_open_character_dialog.add_filter("*.tres")
+	#_open_character_dialog.access = EditorFileDialog.ACCESS_RESOURCES
+	#_open_character_dialog.mode = EditorFileDialog.FILE_MODE_OPEN_FILE
+	#self.add_child(_open_character_dialog)
+	#_open_character_dialog.file_selected.connect(
+	#	_character_file_selected_for_opening
+	#)
 
 
 func edit_graph(object, path):
@@ -205,9 +235,13 @@ func edit_graph(object, path):
 		edited.scroll_offset = Vector2(0, 0)
 		_open_graphs.append(edited)
 	if _edited != null:
-		_edited.graph.disconnect("changed", Callable(self, "_edited_resource_changed"))
+		_edited.graph.changed.disconnect(
+			_edited_resource_changed
+		)
 	_edited = edited
-	_edited.graph.connect("changed", Callable(self, "_edited_resource_changed"))
+	_edited.graph.changed.connect(
+		_edited_resource_changed
+	)
 	_refresh_anchor_maps()
 	_draw_edited_graph()
 
@@ -261,7 +295,6 @@ func _configure_sub_graph_node(editor_node, res):
 func _graph_popup_requested(p_position):
 	if _edited:
 		_node_creation_mode = NodeCreationMode.NORMAL
-		var global_rect = get_global_rect()
 		_last_popup_position = _convert_popup_position(p_position)
 		_graph_popup.position = get_screen_transform() * p_position
 		_set_graph_popup_option_states()
@@ -296,7 +329,8 @@ func _graph_popup_index_pressed(index):
 	perform_save()
 	_refresh_anchor_maps()
 	_populate_anchor_destinations()
-	if editor_node is EditorAnchorNodeClass and _node_creation_mode == NodeCreationMode.CONNECTED:
+	var connected_creation = _node_creation_mode == NodeCreationMode.CONNECTED
+	if editor_node is EditorAnchorNodeClass and connected_creation:
 		var from_node = _graph_edit.get_node(
 			NodePath(_pending_connection_from)
 		)
@@ -311,6 +345,39 @@ func _create_node(
 	editor_position,
 	initial_state = {}
 ):
+	var new_editor_node
+	var new_graph_node
+	
+	var node_objects = _create_node_objects(node_type)
+	new_editor_node = node_objects[0]
+	new_graph_node = node_objects[1]
+		
+	_configure_graph_node_state(
+		new_graph_node,
+		initial_state,
+		editor_position,
+	)
+	
+	_graph_edit.add_child(new_editor_node)
+	
+	_configure_editor_node_state(
+		new_editor_node,
+		new_graph_node,
+	)
+	
+	_edited.graph.nodes[new_graph_node.id] = new_graph_node
+	if new_editor_node.is_root:
+		_edited.graph.root_node = new_graph_node
+	_connect_node_signals(new_editor_node)
+	
+	_connect_new_editor_node_if_necessary(
+		new_editor_node,
+		node_creation_mode,
+	)
+	return new_editor_node
+
+
+func _create_node_objects(node_type):
 	var new_editor_node
 	var new_graph_node
 	
@@ -356,7 +423,14 @@ func _create_node(
 		GraphPopupMenuItems.ADD_REPEAT_NODE:
 			new_editor_node = EditorRepeatNode.instantiate()
 			new_graph_node = RepeatNode.new()
-		
+	return [new_editor_node, new_graph_node]
+
+
+func _configure_graph_node_state(
+	new_graph_node,
+	initial_state,
+	editor_position,
+):
 	new_graph_node.id = _edited.graph.get_next_id()
 	for property in initial_state:
 		if property in new_graph_node and property not in ["offset"]:
@@ -365,33 +439,42 @@ func _create_node(
 				_deep_copy(initial_state[property])
 			)
 	new_graph_node.offset = editor_position
-	
-	_graph_edit.add_child(new_editor_node)
+
+
+func _configure_editor_node_state(
+	new_editor_node,
+	new_graph_node
+):
 	if _graph_edit.get_child_count() == 1:
 		new_editor_node.is_root = true
 	if new_editor_node.has_method("populate_characters"):
 		new_editor_node.populate_characters(_edited.graph.characters)
 	new_editor_node.configure_for_node(_edited.graph, new_graph_node)
-	_edited.graph.nodes[new_graph_node.id] = new_graph_node
-	if new_editor_node.is_root:
-		_edited.graph.root_node = new_graph_node
-	_connect_node_signals(new_editor_node)
+
+
+func _connect_new_editor_node_if_necessary(
+	new_editor_node,
+	node_creation_mode
+):
 	if node_creation_mode == NodeCreationMode.CONNECTED:
-		Logger.debug("Auto-connecting new node from %s, %s" % [_pending_connection_from, _pending_connection_from_port])
-		_graph_edit.emit_signal(
-			"connection_request",
+		Logger.debug(
+			"Auto-connecting new node from %s, %s" % [
+				_pending_connection_from,
+				_pending_connection_from_port,
+			]
+		)
+		_graph_edit.connection_request.emit(
 			_pending_connection_from,
 			_pending_connection_from_port,
 			new_editor_node.name,
-			0
+			0,
 		)
-	return new_editor_node
 
 
 func _generate_anchor_name():
 	return "%s%s" % [
 		CutsceneGraph.NEW_ANCHOR_PREFIX,
-		_edited.graph.get_next_anchor_number()
+		_edited.graph.get_next_anchor_number(),
 	]
 
 
@@ -414,14 +497,41 @@ func _removing_slot(slot, node_name):
 	Logger.debug("Removal of slot %s on node %s requested" % [slot, node_name])
 	var connections = _graph_edit.get_connection_list()
 	for connection in connections:
-		if connection.from == node_name and connection.from_port == slot:
-			# This one just gets removed
-			_graph_edit.disconnect_node(connection.from, connection.from_port, connection.to, connection.to_port)
-		elif connection.from == node_name and connection.from_port > slot:
-			# Remove and reconnect to slot + 1
-			_graph_edit.disconnect_node(connection.from, connection.from_port, connection.to, connection.to_port)
-			_graph_edit.connect_node(connection.from, connection.from_port - 1, connection.to, connection.to_port)
+		_process_connection_for_slot_removal(
+			connection,
+			slot,
+			node_name,
+		)
 	_set_dirty(true)
+
+
+func _process_connection_for_slot_removal(
+	connection,
+	slot,
+	node_name
+):
+	if connection.from == node_name and connection.from_port == slot:
+		# This one just gets removed
+		_graph_edit.disconnect_node(
+			connection.from,
+			connection.from_port,
+			connection.to,
+			connection.to_port
+		)
+	elif connection.from == node_name and connection.from_port > slot:
+		# Remove and reconnect to slot + 1
+		_graph_edit.disconnect_node(
+			connection.from,
+			connection.from_port,
+			connection.to,
+			connection.to_port
+		)
+		_graph_edit.connect_node(
+			connection.from,
+			connection.from_port - 1,
+			connection.to,
+			connection.to_port
+		)
 
 
 func _node_close_request(node_name):
@@ -439,38 +549,53 @@ func _node_close_request(node_name):
 func _action_confirmed():
 	match _confirmation_action:
 		ConfirmationActions.REMOVE_NODE:
-			Logger.debug(
-				"Removal of node(s) {nodes} confirmed.".format({
-					"nodes": _node_to_remove
-				})
-			)
-			var connections = _graph_edit.get_connection_list()
-			for n in _node_to_remove:
-				# This line is throwing an error now - cannot convert from StringName to NodePath
-				var node = _graph_edit.get_node(NodePath(n))
-				var is_anchor = node is EditorAnchorNodeClass
-				for connection in connections:
-					if connection.from == n or connection.to == n:
-						# This one just gets removed
-						_graph_edit.disconnect_node(
-							connection.from,
-							connection.from_port,
-							connection.to,
-							connection.to_port
-						)
-						if is_anchor:
-							var from_node = _graph_edit.get_node(
-								NodePath(connection.from)
-							)
-							from_node.set_destination(-1)
-				
-				_edited.graph.nodes.erase(node.node_resource.id)
-				_graph_edit.remove_child(node)
-			_set_dirty(true)
-			_refresh_anchor_maps()
-			_populate_anchor_destinations()
+			_remove_nodes()
 		ConfirmationActions.CLOSE_GRAPH:
 			_close_graph()
+
+
+func _remove_nodes():
+	Logger.debug(
+		"Removal of node(s) {nodes} confirmed.".format({
+			"nodes": _node_to_remove
+		})
+	)
+	var connections = _graph_edit.get_connection_list()
+	for n in _node_to_remove:
+		_remove_node(n, connections)
+	_set_dirty(true)
+	_refresh_anchor_maps()
+	_populate_anchor_destinations()
+
+
+func _remove_node(n, connections):
+	# This line is throwing an error now - cannot convert from StringName to NodePath
+	var node = _graph_edit.get_node(NodePath(n))
+	var is_anchor = node is EditorAnchorNodeClass
+	for connection in connections:
+		if connection.from == n or connection.to == n:
+			# This one just gets removed
+			_remove_connection_for_node(
+				connection,
+				is_anchor,
+			)
+	
+	_edited.graph.nodes.erase(node.node_resource.id)
+	_graph_edit.remove_child(node)
+
+
+func _remove_connection_for_node(connection, is_anchor):
+	_graph_edit.disconnect_node(
+		connection.from,
+		connection.from_port,
+		connection.to,
+		connection.to_port
+	)
+	if is_anchor:
+		var from_node = _graph_edit.get_node(
+			NodePath(connection.from)
+		)
+		from_node.set_destination(-1)
 
 
 func _graph_selection_changed(index):
@@ -480,11 +605,13 @@ func _graph_selection_changed(index):
 
 
 func _on_save():
-	if _edited:
-		if _edited.path != null:
-			perform_save()
-		else:
-			_get_resource_path()
+	if not _edited:
+		return
+		
+	if _edited.path != null:
+		perform_save()
+	else:
+		_get_resource_path()
 
 
 func _on_open():
@@ -501,17 +628,23 @@ func _sub_graph_open_requested(graph, editor_node):
 
 
 func _on_close():
-	if _edited:
-		if _edited.dirty:
-			_confirmation_dialog.dialog_text = "Unsaved changes will be lost. Are you sure you wish to continue?"
-			_confirmation_action = ConfirmationActions.CLOSE_GRAPH
-			_confirmation_dialog.popup_centered()
-		else:
-			_close_graph()
+	if not _edited:
+		return
+	
+	if _edited.dirty:
+		_confirmation_dialog.dialog_text = "Unsaved changes will be lost. Are you sure you wish to continue?"
+		_confirmation_action = ConfirmationActions.CLOSE_GRAPH
+		_confirmation_dialog.popup_centered()
+	else:
+		_close_graph()
 
 
 func _close_graph():
-	_open_graphs.remove(_open_graphs.find(_edited))
+	_open_graphs.remove(
+		_open_graphs.find(
+			_edited
+		)
+	)
 	if _open_graphs.size() > 0:
 		_edited = _open_graphs[0]
 	else:
@@ -521,10 +654,15 @@ func _close_graph():
 
 func perform_save():
 	Logger.trace("perform_save()")
-	if _edited != null:
-		_update_edited_graph()
-		emit_signal("save_requested", _edited.graph, _edited.path)
-		_set_dirty(false)
+	if _edited == null:
+		return
+	
+	_update_edited_graph()
+	save_requested.emit(
+		_edited.graph,
+		_edited.path,
+	)
+	_set_dirty(false)
 
 
 func _on_save_as():
@@ -547,110 +685,155 @@ func _draw_edited_graph(retain_selection=false):
 	# Clear the existing graph
 	_clear_displayed_graph()
 
-	if _edited != null:
-		_cutscene_name.text = _get_name(_edited.graph)
-
-		# Now create and configure the display nodes
-		for node in _edited.graph.nodes.values():
-			var editor_node
-			if node is DialogueTextNode:
-				editor_node = EditorTextNode.instantiate()
-				editor_node.populate_characters(_edited.graph.characters)
-			elif node is BranchNode:
-				editor_node = EditorBranchNode.instantiate()
-			elif node is VariableSetNode:
-				editor_node = EditorSetNode.instantiate()
-			elif node is DialogueChoiceNode:
-				editor_node = EditorChoiceNode.instantiate()
-			elif node is ActionNode:
-				editor_node = EditorActionNode.instantiate()
-				editor_node.populate_characters(_edited.graph.characters)
-			elif node is SubGraph:
-				editor_node = EditorSubGraphNode.instantiate()
-			elif node is RandomNode:
-				editor_node = EditorRandomNode.instantiate()
-			elif node is CommentNode:
-				editor_node = EditorCommentNode.instantiate()
-			elif node is JumpNode:
-				editor_node = EditorJumpNode.instantiate()
-				editor_node.populate_destinations(_anchor_names_by_id)
-				#editor_node.set_destination(node.next)
-			elif node is AnchorNode:
-				editor_node = EditorAnchorNode.instantiate()
-			elif node is RoutingNode:
-				editor_node = EditorRoutingNode.instantiate()
-			elif node is RepeatNode:
-				editor_node = EditorRepeatNode.instantiate()
-			_graph_edit.add_child(editor_node)
-			editor_node.configure_for_node(_edited.graph, node)
-			if node == _edited.graph.root_node:
-				editor_node.is_root = true
-			_connect_node_signals(editor_node)
-			
-			if node.id in selected_node_ids:
-				editor_node.selected = true
-
-		# Second pass to create connections
-		for node in _edited.graph.nodes.values():
-			if node.next != -1:
-				var from = _get_editor_node_for_graph_node(node)
-				var to = _get_editor_node_for_graph_node(
-					_edited.graph.nodes[node.next]
-				)
-				_graph_edit.connect_node(from.name, 0, to.name, 0)
-			if node is BranchNode:
-				var from = _get_editor_node_for_graph_node(node)
-				for index in range(0, node.branches.size()):
-					if node.branches[index]:
-						var to = _get_editor_node_for_graph_node(
-							_edited.graph.nodes[node.branches[index]]
-						)
-						_graph_edit.connect_node(from.name, index + 1, to.name, 0)
-			elif node is RandomNode:
-				var from = _get_editor_node_for_graph_node(node)
-				for index in range(0, node.branches.size()):
-					if node.branches[index].next != -1:
-						var to = _get_editor_node_for_graph_node(
-							_edited.graph.nodes[node.branches[index].next]
-						)
-						_graph_edit.connect_node(from.name, index + 1, to.name, 0)
-			elif node is DialogueChoiceNode:
-				var from = _get_editor_node_for_graph_node(node)
-				for index in range(0, node.choices.size()):
-					if node.choices[index].next != -1:
-						var to = _get_editor_node_for_graph_node(
-							_edited.graph.nodes[node.choices[index].next]
-						)
-						_graph_edit.connect_node(from.name, index + 1, to.name, 0)
+	if _edited == null:
+		return
 		
-		if _edited.scroll_offset != null:
-			_graph_edit.zoom = _edited.zoom
-			# This was a deferred set previously, not sure why. It didn't seem
-			# like it was actually being called.
-			#_graph_edit.set_deferred("scroll_offset", _edited.scroll_offset)
-			_graph_edit.scroll_offset = Vector2(_edited.scroll_offset)
-			Logger.trace(
-				"Restored scroll offset and zoom %s, %s from saved %s, %s" % [
-					_graph_edit.scroll_offset,
-					_graph_edit.zoom,
-					_edited.scroll_offset,
-					_edited.zoom
-				]
-			)
-		#_populate_anchor_destinations()
+	_cutscene_name.text = _get_name(_edited.graph)
+
+	# Now create and configure the display nodes
+	for node in _edited.graph.nodes.values():
+		var editor_node = _instantiate_editor_node_for_graph_node(node)
+		
+		_graph_edit.add_child(editor_node)
+		editor_node.configure_for_node(_edited.graph, node)
+		if node == _edited.graph.root_node:
+			editor_node.is_root = true
+		_connect_node_signals(editor_node)
+		
+		if node.id in selected_node_ids:
+			editor_node.selected = true
+
+	# Second pass to create connections
+	for node in _edited.graph.nodes.values():
+		_create_connections_for_node(node)
+	
+	if _edited.scroll_offset != null:
+		_graph_edit.zoom = _edited.zoom
+		# This was a deferred set previously, not sure why. It didn't seem
+		# like it was actually being called.
+		#_graph_edit.set_deferred("scroll_offset", _edited.scroll_offset)
+		_graph_edit.scroll_offset = Vector2(_edited.scroll_offset)
+		Logger.trace(
+			"Restored scroll offset and zoom %s, %s from saved %s, %s" % [
+				_graph_edit.scroll_offset,
+				_graph_edit.zoom,
+				_edited.scroll_offset,
+				_edited.zoom
+			]
+		)
+
+
+func _instantiate_editor_node_for_graph_node(node):
+	var editor_node
+	
+	if node is DialogueTextNode:
+		editor_node = EditorTextNode.instantiate()
+		editor_node.populate_characters(_edited.graph.characters)
+	elif node is BranchNode:
+		editor_node = EditorBranchNode.instantiate()
+	elif node is VariableSetNode:
+		editor_node = EditorSetNode.instantiate()
+	elif node is DialogueChoiceNode:
+		editor_node = EditorChoiceNode.instantiate()
+	elif node is ActionNode:
+		editor_node = EditorActionNode.instantiate()
+		editor_node.populate_characters(_edited.graph.characters)
+	elif node is SubGraph:
+		editor_node = EditorSubGraphNode.instantiate()
+	elif node is RandomNode:
+		editor_node = EditorRandomNode.instantiate()
+	elif node is CommentNode:
+		editor_node = EditorCommentNode.instantiate()
+	elif node is JumpNode:
+		editor_node = EditorJumpNode.instantiate()
+		editor_node.populate_destinations(_anchor_names_by_id)
+		#editor_node.set_destination(node.next)
+	elif node is AnchorNode:
+		editor_node = EditorAnchorNode.instantiate()
+	elif node is RoutingNode:
+		editor_node = EditorRoutingNode.instantiate()
+	elif node is RepeatNode:
+		editor_node = EditorRepeatNode.instantiate()
+	
+	return editor_node
+
+
+func _create_connections_for_node(node):
+	if node.next != -1:
+		var from = _get_editor_node_for_graph_node(node)
+		var to = _get_editor_node_for_graph_node(
+			_edited.graph.nodes[node.next]
+		)
+		_graph_edit.connect_node(from.name, 0, to.name, 0)
+	if node is BranchNode:
+		var from = _get_editor_node_for_graph_node(node)
+		for index in range(0, node.branches.size()):
+			if node.branches[index]:
+				var to = _get_editor_node_for_graph_node(
+					_edited.graph.nodes[node.branches[index]]
+				)
+				_graph_edit.connect_node(from.name, index + 1, to.name, 0)
+	elif node is RandomNode:
+		var from = _get_editor_node_for_graph_node(node)
+		for index in range(0, node.branches.size()):
+			if node.branches[index].next != -1:
+				var to = _get_editor_node_for_graph_node(
+					_edited.graph.nodes[node.branches[index].next]
+				)
+				_graph_edit.connect_node(from.name, index + 1, to.name, 0)
+	elif node is DialogueChoiceNode:
+		var from = _get_editor_node_for_graph_node(node)
+		for index in range(0, node.choices.size()):
+			if node.choices[index].next != -1:
+				var to = _get_editor_node_for_graph_node(
+					_edited.graph.nodes[node.choices[index].next]
+				)
+				_graph_edit.connect_node(from.name, index + 1, to.name, 0)
 
 
 func _connect_node_signals(node):
-	node.connect("removing_slot", Callable(self, "_removing_slot").bind(node.name))
-	node.connect("close_request", Callable(self, "_node_close_request").bind(node.name))
-	node.connect("popup_request", Callable(self, "_node_popup_request").bind(node.name))
-	node.connect("position_offset_changed", Callable(self, "_node_offset_changed").bind(node.name))
-	node.connect("modified", Callable(self, "_node_modified").bind(node.name))
+	node.removing_slot.connect(
+		_removing_slot.bind(
+			node.name
+		)
+	)
+	node.close_request.connect(
+		_node_close_request.bind(
+			node.name
+		)
+	)
+	node.popup_request.connect(
+		_node_popup_request.bind(
+			node.name
+		)
+	)
+	node.position_offset_changed.connect(
+		_node_offset_changed.bind(
+			node.name
+		)
+	)
+	node.modified.connect(
+		_node_modified.bind(
+			node.name
+		)
+	)
 	if node is EditorSubGraphNodeClass:
-		node.connect("sub_graph_selection_requested", Callable(self, "_sub_graph_selection_requested").bind(node))
-		node.connect("sub_graph_open_requested", Callable(self, "_sub_graph_open_requested").bind(node))
+		node.sub_graph_selection_requested.connect(
+			_sub_graph_selection_requested.bind(
+				node
+			)
+		)
+		node.sub_graph_open_requested.connect(
+			_sub_graph_open_requested.bind(
+				node
+			)
+		)
 	if node is EditorJumpNodeClass:
-		node.destination_chosen.connect(_jump_node_destination_chosen.bind(node))
+		node.destination_chosen.connect(
+			_jump_node_destination_chosen.bind(
+				node
+			)
+		)
 
 
 func _jump_node_destination_chosen(destination_id, node):
@@ -667,7 +850,6 @@ func _node_modified(node_name):
 		if editor_node is EditorAnchorNodeClass:
 			_refresh_anchor_maps()
 			_populate_anchor_destinations()
-			# TODO: Theres more to be done here I think...
 	perform_save()
 
 
@@ -699,7 +881,9 @@ func _get_graph_node_by_id(id):
 func clear():
 	_clear_displayed_graph()
 	if _edited != null:
-		_edited.graph.disconnect("changed", Callable(self, "_edited_resource_changed"))
+		_edited.graph.changed.disconnect(
+			_edited_resource_changed
+		)
 	_edited = null
 
 
@@ -713,44 +897,48 @@ func _clear_displayed_graph():
 	_cutscene_name.text = "None"
 
 
+## Update the graph resources from the current state of the UI.
 func _update_edited_graph():
-	"""
-	Update the graph resources from the current state of the UI.
-	"""
-	if _edited != null:
-		Logger.trace("_update_edited_graph(): %s" % _edited.graph.name)
-		
-		for node in _graph_edit.get_children():
-			# Watch out! Not all graph edit children are actually our nodes!
-			if node.has_method("persist_changes_to_node"):
-				node.persist_changes_to_node()
-				# Clobber all relationships - they will be recreated if they still exist
-				node.clear_node_relationships()
-		var connections = _graph_edit.get_connection_list()
-		for connection in connections:
-			var from = _graph_edit.get_node(NodePath(connection.from))
-			var from_slot = connection.from_port
-			var to = _graph_edit.get_node(NodePath(connection.to))
-			var to_slot = connection.to_port
-			var from_dialogue_node = from.node_resource
-			var to_dialogue_node = to.node_resource
-			if from_dialogue_node is BranchNode:
-				if from_slot == 0:
-					from_dialogue_node.next = to_dialogue_node.id
-				else:
-					from_dialogue_node.branches[from_slot - 1] = to_dialogue_node.id
-			elif from_dialogue_node is RandomNode:
-				if from_slot == 0:
-					from_dialogue_node.next = to_dialogue_node.id
-				else:
-					from_dialogue_node.branches[from_slot - 1].next = to_dialogue_node.id
-			elif from_dialogue_node is DialogueChoiceNode:
-				if from_slot == 0:
-					from_dialogue_node.next = to_dialogue_node.id
-				else:
-					from_dialogue_node.choices[from_slot - 1].next = to_dialogue_node.id
-			else:
-				from_dialogue_node.next = to_dialogue_node.id
+	if _edited == null:
+		return
+	
+	Logger.trace("_update_edited_graph(): %s" % _edited.graph.name)
+	
+	for node in _graph_edit.get_children():
+		# Watch out! Not all graph edit children are actually our nodes!
+		if node.has_method("persist_changes_to_node"):
+			node.persist_changes_to_node()
+			# Clobber all relationships - they will be recreated if they still exist
+			node.clear_node_relationships()
+	var connections = _graph_edit.get_connection_list()
+	for connection in connections:
+		_update_resource_graph_for_connection(connection)
+
+
+func _update_resource_graph_for_connection(connection):
+	var from = _graph_edit.get_node(NodePath(connection.from))
+	var from_slot = connection.from_port
+	var to = _graph_edit.get_node(NodePath(connection.to))
+	var to_slot = connection.to_port
+	var from_dialogue_node = from.node_resource
+	var to_dialogue_node = to.node_resource
+	if from_dialogue_node is BranchNode:
+		if from_slot == 0:
+			from_dialogue_node.next = to_dialogue_node.id
+		else:
+			from_dialogue_node.branches[from_slot - 1] = to_dialogue_node.id
+	elif from_dialogue_node is RandomNode:
+		if from_slot == 0:
+			from_dialogue_node.next = to_dialogue_node.id
+		else:
+			from_dialogue_node.branches[from_slot - 1].next = to_dialogue_node.id
+	elif from_dialogue_node is DialogueChoiceNode:
+		if from_slot == 0:
+			from_dialogue_node.next = to_dialogue_node.id
+		else:
+			from_dialogue_node.choices[from_slot - 1].next = to_dialogue_node.id
+	else:
+		from_dialogue_node.next = to_dialogue_node.id
 
 
 func _update_node_characters():
@@ -779,7 +967,11 @@ func _edited_resource_changed():
 
 
 func _on_GraphEdit_connection_request(from, from_slot, to, to_slot):
-	Logger.debug("Connection request from %s, %s to %s, %s" % [from, from_slot, to, to_slot])
+	Logger.debug(
+		"Connection request from %s, %s to %s, %s" % [
+			from, from_slot, to, to_slot
+		]
+	)
 	var connections = _graph_edit.get_connection_list()
 	var allow = true
 	for connection in connections:
@@ -802,7 +994,11 @@ func _on_GraphEdit_connection_request(from, from_slot, to, to_slot):
 
 
 func _on_GraphEdit_disconnection_request(from, from_slot, to, to_slot):
-	Logger.debug("Disconnection request from %s, %s to %s, %s" % [from, from_slot, to, to_slot])
+	Logger.debug(
+		"Disconnection request from %s, %s to %s, %s" % [
+			from, from_slot, to, to_slot
+		]
+	)
 	_graph_edit.disconnect_node(from, from_slot, to, to_slot)
 	# If the connection was from a jump node then we have to remove the
 	# selection in its dropdown.
@@ -826,16 +1022,18 @@ func _on_graph_edit_end_node_move():
 
 
 func _on_graph_edit_scroll_offset_changed(offset):
-	if _edited != null:
-		_edited.zoom = _graph_edit.zoom
-		_edited.scroll_offset = Vector2(_graph_edit.scroll_offset)
-		# This would be debug but it is highly verbose
-		Logger.trace(
-			"Saved scroll offset and zoom: %s, %s" % [
-				_edited.scroll_offset,
-				_edited.zoom
-			]
-		)
+	if _edited == null:
+		return
+		
+	_edited.zoom = _graph_edit.zoom
+	_edited.scroll_offset = Vector2(_graph_edit.scroll_offset)
+	# This would be debug but it is highly verbose
+	Logger.trace(
+		"Saved scroll offset and zoom: %s, %s" % [
+			_edited.scroll_offset,
+			_edited.zoom
+		]
+	)
 
 
 func _convert_popup_position(release_position):
@@ -845,15 +1043,16 @@ func _convert_popup_position(release_position):
 
 
 func _on_graph_edit_connection_to_empty(from_node, from_port, release_position):
-	if _edited:
-		_node_creation_mode = NodeCreationMode.CONNECTED
-		_pending_connection_from = from_node
-		_pending_connection_from_port = from_port
-		var global_rect = get_global_rect()
-		_last_popup_position = _convert_popup_position(release_position)
-		_graph_popup.position = get_screen_transform() * release_position
-		_set_graph_popup_option_states()
-		_graph_popup.popup()
+	if not _edited:
+		return
+		
+	_node_creation_mode = NodeCreationMode.CONNECTED
+	_pending_connection_from = from_node
+	_pending_connection_from_port = from_port
+	_last_popup_position = _convert_popup_position(release_position)
+	_graph_popup.position = get_screen_transform() * release_position
+	_set_graph_popup_option_states()
+	_graph_popup.popup()
 
 
 func _set_graph_popup_option_states():
@@ -969,19 +1168,31 @@ func _create_connections_for_copied_nodes(new_nodes):
 			var id = new_nodes[original_id].node_resource.id
 			var pasted_res = pasted.node_resource
 			if pasted_res.next == original_id:
-				Logger.debug("Updating next link for copied node %s from %s to %s" % [pasted_res.id, pasted_res.next, id])
+				Logger.debug(
+					"Updating next link for copied node %s from %s to %s" % [
+						pasted_res.id, pasted_res.next, id
+					]
+				)
 				# Update to the new id.
 				pasted_res.next = id
 				
 			if "branches" in pasted_res:
 				for b in range(len(pasted_res.branches)):
 					if pasted_res.branches[b] == original_id:
-						Logger.debug("Updating branch link for copied node %s from %s to %s" % [pasted_res.id, original_id, id])
+						Logger.debug(
+							"Updating branch link for copied node %s from %s to %s" % [
+								pasted_res.id, original_id, id
+							]
+						)
 						pasted_res.branches[b] = id
 			elif "choices" in pasted_res:
 				for b in range(len(pasted_res.choices)):
 					if pasted_res.choices[b].next == original_id:
-						Logger.debug("Updating choice link for copied node %s from %s to %s" % [pasted_res.id, original_id, id])
+						Logger.debug(
+							"Updating choice link for copied node %s from %s to %s" % [
+								pasted_res.id, original_id, id
+							]
+						)
 						pasted_res.choices[b].next = id
 
 
@@ -1066,4 +1277,6 @@ func _deep_copy(obj):
 
 
 func _on_graph_edit_duplicate_nodes_request():
-	_create_duplicate_nodes(_get_selected_nodes())
+	_create_duplicate_nodes(
+		_get_selected_nodes()
+	)

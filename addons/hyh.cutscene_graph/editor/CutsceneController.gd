@@ -24,16 +24,22 @@ const BooleanCondition = preload("../resources/graph/branches/conditions/Boolean
 const ValueCondition = preload("../resources/graph/branches/conditions/ValueCondition.gd")
 const BooleanType = BooleanCondition.BooleanType
 
+## Emitted when processing of a cutscene graph begins.
 signal cutscene_started(cutscene_name, graph_type)
+## Emitted when a sub-graph has been entered.
 signal sub_graph_entered(cutscene_name, graph_type)
+## Emitted when processing of a cutscene graph resumes after a sub-graph completes.
 signal cutscene_resumed(cutscene_name, graph_type)
+## Emitted when processing of a cutscene graph is completed.
 signal cutscene_completed()
+## A request to display dialogue.
 signal dialogue_display_requested(
 	text,
 	character_name,
 	character_variant,
 	process
 )
+## A request to perform an action.
 signal action_requested(
 	action,
 	character_name,
@@ -41,6 +47,7 @@ signal action_requested(
 	argument,
 	process
 )
+## A request to display choices to the player.
 signal choice_display_requested(choices, process)
 
 
@@ -54,7 +61,8 @@ class ProceedSignal:
 	signal ready_to_proceed(choice)
 	
 	func proceed(choice: int = -1):
-		emit_signal("ready_to_proceed", choice)
+		ready_to_proceed.emit(choice)
+
 
 ## A node that can store variables for the scope of the entire game
 @export var global_store: NodePath
@@ -71,11 +79,13 @@ var _split_dialogue
 var _last_choice_node_id
 
 
+## Register a global variable store
 func register_global_store(store):
 	Logger.info("Registering global store")
 	_global_store = store
 
 
+## Register a "scene" variable store
 func register_scene_store(store):
 	Logger.debug("Registering scene store")
 	_scene_store = store
@@ -102,12 +112,16 @@ func _get_variable(variable_name, scope):
 			return _local_store.get(variable_name)
 		VariableSetNode.VariableScope.SCOPE_SCENE:
 			if _scene_store == null:
-				Logger.error("Scene variable \"%s\" requested but no scene store is available" % variable_name)
+				Logger.error(
+					"Scene variable \"%s\" requested but no scene store is available" % variable_name
+				)
 				return null
 			return _scene_store.get_variable(variable_name)
 		VariableSetNode.VariableScope.SCOPE_GLOBAL:
 			if _global_store == null:
-				Logger.error("Global variable \"%s\" requested but no global store is available" % variable_name)
+				Logger.error(
+					"Global variable \"%s\" requested but no global store is available" % variable_name
+				)
 				return null
 			return _global_store.get_variable(variable_name)
 	return null
@@ -131,12 +145,20 @@ func _set_variable(variable_name, scope, value):
 			_local_store[variable_name] = value
 		VariableSetNode.VariableScope.SCOPE_SCENE:
 			if _scene_store == null:
-				Logger.error("Scene variable \"%s\" set with value \"%s\" but no scene store is available" % [variable_name, value])
+				Logger.error(
+					"Scene variable \"%s\" set with value \"%s\" but no scene store is available" % [
+						variable_name, value
+					]
+				)
 				return
 			_scene_store.set_variable(variable_name, value)
 		VariableSetNode.VariableScope.SCOPE_GLOBAL:
 			if _scene_store == null:
-				Logger.error("Scene variable \"%s\" set with value \"%s\" but no scene store is available" % [variable_name, value])
+				Logger.error(
+					"Scene variable \"%s\" set with value \"%s\" but no scene store is available" % [
+						variable_name, value
+					]
+				)
 				return
 			_global_store.set_variable(variable_name, value)
 
@@ -151,14 +173,20 @@ func _get_node_by_id(id):
 	return null
 
 
+## Process the specified cutscene graph.
 func process_cutscene(cutscene):
 	_graph_stack = []
 	_local_store = {}
 	_current_graph = cutscene
 	_current_node = _current_graph.root_node
 	Logger.info("Processing cutscene \"%s\"" % _current_graph.name)
-	_split_dialogue = _get_split_dialogue_from_type(_current_graph.graph_type)
-	emit_signal("cutscene_started", _current_graph.name, _current_graph.graph_type)
+	_split_dialogue = _get_split_dialogue_from_type(
+		_current_graph.graph_type
+	)
+	cutscene_started.emit(
+		_current_graph.name,
+		_current_graph.graph_type
+	)
 	
 	while _current_node != null:
 		
@@ -192,8 +220,7 @@ func process_cutscene(cutscene):
 				_last_choice_node_id = graph_state.last_choice_node_id
 				_current_node = _get_node_by_id(graph_state.current_node.next)
 				Logger.info("Resuming cutscene \"%s\"." % _current_graph.name)
-				emit_signal(
-					"cutscene_resumed",
+				cutscene_resumed.emit(
 					_current_graph.name,
 					_current_graph.graph_type
 				)
@@ -203,14 +230,17 @@ func process_cutscene(cutscene):
 
 
 func _get_split_dialogue_from_type(graph_type):
-	if graph_type != null and graph_type != '':
-		var graph_types = ProjectSettings.get_setting(
-			"cutscene_graph_editor/graph_types",
-			[]
-		)
-		for gt in graph_types:
-			if gt['name'] == _current_graph.graph_type:
-				return gt['split_dialogue']
+	if graph_type == null or graph_type == '':
+		return true
+
+	var graph_types = ProjectSettings.get_setting(
+		"cutscene_graph_editor/graph_types",
+		[]
+	)
+	for gt in graph_types:
+		if gt['name'] == _current_graph.graph_type:
+			return gt['split_dialogue']
+	
 	return true
 
 
@@ -220,8 +250,7 @@ func _emit_dialogue_signal(
 	character_variant,
 	process
 ):
-	emit_signal(
-		"dialogue_display_requested",
+	dialogue_display_requested.emit(
 		text,
 		character_name,
 		character_variant,
@@ -270,8 +299,7 @@ func _process_dialogue_node():
 			if line == "":
 				continue
 			var process = _await_response()
-			call_deferred(
-				"_emit_dialogue_signal",
+			_emit_dialogue_signal.call_deferred(
 				line,
 				character_name,
 				variant_name,
@@ -280,8 +308,7 @@ func _process_dialogue_node():
 			await process.ready_to_proceed
 	else:
 		var process = _await_response()
-		call_deferred(
-			"_emit_dialogue_signal",
+		_emit_dialogue_signal.call_deferred(
 			text,
 			character_name,
 			variant_name,
@@ -294,21 +321,27 @@ func _process_dialogue_node():
 func _process_branch_node():
 	Logger.debug("Processing branch node \"%s\"." % _current_node)
 	
-	var val = _get_variable(_current_node.variable, _current_node.scope)
+	var val = _get_variable(
+		_current_node.variable,
+		_current_node.scope
+	)
 	for i in range(_current_node.branch_count):
 		if val == _current_node.get_value(i):
-			_current_node = _get_node_by_id(_current_node.branches[i])
+			_current_node = _get_node_by_id(
+				_current_node.branches[i]
+			)
 			return
 	# Default case, no match or no branches
-	_current_node = _get_node_by_id(_current_node.next)
+	_current_node = _get_node_by_id(
+		_current_node.next
+	)
 
 
 func _emit_choices_signal(
 	choices,
 	process
 ):
-	emit_signal(
-		"choice_display_requested",
+	choice_display_requested.emit(
 		choices,
 		process
 	)
@@ -342,15 +375,18 @@ func _process_choice_node():
 	
 	if !choices.is_empty():
 		var process = _await_response()
-		call_deferred(
-			"_emit_choices_signal",
+		_emit_choices_signal.call_deferred(
 			choices,
 			process
 		)
 		var choice = await process.ready_to_proceed
-		_current_node = _get_node_by_id(_current_node.choices[choice].next)
+		_current_node = _get_node_by_id(
+			_current_node.choices[choice].next
+		)
 	else:
-		_current_node = _get_node_by_id(_current_node.next)
+		_current_node = _get_node_by_id(
+			_current_node.next
+		)
 
 
 func _process_set_node():
@@ -361,7 +397,9 @@ func _process_set_node():
 		_current_node.scope,
 		_current_node.get_value()
 	)
-	_current_node = _get_node_by_id(_current_node.next)
+	_current_node = _get_node_by_id(
+		_current_node.next
+	)
 
 
 func _emit_action_signal(
@@ -371,8 +409,7 @@ func _emit_action_signal(
 	argument,
 	process
 ):
-	emit_signal(
-		"action_requested",
+	action_requested.emit(
 		action,
 		character_name,
 		character_variant,
@@ -393,8 +430,7 @@ func _process_action_node():
 	if _current_node.character_variant != null:
 		variant_name = _current_node.character_variant.variant_name
 	
-	call_deferred(
-		"_emit_action_signal",
+	_emit_action_signal.call_deferred(
 		_current_node.action_name,
 		character_name,
 		variant_name,
@@ -402,7 +438,9 @@ func _process_action_node():
 		process
 	)
 	await process.ready_to_proceed
-	_current_node = _get_node_by_id(_current_node.next)
+	_current_node = _get_node_by_id(
+		_current_node.next
+	)
 
 
 func _process_subgraph_node():
@@ -415,7 +453,10 @@ func _process_subgraph_node():
 	_graph_stack.push_back(graph_state)
 	_current_graph = _current_node.sub_graph
 	_current_node = _current_graph.root_node
-	emit_signal("sub_graph_entered", _current_graph.name, _current_graph.graph_type)
+	sub_graph_entered.emit(
+		_current_graph.name,
+		_current_graph.graph_type
+	)
 
 
 func _process_random_node():
@@ -429,9 +470,13 @@ func _process_random_node():
 			viable.append(branch.next)
 
 	if len(viable) == 0:
-		_current_node = _get_node_by_id(_current_node.next)
+		_current_node = _get_node_by_id(
+			_current_node.next
+		)
 	else:
-		_current_node = _get_node_by_id(viable[randi() % len(viable)])
+		_current_node = _get_node_by_id(
+			viable[randi() % len(viable)]
+		)
 
 
 func _evaluate_condition(condition) -> bool:
