@@ -6,6 +6,8 @@ const CutsceneGraphEditor = preload("editor/CutsceneGraphEditor.tscn")
 const Cutscene = preload("editor/Cutscene.gd")
 const GraphTypeEditDialog = preload("editor/graph_types_edit/GraphTypeEditDialog.tscn")
 const GraphTypeEditDialogClass = preload("editor/graph_types_edit/GraphTypeEditDialog.gd")
+const DialogueTypesEditDialog = preload("editor/dialogue_types_edit/DialogueTypesEditDialog.tscn")
+const DialogueTypesEditDialogClass = preload("editor/dialogue_types_edit/DialogueTypesEditDialog.gd")
 #const CutsceneGraph = preload("resources/CutsceneGraph.gd")
 
 var editor
@@ -17,7 +19,8 @@ var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
 
 
 enum ToolMenuItems {
-	EDIT_GRAPH_TYPES
+	EDIT_GRAPH_TYPES,
+	EDIT_DIALOGUE_TYPES,
 }
 
 
@@ -44,6 +47,35 @@ func _enter_tree():
 					"split_dialogue": true,
 					"default": false
 				}
+			]
+		)
+	if not ProjectSettings.has_setting("cutscene_graph_editor/dialogue_types"):
+		ProjectSettings.set_setting(
+			"cutscene_graph_editor/dialogue_types",
+			[
+				{
+					"name": "dialogue",
+					"split_dialogue": null,
+					"involves_character": true,
+					"allowed_in_graph_types": [
+						"dialogue",
+						"cutscene",
+					],
+					"default_in_graph_types": [
+						"dialogue",
+						"cutscene",
+					],
+				},
+				{
+					"name": "narration",
+					"split_dialogue": null,
+					"involves_character": false,
+					"allowed_in_graph_types": [
+						"dialogue",
+						"cutscene",
+					],
+					"default_in_graph_types": [],
+				},
 			]
 		)
 	
@@ -73,6 +105,7 @@ func _editor_expand_button_toggled(button_pressed):
 func _create_menu():
 	menu = PopupMenu.new()
 	menu.add_item("Edit Graph Types...", ToolMenuItems.EDIT_GRAPH_TYPES)
+	menu.add_item("Edit Dialogue Types...", ToolMenuItems.EDIT_DIALOGUE_TYPES)
 	menu.id_pressed.connect(_tool_menu_item_selected)
 	
 	add_tool_submenu_item("Cutscene Graph Editor", menu)
@@ -82,6 +115,8 @@ func _tool_menu_item_selected(id):
 	match id:
 		ToolMenuItems.EDIT_GRAPH_TYPES:
 			_show_edit_graph_types_dialog()
+		ToolMenuItems.EDIT_DIALOGUE_TYPES:
+			_show_edit_dialogue_types_dialog()
 
 
 func _show_edit_graph_types_dialog():
@@ -91,6 +126,17 @@ func _show_edit_graph_types_dialog():
 	self.add_child(dialog)
 	dialog.popup()
 	await (dialog as GraphTypeEditDialogClass).closing
+	dialog.hide()
+	dialog.queue_free()
+
+
+func _show_edit_dialogue_types_dialog():
+	var dialog = DialogueTypesEditDialog.instantiate()
+	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_ABSOLUTE
+	dialog.position = get_tree().root.position + Vector2i(100, 100)
+	self.add_child(dialog)
+	dialog.popup()
+	await (dialog as DialogueTypesEditDialogClass).closing
 	dialog.hide()
 	dialog.queue_free()
 

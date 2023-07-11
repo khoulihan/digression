@@ -2,6 +2,7 @@
 extends "GraphNodeBase.gd"
 
 
+@export var dialogue_type: String
 @export var text: String
 @export var text_translation_key: String
 @export var character: Character

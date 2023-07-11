@@ -2,7 +2,16 @@
 extends "EditorGraphNodeBase.gd"
 
 
+@onready var DialogueTypeOption: OptionButton = get_node("DialogueTypeParent/DialogueTypeOption")
+@onready var CharacterOptionsContainer: GridContainer = get_node("RootContainer/VerticalLayout/CharacterOptionsContainer")
+
+
 var _characters
+var _dialogue_types
+var _dialogue_types_by_id
+
+# TODO: May not need this.
+var _original_size: Vector2
 
 
 func _get_text_edit():
@@ -10,29 +19,38 @@ func _get_text_edit():
 
 
 func _get_character_select():
-	return get_node("RootContainer/VerticalLayout/OptionsContainer/CharacterSelect")
+	return get_node("RootContainer/VerticalLayout/CharacterOptionsContainer/CharacterSelect")
 
 
 func _get_variant_select():
-	return get_node("RootContainer/VerticalLayout/OptionsContainer/VariantSelect")
+	return get_node("RootContainer/VerticalLayout/CharacterOptionsContainer/VariantSelect")
 
 
 func _get_translation_key_edit():
 	return get_node("RootContainer/VerticalLayout/TranslationContainer/TranslationKeyEdit")
 
 
+func _get_dialogue_type_select():
+	return get_node("DialogueTypeParent/DialogueTypeOption")
+
+
 func configure_for_node(g, n):
 	super.configure_for_node(g, n)
 	if n.size != Vector2.ZERO:
 		size = n.size
+	# Hmm, seems like this is not gonna work when the node is manually
+	# resizable...
+	_original_size = Vector2(size.x, 0.0)
 	set_text(n.text)
 	set_translation_key(n.text_translation_key)
 	select_character(n.character)
 	select_variant(n.character_variant)
+	select_dialogue_type(n.dialogue_type, false)
 
 
 func persist_changes_to_node():
 	super.persist_changes_to_node()
+	node_resource.dialogue_type = get_dialogue_type()
 	node_resource.size = self.size
 	node_resource.text = get_text()
 	node_resource.text_translation_key = get_translation_key()
@@ -44,6 +62,76 @@ func persist_changes_to_node():
 			node_resource.character_variant = node_resource.character.character_variants[selected_v]
 	else:
 		node_resource.character = null
+
+
+func get_dialogue_type():
+	var t = _dialogue_types_by_id.get(
+		DialogueTypeOption.get_selected_id()
+	)
+	if t != null:
+		return t['name']
+	return ""
+
+
+func select_dialogue_type(name, adjust_size=true):
+	var t = _get_dialogue_type_by_name(name)
+	_configure_for_dialogue_type(t, adjust_size)
+	if t == null:
+		DialogueTypeOption.select(
+			DialogueTypeOption.get_item_index(0)
+		)
+	else:
+		DialogueTypeOption.select(
+			DialogueTypeOption.get_item_index(
+				_get_id_for_dialogue_type(t)
+			)
+		)
+
+
+func _configure_for_dialogue_type(dialogue_type, adjust_size):
+	if dialogue_type == null:
+		return
+	if dialogue_type["involves_character"]:
+		if not CharacterOptionsContainer.visible:
+			CharacterOptionsContainer.show()
+			if adjust_size:
+				var character_options_height = CharacterOptionsContainer.size.y
+				size = Vector2(size.x, size.y + character_options_height)
+	else:
+		if CharacterOptionsContainer.visible:
+			var character_options_height = CharacterOptionsContainer.size.y
+			CharacterOptionsContainer.hide()
+			if adjust_size:
+				size = Vector2(size.x, size.y - character_options_height)
+
+
+func set_dialogue_types(dialogue_types):
+	Logger.debug("Setting dialogue types")
+	_dialogue_types = dialogue_types
+	_dialogue_types_by_id = {}
+	var dialogue_type_select = _get_dialogue_type_select()
+	dialogue_type_select.clear()
+	dialogue_type_select.add_item("Select Type...", 0)
+	var next_id = 1
+	for t in _dialogue_types:
+		_dialogue_types_by_id[next_id] = t
+		dialogue_type_select.add_item(
+			t["name"].capitalize(),
+			next_id,
+		)
+		next_id += 1
+	#set_dialogue_type(node_resource.dialogue_type)
+
+
+func _get_dialogue_type_by_name(name):
+	for t in _dialogue_types:
+		if t['name'] == name:
+			return t
+	return null
+
+
+func _get_id_for_dialogue_type(type):
+	return _dialogue_types_by_id.find_key(type)
 
 
 func get_text():
@@ -154,3 +242,11 @@ func _on_resize_request(new_minsize):
 
 func _on_translation_key_edit_text_changed(new_text):
 	emit_signal("modified")
+
+
+func _on_dialogue_type_option_item_selected(index):
+	var id = DialogueTypeOption.get_item_id(index)
+	_configure_for_dialogue_type(
+		_dialogue_types_by_id[id],
+		true,
+	)

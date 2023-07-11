@@ -145,6 +145,7 @@ func _perform_save():
 		"cutscene_graph_editor/graph_types",
 		graph_types
 	)
+	ProjectSettings.save()
 
 
 func _validation_failed_dialog_closed(dialog):

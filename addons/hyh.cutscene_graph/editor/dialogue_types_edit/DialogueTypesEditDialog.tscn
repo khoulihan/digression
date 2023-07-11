@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://c32oxnvny8art"]
+
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/dialogue_types_edit/DialogueTypesEditDialog.gd" id="1_tarot"]
+[ext_resource type="PackedScene" uid="uid://hwgq3su6tx5d" path="res://addons/hyh.cutscene_graph/editor/dialogue_types_edit/DialogueTypesEditDialogContents.tscn" id="2_htywv"]
+
+[node name="DialogueTypesEditDialog" type="Window"]
+title = "Dialogue Types"
+size = Vector2i(1000, 420)
+unresizable = true
+script = ExtResource("1_tarot")
+
+[node name="DialogueTypesEditDialogContents" parent="." instance=ExtResource("2_htywv")]
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="closing" from="DialogueTypesEditDialogContents" to="." method="_on_dialogue_types_edit_dialog_contents_closing"]

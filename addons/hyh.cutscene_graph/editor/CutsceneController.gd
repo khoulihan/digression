@@ -34,6 +34,7 @@ signal cutscene_resumed(cutscene_name, graph_type)
 signal cutscene_completed()
 ## A request to display dialogue.
 signal dialogue_display_requested(
+	dialogue_type,
 	text,
 	character_name,
 	character_variant,
@@ -72,6 +73,8 @@ var _local_store : Dictionary
 var _global_store : Node
 var _scene_store : Node
 
+var _dialogue_types
+
 var _graph_stack
 var _current_graph
 var _current_node
@@ -101,6 +104,10 @@ func _ready():
 		register_scene_store(get_node(scene_store))
 	else:
 		Logger.warn("Scene store not set.")
+	
+	_dialogue_types = ProjectSettings.get_setting(
+		"cutscene_graph_editor/dialogue_types"
+	)
 	
 	_local_store = {}
 
@@ -180,7 +187,7 @@ func process_cutscene(cutscene):
 	_current_graph = cutscene
 	_current_node = _current_graph.root_node
 	Logger.info("Processing cutscene \"%s\"" % _current_graph.name)
-	_split_dialogue = _get_split_dialogue_from_type(
+	_split_dialogue = _get_split_dialogue_from_graph_type(
 		_current_graph.graph_type
 	)
 	cutscene_started.emit(
@@ -229,7 +236,7 @@ func process_cutscene(cutscene):
 	emit_signal("cutscene_completed")
 
 
-func _get_split_dialogue_from_type(graph_type):
+func _get_split_dialogue_from_graph_type(graph_type):
 	if graph_type == null or graph_type == '':
 		return true
 
@@ -244,13 +251,30 @@ func _get_split_dialogue_from_type(graph_type):
 	return true
 
 
+func _split_dialogue_for_node(dialogue_type, graph_type_setting):
+	if dialogue_type.get('split_dialogue', null) == null:
+		return graph_type_setting
+	return dialogue_type['split_dialogue']
+
+
+func _get_dialogue_type_by_name(name) -> Dictionary:
+	if name == "":
+		return {}
+	for t in _dialogue_types:
+		if t['name'] == name:
+			return t
+	return {}
+
+
 func _emit_dialogue_signal(
+	dialogue_type,
 	text,
 	character_name,
 	character_variant,
 	process
 ):
 	dialogue_display_requested.emit(
+		dialogue_type,
 		text,
 		character_name,
 		character_variant,
@@ -285,14 +309,21 @@ func _process_dialogue_node():
 	if text == null:
 		text = _current_node.text
 	
+	var dialogue_type: Dictionary = _get_dialogue_type_by_name(
+		_current_node.dialogue_type
+	)
+	var dialogue_type_name = dialogue_type.get('name', "")
+	
 	var character_name = null
 	var variant_name = null
-	if _current_node.character != null:
-		character_name = _current_node.character.character_name
-	if _current_node.character_variant != null:
-		variant_name = _current_node.character_variant.variant_name
 	
-	if _split_dialogue:
+	if dialogue_type.get('involves_character', true):
+		if _current_node.character != null:
+			character_name = _current_node.character.character_name
+		if _current_node.character_variant != null:
+			variant_name = _current_node.character_variant.variant_name
+	
+	if _split_dialogue_for_node(dialogue_type, _split_dialogue):
 		var lines = text.split("\n")
 		for line in lines:
 			# Just in case there are blank lines
@@ -300,6 +331,7 @@ func _process_dialogue_node():
 				continue
 			var process = _await_response()
 			_emit_dialogue_signal.call_deferred(
+				dialogue_type_name,
 				line,
 				character_name,
 				variant_name,
@@ -309,6 +341,7 @@ func _process_dialogue_node():
 	else:
 		var process = _await_response()
 		_emit_dialogue_signal.call_deferred(
+			dialogue_type_name,
 			text,
 			character_name,
 			variant_name,

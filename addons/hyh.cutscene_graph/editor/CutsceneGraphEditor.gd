@@ -107,8 +107,8 @@ enum ConnectionTypes {
 }
 
 var _open_graphs
-
 var _edited
+var _current_graph_type
 
 # Nodes
 var _save_dialog
@@ -136,6 +136,9 @@ var _sub_graph_editor_node_for_assignment
 # TODO: One of these is not actually required.
 var _anchors_by_name = {}
 var _anchor_names_by_id = {}
+
+# Dialogue types for the current graph
+var _dialogue_types
 
 # Copy & paste
 var _copied_nodes
@@ -218,6 +221,17 @@ func _ready():
 	#)
 
 
+func _get_dialogue_types_for_graph_type(graph_type):
+	var all_types = ProjectSettings.get_setting(
+		'cutscene_graph_editor/dialogue_types'
+	)
+	var allowed_types = []
+	for dt in all_types:
+		if graph_type in dt['allowed_in_graph_types']:
+			allowed_types.append(dt)
+	return allowed_types
+
+
 func edit_graph(object, path):
 	_update_edited_graph()
 	var edited
@@ -240,8 +254,12 @@ func edit_graph(object, path):
 			_edited_resource_changed
 		)
 	_edited = edited
+	_current_graph_type = _edited.graph.graph_type
 	_edited.graph.changed.connect(
 		_edited_resource_changed
+	)
+	_dialogue_types = _get_dialogue_types_for_graph_type(
+		_edited.graph.graph_type
 	)
 	_refresh_anchor_maps()
 	_draw_edited_graph()
@@ -378,6 +396,13 @@ func _create_node(
 	return new_editor_node
 
 
+func _get_default_dialogue_type():
+	for t in _dialogue_types:
+		if _edited.graph.graph_type in t['default_in_graph_types']:
+			return t
+	return null
+
+
 func _create_node_objects(node_type):
 	var new_editor_node
 	var new_graph_node
@@ -386,9 +411,13 @@ func _create_node_objects(node_type):
 		GraphPopupMenuItems.ADD_TEXT_NODE:
 			new_editor_node = EditorTextNode.instantiate()
 			new_graph_node = DialogueTextNode.new()
+			var default_dialogue_type = _get_default_dialogue_type()
+			if default_dialogue_type != null:
+				var ddtd = default_dialogue_type as Dictionary
+				new_graph_node.dialogue_type = ddtd['name']
 			new_graph_node.text_translation_key = TranslationKey.generate(
 				_edited.graph.name,
-				"dialogue"
+				"dialogue",
 			)
 		GraphPopupMenuItems.ADD_BRANCH_NODE:
 			new_editor_node = EditorBranchNode.instantiate()
@@ -450,6 +479,8 @@ func _configure_editor_node_state(
 		new_editor_node.is_root = true
 	if new_editor_node.has_method("populate_characters"):
 		new_editor_node.populate_characters(_edited.graph.characters)
+	if new_editor_node.has_method("set_dialogue_types"):
+		new_editor_node.set_dialogue_types(_dialogue_types)
 	new_editor_node.configure_for_node(_edited.graph, new_graph_node)
 
 
@@ -730,6 +761,7 @@ func _instantiate_editor_node_for_graph_node(node):
 	if node is DialogueTextNode:
 		editor_node = EditorTextNode.instantiate()
 		editor_node.populate_characters(_edited.graph.characters)
+		editor_node.set_dialogue_types(_dialogue_types)
 	elif node is BranchNode:
 		editor_node = EditorBranchNode.instantiate()
 	elif node is VariableSetNode:
@@ -960,7 +992,15 @@ func _get_name(graph):
 
 
 func _edited_resource_changed():
+	Logger.debug("Graph resource changed")
 	_update_node_characters()
+	# Only want to do this if the type has actually changed
+	if _edited.graph.graph_type != _current_graph_type:
+		_current_graph_type = _edited.graph.graph_type
+		_dialogue_types = _get_dialogue_types_for_graph_type(
+			_current_graph_type
+		)
+		_draw_edited_graph(true)
 	if _edited != null:
 		_cutscene_name.text = _get_name(_edited.graph)
 	else:
