@@ -140,6 +140,9 @@ var _anchor_names_by_id = {}
 # Dialogue types for the current graph
 var _dialogue_types
 
+# Choice types for the current graph
+var _choice_types
+
 # Copy & paste
 var _copied_nodes
 var _scroll_on_copy
@@ -232,6 +235,17 @@ func _get_dialogue_types_for_graph_type(graph_type):
 	return allowed_types
 
 
+func _get_choice_types_for_graph_type(graph_type):
+	var all_types = ProjectSettings.get_setting(
+		'cutscene_graph_editor/choice_types'
+	)
+	var allowed_types = []
+	for ct in all_types:
+		if graph_type in ct['allowed_in_graph_types']:
+			allowed_types.append(ct)
+	return allowed_types
+
+
 func edit_graph(object, path):
 	_update_edited_graph()
 	var edited
@@ -259,6 +273,9 @@ func edit_graph(object, path):
 		_edited_resource_changed
 	)
 	_dialogue_types = _get_dialogue_types_for_graph_type(
+		_edited.graph.graph_type
+	)
+	_choice_types = _get_choice_types_for_graph_type(
 		_edited.graph.graph_type
 	)
 	_refresh_anchor_maps()
@@ -403,6 +420,27 @@ func _get_default_dialogue_type():
 	return null
 
 
+func _get_default_choice_type():
+	for t in _choice_types:
+		if _edited.graph.graph_type in t['default_in_graph_types']:
+			return t
+	return null
+
+
+func _set_default_dialogue_type_for_node(new_graph_node):
+	var default_dialogue_type = _get_default_dialogue_type()
+	if default_dialogue_type != null:
+		var ddtd = default_dialogue_type as Dictionary
+		new_graph_node.dialogue_type = ddtd['name']
+
+
+func _set_default_choice_type_for_node(new_graph_node):
+	var default_choice_type = _get_default_choice_type()
+	if default_choice_type != null:
+		var dctd = default_choice_type as Dictionary
+		new_graph_node.choice_type = dctd['name']
+
+
 func _create_node_objects(node_type):
 	var new_editor_node
 	var new_graph_node
@@ -411,10 +449,7 @@ func _create_node_objects(node_type):
 		GraphPopupMenuItems.ADD_TEXT_NODE:
 			new_editor_node = EditorTextNode.instantiate()
 			new_graph_node = DialogueTextNode.new()
-			var default_dialogue_type = _get_default_dialogue_type()
-			if default_dialogue_type != null:
-				var ddtd = default_dialogue_type as Dictionary
-				new_graph_node.dialogue_type = ddtd['name']
+			_set_default_dialogue_type_for_node(new_graph_node)
 			new_graph_node.text_translation_key = TranslationKey.generate(
 				_edited.graph.name,
 				"dialogue",
@@ -425,6 +460,12 @@ func _create_node_objects(node_type):
 		GraphPopupMenuItems.ADD_CHOICE_NODE:
 			new_editor_node = EditorChoiceNode.instantiate()
 			new_graph_node = DialogueChoiceNode.new()
+			_set_default_dialogue_type_for_node(new_graph_node.dialogue)
+			_set_default_choice_type_for_node(new_graph_node)
+			new_graph_node.dialogue.text_translation_key = TranslationKey.generate(
+				_edited.graph.name,
+				"choicedialogue",
+			)
 		GraphPopupMenuItems.ADD_SET_NODE:
 			new_editor_node = EditorSetNode.instantiate()
 			new_graph_node = VariableSetNode.new()
@@ -481,7 +522,9 @@ func _configure_editor_node_state(
 		new_editor_node.populate_characters(_edited.graph.characters)
 	if new_editor_node.has_method("set_dialogue_types"):
 		new_editor_node.set_dialogue_types(_dialogue_types)
-	new_editor_node.configure_for_node(_edited.graph, new_graph_node)
+	if new_editor_node.has_method("set_choice_types"):
+		new_editor_node.set_choice_types(_choice_types)
+	new_editor_node.configure_for_node(_edited.graph, new_graph_node, true)
 
 
 func _connect_new_editor_node_if_necessary(
@@ -768,6 +811,9 @@ func _instantiate_editor_node_for_graph_node(node):
 		editor_node = EditorSetNode.instantiate()
 	elif node is DialogueChoiceNode:
 		editor_node = EditorChoiceNode.instantiate()
+		editor_node.populate_characters(_edited.graph.characters)
+		editor_node.set_dialogue_types(_dialogue_types)
+		editor_node.set_choice_types(_choice_types)
 	elif node is ActionNode:
 		editor_node = EditorActionNode.instantiate()
 		editor_node.populate_characters(_edited.graph.characters)
@@ -998,6 +1044,9 @@ func _edited_resource_changed():
 	if _edited.graph.graph_type != _current_graph_type:
 		_current_graph_type = _edited.graph.graph_type
 		_dialogue_types = _get_dialogue_types_for_graph_type(
+			_current_graph_type
+		)
+		_choice_types = _get_choice_types_for_graph_type(
 			_current_graph_type
 		)
 		_draw_edited_graph(true)

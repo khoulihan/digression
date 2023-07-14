@@ -18,7 +18,7 @@ func _ready():
 	# Need to find the CutsceneController - there should only be one
 	# Do this by walking the tree from the root. This should find it whether
 	# it is an autoload or part of the scene.
-	# TODO: Plugins can create their own autoloads now, so maybe we should do that?
+	# TODO: Plugins can create their own set_choiceautoloads now, so maybe we should do that?
 	var root = get_tree().root
 	_cutscene_controller = _find_controller(root)
 

@@ -8,6 +8,8 @@ const GraphTypeEditDialog = preload("editor/graph_types_edit/GraphTypeEditDialog
 const GraphTypeEditDialogClass = preload("editor/graph_types_edit/GraphTypeEditDialog.gd")
 const DialogueTypesEditDialog = preload("editor/dialogue_types_edit/DialogueTypesEditDialog.tscn")
 const DialogueTypesEditDialogClass = preload("editor/dialogue_types_edit/DialogueTypesEditDialog.gd")
+const ChoiceTypesEditDialog = preload("editor/choice_types_edit/ChoiceTypesEditDialog.tscn")
+const ChoiceTypesEditDialogClass = preload("editor/choice_types_edit/ChoiceTypesEditDialog.gd")
 #const CutsceneGraph = preload("resources/CutsceneGraph.gd")
 
 var editor
@@ -21,6 +23,7 @@ var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
 enum ToolMenuItems {
 	EDIT_GRAPH_TYPES,
 	EDIT_DIALOGUE_TYPES,
+	EDIT_CHOICE_TYPES,
 }
 
 
@@ -33,6 +36,13 @@ func _enter_tree():
 	add_custom_type("Cutscene", "Node", preload("editor/Cutscene.gd"), preload("icons/icon_graph_node.svg"))
 	
 	# Check if the settings exist, and create some defaults if necessary
+	_create_default_project_settings()
+	
+	_create_editor()
+	_create_menu()
+
+
+func _create_default_project_settings():
 	if not ProjectSettings.has_setting("cutscene_graph_editor/graph_types"):
 		ProjectSettings.set_setting(
 			"cutscene_graph_editor/graph_types",
@@ -78,9 +88,36 @@ func _enter_tree():
 				},
 			]
 		)
-	
-	_create_editor()
-	_create_menu()
+	if not ProjectSettings.has_setting("cutscene_graph_editor/choice_types"):
+		ProjectSettings.set_setting(
+			"cutscene_graph_editor/choice_types",
+			[
+				{
+					"name": "choice",
+					"include_dialogue": false,
+					"skip_for_repeat": false,
+					"allowed_in_graph_types": [
+						"dialogue",
+						"cutscene",
+					],
+					"default_in_graph_types": [],
+				},
+				{
+					"name": "choice_with_dialogue",
+					"include_dialogue": true,
+					"skip_for_repeat": false,
+					"allowed_in_graph_types": [
+						"dialogue",
+						"cutscene",
+					],
+					"default_in_graph_types": [
+						"dialogue",
+						"cutscene",
+					],
+				},
+			]
+		)
+	ProjectSettings.save()
 
 
 func _create_editor():
@@ -106,6 +143,7 @@ func _create_menu():
 	menu = PopupMenu.new()
 	menu.add_item("Edit Graph Types...", ToolMenuItems.EDIT_GRAPH_TYPES)
 	menu.add_item("Edit Dialogue Types...", ToolMenuItems.EDIT_DIALOGUE_TYPES)
+	menu.add_item("Edit Choice Types...", ToolMenuItems.EDIT_CHOICE_TYPES)
 	menu.id_pressed.connect(_tool_menu_item_selected)
 	
 	add_tool_submenu_item("Cutscene Graph Editor", menu)
@@ -117,6 +155,8 @@ func _tool_menu_item_selected(id):
 			_show_edit_graph_types_dialog()
 		ToolMenuItems.EDIT_DIALOGUE_TYPES:
 			_show_edit_dialogue_types_dialog()
+		ToolMenuItems.EDIT_CHOICE_TYPES:
+			_show_edit_choice_types_dialog()
 
 
 func _show_edit_graph_types_dialog():
@@ -137,6 +177,17 @@ func _show_edit_dialogue_types_dialog():
 	self.add_child(dialog)
 	dialog.popup()
 	await (dialog as DialogueTypesEditDialogClass).closing
+	dialog.hide()
+	dialog.queue_free()
+
+
+func _show_edit_choice_types_dialog():
+	var dialog = ChoiceTypesEditDialog.instantiate()
+	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_ABSOLUTE
+	dialog.position = get_tree().root.position + Vector2i(100, 100)
+	self.add_child(dialog)
+	dialog.popup()
+	await (dialog as ChoiceTypesEditDialogClass).closing
 	dialog.hide()
 	dialog.queue_free()
 

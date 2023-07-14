@@ -48,8 +48,33 @@ signal action_requested(
 	argument,
 	process
 )
+## A request to display dialogue that is related to
+## upcoming choices.
+signal choice_dialogue_display_requested(
+	choice_type,
+	dialogue_type,
+	text,
+	character_name,
+	character_variant,
+	process
+)
 ## A request to display choices to the player.
-signal choice_display_requested(choices, process)
+signal choice_display_requested(
+	choice_type,
+	choices,
+	process
+)
+## A request to display choices to the player.
+#signal choice_display_requested(
+#	choice_type,
+#	dialogue_included,
+#	dialogue_type,
+#	text,
+#	character_name,
+#	character_variant,
+#	choices,
+#	process
+#)
 
 
 class GraphState:
@@ -74,6 +99,7 @@ var _global_store : Node
 var _scene_store : Node
 
 var _dialogue_types
+var _choice_types
 
 var _graph_stack
 var _current_graph
@@ -107,6 +133,9 @@ func _ready():
 	
 	_dialogue_types = ProjectSettings.get_setting(
 		"cutscene_graph_editor/dialogue_types"
+	)
+	_choice_types = ProjectSettings.get_setting(
+		"cutscene_graph_editor/choice_types"
 	)
 	
 	_local_store = {}
@@ -266,6 +295,43 @@ func _get_dialogue_type_by_name(name) -> Dictionary:
 	return {}
 
 
+func _get_choice_type_by_name(name) -> Dictionary:
+	if name == "":
+		return {}
+	for t in _choice_types:
+		if t['name'] == name:
+			return t
+	return {}
+
+
+func _emit_dialogue_signal_variant(
+	for_choice,
+	choice_type,
+	dialogue_type,
+	text,
+	character_name,
+	character_variant,
+	process
+):
+	if for_choice:
+		_emit_choice_dialogue_signal(
+			choice_type,
+			dialogue_type,
+			text,
+			character_name,
+			character_variant,
+			process
+		)
+	else:
+		_emit_dialogue_signal(
+			dialogue_type,
+			text,
+			character_name,
+			character_variant,
+			process
+		)
+
+
 func _emit_dialogue_signal(
 	dialogue_type,
 	text,
@@ -274,6 +340,24 @@ func _emit_dialogue_signal(
 	process
 ):
 	dialogue_display_requested.emit(
+		dialogue_type,
+		text,
+		character_name,
+		character_variant,
+		process
+	)
+
+
+func _emit_choice_dialogue_signal(
+	choice_type,
+	dialogue_type,
+	text,
+	character_name,
+	character_variant,
+	process
+):
+	choice_dialogue_display_requested.emit(
+		choice_type,
 		dialogue_type,
 		text,
 		character_name,
@@ -295,22 +379,25 @@ func _process_passthrough_node():
 
 
 func _process_dialogue_node():
-	
-	Logger.debug("Processing dialogue node \"%s\"." % _current_node)
+	await _process_dialogue_node_internal(_current_node)
+
+
+func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
+	Logger.debug("Processing dialogue node \"%s\"." % node)
 	
 	var text = null
 	# Try the translation first
-	var tr_key = _current_node.text_translation_key
+	var tr_key = node.text_translation_key
 	if tr_key != null and tr_key != "":
 		text = tr(tr_key)
 		if text == tr_key:
 			text = null
 	# Still no text, so use the default
 	if text == null:
-		text = _current_node.text
+		text = node.text
 	
 	var dialogue_type: Dictionary = _get_dialogue_type_by_name(
-		_current_node.dialogue_type
+		node.dialogue_type
 	)
 	var dialogue_type_name = dialogue_type.get('name', "")
 	
@@ -318,21 +405,26 @@ func _process_dialogue_node():
 	var variant_name = null
 	
 	if dialogue_type.get('involves_character', true):
-		if _current_node.character != null:
-			character_name = _current_node.character.character_name
-		if _current_node.character_variant != null:
-			variant_name = _current_node.character_variant.variant_name
+		if node.character != null:
+			character_name = node.character.character_name
+		if node.character_variant != null:
+			variant_name = node.character_variant.variant_name
 	
 	if _split_dialogue_for_node(dialogue_type, _split_dialogue):
+		# TODO: This should strip before splitting in case there
+		# are blank lines before or after the interesting text.
 		var lines = text.split("\n")
-		for line in lines:
+		for index in range(len(lines)):
 			# Just in case there are blank lines
-			if line == "":
+			if lines[index] == "":
 				continue
 			var process = _await_response()
-			_emit_dialogue_signal.call_deferred(
+			var final_line = for_choice and index == len(lines) - 1
+			_emit_dialogue_signal_variant.call_deferred(
+				final_line,
+				choice_type,
 				dialogue_type_name,
-				line,
+				lines[index],
 				character_name,
 				variant_name,
 				process
@@ -340,7 +432,9 @@ func _process_dialogue_node():
 			await process.ready_to_proceed
 	else:
 		var process = _await_response()
-		_emit_dialogue_signal.call_deferred(
+		_emit_dialogue_signal_variant.call_deferred(
+			for_choice,
+			choice_type,
 			dialogue_type_name,
 			text,
 			character_name,
@@ -348,7 +442,11 @@ func _process_dialogue_node():
 			process
 		)
 		await process.ready_to_proceed
-	_current_node = _get_node_by_id(_current_node.next)
+	# If this dialogue is the child of a choice node,
+	# it is the choice node that needs to decide the
+	# next node to process.
+	if not for_choice:
+		_current_node = _get_node_by_id(node.next)
 	
 
 func _process_branch_node():
@@ -371,10 +469,12 @@ func _process_branch_node():
 
 
 func _emit_choices_signal(
+	choice_type,
 	choices,
 	process
 ):
 	choice_display_requested.emit(
+		choice_type,
 		choices,
 		process
 	)
@@ -383,7 +483,16 @@ func _emit_choices_signal(
 func _process_choice_node():
 	Logger.debug("Processing choice node \"%s\"." % _current_node)
 	
-	_last_choice_node_id = _current_node.id
+	var choice_type: Dictionary = _get_choice_type_by_name(
+		_current_node.choice_type
+	)
+	var choice_type_name = choice_type.get('name', "")
+	# TODO: What is the correct default here if the choice type is null?
+	var include_dialogue = choice_type.get('include_dialogue', false)
+	var show_dialogue_for_default = _current_node.show_dialogue_for_default
+	
+	if not choice_type.get("skip_for_repeat", false):
+		_last_choice_node_id = _current_node.id
 	
 	var choices = {}
 	for i in range(len(_current_node.choices)):
@@ -406,16 +515,30 @@ func _process_choice_node():
 				text = choice.display
 			choices[i] = text
 	
-	if !choices.is_empty():
+	if !choices.is_empty() or (include_dialogue and show_dialogue_for_default):
+		
+		if include_dialogue:
+			await _process_dialogue_node_internal(
+				_current_node.dialogue,
+				true,
+				choice_type_name
+			)
+		
 		var process = _await_response()
 		_emit_choices_signal.call_deferred(
+			choice_type_name,
 			choices,
 			process
 		)
 		var choice = await process.ready_to_proceed
-		_current_node = _get_node_by_id(
-			_current_node.choices[choice].next
-		)
+		if !choices.is_empty():
+			_current_node = _get_node_by_id(
+				_current_node.choices[choice].next
+			)
+		else:
+			_current_node = _get_node_by_id(
+				_current_node.next
+			)
 	else:
 		_current_node = _get_node_by_id(
 			_current_node.next

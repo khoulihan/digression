@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://bqak4rreivdak"]
+
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/choice_types_edit/ChoiceTypesEditDialog.gd" id="1_qbql7"]
+[ext_resource type="PackedScene" uid="uid://cqgf3bx1e00m6" path="res://addons/hyh.cutscene_graph/editor/choice_types_edit/ChoiceTypesEditDialogContents.tscn" id="2_pcj6w"]
+
+[node name="ChoiceTypesEditDialog" type="Window"]
+title = "Choice Types"
+size = Vector2i(1000, 420)
+unresizable = true
+script = ExtResource("1_qbql7")
+
+[node name="ChoiceTypesEditDialogContents" parent="." instance=ExtResource("2_pcj6w")]
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="closing" from="ChoiceTypesEditDialogContents" to="." method="_on_choice_types_edit_dialog_contents_closing"]

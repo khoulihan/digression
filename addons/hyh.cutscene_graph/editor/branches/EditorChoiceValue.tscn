@@ -6,7 +6,7 @@
 
 [node name="ChoiceValue" type="MarginContainer"]
 offset_right = 306.0
-offset_bottom = 146.0
+offset_bottom = 136.0
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
@@ -15,6 +15,7 @@ script = ExtResource("1_4mgxx")
 
 [node name="HBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
+size_flags_stretch_ratio = 0.0
 theme_override_constants/separation = 10
 
 [node name="HSeparator" type="HSeparator" parent="HBoxContainer"]
