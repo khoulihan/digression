@@ -36,14 +36,14 @@ signal cutscene_completed()
 signal dialogue_display_requested(
 	dialogue_type,
 	text,
-	character_name,
+	character,
 	character_variant,
 	process
 )
 ## A request to perform an action.
 signal action_requested(
 	action,
-	character_name,
+	character,
 	character_variant,
 	argument,
 	process
@@ -54,7 +54,7 @@ signal choice_dialogue_display_requested(
 	choice_type,
 	dialogue_type,
 	text,
-	character_name,
+	character,
 	character_variant,
 	process
 )
@@ -309,7 +309,7 @@ func _emit_dialogue_signal_variant(
 	choice_type,
 	dialogue_type,
 	text,
-	character_name,
+	character,
 	character_variant,
 	process
 ):
@@ -318,7 +318,7 @@ func _emit_dialogue_signal_variant(
 			choice_type,
 			dialogue_type,
 			text,
-			character_name,
+			character,
 			character_variant,
 			process
 		)
@@ -326,7 +326,7 @@ func _emit_dialogue_signal_variant(
 		_emit_dialogue_signal(
 			dialogue_type,
 			text,
-			character_name,
+			character,
 			character_variant,
 			process
 		)
@@ -335,14 +335,14 @@ func _emit_dialogue_signal_variant(
 func _emit_dialogue_signal(
 	dialogue_type,
 	text,
-	character_name,
+	character,
 	character_variant,
 	process
 ):
 	dialogue_display_requested.emit(
 		dialogue_type,
 		text,
-		character_name,
+		character,
 		character_variant,
 		process
 	)
@@ -352,7 +352,7 @@ func _emit_choice_dialogue_signal(
 	choice_type,
 	dialogue_type,
 	text,
-	character_name,
+	character,
 	character_variant,
 	process
 ):
@@ -360,7 +360,7 @@ func _emit_choice_dialogue_signal(
 		choice_type,
 		dialogue_type,
 		text,
-		character_name,
+		character,
 		character_variant,
 		process
 	)
@@ -401,14 +401,14 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 	)
 	var dialogue_type_name = dialogue_type.get('name', "")
 	
-	var character_name = null
-	var variant_name = null
+	var character = null
+	var variant = null
 	
 	if dialogue_type.get('involves_character', true):
 		if node.character != null:
-			character_name = node.character.character_name
+			character = node.character
 		if node.character_variant != null:
-			variant_name = node.character_variant.variant_name
+			variant = node.character_variant
 	
 	if _split_dialogue_for_node(dialogue_type, _split_dialogue):
 		# TODO: This should strip before splitting in case there
@@ -425,8 +425,8 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 				choice_type,
 				dialogue_type_name,
 				lines[index],
-				character_name,
-				variant_name,
+				character,
+				variant,
 				process
 			)
 			await process.ready_to_proceed
@@ -437,8 +437,8 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 			choice_type,
 			dialogue_type_name,
 			text,
-			character_name,
-			variant_name,
+			character,
+			variant,
 			process
 		)
 		await process.ready_to_proceed
@@ -560,14 +560,14 @@ func _process_set_node():
 
 func _emit_action_signal(
 	action,
-	character_name,
+	character,
 	character_variant,
 	argument,
 	process
 ):
 	action_requested.emit(
 		action,
-		character_name,
+		character,
 		character_variant,
 		argument,
 		process
@@ -579,17 +579,17 @@ func _process_action_node():
 	
 	var process = _await_response()
 	
-	var character_name = null
-	var variant_name = null
+	var character = null
+	var variant = null
 	if _current_node.character != null:
-		character_name = _current_node.character.character_name
+		character = _current_node.character
 	if _current_node.character_variant != null:
-		variant_name = _current_node.character_variant.variant_name
+		variant = _current_node.character_variant
 	
 	_emit_action_signal.call_deferred(
 		_current_node.action_name,
-		character_name,
-		variant_name,
+		character,
+		variant,
 		_current_node.argument,
 		process
 	)
