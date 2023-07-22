@@ -1,5 +1,5 @@
 @tool
-@icon("res://addons/hyh.cutscene_graph/icons/icon_graph_node.svg")
+@icon("res://addons/hyh.cutscene_graph/icons/icon_chat.svg")
 extends Resource
 
 class_name CutsceneGraph

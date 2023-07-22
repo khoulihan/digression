@@ -32,8 +32,8 @@ func _enter_tree():
 	#add_custom_type("Character", "Resource", preload("resources/Character.gd"), preload("icon_sprite.svg"))
 	#add_custom_type("CharacterVariant", "Resource", preload("resources/CharacterVariant.gd"), preload("icon_texture_rect.svg"))
 	# TODO: Need a new icon for these - should be white at the very least, like other Node-derived types
-	add_custom_type("CutsceneController", "Node", preload("editor/CutsceneController.gd"), preload("icons/icon_graph_node.svg"))
-	add_custom_type("Cutscene", "Node", preload("editor/Cutscene.gd"), preload("icons/icon_graph_node.svg"))
+	add_custom_type("CutsceneController", "Node", preload("editor/CutsceneController.gd"), preload("icons/icon_cutscene_controller.svg"))
+	add_custom_type("Cutscene", "Node", preload("editor/Cutscene.gd"), preload("icons/icon_chat.svg"))
 	
 	# Check if the settings exist, and create some defaults if necessary
 	_create_default_project_settings()
@@ -263,7 +263,7 @@ func _get_plugin_name():
 
 
 func _get_plugin_icon():
-	return preload("icons/icon_graph_edit.svg")
+	return preload("icons/icon_chat.svg")
 
 
 func handles(object: Object) -> bool:

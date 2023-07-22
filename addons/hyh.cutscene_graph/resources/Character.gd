@@ -1,4 +1,4 @@
-@icon("res://addons/hyh.cutscene_graph/icons/icon_sprite.svg")
+@icon("res://addons/hyh.cutscene_graph/icons/icon_character.svg")
 extends Resource
 
 class_name Character

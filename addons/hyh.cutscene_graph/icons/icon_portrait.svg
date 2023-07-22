@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 12 16"
+   version="1.1"
+   id="svg6915"
+   width="12"
+   height="16"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs6919" />
+  <!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+  <path
+     d="M 12,2 C 12,0.896875 11.103125,0 10,0 H 2 C 0.896875,0 0,0.896875 0,2 v 12 c 0,1.103125 0.896875,2 2,2 h 8 c 1.103125,0 2,-0.896875 2,-2 z M 4,6 A 2,2 0 1 1 8,6 2,2 0 1 1 4,6 Z M 2.5,11.14375 C 2.5,9.959375 3.459375,9 4.64375,9 H 7.359375 C 8.54375,9 9.503125,9.959375 9.503125,11.14375 9.503125,11.615625 9.11875,12 8.646875,12 H 3.35625 C 2.884375,12 2.5,11.615625 2.5,11.14375 Z"
+     id="path6913"
+     style="fill:#e7e7e7;fill-opacity:1;stroke-width:0.03125" />
+</svg>
