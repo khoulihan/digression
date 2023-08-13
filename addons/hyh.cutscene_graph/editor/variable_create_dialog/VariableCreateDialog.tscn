@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://dtow4yped1ran"]
+
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/variable_create_dialog/VariableCreateDialog.gd" id="1_buqw8"]
+[ext_resource type="PackedScene" uid="uid://gjnoxtngguo5" path="res://addons/hyh.cutscene_graph/editor/variable_create_dialog/VariableCreateDialogContents.tscn" id="1_epo82"]
+
+[node name="VariableCreateDialog" type="Window"]
+size = Vector2i(360, 460)
+script = ExtResource("1_buqw8")
+
+[node name="VariableCreateDialogContents" parent="." instance=ExtResource("1_epo82")]
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="cancelled" from="VariableCreateDialogContents" to="." method="_on_variable_create_dialog_contents_cancelled"]
+[connection signal="created" from="VariableCreateDialogContents" to="." method="_on_variable_create_dialog_contents_created"]
+[connection signal="resized" from="VariableCreateDialogContents" to="." method="_on_variable_create_dialog_contents_resized"]

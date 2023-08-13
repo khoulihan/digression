@@ -155,7 +155,7 @@ class ValueConditionMetaNode:
 		]
 	
 	func get_highlighted_display_text():
-		if variable_type == -1:
+		if variable_type == -1 or variable_name == null or variable_name.is_empty():
 			return "[color=red]%s[/color]" % _variable_display_name()
 		if comparison_type == ComparisonType.SET:
 			# TODO: Display at least some of the values I guess
@@ -276,16 +276,20 @@ func _create_item_for_condition(parent_item, condition):
 	
 	var item_meta
 	if condition is BooleanCondition:
+		Logger.debug("Creating boolean condition item")
 		item.set_meta("node_type", ConditionNodeType.BOOLEAN)
 		item_meta = BooleanConditionMetaNode.new()
 		item_meta.boolean_type = condition.operator
 	elif condition is ValueCondition:
+		Logger.debug("Creating value condition item")
 		item.set_meta("node_type", ConditionNodeType.VALUE)
 		item_meta = ValueConditionMetaNode.new()
 		item_meta.variable_name = condition.variable
 		item_meta.variable_type = condition.variable_type
 		item_meta.scope = condition.scope
 		_set_meta_comparison(item_meta, condition.comparison)
+	else:
+		Logger.error("Unrecognised condition type!")
 		
 	item.set_text(0, "%s" % item_meta.get_display_text())
 	item.set_meta("condition", item_meta)
@@ -599,14 +603,23 @@ func _on_value_node_edit_value_modified(
 	validation_text
 ):
 	var condition = _edited_node.get_meta("condition")
-	condition.variable_name = variable_name
-	condition.variable_type = variable_type
-	condition.scope = scope
-	condition.comparison_type = comparison_type
-	condition.value = value
-	condition.min_value = min_value
-	condition.max_value = max_value
-	condition.value_set = value_set
+	if variable_name != null:
+		condition.variable_name = variable_name
+		condition.variable_type = variable_type
+		condition.scope = scope
+		condition.comparison_type = comparison_type
+		condition.value = value
+		condition.min_value = min_value
+		condition.max_value = max_value
+		condition.value_set = value_set
+	else:
+		condition.variable_name = ""
+		condition.variable_type = VariableType.TYPE_BOOL
+		condition.scope = VariableScope.SCOPE_DIALOGUE
+		condition.value = null
+		condition.min_value = null
+		condition.max_value = null
+		condition.value_set = null
 	_edited_node.set_text(0, condition.get_display_text())
 	_refresh_summary_label()
 

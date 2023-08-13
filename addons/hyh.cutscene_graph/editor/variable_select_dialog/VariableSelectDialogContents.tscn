@@ -1,0 +1,167 @@
+[gd_scene load_steps=9 format=3 uid="uid://drhcsh36hritm"]
+
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/variable_select_dialog/VariableSelectDialogContents.gd" id="1_e8ad3"]
+[ext_resource type="Texture2D" uid="uid://yw0o1piqpci0" path="res://addons/hyh.cutscene_graph/icons/icon_scope_transient_light.svg" id="2_gtkwb"]
+[ext_resource type="Texture2D" uid="uid://obagryd77fku" path="res://addons/hyh.cutscene_graph/icons/icon_scope_local_light.svg" id="3_hbh0c"]
+[ext_resource type="Texture2D" uid="uid://dqtx77gjre00a" path="res://addons/hyh.cutscene_graph/icons/icon_scope_global_light.svg" id="4_7vxqt"]
+[ext_resource type="Texture2D" uid="uid://d1xqn6pvoeekw" path="res://addons/hyh.cutscene_graph/icons/icon_favourites.svg" id="4_qdda1"]
+[ext_resource type="Texture2D" uid="uid://d65jtbo3b07t" path="res://addons/hyh.cutscene_graph/icons/icon_clear.svg" id="5_3155d"]
+[ext_resource type="Texture2D" uid="uid://bta3jvd470c36" path="res://addons/hyh.cutscene_graph/icons/icon_close.svg" id="5_fxd2y"]
+[ext_resource type="Texture2D" uid="uid://dfvamw687u0qj" path="res://addons/hyh.cutscene_graph/icons/icon_search.svg" id="6_5h0w2"]
+
+[node name="VariableSelectDialogContents" type="MarginContainer"]
+offset_right = 1200.0
+offset_bottom = 600.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_e8ad3")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="BodyContainer" type="HSplitContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FavouritesPane" type="MarginContainer" parent="VBoxContainer/BodyContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="VBoxContainer" parent="VBoxContainer/BodyContainer/FavouritesPane"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/BodyContainer/FavouritesPane/HBoxContainer"]
+layout_mode = 2
+text = "Favourites:"
+
+[node name="FavouritesTree" type="Tree" parent="VBoxContainer/BodyContainer/FavouritesPane/HBoxContainer"]
+custom_minimum_size = Vector2(75, 75)
+layout_mode = 2
+size_flags_vertical = 3
+columns = 3
+allow_reselect = true
+hide_folding = true
+hide_root = true
+select_mode = 1
+
+[node name="Label2" type="Label" parent="VBoxContainer/BodyContainer/FavouritesPane/HBoxContainer"]
+layout_mode = 2
+text = "Recent:"
+
+[node name="RecentTree" type="Tree" parent="VBoxContainer/BodyContainer/FavouritesPane/HBoxContainer"]
+custom_minimum_size = Vector2(75, 75)
+layout_mode = 2
+size_flags_vertical = 3
+columns = 3
+allow_reselect = true
+hide_folding = true
+hide_root = true
+select_mode = 1
+
+[node name="SearchPane" type="MarginContainer" parent="VBoxContainer/BodyContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/BodyContainer/SearchPane"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/BodyContainer/SearchPane/VBoxContainer"]
+layout_mode = 2
+text = "Search:"
+
+[node name="SearchContainer" type="HBoxContainer" parent="VBoxContainer/BodyContainer/SearchPane/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScopeOptionButton" type="OptionButton" parent="VBoxContainer/BodyContainer/SearchPane/VBoxContainer/SearchContainer"]
+layout_mode = 2
+item_count = 3
+popup/item_0/text = "Transient"
+popup/item_0/icon = ExtResource("2_gtkwb")
+popup/item_0/id = 0
+popup/item_1/text = "Local"
+popup/item_1/icon = ExtResource("3_hbh0c")
+popup/item_1/id = 1
+popup/item_2/text = "Global"
+popup/item_2/icon = ExtResource("4_7vxqt")
+popup/item_2/id = 2
+
+[node name="ClearScopeButton" type="Button" parent="VBoxContainer/BodyContainer/SearchPane/VBoxContainer/SearchContainer"]
+layout_mode = 2
+tooltip_text = "Clear"
+icon = ExtResource("5_3155d")
+flat = true
+
+[node name="Spacer" type="MarginContainer" parent="VBoxContainer/BodyContainer/SearchPane/VBoxContainer/SearchContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+
+[node name="SearchEdit" type="LineEdit" parent="VBoxContainer/BodyContainer/SearchPane/VBoxContainer/SearchContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+clear_button_enabled = true
+right_icon = ExtResource("6_5h0w2")
+
+[node name="ClearSearchButton" type="Button" parent="VBoxContainer/BodyContainer/SearchPane/VBoxContainer/SearchContainer"]
+visible = false
+layout_mode = 2
+icon = ExtResource("5_fxd2y")
+
+[node name="MatchesTitleContainer" type="HBoxContainer" parent="VBoxContainer/BodyContainer/SearchPane/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/BodyContainer/SearchPane/VBoxContainer/MatchesTitleContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Matches:"
+
+[node name="FavouriteButton" type="Button" parent="VBoxContainer/BodyContainer/SearchPane/VBoxContainer/MatchesTitleContainer"]
+layout_mode = 2
+icon = ExtResource("4_qdda1")
+
+[node name="MatchesTree" type="Tree" parent="VBoxContainer/BodyContainer/SearchPane/VBoxContainer"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_vertical = 3
+columns = 4
+hide_folding = true
+hide_root = true
+select_mode = 1
+
+[node name="Label2" type="Label" parent="VBoxContainer/BodyContainer/SearchPane/VBoxContainer"]
+layout_mode = 2
+text = "Description:"
+
+[node name="DescriptionLabel" type="RichTextLabel" parent="VBoxContainer/BodyContainer/SearchPane/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_override_colors/default_color = Color(0.921569, 0.921569, 0.921569, 0.85098)
+
+[node name="FooterButtonsContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_constants/separation = 30
+
+[node name="CancelButton" type="Button" parent="VBoxContainer/FooterButtonsContainer"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="SelectButton" type="Button" parent="VBoxContainer/FooterButtonsContainer"]
+layout_mode = 2
+text = "Select"
+
+[connection signal="item_selected" from="VBoxContainer/BodyContainer/FavouritesPane/HBoxContainer/FavouritesTree" to="." method="_on_favourites_tree_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/BodyContainer/FavouritesPane/HBoxContainer/RecentTree" to="." method="_on_recent_tree_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/BodyContainer/SearchPane/VBoxContainer/SearchContainer/ScopeOptionButton" to="." method="_on_scope_option_button_item_selected"]
+[connection signal="pressed" from="VBoxContainer/BodyContainer/SearchPane/VBoxContainer/SearchContainer/ClearScopeButton" to="." method="_on_clear_scope_button_pressed"]
+[connection signal="text_changed" from="VBoxContainer/BodyContainer/SearchPane/VBoxContainer/SearchContainer/SearchEdit" to="." method="_on_search_edit_text_changed"]
+[connection signal="pressed" from="VBoxContainer/BodyContainer/SearchPane/VBoxContainer/MatchesTitleContainer/FavouriteButton" to="." method="_on_favourite_button_pressed"]
+[connection signal="item_activated" from="VBoxContainer/BodyContainer/SearchPane/VBoxContainer/MatchesTree" to="." method="_on_matches_tree_item_activated"]
+[connection signal="item_selected" from="VBoxContainer/BodyContainer/SearchPane/VBoxContainer/MatchesTree" to="." method="_on_matches_tree_item_selected"]
+[connection signal="nothing_selected" from="VBoxContainer/BodyContainer/SearchPane/VBoxContainer/MatchesTree" to="." method="_on_matches_tree_nothing_selected"]
+[connection signal="pressed" from="VBoxContainer/FooterButtonsContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/FooterButtonsContainer/SelectButton" to="." method="_on_select_button_pressed"]

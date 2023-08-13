@@ -4,6 +4,7 @@ extends VBoxContainer
 ## Emitted when saving the graph has been requested.
 signal save_requested(object, path)
 signal expand_button_toggled(button_pressed)
+signal variable_select_dialog_state_changed(favourites, recent)
 
 # Utility classes.
 const Logging = preload("../utility/Logging.gd")
@@ -524,7 +525,7 @@ func _configure_editor_node_state(
 		new_editor_node.set_dialogue_types(_dialogue_types)
 	if new_editor_node.has_method("set_choice_types"):
 		new_editor_node.set_choice_types(_choice_types)
-	new_editor_node.configure_for_node(_edited.graph, new_graph_node, true)
+	new_editor_node.configure_for_node(_edited.graph, new_graph_node)
 
 
 func _connect_new_editor_node_if_necessary(

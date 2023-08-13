@@ -22,6 +22,9 @@ enum VariableType {
 
 var value
 
+# This is used only for recreating the node state in the editor
+@export var size: Vector2
+
 
 # This is necessary to ensure that "value" is saved to the resource
 func _get_property_list():

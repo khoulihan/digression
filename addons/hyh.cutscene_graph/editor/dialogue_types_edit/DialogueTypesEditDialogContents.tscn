@@ -76,6 +76,7 @@ size_flags_horizontal = 3
 layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/GraphTypesPane/VBoxContainer"]
+visible = false
 layout_mode = 2
 
 [node name="SecondPanelHeaderLabel" type="Label" parent="VBoxContainer/HSplitContainer/GraphTypesPane/VBoxContainer/HBoxContainer"]
@@ -93,6 +94,7 @@ texture = ExtResource("5_wivtf")
 stretch_mode = 2
 
 [node name="GraphTypesTree" type="Tree" parent="VBoxContainer/HSplitContainer/GraphTypesPane/VBoxContainer"]
+visible = false
 custom_minimum_size = Vector2(200, 300)
 layout_mode = 2
 size_flags_vertical = 3

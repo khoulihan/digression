@@ -48,14 +48,14 @@ func _configure_for_type():
 			SpinBoxControl.step = 0.0001
 
 
-func _clear_values():
+func clear_values():
 	CheckBoxControl.button_pressed = true
 	LineEditControl.text = ""
 	SpinBoxControl.value = 0
 
 
 func set_value(val):
-	_clear_values()
+	clear_values()
 	match variable_type:
 		VariableType.TYPE_BOOL:
 			if val == null:

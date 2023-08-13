@@ -7,23 +7,22 @@ const VariableScope = preload("../../resources/graph/VariableSetNode.gd").Variab
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
 
 
-@onready var VariableEdit = get_node("MarginContainer/VBoxContainer/HeaderContainer/GridContainer/VariableEdit")
-@onready var ScopeSelect = get_node("MarginContainer/VBoxContainer/HeaderContainer/GridContainer/ScopeSelect")
-@onready var TypeSelect = get_node("MarginContainer/VBoxContainer/HeaderContainer/GridContainer/TypeSelect")
-
+@onready var VariableSelectionControl = get_node("MarginContainer/VBoxContainer/HeaderContainer/GridContainer/VariableSelectionControl")
+@onready var AddValueButton : Button = get_node("MarginContainer/VBoxContainer/HeaderContainer/AddValueButton")
 
 var _original_size: Vector2
 
+var _variable_name
+var _variable_scope
+var _variable_type
+
 
 func get_variable():
-	return VariableEdit.text
+	return _variable_name
 
 
 func set_variable(val):
-	if val != null:
-		VariableEdit.text = val
-	else:
-		VariableEdit.text = ""
+	_variable_name = val
 
 
 func get_values():
@@ -40,25 +39,19 @@ func set_values(values):
 
 
 func get_scope():
-	return ScopeSelect.selected
+	return _variable_scope
 
 
 func set_scope(val):
-	if val != null:
-		ScopeSelect.select(val)
-	else:
-		ScopeSelect.select(ScopeSelect.get_item_index(VariableScope.SCOPE_DIALOGUE))
+	_variable_scope = val
 
 
 func get_type():
-	return TypeSelect.get_selected_id()
+	return _variable_type
 
 
 func set_type(val):
-	if val != null:
-		TypeSelect.select(TypeSelect.get_item_index(val))
-	else:
-		TypeSelect.select(TypeSelect.get_item_index(VariableType.TYPE_BOOL))
+	_variable_type = val
 	for index in range(1, get_child_count()):
 		get_child(index).set_type(val)
 
@@ -103,6 +96,16 @@ func configure_for_node(g, n):
 	set_variable(n.variable)
 	set_scope(n.scope)
 	set_type(n.variable_type)
+	if _variable_name != null and not _variable_name.is_empty():
+		VariableSelectionControl.configure_for_variable(
+			_variable_name,
+			_variable_scope,
+			_variable_type,
+		)
+		AddValueButton.disabled = false
+	else:
+		AddValueButton.disabled = true
+		
 	set_values(n.get_values())
 
 
@@ -150,15 +153,16 @@ func _on_gui_input(ev):
 	super._on_gui_input(ev)
 
 
-func _on_ScopeSelect_item_selected(index):
-	emit_signal("modified")
-
-
-func _on_VariableEdit_text_changed(new_text):
-	emit_signal("modified")
-
-
-func _on_TypeSelect_item_selected(index):
+func _on_variable_selection_control_variable_selected(variable):
+	set_variable(variable['name'])
+	set_scope(variable['scope'])
+	set_type(variable['type'])
+	VariableSelectionControl.configure_for_variable(
+		_variable_name,
+		_variable_scope,
+		_variable_type,
+	)
 	for i in range(1, get_child_count()):
-		get_child(i).set_type(TypeSelect.get_item_id(index))
+		get_child(i).set_type(_variable_type)
+	AddValueButton.disabled = false
 	emit_signal("modified")
