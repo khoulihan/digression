@@ -30,6 +30,7 @@ theme_override_constants/v_separation = 10
 
 [node name="ConditionControl" parent="VBoxContainer/HBoxContainer/VariableContainer" instance=ExtResource("2_e0v4u")]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="RemoveButton" type="Button" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
