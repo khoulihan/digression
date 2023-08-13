@@ -1171,6 +1171,10 @@ func _set_graph_popup_option_states_for_connected_creation():
 			GraphPopupMenuItems.ADD_ANCHOR_NODE,
 			false
 		)
+	_graph_popup.set_item_disabled(
+		GraphPopupMenuItems.ADD_COMMENT_NODE,
+		true
+	)
 
 
 func _set_all_graph_popup_disabled(state):
