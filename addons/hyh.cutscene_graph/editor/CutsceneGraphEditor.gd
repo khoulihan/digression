@@ -887,11 +887,6 @@ func _connect_node_signals(node):
 			node.name
 		)
 	)
-	node.position_offset_changed.connect(
-		_node_offset_changed.bind(
-			node.name
-		)
-	)
 	node.modified.connect(
 		_node_modified.bind(
 			node.name
@@ -1096,12 +1091,6 @@ func _on_GraphEdit_disconnection_request(from, from_slot, to, to_slot):
 	var from_node = _graph_edit.get_node(NodePath(from))
 	if from_node is EditorJumpNodeClass:
 		from_node.set_destination(-1)
-	_set_dirty(true)
-	perform_save()
-
-
-func _node_offset_changed(node_name):
-	Logger.debug("Graph node offset changed")
 	_set_dirty(true)
 	perform_save()
 
