@@ -5,6 +5,7 @@ extends VBoxContainer
 signal save_requested(object, path)
 signal expand_button_toggled(button_pressed)
 signal variable_select_dialog_state_changed(favourites, recent)
+signal display_filesystem_path_requested(path)
 
 # Utility classes.
 const Logging = preload("../utility/Logging.gd")
@@ -53,6 +54,16 @@ const EditorJumpNode = preload("./nodes/EditorJumpNode.tscn")
 const EditorAnchorNode = preload("./nodes/EditorAnchorNode.tscn")
 const EditorRoutingNode = preload("./nodes/EditorRoutingNode.tscn")
 const EditorRepeatNode = preload("./nodes/EditorRepeatNode.tscn")
+
+
+class ResourceClipboard:
+	signal changed(value)
+	var contents:
+		get:
+			return contents
+		set(value):
+			contents = value
+			changed.emit(contents)
 
 
 class OpenGraph:
@@ -110,6 +121,7 @@ enum ConnectionTypes {
 var _open_graphs
 var _edited
 var _current_graph_type
+var _resource_clipboard
 
 # Nodes
 var _save_dialog
@@ -156,6 +168,9 @@ func _init():
 
 
 func _ready():
+	# Create clipboard
+	_resource_clipboard = ResourceClipboard.new()
+	
 	# Set up editor
 	_graph_edit.popup_request.connect(
 		_graph_popup_requested
@@ -199,7 +214,7 @@ func _ready():
 	_open_graph_dialog = EditorFileDialog.new()
 	_open_graph_dialog.add_filter("*.tres")
 	_open_graph_dialog.access = EditorFileDialog.ACCESS_RESOURCES
-	_open_graph_dialog.mode = EditorFileDialog.FILE_MODE_OPEN_FILE
+	_open_graph_dialog.file_mode = EditorFileDialog.FILE_MODE_OPEN_FILE
 	self.add_child(_open_graph_dialog)
 	_open_graph_dialog.file_selected.connect(
 		_graph_file_selected_for_opening
@@ -208,7 +223,7 @@ func _ready():
 	_open_sub_graph_dialog = EditorFileDialog.new()
 	_open_sub_graph_dialog.add_filter("*.tres")
 	_open_sub_graph_dialog.access = EditorFileDialog.ACCESS_RESOURCES
-	_open_sub_graph_dialog.mode = EditorFileDialog.FILE_MODE_OPEN_FILE
+	_open_sub_graph_dialog.file_mode = EditorFileDialog.FILE_MODE_OPEN_FILE
 	self.add_child(_open_sub_graph_dialog)
 	_open_sub_graph_dialog.file_selected.connect(
 		_sub_graph_file_selected_for_opening
@@ -323,6 +338,10 @@ func _sub_graph_file_selected_for_opening(path):
 		_error_dialog.popup_centered()
 		return
 	_configure_sub_graph_node(_sub_graph_editor_node_for_assignment, res)
+
+
+func _display_filesystem_path_requested(path):
+	display_filesystem_path_requested.emit(path)
 
 
 func _configure_sub_graph_node(editor_node, res):
@@ -694,11 +713,6 @@ func _on_open():
 	_get_open_path()
 
 
-func _sub_graph_selection_requested(node):
-	_sub_graph_editor_node_for_assignment = node
-	_get_sub_graph_open_path()
-
-
 func _sub_graph_open_requested(graph, editor_node):
 	edit_graph(graph, graph.resource_path)
 
@@ -820,6 +834,7 @@ func _instantiate_editor_node_for_graph_node(node):
 		editor_node.populate_characters(_edited.graph.characters)
 	elif node is SubGraph:
 		editor_node = EditorSubGraphNode.instantiate()
+		editor_node.set_resource_clipboard(_resource_clipboard)
 	elif node is RandomNode:
 		editor_node = EditorRandomNode.instantiate()
 	elif node is CommentNode:
@@ -893,15 +908,13 @@ func _connect_node_signals(node):
 		)
 	)
 	if node is EditorSubGraphNodeClass:
-		node.sub_graph_selection_requested.connect(
-			_sub_graph_selection_requested.bind(
-				node
-			)
-		)
 		node.sub_graph_open_requested.connect(
 			_sub_graph_open_requested.bind(
 				node
 			)
+		)
+		node.display_filesystem_path_requested.connect(
+			_display_filesystem_path_requested
 		)
 	if node is EditorJumpNodeClass:
 		node.destination_chosen.connect(

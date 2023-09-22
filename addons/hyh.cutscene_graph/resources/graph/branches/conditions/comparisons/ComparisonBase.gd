@@ -20,6 +20,10 @@ func evaluate(val) -> bool:
 	return false
 
 
+func custom_duplicate(subresources=false):
+	return self.duplicate(subresources)
+
+
 func get_highlighted_syntax(variable) -> String:
 	print ("Base comparison")
 	return "[color=%s]%s[/color]" % [

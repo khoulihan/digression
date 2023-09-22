@@ -16,5 +16,14 @@ func evaluate(value) -> bool:
 	return comparison.evaluate(value)
 
 
+func custom_duplicate(subresources=false):
+	var dup = super(subresources)
+	if not subresources:
+		return dup
+	if self.comparison != null:
+		dup.comparison = self.comparison.custom_duplicate(true)
+	return dup
+
+
 func get_highlighted_syntax() -> String:
 	return comparison.get_highlighted_syntax(variable)

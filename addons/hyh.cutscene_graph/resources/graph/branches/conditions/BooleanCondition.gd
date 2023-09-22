@@ -10,6 +10,16 @@ enum BooleanType {
 @export var children: Array
 
 
+func custom_duplicate(subresources=false):
+	var dup = super(subresources)
+	if not subresources:
+		return dup
+	dup.children.clear()
+	for child in self.children:
+		dup.children.append(child.custom_duplicate(true))
+	return dup
+
+
 # I don't think it would be possible to implement an `evaluate` method here
 # because would need to retrieve the variable value for each `ValueConditional`
 # descendant, and I think that will probably be better handled by the

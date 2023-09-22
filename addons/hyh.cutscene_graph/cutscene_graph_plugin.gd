@@ -128,10 +128,18 @@ func _create_editor():
 	editor.expand_button_toggled.connect(
 		_editor_expand_button_toggled
 	)
+	editor.display_filesystem_path_requested.connect(
+		_display_filesystem_path_requested
+	)
 	editor_button = add_control_to_bottom_panel(editor, _get_plugin_name())
 	var button_parent = editor_button.get_parent().get_parent()
 	# Caution: this method of obtaining the expand button could break at any time
 	expand_button = button_parent.get_child(button_parent.get_child_count() - 1)
+
+
+func _display_filesystem_path_requested(path):
+	Logger.debug("Navigating to path %s" % path)
+	get_editor_interface().get_file_system_dock().navigate_to_path(path)
 
 
 func _editor_expand_button_toggled(button_pressed):

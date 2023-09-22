@@ -5,7 +5,15 @@ extends Resource
 class_name CutsceneGraph
 
 
+# Utility classes.
+const ResourceHelper = preload("../../utility/ResourceHelper.gd")
+
+
 const AnchorNode = preload("AnchorNode.gd")
+const SubGraph = preload("SubGraph.gd")
+const DialogueChoiceNode = preload("DialogueChoiceNode.gd")
+const BranchNode = preload("BranchNode.gd")
+const RandomNode = preload("RandomNode.gd")
 
 const NEW_ANCHOR_PREFIX = "destination_"
 
@@ -117,3 +125,89 @@ func _init():
 			default_graph_type = gt["name"]
 			break
 	self.graph_type = default_graph_type
+
+
+func duplicate_with_nodes():
+	# Need this to replace built-in `duplicate` method, which is not
+	# copying the nodes collection.
+	var duplicate = CutsceneGraph.new()
+	duplicate.name = self.name
+	duplicate.display_name = self.display_name
+	duplicate.graph_type = self.graph_type
+	duplicate.notes = self.notes
+	
+	# Copy the characters, creating a map to allow the new nodes to be
+	# pointed at the copies. Only embedded characters are duplicated.
+	var character_map = {}
+	var variant_map = {}
+	for character in self.characters:
+		if not ResourceHelper.is_embedded(character):
+			character_map[character] = character
+			for variant in character.character_variants:
+				variant_map[variant] = variant
+			duplicate.characters.append(character)
+		else:
+			var character_dup = character.duplicate()
+			character_dup.character_variants.clear()
+			character_map[character] = character_dup
+			for variant in character.character_variants:
+				if not ResourceHelper.is_embedded(variant):
+					variant_map[variant] = variant
+					character_dup.character_variants.append(variant)
+				else:
+					var variant_dup = variant.duplicate()
+					variant_map[variant] = variant_dup
+					character_dup.character_variants.append(variant_dup)
+			duplicate.characters.append(character_dup)
+	
+	# Copy the nodes
+	#duplicate.nodes.clear()
+	for node_id in self.nodes.keys():
+		var node = self.nodes[node_id]
+		var node_dup = _duplicate_node(
+			node,
+			character_map,
+			variant_map,
+		)
+		duplicate.nodes[node_id] = node_dup
+		if self.root_node == node:
+			duplicate.root_node = node_dup
+
+	# Since we are using the same IDs, connections should
+	# work fine in the duplicate...
+	
+	return duplicate
+
+
+func _duplicate_node(node, character_map, variant_map):
+	var node_dup = node.duplicate()
+	
+	if node is SubGraph:
+		if ResourceHelper.is_embedded(node.sub_graph):
+			node_dup.sub_graph = node.sub_graph.duplicate_with_nodes()
+	if "character" in node:
+		if node.character != null:
+			node_dup.character = character_map[node.character]
+	if "character_variant" in node:
+		if node.character_variant != null:
+			node_dup.character_variant = variant_map[node.character_variant]
+	# "dialogue" property of DialogueChoiceNode
+	if "dialogue" in node:
+		node_dup.dialogue = _duplicate_node(
+			node.dialogue,
+			character_map,
+			variant_map,
+		)
+	# Duplicate any branch resources
+	# Branch node currently does not require this because its branches
+	# are just IDs
+	if node is DialogueChoiceNode:
+		node_dup.choices.clear()
+		for choice in node.choices:
+			node_dup.choices.append(choice.duplicate(true))
+	if node is RandomNode:
+		node_dup.branches.clear()
+		for branch in node.branches:
+			node_dup.branches.append(branch.duplicate(true))
+	# TODO: Do we need to deal with Conditions explicitly?
+	return node_dup
