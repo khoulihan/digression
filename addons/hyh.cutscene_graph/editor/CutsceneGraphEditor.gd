@@ -6,6 +6,7 @@ signal save_requested(object, path)
 signal expand_button_toggled(button_pressed)
 signal variable_select_dialog_state_changed(favourites, recent)
 signal display_filesystem_path_requested(path)
+signal graph_edited(graph)
 
 # Utility classes.
 const Logging = preload("../utility/Logging.gd")
@@ -714,7 +715,7 @@ func _on_open():
 
 
 func _sub_graph_open_requested(graph, editor_node):
-	edit_graph(graph, graph.resource_path)
+	graph_edited.emit(graph)
 
 
 func _on_close():

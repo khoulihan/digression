@@ -131,10 +131,17 @@ func _create_editor():
 	editor.display_filesystem_path_requested.connect(
 		_display_filesystem_path_requested
 	)
+	editor.graph_edited.connect(
+		_graph_edited
+	)
 	editor_button = add_control_to_bottom_panel(editor, _get_plugin_name())
 	var button_parent = editor_button.get_parent().get_parent()
 	# Caution: this method of obtaining the expand button could break at any time
 	expand_button = button_parent.get_child(button_parent.get_child_count() - 1)
+
+
+func _graph_edited(graph):
+	get_editor_interface().edit_resource(graph)
 
 
 func _display_filesystem_path_requested(path):
@@ -259,6 +266,7 @@ func _exit_tree():
 	editor.save_requested.disconnect(
 		_save_requested
 	)
+	editor.graph_edited.disconnect(_graph_edited)
 	remove_control_from_bottom_panel(editor)
 	menu.id_pressed.disconnect(_tool_menu_item_selected)
 	remove_tool_menu_item("Cutscene Graph Editor")
