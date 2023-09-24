@@ -81,10 +81,8 @@ func get_value():
 		VariableType.TYPE_STRING:
 			return LineEditControl.text
 		VariableType.TYPE_INT:
-			Logger.debug("Variable int value: %s" % (SpinBoxControl.value as int))
 			return SpinBoxControl.value as int
 		VariableType.TYPE_FLOAT:
-			Logger.debug("Variable float value: %s" % (SpinBoxControl.value as float))
 			return SpinBoxControl.value as float
 
 
