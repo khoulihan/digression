@@ -1,6 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://dkdmsbw1ph825"]
+[gd_scene load_steps=7 format=3 uid="uid://dkdmsbw1ph825"]
 
 [ext_resource type="Texture2D" uid="uid://2hw2ojtmrrsm" path="res://addons/hyh.cutscene_graph/icons/icon_expand.svg" id="2_4k8uw"]
+[ext_resource type="Texture2D" uid="uid://cphlblvt01plb" path="res://addons/hyh.cutscene_graph/icons/icon_chat.svg" id="2_hackq"]
+[ext_resource type="PackedScene" uid="uid://dhubj3hnf0rxp" path="res://addons/hyh.cutscene_graph/editor/controls/GraphBreadcrumbs.tscn" id="3_8v60q"]
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/CutsceneGraphEditor.gd" id="6"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_bqxlt"]
@@ -23,13 +25,19 @@ script = ExtResource("6")
 [node name="MenuBar" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MenuBar"]
+[node name="MarginContainer" type="MarginContainer" parent="MenuBar"]
 layout_mode = 2
-text = "Cutscene: "
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 6
 
-[node name="CutsceneName" type="Label" parent="MenuBar"]
+[node name="TextureRect" type="TextureRect" parent="MenuBar/MarginContainer"]
 layout_mode = 2
-text = "None"
+size_flags_vertical = 4
+texture = ExtResource("2_hackq")
+
+[node name="GraphBreadcrumbs" parent="MenuBar" instance=ExtResource("3_8v60q")]
+layout_mode = 2
+size_flags_vertical = 4
 
 [node name="ExpandButton" type="Button" parent="MenuBar"]
 layout_mode = 2
@@ -98,6 +106,7 @@ item_0/id = -1
 
 [node name="ErrorDialog" type="AcceptDialog" parent="."]
 
+[connection signal="graph_open_requested" from="MenuBar/GraphBreadcrumbs" to="." method="_on_graph_breadcrumbs_graph_open_requested"]
 [connection signal="toggled" from="MenuBar/ExpandButton" to="." method="_on_expand_button_toggled"]
 [connection signal="connection_request" from="MarginContainer/GraphEdit" to="." method="_on_GraphEdit_connection_request"]
 [connection signal="connection_to_empty" from="MarginContainer/GraphEdit" to="." method="_on_graph_edit_connection_to_empty"]

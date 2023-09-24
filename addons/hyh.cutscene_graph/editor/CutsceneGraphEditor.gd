@@ -121,6 +121,9 @@ enum ConnectionTypes {
 
 var _open_graphs
 var _edited
+# This is for recording a stack of edited subgraphs
+# It is cleared when a graph is edited in the scene tree or filesystem
+var _graph_stack
 var _current_graph_type
 var _resource_clipboard
 
@@ -130,11 +133,11 @@ var _open_graph_dialog
 var _open_sub_graph_dialog
 var _open_character_dialog
 @onready var _graph_edit = $MarginContainer/GraphEdit
-@onready var _cutscene_name = $MenuBar/CutsceneName
 @onready var _graph_popup = $GraphContextMenu
 @onready var _node_popup = $NodePopupMenu
 @onready var _confirmation_dialog = $ConfirmationDialog
 @onready var _error_dialog = $ErrorDialog
+@onready var _breadcrumbs = $MenuBar/GraphBreadcrumbs
 
 # State variables for carrying out user actions.
 var _last_popup_position
@@ -145,6 +148,7 @@ var _confirmation_action
 var _node_to_remove
 var _node_for_popup
 var _sub_graph_editor_node_for_assignment
+var _sub_graph_edit_requested
 
 # Anchor maps
 # TODO: One of these is not actually required.
@@ -166,6 +170,7 @@ var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
 
 func _init():
 	_open_graphs = Array()
+	_graph_stack = Array()
 
 
 func _ready():
@@ -284,7 +289,11 @@ func edit_graph(object, path):
 		_edited.graph.changed.disconnect(
 			_edited_resource_changed
 		)
+	if not _sub_graph_edit_requested:
+		_graph_stack.clear()
 	_edited = edited
+	_graph_stack.append(_edited.graph)
+	_sub_graph_edit_requested = false
 	_current_graph_type = _edited.graph.graph_type
 	_edited.graph.changed.connect(
 		_edited_resource_changed
@@ -297,6 +306,7 @@ func edit_graph(object, path):
 	)
 	_refresh_anchor_maps()
 	_draw_edited_graph()
+	_breadcrumbs.populate(_graph_stack)
 
 
 func _refresh_anchor_maps():
@@ -715,6 +725,7 @@ func _on_open():
 
 
 func _sub_graph_open_requested(graph, editor_node):
+	_sub_graph_edit_requested = true
 	graph_edited.emit(graph)
 
 
@@ -778,8 +789,6 @@ func _draw_edited_graph(retain_selection=false):
 
 	if _edited == null:
 		return
-		
-	_cutscene_name.text = _get_name(_edited.graph)
 
 	# Now create and configure the display nodes
 	for node in _edited.graph.nodes.values():
@@ -983,7 +992,6 @@ func _clear_displayed_graph():
 		Logger.debug("Removing node %s" % node.name)
 		_graph_edit.remove_child(node)
 		node.queue_free()
-	_cutscene_name.text = "None"
 
 
 ## Update the graph resources from the current state of the UI.
@@ -1060,10 +1068,7 @@ func _edited_resource_changed():
 			_current_graph_type
 		)
 		_draw_edited_graph(true)
-	if _edited != null:
-		_cutscene_name.text = _get_name(_edited.graph)
-	else:
-		_cutscene_name.text = "None"
+	_breadcrumbs.populate(_graph_stack)
 
 
 func _on_GraphEdit_connection_request(from, from_slot, to, to_slot):
@@ -1382,3 +1387,10 @@ func _on_graph_edit_duplicate_nodes_request():
 
 func _on_expand_button_toggled(button_pressed):
 	expand_button_toggled.emit(button_pressed)
+
+
+func _on_graph_breadcrumbs_graph_open_requested(index):
+	_sub_graph_edit_requested = true
+	var graph = _graph_stack[index]
+	_graph_stack.resize(index)
+	graph_edited.emit(graph)
