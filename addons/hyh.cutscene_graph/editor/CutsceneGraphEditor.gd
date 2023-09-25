@@ -174,6 +174,8 @@ func _init():
 
 
 func _ready():
+	_breadcrumbs.populate([])
+	
 	# Create clipboard
 	_resource_clipboard = ResourceClipboard.new()
 	
