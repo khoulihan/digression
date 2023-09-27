@@ -7,6 +7,7 @@ signal expand_button_toggled(button_pressed)
 signal variable_select_dialog_state_changed(favourites, recent)
 signal display_filesystem_path_requested(path)
 signal graph_edited(graph)
+signal current_graph_modified()
 
 # Utility classes.
 const Logging = preload("../utility/Logging.gd")
@@ -964,6 +965,7 @@ func _populate_anchor_destinations():
 
 func _set_dirty(val):
 	_edited.dirty = val
+	current_graph_modified.emit()
 
 
 func _get_editor_node_for_graph_node(n):
@@ -1071,6 +1073,7 @@ func _edited_resource_changed():
 		)
 		_draw_edited_graph(true)
 	_breadcrumbs.populate(_graph_stack)
+	current_graph_modified.emit()
 
 
 func _on_GraphEdit_connection_request(from, from_slot, to, to_slot):

@@ -17,6 +17,8 @@ var editor_button
 var expand_button
 var menu
 
+var _current_graph_is_in_scene
+
 var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
 
 
@@ -134,6 +136,9 @@ func _create_editor():
 	editor.graph_edited.connect(
 		_graph_edited
 	)
+	editor.current_graph_modified.connect(
+		_current_graph_modified
+	)
 	editor_button = add_control_to_bottom_panel(editor, _get_plugin_name())
 	var button_parent = editor_button.get_parent().get_parent()
 	# Caution: this method of obtaining the expand button could break at any time
@@ -142,6 +147,15 @@ func _create_editor():
 
 func _graph_edited(graph):
 	get_editor_interface().edit_resource(graph)
+
+
+func _current_graph_modified():
+	if _current_graph_is_in_scene:
+		# This is not available until 4.1
+		# I don't see a way to do this in earlier versions.
+		var interface = get_editor_interface()
+		if interface.has_method("mark_scene_as_unsaved"):
+			get_editor_interface().mark_scene_as_unsaved()
 
 
 func _display_filesystem_path_requested(path):
@@ -267,6 +281,9 @@ func _exit_tree():
 		_save_requested
 	)
 	editor.graph_edited.disconnect(_graph_edited)
+	editor.current_graph_modified.disconnect(
+		_current_graph_modified
+	)
 	remove_control_from_bottom_panel(editor)
 	menu.id_pressed.disconnect(_tool_menu_item_selected)
 	remove_tool_menu_item("Cutscene Graph Editor")
@@ -299,8 +316,10 @@ func _edit(object):
 	var graph
 	if object is Cutscene:
 		graph = object.cutscene
+		_current_graph_is_in_scene = true
 	else:
 		graph = object
+		_current_graph_is_in_scene = false
 	if graph != null:
 		var current_resource_path = graph.resource_path
 		call_deferred("_request_edit", graph, current_resource_path)
