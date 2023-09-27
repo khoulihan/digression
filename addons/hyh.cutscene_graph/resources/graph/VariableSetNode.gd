@@ -2,8 +2,9 @@
 extends "GraphNodeBase.gd"
 
 enum VariableScope {
-	SCOPE_DIALOGUE,
-	SCOPE_SCENE,
+	SCOPE_TRANSIENT,
+	SCOPE_CUTSCENE,
+	SCOPE_LOCAL,
 	SCOPE_GLOBAL
 }
 

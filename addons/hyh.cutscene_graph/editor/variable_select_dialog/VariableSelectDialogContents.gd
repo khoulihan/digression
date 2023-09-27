@@ -15,6 +15,7 @@ const FloatIcon = preload("../../icons/icon_type_float.svg")
 const StringIcon = preload("../../icons/icon_type_string.svg")
 
 const TransientIcon = preload("../../icons/icon_scope_transient_light.svg")
+const CutsceneScopeIcon = preload("../../icons/icon_scope_cutscene_light.svg")
 const LocalIcon = preload("../../icons/icon_scope_local_light.svg")
 const GlobalIcon = preload("../../icons/icon_scope_global_light.svg")
 
@@ -200,9 +201,11 @@ func _perform_search_and_refresh():
 
 func _tooltip_for_scope(scope):
 	match scope:
-		VariableScope.SCOPE_DIALOGUE:
+		VariableScope.SCOPE_TRANSIENT:
 			return "Transient"
-		VariableScope.SCOPE_SCENE:
+		VariableScope.SCOPE_CUTSCENE:
+			return "Cutscene"
+		VariableScope.SCOPE_LOCAL:
 			return "Local"
 		VariableScope.SCOPE_GLOBAL:
 			return "Global"
@@ -211,9 +214,11 @@ func _tooltip_for_scope(scope):
 
 func _icon_for_scope(scope):
 	match scope:
-		VariableScope.SCOPE_DIALOGUE:
+		VariableScope.SCOPE_TRANSIENT:
 			return TransientIcon
-		VariableScope.SCOPE_SCENE:
+		VariableScope.SCOPE_CUTSCENE:
+			return CutsceneScopeIcon
+		VariableScope.SCOPE_LOCAL:
 			return LocalIcon
 		VariableScope.SCOPE_GLOBAL:
 			return GlobalIcon

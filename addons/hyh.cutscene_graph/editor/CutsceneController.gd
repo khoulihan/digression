@@ -90,13 +90,22 @@ class ProceedSignal:
 		ready_to_proceed.emit(choice)
 
 
+class Choice:
+	var text: String
+	var visited: bool:
+		get:
+			return visit_count > 0
+	var visit_count: int
+
+
 ## A node that can store variables for the scope of the entire game
 @export var global_store: NodePath
 ## A node that can store variables for the scope of the current level/scene
 @export var scene_store: NodePath
-var _local_store : Dictionary
+var _transient_store : Dictionary
+var _cutscene_state_store : Dictionary
 var _global_store : Node
-var _scene_store : Node
+var _local_store : Node
 
 var _dialogue_types
 var _choice_types
@@ -117,7 +126,7 @@ func register_global_store(store):
 ## Register a "scene" variable store
 func register_scene_store(store):
 	Logger.debug("Registering scene store")
-	_scene_store = store
+	_local_store = store
 
 
 func _ready():
@@ -138,21 +147,23 @@ func _ready():
 		"cutscene_graph_editor/choice_types"
 	)
 	
-	_local_store = {}
+	_transient_store = {}
 
 
 func _get_variable(variable_name, scope):
 	match scope:
-		VariableSetNode.VariableScope.SCOPE_DIALOGUE:
+		VariableSetNode.VariableScope.SCOPE_TRANSIENT:
 			# We can deal with these internally for the duration of a cutscene
-			return _local_store.get(variable_name)
-		VariableSetNode.VariableScope.SCOPE_SCENE:
-			if _scene_store == null:
+			return _transient_store.get(variable_name)
+		VariableSetNode.VariableScope.SCOPE_CUTSCENE:
+			return _cutscene_state_store.get(variable_name)
+		VariableSetNode.VariableScope.SCOPE_LOCAL:
+			if _local_store == null:
 				Logger.error(
 					"Scene variable \"%s\" requested but no scene store is available" % variable_name
 				)
 				return null
-			return _scene_store.get_variable(variable_name)
+			return _local_store.get_variable(variable_name)
 		VariableSetNode.VariableScope.SCOPE_GLOBAL:
 			if _global_store == null:
 				Logger.error(
@@ -165,10 +176,10 @@ func _get_variable(variable_name, scope):
 
 # This shouldn't really be required anymore
 func _get_first_variable(variable_name):
-	if variable_name in _local_store:
-		return _local_store[variable_name]
-	if _scene_store.has_variable(variable_name):
-		return _scene_store.get_variable(variable_name)
+	if variable_name in _transient_store:
+		return _transient_store[variable_name]
+	if _local_store.has_variable(variable_name):
+		return _local_store.get_variable(variable_name)
 	if _global_store.has_variable(variable_name):
 		return _global_store.get_variable(variable_name)
 	return null
@@ -176,22 +187,24 @@ func _get_first_variable(variable_name):
 
 func _set_variable(variable_name, scope, value):
 	match scope:
-		VariableSetNode.VariableScope.SCOPE_DIALOGUE:
+		VariableSetNode.VariableScope.SCOPE_TRANSIENT:
 			# We can deal with these internally for the duration of a cutscene
-			_local_store[variable_name] = value
-		VariableSetNode.VariableScope.SCOPE_SCENE:
-			if _scene_store == null:
+			_transient_store[variable_name] = value
+		VariableSetNode.VariableScope.SCOPE_CUTSCENE:
+			_cutscene_state_store[variable_name] = value
+		VariableSetNode.VariableScope.SCOPE_LOCAL:
+			if _local_store == null:
 				Logger.error(
 					"Scene variable \"%s\" set with value \"%s\" but no scene store is available" % [
 						variable_name, value
 					]
 				)
 				return
-			_scene_store.set_variable(variable_name, value)
+			_local_store.set_variable(variable_name, value)
 		VariableSetNode.VariableScope.SCOPE_GLOBAL:
-			if _scene_store == null:
+			if _global_store == null:
 				Logger.error(
-					"Scene variable \"%s\" set with value \"%s\" but no scene store is available" % [
+					"Global variable \"%s\" set with value \"%s\" but no global store is available" % [
 						variable_name, value
 					]
 				)
@@ -210,9 +223,10 @@ func _get_node_by_id(id):
 
 
 ## Process the specified cutscene graph.
-func process_cutscene(cutscene):
+func process_cutscene(cutscene, state_store):
 	_graph_stack = []
-	_local_store = {}
+	_transient_store = {}
+	_cutscene_state_store = state_store
 	_current_graph = cutscene
 	_current_node = _current_graph.root_node
 	Logger.info("Processing cutscene \"%s\"" % _current_graph.name)
@@ -503,6 +517,7 @@ func _process_choice_node():
 			valid = _evaluate_condition(choice.condition)
 		
 		if valid:
+			var choice_obj = Choice.new()
 			var text = null
 			# Try the translation first
 			var tr_key = choice.display_translation_key
@@ -513,7 +528,9 @@ func _process_choice_node():
 			# Still no text, so use the default
 			if text == null:
 				text = choice.display
-			choices[i] = text
+			choice_obj.text = text
+			choice_obj.visit_count = _get_visit_count(choice)
+			choices[i] = choice_obj
 	
 	if !choices.is_empty() or (include_dialogue and show_dialogue_for_default):
 		
@@ -532,8 +549,10 @@ func _process_choice_node():
 		)
 		var choice = await process.ready_to_proceed
 		if !choices.is_empty():
+			var c = _current_node.choices[choice]
+			_increment_visit_count(c)
 			_current_node = _get_node_by_id(
-				_current_node.choices[choice].next
+				c.next
 			)
 		else:
 			_current_node = _get_node_by_id(
@@ -543,6 +562,29 @@ func _process_choice_node():
 		_current_node = _get_node_by_id(
 			_current_node.next
 		)
+
+
+func _get_meta_variable_root(res):
+	return "_%s_%s" % [_current_graph.name, res.resource_path]
+
+
+func _get_meta_variable_name(res, v):
+	return "%s_%s" % [_get_meta_variable_root(res), v]
+
+
+func _get_visit_count_variable(res):
+	return _get_meta_variable_name(res, "visited_count")
+
+
+func _get_visit_count(res):
+	var v = _get_visit_count_variable(res)
+	return _cutscene_state_store.get(v, 0)
+
+
+func _increment_visit_count(res):
+	_cutscene_state_store[
+		_get_visit_count_variable(res)
+	] = _get_visit_count(res) + 1
 
 
 func _process_set_node():

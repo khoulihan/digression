@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://gjnoxtngguo5"]
+[gd_scene load_steps=11 format=3 uid="uid://gjnoxtngguo5"]
 
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/variable_create_dialog/VariableCreateDialogContents.gd" id="1_dookr"]
 [ext_resource type="Texture2D" uid="uid://yw0o1piqpci0" path="res://addons/hyh.cutscene_graph/icons/icon_scope_transient_light.svg" id="1_tvrdr"]
 [ext_resource type="Texture2D" uid="uid://obagryd77fku" path="res://addons/hyh.cutscene_graph/icons/icon_scope_local_light.svg" id="2_8fln5"]
+[ext_resource type="Texture2D" uid="uid://daoewvcifx34k" path="res://addons/hyh.cutscene_graph/icons/icon_scope_cutscene_light.svg" id="3_mw4li"]
 [ext_resource type="Texture2D" uid="uid://dqtx77gjre00a" path="res://addons/hyh.cutscene_graph/icons/icon_scope_global_light.svg" id="3_u3s13"]
 [ext_resource type="Texture2D" uid="uid://c3kvtyvnpubei" path="res://addons/hyh.cutscene_graph/icons/icon_type_bool.svg" id="4_gj26j"]
 [ext_resource type="Texture2D" uid="uid://mksqvoqy2yi4" path="res://addons/hyh.cutscene_graph/icons/icon_node_warning.svg" id="5_pvmf8"]
@@ -34,16 +35,19 @@ text = "Scope:
 [node name="ScopeOption" type="OptionButton" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-item_count = 3
+item_count = 4
 popup/item_0/text = "Transient"
 popup/item_0/icon = ExtResource("1_tvrdr")
 popup/item_0/id = 0
-popup/item_1/text = "Local"
-popup/item_1/icon = ExtResource("2_8fln5")
+popup/item_1/text = "Cutscene"
+popup/item_1/icon = ExtResource("3_mw4li")
 popup/item_1/id = 1
-popup/item_2/text = "Global"
-popup/item_2/icon = ExtResource("3_u3s13")
+popup/item_2/text = "Local"
+popup/item_2/icon = ExtResource("2_8fln5")
 popup/item_2/id = 2
+popup/item_3/text = "Global"
+popup/item_3/icon = ExtResource("3_u3s13")
+popup/item_3/id = 3
 
 [node name="ScopeValidationWarning" type="TextureRect" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(16, 0)

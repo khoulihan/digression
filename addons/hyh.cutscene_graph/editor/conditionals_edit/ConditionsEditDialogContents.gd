@@ -615,7 +615,7 @@ func _on_value_node_edit_value_modified(
 	else:
 		condition.variable_name = ""
 		condition.variable_type = VariableType.TYPE_BOOL
-		condition.scope = VariableScope.SCOPE_DIALOGUE
+		condition.scope = VariableScope.SCOPE_TRANSIENT
 		condition.value = null
 		condition.min_value = null
 		condition.max_value = null
@@ -637,7 +637,7 @@ func _on_add_node_menu_item_pressed(id):
 		child.set_meta("node_type", ConditionNodeType.VALUE)
 		child.set_meta("resource_id", null)
 		var child_meta = ValueConditionMetaNode.new()
-		child_meta.scope = VariableScope.SCOPE_DIALOGUE
+		child_meta.scope = VariableScope.SCOPE_TRANSIENT
 		child_meta.variable_type = -1
 		child.set_text(0, "%s" % child_meta.get_display_text())
 		child.set_meta("condition", child_meta)
