@@ -6,12 +6,14 @@
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/CutsceneGraphEditor.gd" id="6"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_bqxlt"]
+resource_name = "Distraction Free Mode"
 device = -1
 shift_pressed = true
 ctrl_pressed = true
 keycode = 4194343
 
 [sub_resource type="Shortcut" id="Shortcut_m4wk5"]
+resource_name = "Distraction Free Mode"
 events = [SubResource("InputEventKey_bqxlt")]
 
 [node name="CutsceneGraphEditor" type="VBoxContainer"]
@@ -42,6 +44,7 @@ size_flags_vertical = 4
 [node name="ExpandButton" type="Button" parent="MenuBar"]
 layout_mode = 2
 size_flags_horizontal = 10
+tooltip_text = "Toggle distraction-free mode."
 toggle_mode = true
 shortcut = SubResource("Shortcut_m4wk5")
 icon = ExtResource("2_4k8uw")
