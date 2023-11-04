@@ -1,3 +1,4 @@
+@tool
 extends Node
 
 ## Walks a CutsceneGraph resource and raises signals with the details of each
@@ -32,6 +33,8 @@ signal sub_graph_entered(cutscene_name, graph_type)
 signal cutscene_resumed(cutscene_name, graph_type)
 ## Emitted when processing of a cutscene graph is completed.
 signal cutscene_completed()
+## Emitted when processing of a cutscene graph is cancelled prematurely.
+signal cancelled()
 ## A request to display dialogue.
 signal dialogue_display_requested(
 	dialogue_type,
@@ -86,8 +89,23 @@ class GraphState:
 class ProceedSignal:
 	signal ready_to_proceed(choice)
 	
+	var _cancelled = false
+	var _signalled = false
+	
 	func proceed(choice: int = -1):
+		_signalled = true
 		ready_to_proceed.emit(choice)
+	
+	func cancel():
+		_signalled = true
+		_cancelled = true
+		ready_to_proceed.emit()
+	
+	func was_cancelled():
+		return self._cancelled
+	
+	func signalled():
+		return _signalled
 
 
 class Choice:
@@ -98,8 +116,21 @@ class Choice:
 	var visit_count: int
 
 
+# This class is for communicating the internal state of the controller to
+# the graph previewer, and perhaps other debugging tools.
+class ControllerInternal:
+	signal processed_set_node(variable, scope, value)
+	signal processed_branch_node(variable, scope, value, branch_matched)
+	signal processed_random_node()
+	signal processed_repeat_node()
+	signal processed_jump_node(destination_name)
+	signal processed_anchor_node(anchor_name)
+	signal processed_routing_node()
+
+
 ## A node that can store variables for the scope of the entire game
 @export var global_store: NodePath
+# TODO: Rename this to local_store
 ## A node that can store variables for the scope of the current level/scene
 @export var scene_store: NodePath
 var _transient_store : Dictionary
@@ -115,6 +146,9 @@ var _current_graph
 var _current_node
 var _split_dialogue
 var _last_choice_node_id
+
+var _internal: ControllerInternal
+var _currently_awaiting: ProceedSignal
 
 
 ## Register a global variable store
@@ -148,6 +182,10 @@ func _ready():
 	)
 	
 	_transient_store = {}
+	
+	# Only expose the internals if we are running in the editor.
+	if Engine.is_editor_hint():
+		_internal = ControllerInternal.new()
 
 
 func _get_variable(variable_name, scope):
@@ -213,7 +251,8 @@ func _set_variable(variable_name, scope, value):
 
 
 func _await_response():
-	return ProceedSignal.new()
+	_currently_awaiting = ProceedSignal.new()
+	return _currently_awaiting
 
 
 func _get_node_by_id(id):
@@ -247,6 +286,7 @@ func process_cutscene(cutscene, state_store):
 		elif _current_node is DialogueChoiceNode:
 			await _process_choice_node()
 		elif _current_node is VariableSetNode:
+			_internal_notify_set_node()
 			_process_set_node()
 		elif _current_node is ActionNode:
 			await _process_action_node()
@@ -255,13 +295,23 @@ func process_cutscene(cutscene, state_store):
 		elif _current_node is RandomNode:
 			_process_random_node()
 		elif _current_node is JumpNode:
+			_internal_notify_jump_node()
 			_process_passthrough_node()
 		elif _current_node is AnchorNode:
+			_internal_notify_anchor_node()
 			_process_passthrough_node()
 		elif _current_node is RoutingNode:
+			_internal_notify_routing_node()
 			_process_passthrough_node()
 		elif _current_node is RepeatNode:
+			_internal_notify_repeat_node()
 			_process_repeat_node()
+		
+		if _current_graph == null:
+			# Graph processing has been cancelled.
+			Logger.info("Cutscene processing cancelled.")
+			cancelled.emit()
+			return
 		
 		if _current_node == null:
 			if len(_graph_stack) > 0:
@@ -277,6 +327,16 @@ func process_cutscene(cutscene, state_store):
 	
 	Logger.info("Cutscene \"%s\" completed." % _current_graph.name)
 	emit_signal("cutscene_completed")
+
+
+## Stop processing
+func cancel():
+	_current_graph = null
+	_current_node = null
+	if _currently_awaiting != null and not _currently_awaiting.signalled():
+		_currently_awaiting.cancel()
+	_current_graph = null
+	_current_node = null
 
 
 func _get_split_dialogue_from_graph_type(graph_type):
@@ -387,9 +447,37 @@ func _process_repeat_node():
 	_current_node = _get_node_by_id(_last_choice_node_id)
 
 
+func _internal_notify_repeat_node():
+	if _internal == null:
+		return
+	_internal.processed_repeat_node.emit()
+
+
 ## Process any type of node that just involves moving directly to the next node.
 func _process_passthrough_node():
 	_current_node = _get_node_by_id(_current_node.next)
+
+
+func _internal_notify_jump_node():
+	if _internal == null:
+		return
+	var target = _get_node_by_id(_current_node.next)
+	var destination_name = null
+	if target != null:
+		destination_name = target.name
+	_internal.processed_jump_node.emit(destination_name)
+
+
+func _internal_notify_anchor_node():
+	if _internal == null:
+		return
+	_internal.processed_anchor_node.emit(_current_node.name)
+
+
+func _internal_notify_routing_node():
+	if _internal == null:
+		return
+	_internal.processed_routing_node.emit()
 
 
 func _process_dialogue_node():
@@ -444,6 +532,8 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 				process
 			)
 			await process.ready_to_proceed
+			if process.was_cancelled():
+				return
 	else:
 		var process = _await_response()
 		_emit_dialogue_signal_variant.call_deferred(
@@ -456,6 +546,8 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 			process
 		)
 		await process.ready_to_proceed
+		if process.was_cancelled():
+			return
 	# If this dialogue is the child of a choice node,
 	# it is the choice node that needs to decide the
 	# next node to process.
@@ -548,6 +640,8 @@ func _process_choice_node():
 			process
 		)
 		var choice = await process.ready_to_proceed
+		if process.was_cancelled():
+			return
 		if !choices.is_empty():
 			var c = _current_node.choices[choice]
 			_increment_visit_count(c)
@@ -600,6 +694,16 @@ func _process_set_node():
 	)
 
 
+func _internal_notify_set_node():
+	if _internal == null:
+		return
+	_internal.processed_set_node.emit(
+		_current_node.variable,
+		_current_node.scope,
+		_current_node.get_value()
+	)
+
+
 func _emit_action_signal(
 	action,
 	character,
@@ -636,6 +740,8 @@ func _process_action_node():
 		process
 	)
 	await process.ready_to_proceed
+	if process.was_cancelled():
+		return
 	_current_node = _get_node_by_id(
 		_current_node.next
 	)

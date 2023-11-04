@@ -12,6 +12,7 @@ const ChoiceTypesEditDialog = preload("editor/choice_types_edit/ChoiceTypesEditD
 const ChoiceTypesEditDialogClass = preload("editor/choice_types_edit/ChoiceTypesEditDialog.gd")
 #const CutsceneGraph = preload("resources/CutsceneGraph.gd")
 
+var editor_host
 var editor
 var editor_button
 var expand_button
@@ -36,11 +37,12 @@ func _enter_tree():
 	# TODO: Need a new icon for these - should be white at the very least, like other Node-derived types
 	add_custom_type("CutsceneController", "Node", preload("editor/CutsceneController.gd"), preload("icons/icon_cutscene_controller.svg"))
 	add_custom_type("Cutscene", "Node", preload("editor/Cutscene.gd"), preload("icons/icon_chat.svg"))
+	add_custom_type("CutsceneVariableStore", "Node", preload("editor/CutsceneVariableStore.gd"), preload("icons/icon_datastore.svg"))
 	
 	# Check if the settings exist, and create some defaults if necessary
 	_create_default_project_settings()
 	
-	_create_editor()
+	_create_editor_host()
 	_create_menu()
 
 
@@ -122,12 +124,24 @@ func _create_default_project_settings():
 	ProjectSettings.save()
 
 
-func _create_editor():
-	editor = preload("editor/CutsceneGraphEditor.tscn").instantiate()
+func _create_editor_host():
+	Logger.debug("Creating host...")
+	editor_host = preload("editor/CutsceneGraphEditorHost.tscn").instantiate()
+	editor_button = add_control_to_bottom_panel(editor_host, _get_plugin_name())
+	_get_editor()
+	
+	var button_parent = editor_button.get_parent().get_parent()
+	# Caution: this method of obtaining the expand button could break at any time
+	expand_button = button_parent.get_child(button_parent.get_child_count() - 1)
+
+
+func _get_editor():
+	Logger.debug("Getting editor from host...")
+	editor = editor_host.editor
 	editor.save_requested.connect(
 		_save_requested
 	)
-	editor.expand_button_toggled.connect(
+	editor_host.expand_button_toggled.connect(
 		_editor_expand_button_toggled
 	)
 	editor.display_filesystem_path_requested.connect(
@@ -139,10 +153,8 @@ func _create_editor():
 	editor.current_graph_modified.connect(
 		_current_graph_modified
 	)
-	editor_button = add_control_to_bottom_panel(editor, _get_plugin_name())
-	var button_parent = editor_button.get_parent().get_parent()
-	# Caution: this method of obtaining the expand button could break at any time
-	expand_button = button_parent.get_child(button_parent.get_child_count() - 1)
+	#editor_host.ready.disconnect(_get_editor)
+	return editor
 
 
 func _graph_edited(graph):
@@ -232,19 +244,21 @@ func _reacquire_editor():
 	var node_stack = [] + root.get_children()
 	while !node_stack.is_empty():
 		var current = node_stack.pop_back()
-		if current.name == "CutsceneGraphEditor":
-			editor = current
+		if current.name == "CutsceneGraphEditorHost":
+			editor_host = current
+			editor = editor_host.editor
 			node_stack.clear()
 		else:
 			node_stack = node_stack + current.get_children()
-	if editor == null:
+	if editor_host == null:
 		Logger.error("Editor not found")
 	else:
 		Logger.debug("Editor reacquired")
-		remove_control_from_bottom_panel(editor)
-		if editor != null:
-			editor.free()
-		_create_editor()
+		remove_control_from_bottom_panel(editor_host)
+		if editor_host != null:
+			editor_host.free()
+			editor = null
+		_create_editor_host()
 
 
 func _apply_changes():
@@ -274,21 +288,24 @@ func _exit_tree():
 	#remove_custom_type("CharacterVariant")
 	remove_custom_type("CutsceneController")
 	remove_custom_type("Cutscene")
-	editor.expand_button_toggled.disconnect(
-		_editor_expand_button_toggled
-	)
-	editor.save_requested.disconnect(
-		_save_requested
-	)
-	editor.graph_edited.disconnect(_graph_edited)
-	editor.current_graph_modified.disconnect(
-		_current_graph_modified
-	)
-	remove_control_from_bottom_panel(editor)
+	remove_custom_type("CutsceneVariableStore")
+	if editor != null:
+		editor_host.expand_button_toggled.disconnect(
+			_editor_expand_button_toggled
+		)
+		editor.save_requested.disconnect(
+			_save_requested
+		)
+		editor.graph_edited.disconnect(_graph_edited)
+		editor.current_graph_modified.disconnect(
+			_current_graph_modified
+		)
+	remove_control_from_bottom_panel(editor_host)
 	menu.id_pressed.disconnect(_tool_menu_item_selected)
 	remove_tool_menu_item("Cutscene Graph Editor")
-	if editor != null:
-		editor.free()
+	if editor_host != null:
+		editor_host.free()
+		editor = null
 
 
 func _get_plugin_name():
@@ -309,7 +326,7 @@ func _handles(object: Object) -> bool:
 
 func _make_visible(visible):
 	if visible:
-		make_bottom_panel_item_visible(editor)
+		make_bottom_panel_item_visible(editor_host)
 
 
 func _edit(object):
@@ -328,7 +345,7 @@ func _edit(object):
 
 
 func _request_edit(object, current_resource_path):
-	if editor == null:
+	if editor_host == null:
 		_reacquire_editor()
 	#if editor != null:
 	editor.edit_graph(object, current_resource_path)

@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://d2vbxgl24awpj"]
+
+[ext_resource type="Texture2D" uid="uid://dkeputvqdl5bg" path="res://addons/hyh.cutscene_graph/icons/icon_tree_arrow_right.svg" id="1_gb1od"]
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/ChoiceEventChoice.gd" id="1_lgiro"]
+
+[node name="ChoiceEventChoice" type="HBoxContainer"]
+theme_override_constants/separation = 12
+script = ExtResource("1_lgiro")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+text = "Choice Text"
+icon = ExtResource("1_gb1od")
+flat = true
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.941176, 0.941176, 0.941176, 0.862745)
+theme_override_font_sizes/font_size = 10
+text = "Visited 0 times"
+vertical_alignment = 2
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

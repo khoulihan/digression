@@ -8,6 +8,16 @@ signal graph_open_requested(index)
 const _arrow_icon = preload("res://addons/hyh.cutscene_graph/icons/icon_tree_arrow_right.svg")
 
 
+@export var navigable: bool = true:
+	get:
+		return navigable
+	set(value):
+		navigable = value
+		for child in self.get_children():
+			if child is LinkButton:
+				child.disabled = not value
+
+
 func populate(graph_stack):
 	_remove_existing()
 	for graph_index in range(len(graph_stack)):
@@ -24,6 +34,9 @@ func populate(graph_stack):
 				_button_pressed.bind(graph_index)
 			)
 			button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			button.disabled = not self.navigable
+			if not self.navigable:
+				button.mouse_default_cursor_shape = Control.CURSOR_ARROW
 			self.add_child(button)
 			var arrow = TextureRect.new()
 			arrow.texture = _arrow_icon

@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://4ffr7mwmqb50"]
+
+[ext_resource type="PackedScene" uid="uid://qghkuf1wo64c" path="res://addons/hyh.cutscene_graph/editor/preview/minimap/MiniMapNodeBase.tscn" id="1_mae4b"]
+[ext_resource type="Theme" uid="uid://gnjaygqvbbxn" path="res://addons/hyh.cutscene_graph/editor/preview/minimap/styles/set_node.tres" id="2_nslg6"]
+
+[node name="MiniMapNodeBase" instance=ExtResource("1_mae4b")]
+theme = ExtResource("2_nslg6")
+
+[node name="Label" parent="Control" index="0"]
+text = "Sub-Graph"

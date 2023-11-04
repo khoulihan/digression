@@ -8,6 +8,8 @@ signal variable_select_dialog_state_changed(favourites, recent)
 signal display_filesystem_path_requested(path)
 signal graph_edited(graph)
 signal current_graph_modified()
+signal previewable()
+signal not_previewable()
 
 # Utility classes.
 const Logging = preload("../utility/Logging.gd")
@@ -138,7 +140,7 @@ var _open_character_dialog
 @onready var _node_popup = $NodePopupMenu
 @onready var _confirmation_dialog = $ConfirmationDialog
 @onready var _error_dialog = $ErrorDialog
-@onready var _breadcrumbs = $MenuBar/GraphBreadcrumbs
+@onready var _breadcrumbs = $TitleBar/GraphBreadcrumbs
 
 # State variables for carrying out user actions.
 var _last_popup_position
@@ -176,6 +178,8 @@ func _init():
 
 func _ready():
 	_breadcrumbs.populate([])
+	
+	_update_preview_button_state()
 	
 	# Create clipboard
 	_resource_clipboard = ResourceClipboard.new()
@@ -249,6 +253,12 @@ func _ready():
 	#)
 
 
+func get_edited_graph():
+	if _edited == null:
+		return null
+	return _edited.graph
+
+
 func _get_dialogue_types_for_graph_type(graph_type):
 	var all_types = ProjectSettings.get_setting(
 		'cutscene_graph_editor/dialogue_types'
@@ -310,6 +320,14 @@ func edit_graph(object, path):
 	_refresh_anchor_maps()
 	_draw_edited_graph()
 	_breadcrumbs.populate(_graph_stack)
+	_update_preview_button_state()
+
+
+func _update_preview_button_state():
+	if _edited == null:
+		not_previewable.emit()
+	else:
+		previewable.emit()
 
 
 func _refresh_anchor_maps():
@@ -987,6 +1005,8 @@ func clear():
 			_edited_resource_changed
 		)
 	_edited = null
+	_breadcrumbs.populate([])
+	_update_preview_button_state()
 
 
 func _clear_displayed_graph():
@@ -1389,9 +1409,6 @@ func _on_graph_edit_duplicate_nodes_request():
 		_get_selected_nodes()
 	)
 
-
-func _on_expand_button_toggled(button_pressed):
-	expand_button_toggled.emit(button_pressed)
 
 
 func _on_graph_breadcrumbs_graph_open_requested(index):

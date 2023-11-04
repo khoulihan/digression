@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://ccvd6pqrqs07a"]
+
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/preview/minimap/GraphMiniMap.gd" id="1_0so6g"]
+
+[node name="GraphMiniMap" type="GraphEdit"]
+offset_right = 400.0
+offset_bottom = 400.0
+use_snap = false
+connection_lines_thickness = 1.0
+zoom_min = 1.0
+zoom_max = 1.0
+zoom_step = 0.1
+minimap_enabled = false
+script = ExtResource("1_0so6g")
+
+[connection signal="connection_drag_started" from="." to="." method="_on_connection_drag_started"]

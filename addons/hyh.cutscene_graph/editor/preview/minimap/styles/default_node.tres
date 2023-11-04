@@ -1,0 +1,14 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://bio5a7m3ppb0p"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_anl62"]
+border_width_top = 20
+border_color = Color(0.6, 0.6, 0.6, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+shadow_color = Color(0, 0, 0, 0.835294)
+shadow_size = 1
+shadow_offset = Vector2(4, 4)
+
+[resource]
+GraphNode/styles/frame = SubResource("StyleBoxFlat_anl62")

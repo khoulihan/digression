@@ -1,3 +1,4 @@
+@tool
 extends Node
 
 ## Stores a CutsceneGraph resource and allows it to be triggered.
@@ -48,7 +49,8 @@ func _ready():
 	# it is an autoload or part of the scene.
 	# TODO: Plugins can create their own set_choice autoloads now, so maybe we should do that?
 	var root = get_tree().root
-	_cutscene_controller = _find_controller(root)
+	if not Engine.is_editor_hint():
+		_cutscene_controller = _find_controller(root)
 	_state = {
 		'triggered_count': 0,
 	}
@@ -68,6 +70,10 @@ func _find_controller(root):
 			return result
 	Logger.warn("Cutscene controller not found in scene.")
 	return null
+
+
+func set_controller(controller):
+	_cutscene_controller = controller
 
 
 ## Returns the state Dictionary.
@@ -98,6 +104,9 @@ func trigger():
 			"Cutscene node \"%s\" triggered, but no CutsceneController is available." % self
 		)
 		return
-	_state['triggered_count'] += 1
+	if _state.has("triggered_count"):
+		_state['triggered_count'] += 1
+	else:
+		_state['triggered_count'] = 1
 	emit_signal("cutscene_triggered", self.cutscene)
 	_cutscene_controller.process_cutscene(cutscene, _state)

@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://70fmi68kvrv8"]
+
+[ext_resource type="PackedScene" uid="uid://qghkuf1wo64c" path="res://addons/hyh.cutscene_graph/editor/preview/minimap/MiniMapNodeBase.tscn" id="1_jfyaa"]
+[ext_resource type="Theme" uid="uid://c6skrwiogi132" path="res://addons/hyh.cutscene_graph/editor/preview/minimap/styles/dialogue_node.tres" id="2_sueqw"]
+
+[node name="MiniMapNodeBase" instance=ExtResource("1_jfyaa")]
+theme = ExtResource("2_sueqw")
+
+[node name="Control" parent="." index="0"]
+custom_minimum_size = Vector2(0, 20)
+
+[node name="Label" parent="Control" index="0"]
+offset_top = -48.0
+offset_bottom = -25.0
+text = "Choice"

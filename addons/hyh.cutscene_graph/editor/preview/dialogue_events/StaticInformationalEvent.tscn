@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://mgp5y07pgu5h"]
+
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/StaticInformationalEvent.gd" id="1_kblbi"]
+
+[node name="StaticInformationalEvent" type="MarginContainer"]
+offset_right = 300.0
+offset_bottom = 23.0
+size_flags_horizontal = 3
+script = ExtResource("1_kblbi")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.941176, 0.941176, 0.941176, 0.862745)
+theme_override_font_sizes/font_size = 14
+text = "Something happened"
+horizontal_alignment = 1
+autowrap_mode = 3
