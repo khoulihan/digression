@@ -2,6 +2,12 @@
 extends "res://addons/hyh.cutscene_graph/editor/controls/expressions/Expression.gd"
 
 
+const BoolIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_type_bool.svg")
+const IntIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_type_int.svg")
+const FloatIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_type_float.svg")
+const StringIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_type_string.svg")
+
+
 signal remove_requested()
 
 
@@ -46,6 +52,46 @@ func _remove_confirmed(confirm):
 
 func _remove_cancelled(confirm):
 	get_tree().root.remove_child(confirm)
+
+
+func get_drag_preview():
+	var preview = HBoxContainer.new()
+	var icon = TextureRect.new()
+	icon.texture = _get_type_icon(type)
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	icon.stretch_mode = TextureRect.STRETCH_KEEP
+	var ptext = Label.new()
+	# TODO: Maybe include the value for value expressions, function names for
+	# functions?
+	ptext.text = "%s Expression" % _get_type_name(type)
+	preview.add_child(icon)
+	preview.add_child(ptext)
+	preview.modulate = Color.from_string("#FFFFFF88", Color.WHITE)
+	return preview
+
+
+func _get_type_icon(t):
+	match type:
+		VariableType.TYPE_BOOL:
+			return BoolIcon
+		VariableType.TYPE_INT:
+			return IntIcon
+		VariableType.TYPE_FLOAT:
+			return FloatIcon
+		VariableType.TYPE_STRING:
+			return StringIcon
+
+
+func _get_type_name(t):
+	match type:
+		VariableType.TYPE_BOOL:
+			return "Boolean"
+		VariableType.TYPE_INT:
+			return "Integer"
+		VariableType.TYPE_FLOAT:
+			return "Float"
+		VariableType.TYPE_STRING:
+			return "String"
 
 
 #func _on_drag_handle_button_down():

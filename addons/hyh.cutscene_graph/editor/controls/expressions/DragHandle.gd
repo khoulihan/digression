@@ -11,10 +11,7 @@ const VariableType = preload("../../../resources/graph/VariableSetNode.gd").Vari
 func _get_drag_data(at_position):
 	if target == null:
 		return
-	# TODO: Create a proper preview here
-	var preview = Label.new()
-	preview.text = "Being dragged rn"
-	set_drag_preview(preview)
+	set_drag_preview(target.get_drag_preview())
 	return {
 		"cge_drag_class": "expression",
 		"control": target,
