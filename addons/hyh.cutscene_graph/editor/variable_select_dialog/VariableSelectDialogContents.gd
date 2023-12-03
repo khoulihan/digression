@@ -32,6 +32,9 @@ const VariableType = preload("../../resources/graph/VariableSetNode.gd").Variabl
 @onready var DescriptionLabel: RichTextLabel = get_node("VBoxContainer/BodyContainer/SearchPane/VBoxContainer/DescriptionLabel")
 
 
+var _type_restriction : Variant
+
+
 enum MatchesTreeColumns {
 	SCOPE,
 	TYPE,
@@ -47,9 +50,12 @@ var _variables_for_search = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	_all_variables = ProjectSettings.get_setting(
-		"cutscene_graph_editor/variables",
-		[]
+	_type_restriction = get_parent().type_restriction
+	_all_variables = _filter_by_type_restriction(
+		ProjectSettings.get_setting(
+			"cutscene_graph_editor/variables",
+			[]
+		)
 	)
 	_perform_search()
 	MatchesTree.set_column_expand(MatchesTreeColumns.SCOPE, false)
@@ -66,6 +72,16 @@ func _ready():
 	RecentTree.set_column_expand(MatchesTreeColumns.NAME, true)
 	_populate_matches()
 	_load_favourites_and_recent()
+
+
+func _filter_by_type_restriction(vars):
+	if _type_restriction == null:
+		return vars
+	var filtered = []
+	for v in vars:
+		if v['type'] == _type_restriction:
+			filtered.append(v)
+	return filtered
 
 
 func _filter_by_scope(vars, scope):

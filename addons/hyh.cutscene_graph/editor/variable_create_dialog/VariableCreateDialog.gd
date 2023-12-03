@@ -9,9 +9,11 @@ var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
 signal cancelled()
 signal created(variable)
 
+const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
 
 @onready var Contents = get_node("VariableCreateDialogContents")
 
+var type_restriction : Variant
 
 func _ready():
 	self.size = get_node("VariableCreateDialogContents").size

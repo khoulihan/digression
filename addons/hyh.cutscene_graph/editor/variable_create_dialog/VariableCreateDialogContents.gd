@@ -18,6 +18,7 @@ var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
 @onready var TagEdit: LineEdit = get_node("VBoxContainer/TagContainer/TagEdit")
 @onready var TagSuggestionsContainer: HFlowContainer = get_node("VBoxContainer/TagContainer/SuggestionsContainer")
 
+const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
 
 const TagControlScene = preload("res://addons/hyh.cutscene_graph/editor/controls/TagControl.tscn")
 const WarningIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_node_warning.svg")
@@ -27,6 +28,9 @@ signal cancelled()
 signal created(variable)
 
 
+var _type_restriction : Variant
+
+
 var _variables: Array[Dictionary]
 var _all_tags: Array[String]
 var _all_names: Array[String]
@@ -34,6 +38,12 @@ var _all_names: Array[String]
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	_type_restriction = get_parent().type_restriction
+	if _type_restriction != null:
+		TypeOption.select(
+			TypeOption.get_item_index(_type_restriction)
+		)
+		TypeOption.disabled = true
 	_clear_tag_container()
 	_validate()
 	var default: Array[Dictionary] = []

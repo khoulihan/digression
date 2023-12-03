@@ -37,6 +37,7 @@ signal variable_selected(variable)
 
 var _popup: PopupMenu
 
+var _type_restriction = null
 
 func _create_example_variable(
 	name,
@@ -57,6 +58,14 @@ func _ready():
 	TypeMarginContainer.hide()
 	_popup = VariableMenuButton.get_popup()
 	_popup.index_pressed.connect(_popup_index_pressed)
+
+
+func set_type_restriction(t):
+	_type_restriction = t
+
+
+func clear_type_restriction():
+	_type_restriction = null
 
 
 func configure_for_variable(
@@ -130,6 +139,7 @@ func _on_type_margin_container_gui_input(event):
 
 func _show_selection_dialog():
 	var dialog = VariableSelectDialog.instantiate()
+	dialog.type_restriction = _type_restriction
 	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_ABSOLUTE
 	dialog.position = get_tree().root.position + Vector2i(200, 200)
 	dialog.selected.connect(_variable_selected.bind(dialog))
@@ -156,6 +166,7 @@ func _select_dialog_cancelled(dialog):
 
 func _show_create_dialog():
 	var dialog = VariableCreateDialog.instantiate()
+	dialog.type_restriction = _type_restriction
 	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_ABSOLUTE
 	dialog.position = get_tree().root.position + Vector2i(200, 200)
 	dialog.created.connect(_variable_created.bind(dialog))

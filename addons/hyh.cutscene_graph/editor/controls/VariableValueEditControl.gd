@@ -62,6 +62,7 @@ func set_variable_type(t):
 
 func _configure():
 	var show_variable_selection = _selecting_variable or mode == ValueSelectionMode.VARIABLE
+	VariableSelectionControl.set_type_restriction(variable_type)
 	VariableSelectionControl.visible = show_variable_selection
 	VariableCheckButton.visible = mode == ValueSelectionMode.BOTH
 	EditContainer.visible = not show_variable_selection
