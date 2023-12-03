@@ -7,35 +7,64 @@ var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
 
 
+# Another possible type might be determined by user code...
+enum ValueSelectionMode {
+	CONSTANT,
+	VARIABLE,
+	BOTH
+}
+
+
 signal value_changed()
 
 
-@onready var LineEditControl = get_node("HBoxContainer/EditContainer/LineEdit")
-@onready var SpinBoxControl = get_node("HBoxContainer/EditContainer/SpinBox")
-@onready var CheckBoxControl = get_node("HBoxContainer/EditContainer/CheckBox")
+@onready var VariableCheckButton = get_node("HBoxContainer/VariableCheckButton")
+@onready var EditContainer = get_node("HBoxContainer/SelectionContainer/EditContainer")
+@onready var LineEditControl = get_node("HBoxContainer/SelectionContainer/EditContainer/LineEdit")
+@onready var SpinBoxControl = get_node("HBoxContainer/SelectionContainer/EditContainer/SpinBox")
+@onready var CheckBoxControl = get_node("HBoxContainer/SelectionContainer/EditContainer/CheckBox")
+@onready var VariableSelectionControl = get_node("HBoxContainer/SelectionContainer/VariableSelectionControl")
 @onready var ValidationWarning = get_node("HBoxContainer/ValidationWarning")
 
+
 # TODO: Setting this in the inspector does not work because the controls are not
-# ready when it is set at runtime
+# ready when it is set at runtime (might have fixed this now, need to test)
 @export var variable_type: VariableType = VariableType.TYPE_BOOL:
 	get:
 		return variable_type
 	set(t):
 		variable_type = t
-		_configure_for_type()
+		if is_node_ready():
+			_configure()
+
+
+@export var mode: ValueSelectionMode = ValueSelectionMode.BOTH:
+	get:
+		return mode
+	set(t):
+		mode = t
+		if is_node_ready():
+			_configure()
+
+
+var _selecting_variable: bool = false
 
 
 func _ready():
-	_configure_for_type()
+	_configure()
 	clear_validation_warning()
 
 
 func set_variable_type(t):
 	variable_type = t
-	_configure_for_type()
+	_configure()
 
 
-func _configure_for_type():
+func _configure():
+	var show_variable_selection = _selecting_variable or mode == ValueSelectionMode.VARIABLE
+	VariableSelectionControl.visible = show_variable_selection
+	VariableCheckButton.visible = mode == ValueSelectionMode.BOTH
+	EditContainer.visible = not show_variable_selection
 	LineEditControl.visible = variable_type == VariableType.TYPE_STRING
 	SpinBoxControl.visible = variable_type == VariableType.TYPE_INT or variable_type == VariableType.TYPE_FLOAT
 	CheckBoxControl.visible = variable_type == VariableType.TYPE_BOOL
@@ -108,3 +137,8 @@ func _on_LineEdit_text_changed(new_text):
 
 func _on_SpinBox_changed():
 	emit_signal("value_changed")
+
+
+func _on_variable_check_button_toggled(button_pressed):
+	_selecting_variable = button_pressed
+	_configure()

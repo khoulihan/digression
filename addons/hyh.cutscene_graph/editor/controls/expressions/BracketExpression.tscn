@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://yql51uvcayr0"]
+
+[ext_resource type="PackedScene" uid="uid://b8lfk4ccumg1e" path="res://addons/hyh.cutscene_graph/editor/controls/expressions/MoveableExpression.tscn" id="1_ffysq"]
+[ext_resource type="PackedScene" uid="uid://b46vwf6pxf1tl" path="res://addons/hyh.cutscene_graph/editor/controls/expressions/OperatorExpression.tscn" id="2_nmkt4"]
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/controls/expressions/BracketExpression.gd" id="2_wmk45"]
+
+[node name="BracketExpression" instance=ExtResource("1_ffysq")]
+script = ExtResource("2_wmk45")
+
+[node name="Title" parent="PanelContainer/MC/ExpressionContainer/Header" index="1"]
+text = "( ... )"
+
+[node name="MC" type="MarginContainer" parent="PanelContainer/MC/ExpressionContainer" index="1"]
+layout_mode = 2
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_right = 11
+
+[node name="ChildExpression" parent="PanelContainer/MC/ExpressionContainer/MC" index="0" instance=ExtResource("2_nmkt4")]
+layout_mode = 2

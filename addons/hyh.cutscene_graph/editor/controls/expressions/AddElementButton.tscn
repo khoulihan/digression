@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://i0xv3qj0hcsu"]
+
+[ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.cutscene_graph/icons/icon_add.svg" id="1_evxp6"]
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/controls/expressions/AddElementButton.gd" id="2_1yran"]
+
+[node name="AddElementButton" type="MenuButton"]
+custom_minimum_size = Vector2(160, 0)
+offset_right = 126.0
+offset_bottom = 31.0
+size_flags_horizontal = 4
+text = "Add Element"
+icon = ExtResource("1_evxp6")
+script = ExtResource("2_1yran")
