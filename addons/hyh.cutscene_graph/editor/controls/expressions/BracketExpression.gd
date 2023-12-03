@@ -16,5 +16,6 @@ func _process(delta):
 
 
 func configure():
+	super()
 	_child_expression.type = type
 	_child_expression.configure()

@@ -16,4 +16,5 @@ func _process(delta):
 
 
 func configure():
+	super()
 	_value_edit.variable_type = type

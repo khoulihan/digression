@@ -8,9 +8,21 @@ signal remove_requested()
 @onready var _panel : PanelContainer = get_node("PanelContainer")
 @onready var _expression_container : VBoxContainer = get_node("PanelContainer/MC/ExpressionContainer")
 @onready var _header : HBoxContainer = get_node("PanelContainer/MC/ExpressionContainer/Header")
-@onready var _drag_handle : Button = get_node("PanelContainer/MC/ExpressionContainer/Header/DragHandle")
+@onready var _drag_handle : TextureRect = get_node("PanelContainer/MC/ExpressionContainer/Header/DragHandle")
 @onready var _title : Label = get_node("PanelContainer/MC/ExpressionContainer/Header/Title")
 @onready var _remove_button = get_node("PanelContainer/MC/ExpressionContainer/Header/RemoveButton")
+
+
+func _ready():
+	#_title.set_drag_forwarding(_get_drag_data, _can_drop_data, _drop_data)
+	#_drag_handle.set_drag_forwarding(_get_drag_data, _can_drop_data, _drop_data)
+	pass
+
+
+func configure():
+	super()
+	_drag_handle.target = self
+	_drag_handle.type = type
 
 
 func set_title(text):
@@ -34,3 +46,34 @@ func _remove_confirmed(confirm):
 
 func _remove_cancelled(confirm):
 	get_tree().root.remove_child(confirm)
+
+
+#func _on_drag_handle_button_down():
+#	#set_drag_preview(_header)
+#	print("Forcing drag")
+#	var preview = Label.new()
+#	preview.text = "Being dragged rn"
+#	force_drag({
+#		"control": self,
+#		"type": type,
+#	}, preview)
+#	pass
+#
+#
+#func _get_drag_data(at_position):
+#	print("Regular drag")
+#	var preview = Label.new()
+#	preview.text = "Being dragged rn"
+#	set_drag_preview(preview)
+#	return {
+#		"control": self,
+#		"type": type,
+#	}
+#
+#
+#func _can_drop_data(at_position, data):
+#	return false
+#
+#
+#func _drop_data(at_position, data):
+#	pass

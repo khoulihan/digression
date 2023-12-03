@@ -23,6 +23,10 @@ func configure():
 	#call_deferred("_configure_button")
 
 
+func refresh():
+	pass
+
+
 func _configure_button():
 	_add_element_button.configure(type)
 
@@ -83,3 +87,75 @@ func _add_function(variable_type, function_type):
 func _remove_child_requested(child):
 	remove_child(child)
 	child.queue_free()
+
+
+func _can_drop_data(at_position, data):
+	if not typeof(data) == TYPE_DICTIONARY:
+		return false
+	if not "cge_drag_class" in data:
+		return false
+	if data["cge_drag_class"] != "expression":
+		return false
+	if type != data["type"]:
+		return false
+	# TODO: I assume this would be the place to highlight the drop location?
+	return true
+
+
+func _drop_data(at_position, data):
+	var target = data["control"]
+	var parent = target.get_parent()
+	# TODO: Likely the parent has other stuff to do to the child first
+	parent.remove_child(target)
+	parent.refresh()
+	# TODO: We do not actually want to add to the bottom, but to the drag location.
+	#_add_to_bottom(target)
+	_add_at_position(at_position, target)
+
+
+func _add_at_position(at_position, target):
+	# I think what we have to do here is find the MoveableExpression
+	# under the point, and then determine if we are closer to the top or
+	# bottom of it, and insert accordingly.
+	var children = get_children().slice(0, -1)
+	var distance_to_child = null
+	var closest = null
+	var add_before = false
+	var y = at_position.y
+	for child in children:
+		var top = child.offset_top
+		var bottom = child.offset_bottom
+		if y >= top and y <= bottom:
+			# We are over this child!
+			closest = child
+			if y - top < bottom - y:
+				add_before = true
+				distance_to_child = y - top
+			else:
+				add_before = false
+				distance_to_child = bottom - y
+			break
+		if closest == null or y - top < distance_to_child or bottom - y < distance_to_child:
+			closest = child
+			if y - top < bottom - y:
+				add_before = true
+				distance_to_child = y - top
+			else:
+				add_before = false
+				distance_to_child = bottom - y
+			
+	
+	add_child(target)
+	if closest != null:
+		if add_before:
+			move_child(target, closest.get_index())
+		else:
+			move_child(target, closest.get_index() + 1)
+	else:
+		# Leave it at the bottom, but move the add button down
+		move_child(_add_element_button, -1)
+	target.remove_requested.connect(_remove_child_requested.bind(target))
+
+
+func _get_child_expression_at_position(at_position):
+	pass

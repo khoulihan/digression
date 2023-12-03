@@ -6,6 +6,11 @@ const Operator = preload("res://addons/hyh.cutscene_graph/editor/controls/expres
 const OperatorClass = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/Operator.gd")
 
 
+func refresh():
+	super()
+	_rectify_operators()
+
+
 func _add_to_bottom(child):
 	super(child)
 	_rectify_operators()
@@ -13,6 +18,11 @@ func _add_to_bottom(child):
 
 func _remove_child_requested(child):
 	super(child)
+	_rectify_operators()
+
+
+func _add_at_position(at_position, target):
+	super(at_position, target)
 	_rectify_operators()
 
 
