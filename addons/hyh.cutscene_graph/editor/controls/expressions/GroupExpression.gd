@@ -47,7 +47,7 @@ func _on_add_element_button_add_requested(
 func _add_to_bottom(child):
 	add_child(child)
 	move_child(_add_element_button, -1)
-	#child.ready.connect(_configure_child.bind(child))
+	child.remove_requested.connect(_remove_child_requested.bind(child))
 	call_deferred("_configure_child", child)
 
 
@@ -78,3 +78,8 @@ func _add_function(variable_type, function_type):
 	exp.type = variable_type
 	exp.function_type = function_type
 	_add_to_bottom(exp)
+
+
+func _remove_child_requested(child):
+	remove_child(child)
+	child.queue_free()

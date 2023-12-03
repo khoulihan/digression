@@ -18,4 +18,19 @@ func set_title(text):
 
 
 func _on_remove_button_pressed():
+	var confirm = ConfirmationDialog.new()
+	confirm.title = "Please confirm"
+	confirm.dialog_text = "Are you sure you want to remove this expression? This action cannot be undone."
+	confirm.canceled.connect(_remove_cancelled.bind(confirm))
+	confirm.confirmed.connect(_remove_confirmed.bind(confirm))
+	get_tree().root.add_child(confirm)
+	confirm.show()
+
+
+func _remove_confirmed(confirm):
+	get_tree().root.remove_child(confirm)
 	remove_requested.emit()
+
+
+func _remove_cancelled(confirm):
+	get_tree().root.remove_child(confirm)
