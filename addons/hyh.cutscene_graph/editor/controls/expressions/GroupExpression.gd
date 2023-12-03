@@ -16,11 +16,7 @@ const ExpressionType = preload("res://addons/hyh.cutscene_graph/editor/controls/
 
 func configure():
 	super()
-	# This is necessary because configuring the button loads derivatives of
-	# this class, which Godot doesn't like, and it can corrupt the scenes.
-	#await _add_element_button.ready
 	_configure_button()
-	#call_deferred("_configure_button")
 
 
 func refresh():
@@ -89,6 +85,11 @@ func _remove_child_requested(child):
 	child.queue_free()
 
 
+func remove_child_expression(child):
+	remove_child(child)
+	child.remove_requested.disconnect(_remove_child_requested)
+
+
 func _can_drop_data(at_position, data):
 	if not typeof(data) == TYPE_DICTIONARY:
 		return false
@@ -105,11 +106,8 @@ func _can_drop_data(at_position, data):
 func _drop_data(at_position, data):
 	var target = data["control"]
 	var parent = target.get_parent()
-	# TODO: Likely the parent has other stuff to do to the child first
-	parent.remove_child(target)
+	parent.remove_child_expression(target)
 	parent.refresh()
-	# TODO: We do not actually want to add to the bottom, but to the drag location.
-	#_add_to_bottom(target)
 	_add_at_position(at_position, target)
 
 
