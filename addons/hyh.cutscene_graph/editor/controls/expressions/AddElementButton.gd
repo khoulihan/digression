@@ -10,7 +10,8 @@ const ExpressionType = preload("res://addons/hyh.cutscene_graph/editor/controls/
 signal add_requested(
 	variable_type: VariableType,
 	expression_type: ExpressionType,
-	function_type: Variant
+	function_type: Variant,
+	comparison_type: Variant
 )
 
 
@@ -18,6 +19,10 @@ enum ExpressionMenuId {
 	VALUE,
 	BRACKETS,
 	COMPARISON,
+	COMPARISON_BOOL,
+	COMPARISON_INT,
+	COMPARISON_FLOAT,
+	COMPARISON_STRING,
 	FUNCTION,
 	BOOL_NOT,
 	INT_MAX,
@@ -39,20 +44,26 @@ func configure(t: VariableType):
 	menu.add_item("Value", ExpressionMenuId.VALUE)
 	menu.add_item("Brackets", ExpressionMenuId.BRACKETS)
 	if (t == VariableType.TYPE_BOOL):
-		menu.add_item("Comparison", ExpressionMenuId.COMPARISON)
+		_add_comparisons_sub_menu(menu)
 	_add_functions_sub_menu(menu, t)
 	menu.id_pressed.connect(_menu_item_selected)
 
 
 func _menu_item_selected(id: int):
 	var expression_type = _expression_type_for_id(id)
-	add_requested.emit(_type, expression_type, null)
+	add_requested.emit(_type, expression_type, null, null)
 
 
 func _function_menu_item_selected(id: int):
 	var expression_type = _expression_type_for_id(id)
 	var func_type = _function_type_for_id(id)
-	add_requested.emit(_type, expression_type, func_type)
+	add_requested.emit(_type, expression_type, func_type, null)
+
+
+func _comparison_menu_item_selected(id: int):
+	var expression_type = _expression_type_for_id(id)
+	var comparison_type = _comparison_type_for_id(id)
+	add_requested.emit(_type, expression_type, null, comparison_type)
 
 
 func _expression_type_for_id(id: ExpressionMenuId) -> ExpressionType:
@@ -61,9 +72,9 @@ func _expression_type_for_id(id: ExpressionMenuId) -> ExpressionType:
 			return ExpressionType.VALUE
 		ExpressionMenuId.BRACKETS:
 			return ExpressionType.BRACKETS
-		ExpressionMenuId.COMPARISON:
+		ExpressionMenuId.COMPARISON_BOOL, ExpressionMenuId.COMPARISON_FLOAT, ExpressionMenuId.COMPARISON_INT, ExpressionMenuId.COMPARISON_STRING:
 			return ExpressionType.COMPARISON
-	# Currently all other ids refer to functions
+	# All other Ids are functions
 	return ExpressionType.FUNCTION
 
 
@@ -79,6 +90,19 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.CONTAINS
 		ExpressionMenuId.STRING_TO_LOWER:
 			return FunctionType.TO_LOWER
+	return null
+
+
+func _comparison_type_for_id(id: ExpressionMenuId) -> Variant:
+	match id:
+		ExpressionMenuId.COMPARISON_BOOL:
+			return VariableType.TYPE_BOOL
+		ExpressionMenuId.COMPARISON_INT:
+			return VariableType.TYPE_INT
+		ExpressionMenuId.COMPARISON_FLOAT:
+			return VariableType.TYPE_FLOAT
+		ExpressionMenuId.COMPARISON_STRING:
+			return VariableType.TYPE_STRING
 	return null
 
 
@@ -107,8 +131,6 @@ func _add_function_item(
 	name: String
 ):
 	menu.add_item(name, item)
-	#var index = menu.get_item_index(item)
-	#menu.set_item_submenu(index, "function")
 
 
 # TODO: Just implementing a few example functions for now
@@ -131,3 +153,17 @@ func _add_float_functions(menu: PopupMenu):
 func _add_string_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.STRING_CONTAINS, "contains")
 	_add_function_item(menu, ExpressionMenuId.STRING_TO_LOWER, "to_lower")
+
+
+func _add_comparisons_sub_menu(menu):
+	var submenu = PopupMenu.new()
+	submenu.set_name("comparison")
+	submenu.id_pressed.connect(_comparison_menu_item_selected)
+	
+	submenu.add_item("Integer", ExpressionMenuId.COMPARISON_INT)
+	submenu.add_item("Float", ExpressionMenuId.COMPARISON_FLOAT)
+	submenu.add_item("String", ExpressionMenuId.COMPARISON_STRING)
+	submenu.add_item("Boolean", ExpressionMenuId.COMPARISON_BOOL)
+	
+	menu.add_child(submenu)
+	menu.add_submenu_item("Comparison", "comparison", ExpressionMenuId.COMPARISON)

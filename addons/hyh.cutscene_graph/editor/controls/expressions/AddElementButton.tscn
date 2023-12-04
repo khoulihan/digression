@@ -4,10 +4,12 @@
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/controls/expressions/AddElementButton.gd" id="2_1yran"]
 
 [node name="AddElementButton" type="MenuButton"]
-custom_minimum_size = Vector2(160, 0)
+modulate = Color(1, 1, 1, 0.784314)
+custom_minimum_size = Vector2(120, 0)
 offset_right = 126.0
-offset_bottom = 31.0
+offset_bottom = 25.0
 size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 12
 text = "Add Element"
 icon = ExtResource("1_evxp6")
 script = ExtResource("2_1yran")

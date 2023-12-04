@@ -30,7 +30,8 @@ func _configure_button():
 func _on_add_element_button_add_requested(
 	variable_type,
 	expression_type,
-	function_type
+	function_type,
+	comparison_type
 ):
 	match expression_type:
 		ExpressionType.VALUE:
@@ -38,7 +39,7 @@ func _on_add_element_button_add_requested(
 		ExpressionType.BRACKETS:
 			_add_brackets(variable_type)
 		ExpressionType.COMPARISON:
-			_add_comparison(variable_type)
+			_add_comparison(variable_type, comparison_type)
 		ExpressionType.FUNCTION:
 			_add_function(variable_type, function_type)
 	# TODO: Have skipped custom functions for now
@@ -67,9 +68,11 @@ func _add_brackets(variable_type):
 	_add_to_bottom(exp)
 
 
-func _add_comparison(variable_type):
+func _add_comparison(variable_type, comparison_type):
 	var exp = load("res://addons/hyh.cutscene_graph/editor/controls/expressions/ComparisonExpression.tscn").instantiate()
+	# I think the type will always be boolean here
 	exp.type = variable_type
+	exp.comparison_type = comparison_type
 	_add_to_bottom(exp)
 
 

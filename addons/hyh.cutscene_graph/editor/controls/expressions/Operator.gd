@@ -20,6 +20,12 @@ var operator_type : OperatorType
 
 
 enum ExpressionOperators {
+	COMPARISON_EQUALS,
+	COMPARISON_NOT_EQUALS,
+	COMPARISON_GREATER_THAN,
+	COMPARISON_GREATER_THAN_OR_EQUALS,
+	COMPARISON_LESS_THAN,
+	COMPARISON_LESS_THAN_OR_EQUALS,
 	BOOL_AND,
 	BOOL_OR,
 	NUMERIC_ADD,
@@ -93,5 +99,10 @@ func _populate_string_operators():
 
 
 func _populate_comparison_operators():
-	# TODO: Add the comparison operators
-	pass
+	# TODO: Would like icons for all these
+	_options.add_item("==", ExpressionOperators.COMPARISON_EQUALS)
+	_options.add_item("!=", ExpressionOperators.COMPARISON_NOT_EQUALS)
+	_options.add_item(">", ExpressionOperators.COMPARISON_GREATER_THAN)
+	_options.add_item(">=", ExpressionOperators.COMPARISON_GREATER_THAN_OR_EQUALS)
+	_options.add_item("<", ExpressionOperators.COMPARISON_LESS_THAN)
+	_options.add_item("<=", ExpressionOperators.COMPARISON_LESS_THAN_OR_EQUALS)

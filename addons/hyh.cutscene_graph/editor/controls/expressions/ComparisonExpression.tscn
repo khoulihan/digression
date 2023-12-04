@@ -1,11 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://bj0s37lsbrewq"]
+[gd_scene load_steps=5 format=3 uid="uid://bj0s37lsbrewq"]
 
 [ext_resource type="PackedScene" uid="uid://b8lfk4ccumg1e" path="res://addons/hyh.cutscene_graph/editor/controls/expressions/MoveableExpression.tscn" id="1_qh1e8"]
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/controls/expressions/ComparisonExpression.gd" id="2_auu2u"]
+[ext_resource type="PackedScene" uid="uid://b46vwf6pxf1tl" path="res://addons/hyh.cutscene_graph/editor/controls/expressions/OperatorExpression.tscn" id="3_2n82i"]
 [ext_resource type="PackedScene" uid="uid://b15b0wmfjxo1l" path="res://addons/hyh.cutscene_graph/editor/controls/expressions/Operator.tscn" id="3_d2b3s"]
 
 [node name="ComparisonExpression" instance=ExtResource("1_qh1e8")]
 script = ExtResource("2_auu2u")
+comparison_type = 0
 
 [node name="Title" parent="PanelContainer/MC/ExpressionContainer/Header" index="1"]
 text = "Comparison"
@@ -18,5 +20,33 @@ theme_override_constants/margin_right = 11
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MC/ExpressionContainer/MC" index="0"]
 layout_mode = 2
 
-[node name="Operator" parent="PanelContainer/MC/ExpressionContainer/MC/VBoxContainer" index="0" instance=ExtResource("3_d2b3s")]
+[node name="LeftPanel" type="PanelContainer" parent="PanelContainer/MC/ExpressionContainer/MC/VBoxContainer" index="0"]
+layout_mode = 2
+
+[node name="MC" type="MarginContainer" parent="PanelContainer/MC/ExpressionContainer/MC/VBoxContainer/LeftPanel" index="0"]
+layout_mode = 2
+theme_override_constants/margin_left = 11
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 11
+theme_override_constants/margin_bottom = 5
+
+[node name="LeftExpression" parent="PanelContainer/MC/ExpressionContainer/MC/VBoxContainer/LeftPanel/MC" index="0" instance=ExtResource("3_2n82i")]
+layout_mode = 2
+
+[node name="ComparisonOperator" parent="PanelContainer/MC/ExpressionContainer/MC/VBoxContainer" index="1" instance=ExtResource("3_d2b3s")]
+layout_mode = 2
+variable_type = 0
+operator_type = 0
+
+[node name="RightPanel" type="PanelContainer" parent="PanelContainer/MC/ExpressionContainer/MC/VBoxContainer" index="2"]
+layout_mode = 2
+
+[node name="MC" type="MarginContainer" parent="PanelContainer/MC/ExpressionContainer/MC/VBoxContainer/RightPanel" index="0"]
+layout_mode = 2
+theme_override_constants/margin_left = 11
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 11
+theme_override_constants/margin_bottom = 5
+
+[node name="RightExpression" parent="PanelContainer/MC/ExpressionContainer/MC/VBoxContainer/RightPanel/MC" index="0" instance=ExtResource("3_2n82i")]
 layout_mode = 2

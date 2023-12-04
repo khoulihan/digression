@@ -9,5 +9,6 @@ script = ExtResource("2_wcyjl")
 
 [node name="AddElementButton" parent="." index="0" instance=ExtResource("3_h2t8h")]
 layout_mode = 2
+size_flags_horizontal = 0
 
 [connection signal="add_requested" from="AddElementButton" to="." method="_on_add_element_button_add_requested"]
