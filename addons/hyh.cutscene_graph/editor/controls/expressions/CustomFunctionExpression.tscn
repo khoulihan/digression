@@ -9,6 +9,12 @@
 [node name="CustomFunctionExpression" instance=ExtResource("1_6bndv")]
 script = ExtResource("2_75nwx")
 
+[node name="DragHandle" parent="PanelContainer/MC/ExpressionContainer/Header" index="0"]
+tooltip_text = ""
+
+[node name="Title" parent="PanelContainer/MC/ExpressionContainer/Header" index="1"]
+mouse_filter = 2
+
 [node name="TitleEdit" type="LineEdit" parent="PanelContainer/MC/ExpressionContainer/Header" index="2"]
 visible = false
 layout_mode = 2

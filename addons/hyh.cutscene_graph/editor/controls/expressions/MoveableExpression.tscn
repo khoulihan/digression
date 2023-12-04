@@ -28,6 +28,7 @@ layout_mode = 2
 [node name="DragHandle" type="TextureRect" parent="PanelContainer/MC/ExpressionContainer/Header" index="0"]
 layout_mode = 2
 size_flags_vertical = 4
+tooltip_text = "Drag to rearrange expressions."
 mouse_filter = 0
 texture = ExtResource("2_c0qoh")
 stretch_mode = 2
@@ -35,6 +36,7 @@ script = ExtResource("4_c35qm")
 
 [node name="Title" type="Label" parent="PanelContainer/MC/ExpressionContainer/Header" index="1"]
 layout_mode = 2
+mouse_filter = 1
 text = "Title Placeholder"
 
 [node name="ValidationWarning" type="TextureRect" parent="PanelContainer/MC/ExpressionContainer/Header" index="2"]

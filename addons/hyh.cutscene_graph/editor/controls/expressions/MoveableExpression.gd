@@ -33,8 +33,9 @@ func configure():
 	_validation_warning.visible = false
 
 
-func set_title(text):
+func set_title(text, tooltip):
 	_title.text = text
+	_title.tooltip_text = tooltip
 
 
 func _on_remove_button_pressed():

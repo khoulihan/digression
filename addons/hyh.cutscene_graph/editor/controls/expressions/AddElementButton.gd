@@ -25,11 +25,11 @@ enum ExpressionMenuId {
 	COMPARISON_STRING,
 	FUNCTION,
 	BOOL_NOT,
+	BOOL_STRING_CONTAINS,
 	INT_MAX,
 	INT_MIN,
 	FLOAT_MAX,
 	FLOAT_MIN,
-	STRING_CONTAINS,
 	STRING_TO_LOWER,
 }
 
@@ -86,7 +86,7 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.MIN
 		ExpressionMenuId.INT_MAX, ExpressionMenuId.FLOAT_MAX:
 			return FunctionType.MAX
-		ExpressionMenuId.STRING_CONTAINS:
+		ExpressionMenuId.BOOL_STRING_CONTAINS:
 			return FunctionType.CONTAINS
 		ExpressionMenuId.STRING_TO_LOWER:
 			return FunctionType.TO_LOWER
@@ -138,6 +138,7 @@ func _add_function_item(
 
 func _add_bool_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.BOOL_NOT, "not")
+	_add_function_item(menu, ExpressionMenuId.BOOL_STRING_CONTAINS, "contains")
 
 
 func _add_int_functions(menu: PopupMenu):
@@ -151,7 +152,6 @@ func _add_float_functions(menu: PopupMenu):
 
 
 func _add_string_functions(menu: PopupMenu):
-	_add_function_item(menu, ExpressionMenuId.STRING_CONTAINS, "contains")
 	_add_function_item(menu, ExpressionMenuId.STRING_TO_LOWER, "to_lower")
 
 

@@ -16,6 +16,7 @@ const OperatorType = preload("Operator.gd").OperatorType
 func _ready():
 	_panel.remove_theme_stylebox_override("panel")
 	_panel.get_child(0).add_theme_constant_override("margin_bottom", 10)
+	_title.tooltip_text = "Compares two values, returning a boolean result."
 
 
 func configure():

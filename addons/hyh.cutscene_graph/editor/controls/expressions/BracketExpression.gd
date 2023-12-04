@@ -8,6 +8,7 @@ extends "res://addons/hyh.cutscene_graph/editor/controls/expressions/MoveableExp
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	_panel.remove_theme_stylebox_override("panel")
+	_title.tooltip_text = "Groups expressions to be evaluated with priority."
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

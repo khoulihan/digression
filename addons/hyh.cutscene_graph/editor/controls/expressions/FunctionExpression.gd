@@ -18,41 +18,48 @@ const _functions = {
 	VariableType.TYPE_BOOL: {
 		FunctionType.NOT: {
 			"display": "not ( x )",
+			"tooltip": "Negates the argument.",
 			"arguments": {
 				"x": VariableType.TYPE_BOOL,
 			}
-		}
+		},
+		FunctionType.CONTAINS: {
+			"display": "contains ( in, query )",
+			"tooltip": "Returns true if \"in\" contains the substring \"query\".",
+			"arguments": {
+				"in": VariableType.TYPE_STRING,
+				"query": VariableType.TYPE_STRING,
+			}
+		},
 	},
 	VariableType.TYPE_INT: {
 		FunctionType.MIN: {
 			"display": "min ( ... )",
+			"tooltip": "Returns the smallest of the arguments.",
 			"arguments": VariableType.TYPE_INT,
 		},
 		FunctionType.MAX: {
 			"display": "max ( ... )",
+			"tooltip": "Returns the largest of the arguments.",
 			"arguments": VariableType.TYPE_INT,
 		}
 	},
 	VariableType.TYPE_FLOAT: {
 		FunctionType.MIN: {
 			"display": "min ( ... )",
+			"tooltip": "Returns the smallest of the arguments.",
 			"arguments": VariableType.TYPE_FLOAT,
 		},
 		FunctionType.MAX: {
 			"display": "max ( ... )",
+			"tooltip": "Returns the largest of the arguments.",
 			"arguments": VariableType.TYPE_FLOAT,
 		}
 	},
 	VariableType.TYPE_STRING: {
-		FunctionType.CONTAINS: {
-			"display": "contains ( in, query )",
-			"arguments": {
-				"in": VariableType.TYPE_STRING,
-				"query": VariableType.TYPE_STRING,
-			}
-		},
 		FunctionType.TO_LOWER: {
 			"display": "to_lower ( what )",
+			"tooltip": "Converts the argument to lowercase.",
 			"arguments": {
 				"what": VariableType.TYPE_STRING,
 			}
@@ -68,7 +75,10 @@ func _ready():
 func configure():
 	super()
 	var function_spec = _functions[type][function_type]
-	set_title(function_spec["display"])
+	set_title(
+		function_spec["display"],
+		function_spec["tooltip"]
+	)
 	var arguments = function_spec.get("arguments", null)
 	var args_type = typeof(arguments)
 	if args_type == TYPE_NIL:
