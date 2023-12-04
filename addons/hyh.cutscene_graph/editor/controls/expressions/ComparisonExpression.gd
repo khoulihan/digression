@@ -1,7 +1,9 @@
 @tool
 extends "res://addons/hyh.cutscene_graph/editor/controls/expressions/MoveableExpression.gd"
 
-const OperatorType = preload("Operator.gd").OperatorType
+const OperatorClass = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/Operator.gd")
+const OperatorType = preload("../../../resources/graph/expressions/ExpressionResource.gd").OperatorType
+const ExpressionType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionType
 
 
 # TODO: For some reason chose a different style for these variables
@@ -59,3 +61,35 @@ func _on_left_expression_modified():
 
 func _on_right_expression_modified():
 	modified.emit()
+
+
+func serialise():
+	var exp = super()
+	exp["expression_type"] = ExpressionType.COMPARISON
+	# Type of the expressions being compared - not the same as the type of
+	# THIS expression...
+	exp["comparison_type"] = comparison_type
+	exp["left_expression"] = LeftExpression.serialise()
+	exp["right_expression"] = RightExpression.serialise()
+	exp["comparison_operator"] = ComparisonOperator.serialise()
+	return exp
+
+
+func deserialise(serialised):
+	super(serialised)
+	LeftExpression.deserialise(serialised["left_expression"])
+	RightExpression.deserialise(serialised["right_expression"])
+	# Had to defer this to get it to select the correct operator, despite this
+	# not being required for operation operators.
+	call_deferred("_deserialise_operator", serialised["comparison_operator"])
+
+
+func _deserialise_operator(serialised):
+	ComparisonOperator.deserialise(serialised)
+
+
+# TODO: Might only need this for testing?
+func clear():
+	LeftExpression.clear()
+	RightExpression.clear()
+	ComparisonOperator.clear()

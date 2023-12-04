@@ -2,6 +2,7 @@
 extends VBoxContainer
 
 const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
+const ExpressionComponentType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionComponentType
 
 
 signal modified()
@@ -26,3 +27,19 @@ func configure():
 
 func validate():
 	return null
+
+
+func serialise():
+	return {
+		"component_type": ExpressionComponentType.EXPRESSION,
+		"variable_type": type,
+	}
+
+
+func deserialise(serialised):
+	type = serialised["variable_type"]
+
+
+# TODO: Might only need this for testing?
+func clear():
+	pass

@@ -13,6 +13,7 @@ comparison_type = 0
 theme_override_constants/margin_bottom = 10
 
 [node name="Title" parent="PanelContainer/MC/ExpressionContainer/Header" index="1"]
+tooltip_text = "Compares two values, returning a boolean result."
 text = "Comparison"
 
 [node name="MC" type="MarginContainer" parent="PanelContainer/MC/ExpressionContainer" index="1"]

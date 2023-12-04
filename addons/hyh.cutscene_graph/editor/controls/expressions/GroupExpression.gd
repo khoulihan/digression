@@ -2,8 +2,8 @@
 extends "res://addons/hyh.cutscene_graph/editor/controls/expressions/Expression.gd"
 
 
-const FunctionType = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/ExpressionEnums.gd").FunctionType
-const ExpressionType = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/ExpressionEnums.gd").ExpressionType
+const FunctionType = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").FunctionType
+const ExpressionType = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").ExpressionType
 
 #const ValueExpression = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/ValueExpression.tscn")
 #const BracketExpression = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/BracketExpression.tscn")
@@ -66,12 +66,14 @@ func _add_value(variable_type):
 	var exp = load("res://addons/hyh.cutscene_graph/editor/controls/expressions/ValueExpression.tscn").instantiate()
 	exp.type = variable_type
 	_add_to_bottom(exp)
+	return exp
 
 
 func _add_brackets(variable_type):
 	var exp = load("res://addons/hyh.cutscene_graph/editor/controls/expressions/BracketExpression.tscn").instantiate()
 	exp.type = variable_type
 	_add_to_bottom(exp)
+	return exp
 
 
 func _add_comparison(variable_type, comparison_type):
@@ -80,6 +82,7 @@ func _add_comparison(variable_type, comparison_type):
 	exp.type = variable_type
 	exp.comparison_type = comparison_type
 	_add_to_bottom(exp)
+	return exp
 
 
 func _add_function(variable_type, function_type):
@@ -87,6 +90,7 @@ func _add_function(variable_type, function_type):
 	exp.type = variable_type
 	exp.function_type = function_type
 	_add_to_bottom(exp)
+	return exp
 
 
 func _remove_child_requested(child):
@@ -190,4 +194,46 @@ func validate():
 		return null
 	else:
 		return child_warnings
-	
+
+
+func serialise():
+	var exp = super()
+	exp["expression_type"] = ExpressionType.GROUP
+	exp["children"] = _serialise_children()
+	return exp
+
+
+func _serialise_children():
+	var child_exps = []
+	var children = get_children().slice(0, -1)
+	for child in children:
+		child_exps.append(child.serialise())
+	return child_exps
+
+
+func deserialise(serialised):
+	super(serialised)
+	for sc in serialised["children"]:
+		_deserialise_child(sc)
+
+
+func _deserialise_child(serialised):
+	var child
+	var expression_type = serialised["expression_type"]
+	match expression_type:
+		ExpressionType.VALUE:
+			child = _add_value(type)
+		ExpressionType.BRACKETS:
+			child = _add_brackets(type)
+		ExpressionType.COMPARISON:
+			child = _add_comparison(type, serialised["comparison_type"])
+		ExpressionType.FUNCTION:
+			child = _add_function(type, serialised["function_type"])
+	child.deserialise(serialised)
+
+
+# TODO: Might only need this for testing?
+func clear():
+	var children = get_children().slice(0, -1)
+	for child in children:
+		remove_child(child)

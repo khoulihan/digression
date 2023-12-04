@@ -2,6 +2,9 @@
 extends "res://addons/hyh.cutscene_graph/editor/controls/expressions/MoveableExpression.gd"
 
 
+const ExpressionType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionType
+
+
 @onready var _child_expression = get_node("PanelContainer/MC/ExpressionContainer/MC/ChildExpression")
 
 
@@ -38,3 +41,20 @@ func validate():
 
 func _on_child_expression_modified():
 	modified.emit()
+
+
+func serialise():
+	var exp = super()
+	exp["expression_type"] = ExpressionType.BRACKETS
+	exp["contents"] = _child_expression.serialise()
+	return exp
+
+
+func deserialise(serialised):
+	super(serialised)
+	_child_expression.deserialise(serialised["contents"])
+
+
+# TODO: Might only need this for testing?
+func clear():
+	_child_expression.clear()

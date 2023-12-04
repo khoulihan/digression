@@ -3,6 +3,9 @@ extends MarginContainer
 
 
 const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
+const OperatorType = preload("../../../resources/graph/expressions/ExpressionResource.gd").OperatorType
+const ExpressionOperators = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionOperators
+const ExpressionComponentType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionComponentType
 
 const AddIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_add.svg")
 const SubtractIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_subtract.svg")
@@ -17,29 +20,6 @@ var variable_type : VariableType
 
 @export
 var operator_type : OperatorType
-
-
-enum ExpressionOperators {
-	COMPARISON_EQUALS,
-	COMPARISON_NOT_EQUALS,
-	COMPARISON_GREATER_THAN,
-	COMPARISON_GREATER_THAN_OR_EQUALS,
-	COMPARISON_LESS_THAN,
-	COMPARISON_LESS_THAN_OR_EQUALS,
-	BOOL_AND,
-	BOOL_OR,
-	NUMERIC_ADD,
-	NUMERIC_SUBTRACT,
-	NUMERIC_MULTIPLY,
-	NUMERIC_DIVIDE,
-	STRING_CONCATENATE,
-	STRING_CONCATENATE_WITH_SPACE,
-}
-
-enum OperatorType {
-	OPERATION,
-	COMPARISON,
-}
 
 
 func configure():
@@ -106,3 +86,18 @@ func _populate_comparison_operators():
 	_options.add_item(">=", ExpressionOperators.COMPARISON_GREATER_THAN_OR_EQUALS)
 	_options.add_item("<", ExpressionOperators.COMPARISON_LESS_THAN)
 	_options.add_item("<=", ExpressionOperators.COMPARISON_LESS_THAN_OR_EQUALS)
+
+
+func serialise():
+	return {
+		"component_type": ExpressionComponentType.OPERATOR,
+		"variable_type": variable_type,
+		"operator_type": operator_type,
+		"operator": _options.get_selected_id()
+	}
+
+
+func deserialise(serialised):
+	variable_type = serialised["variable_type"]
+	operator_type = serialised["operator_type"]
+	_options.select(_options.get_item_index(serialised["operator"]))

@@ -86,6 +86,7 @@ func clear_values():
 
 
 func set_value(val):
+	_selecting_variable = false
 	clear_values()
 	match variable_type:
 		VariableType.TYPE_BOOL:
@@ -125,6 +126,17 @@ func get_selected_variable():
 	if _selecting_variable:
 		return _selected_variable
 	return null
+
+
+func set_variable(variable):
+	_selecting_variable = true
+	_selected_variable = variable
+	VariableSelectionControl.configure_for_variable(
+		variable["name"],
+		variable["scope"],
+		variable["type"],
+	)
+	value_changed.emit()
 
 
 func set_validation_warning(t):

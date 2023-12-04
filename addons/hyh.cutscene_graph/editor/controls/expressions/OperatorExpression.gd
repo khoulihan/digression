@@ -93,3 +93,27 @@ func validate():
 		return null
 	else:
 		return child_warnings
+
+
+func _deserialise_child(serialised):
+	var child
+	var component_type = serialised["component_type"]
+	if component_type == ExpressionComponentType.EXPRESSION:
+		var expression_type = serialised["expression_type"]
+		match expression_type:
+			ExpressionType.VALUE:
+				child = _add_value(type)
+			ExpressionType.BRACKETS:
+				child = _add_brackets(type)
+			ExpressionType.COMPARISON:
+				child = _add_comparison(type, serialised["comparison_type"])
+			ExpressionType.FUNCTION:
+				child = _add_function(type, serialised["function_type"])
+	else:
+		child = Operator.instantiate()
+		child.operator_type = OperatorClass.OperatorType.OPERATION
+		child.variable_type = type
+		add_child(child)
+		move_child(child, -2)
+		child.configure()
+	child.deserialise(serialised)

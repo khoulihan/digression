@@ -2,6 +2,9 @@
 extends "res://addons/hyh.cutscene_graph/editor/controls/expressions/MoveableExpression.gd"
 
 
+const ExpressionType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionType
+
+
 @onready var _value_edit = get_node("PanelContainer/MC/ExpressionContainer/Header/VariableValueEdit")
 
 
@@ -31,3 +34,22 @@ func validate():
 
 func _on_variable_value_edit_value_changed():
 	modified.emit()
+
+
+func serialise():
+	var exp = super()
+	exp["expression_type"] = ExpressionType.VALUE
+	if _value_edit.is_selecting_variable():
+		exp["variable"] = _value_edit.get_selected_variable()
+	else:
+		exp["value"] = _value_edit.get_value()
+	return exp
+
+
+func deserialise(serialised):
+	super(serialised)
+	_value_edit.set_variable_type(type)
+	if "variable" in serialised:
+		_value_edit.set_variable(serialised["variable"])
+	else:
+		_value_edit.set_value(serialised["value"])

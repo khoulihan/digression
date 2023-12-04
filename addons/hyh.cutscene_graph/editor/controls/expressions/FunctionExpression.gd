@@ -6,66 +6,15 @@ extends "res://addons/hyh.cutscene_graph/editor/controls/expressions/MoveableExp
 const GroupExpression = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/GroupExpression.tscn")
 const OperatorExpression = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/OperatorExpression.tscn")
 
-const FunctionType = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/ExpressionEnums.gd").FunctionType
+const ExpressionType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionType
+const FunctionType = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").FunctionType
+const FUNCTIONS = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").EXPRESSION_FUNCTIONS
+
 
 @onready var _arguments_container : VBoxContainer = get_node("PanelContainer/MC/ExpressionContainer/MC/ArgumentsContainer")
 
 
 @export var function_type : FunctionType
-
-
-const _functions = {
-	VariableType.TYPE_BOOL: {
-		FunctionType.NOT: {
-			"display": "not ( x )",
-			"tooltip": "Negates the argument.",
-			"arguments": {
-				"x": VariableType.TYPE_BOOL,
-			}
-		},
-		FunctionType.CONTAINS: {
-			"display": "contains ( in, query )",
-			"tooltip": "Returns true if \"in\" contains the substring \"query\".",
-			"arguments": {
-				"in": VariableType.TYPE_STRING,
-				"query": VariableType.TYPE_STRING,
-			}
-		},
-	},
-	VariableType.TYPE_INT: {
-		FunctionType.MIN: {
-			"display": "min ( ... )",
-			"tooltip": "Returns the smallest of the arguments.",
-			"arguments": VariableType.TYPE_INT,
-		},
-		FunctionType.MAX: {
-			"display": "max ( ... )",
-			"tooltip": "Returns the largest of the arguments.",
-			"arguments": VariableType.TYPE_INT,
-		}
-	},
-	VariableType.TYPE_FLOAT: {
-		FunctionType.MIN: {
-			"display": "min ( ... )",
-			"tooltip": "Returns the smallest of the arguments.",
-			"arguments": VariableType.TYPE_FLOAT,
-		},
-		FunctionType.MAX: {
-			"display": "max ( ... )",
-			"tooltip": "Returns the largest of the arguments.",
-			"arguments": VariableType.TYPE_FLOAT,
-		}
-	},
-	VariableType.TYPE_STRING: {
-		FunctionType.TO_LOWER: {
-			"display": "to_lower ( what )",
-			"tooltip": "Converts the argument to lowercase.",
-			"arguments": {
-				"what": VariableType.TYPE_STRING,
-			}
-		},
-	},
-}
 
 
 func _ready():
@@ -74,7 +23,7 @@ func _ready():
 
 func configure():
 	super()
-	var function_spec = _functions[type][function_type]
+	var function_spec = FUNCTIONS[type][function_type]
 	set_title(
 		function_spec["display"],
 		function_spec["tooltip"]
@@ -113,3 +62,41 @@ func _add_set_arguments(type):
 func validate():
 	# TODO: Check all arguments are valid for the selected function
 	return null
+
+
+func serialise():
+	var exp = super()
+	exp["expression_type"] = ExpressionType.FUNCTION
+	exp["function_type"] = function_type
+	exp["arguments"] = _serialise_arguments()
+	return exp
+
+
+func _serialise_arguments():
+	var spec = FUNCTIONS[type][function_type]
+	var spec_args = spec["arguments"]
+	if spec_args == null:
+		# No arguments - unlikely, but ok
+		return null
+	if typeof(spec_args) == TYPE_DICTIONARY:
+		# Named arguments
+		var args = {}
+		# Every second child of the arguments container will be an expression
+		for i in range(0, spec_args.size()):
+			args[spec_args.keys()[i]] = _arguments_container.get_child((i*2) + 1).serialise()
+		return args
+	# Collection of arguments
+	var arg_array = []
+	for child in _arguments_container.get_children():
+		arg_array.append(child.serialise())
+	return arg_array
+	
+	
+func deserialise(serialised):
+	super(serialised)
+	pass
+
+
+# TODO: Might only need this for testing?
+func clear():
+	pass
