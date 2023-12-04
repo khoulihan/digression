@@ -9,6 +9,9 @@
 script = ExtResource("2_auu2u")
 comparison_type = 0
 
+[node name="MC" parent="PanelContainer" index="0"]
+theme_override_constants/margin_bottom = 10
+
 [node name="Title" parent="PanelContainer/MC/ExpressionContainer/Header" index="1"]
 text = "Comparison"
 
@@ -50,3 +53,6 @@ theme_override_constants/margin_bottom = 5
 
 [node name="RightExpression" parent="PanelContainer/MC/ExpressionContainer/MC/VBoxContainer/RightPanel/MC" index="0" instance=ExtResource("3_2n82i")]
 layout_mode = 2
+
+[connection signal="modified" from="PanelContainer/MC/ExpressionContainer/MC/VBoxContainer/LeftPanel/MC/LeftExpression" to="." method="_on_left_expression_modified"]
+[connection signal="modified" from="PanelContainer/MC/ExpressionContainer/MC/VBoxContainer/RightPanel/MC/RightExpression" to="." method="_on_right_expression_modified"]

@@ -19,3 +19,21 @@ func configure():
 	super()
 	_child_expression.type = type
 	_child_expression.configure()
+
+
+func validate():
+	var warning = _child_expression.validate()
+	if warning == null:
+		_validation_warning.visible = false
+		return null
+	_validation_warning.visible = true
+	_validation_warning.tooltip_text = ""
+	if typeof(warning) == TYPE_STRING:
+		_validation_warning.tooltip_text = warning
+	else:
+		_validation_warning.tooltip_text = "There are problems with one or more child expressions."
+	return warning
+
+
+func _on_child_expression_modified():
+	modified.emit()

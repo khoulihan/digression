@@ -64,3 +64,4 @@ layout_mode = 2
 [connection signal="changed" from="HBoxContainer/SelectionContainer/EditContainer/SpinBox" to="." method="_on_SpinBox_changed"]
 [connection signal="value_changed" from="HBoxContainer/SelectionContainer/EditContainer/SpinBox" to="." method="_on_SpinBox_value_changed"]
 [connection signal="pressed" from="HBoxContainer/SelectionContainer/EditContainer/CheckBox" to="." method="_on_CheckBox_pressed"]
+[connection signal="variable_selected" from="HBoxContainer/SelectionContainer/VariableSelectionControl" to="." method="_on_variable_selection_control_variable_selected"]

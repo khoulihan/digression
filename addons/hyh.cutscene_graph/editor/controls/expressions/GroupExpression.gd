@@ -49,7 +49,13 @@ func _add_to_bottom(child):
 	add_child(child)
 	move_child(_add_element_button, -1)
 	child.remove_requested.connect(_remove_child_requested.bind(child))
+	child.modified.connect(_child_modified)
 	call_deferred("_configure_child", child)
+	call_deferred("_emit_modified")
+
+
+func _emit_modified():
+	modified.emit()
 
 
 func _configure_child(child):
@@ -86,11 +92,17 @@ func _add_function(variable_type, function_type):
 func _remove_child_requested(child):
 	remove_child(child)
 	child.queue_free()
+	call_deferred("_emit_modified")
+
+
+func _child_modified():
+	modified.emit()
 
 
 func remove_child_expression(child):
 	remove_child(child)
 	child.remove_requested.disconnect(_remove_child_requested)
+	child.modified.disconnect(_child_modified)
 
 
 func _can_drop_data(at_position, data):
@@ -156,7 +168,26 @@ func _add_at_position(at_position, target):
 		# Leave it at the bottom, but move the add button down
 		move_child(_add_element_button, -1)
 	target.remove_requested.connect(_remove_child_requested.bind(target))
+	target.modified.connect(_child_modified)
+	call_deferred("_emit_modified")
 
 
 func _get_child_expression_at_position(at_position):
 	pass
+
+
+func validate():
+	var children = get_children().slice(0, -1)
+	if len(children) == 0:
+		return "Group expression has no children."
+	var child_warnings = []
+	for child in children:
+		var warning = child.validate()
+		if warning == null:
+			continue
+		child_warnings.append(warning)
+	if len(child_warnings) == 0:
+		return null
+	else:
+		return child_warnings
+	

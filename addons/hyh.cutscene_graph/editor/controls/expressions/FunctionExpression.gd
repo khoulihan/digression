@@ -99,3 +99,7 @@ func _add_set_arguments(type):
 	_arguments_container.add_child(group)
 	group.configure()
 
+
+func validate():
+	# TODO: Check all arguments are valid for the selected function
+	return null

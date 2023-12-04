@@ -48,6 +48,7 @@ signal value_changed()
 
 
 var _selecting_variable: bool = false
+var _selected_variable
 
 
 func _ready():
@@ -116,6 +117,16 @@ func get_value():
 			return SpinBoxControl.value as float
 
 
+func is_selecting_variable():
+	return _selecting_variable
+
+
+func get_selected_variable():
+	if _selecting_variable:
+		return _selected_variable
+	return null
+
+
 func set_validation_warning(t):
 	ValidationWarning.set_warning(t)
 
@@ -143,3 +154,9 @@ func _on_SpinBox_changed():
 func _on_variable_check_button_toggled(button_pressed):
 	_selecting_variable = button_pressed
 	_configure()
+	value_changed.emit()
+
+
+func _on_variable_selection_control_variable_selected(variable):
+	_selected_variable = variable
+	value_changed.emit()

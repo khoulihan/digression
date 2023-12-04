@@ -4,6 +4,9 @@ extends VBoxContainer
 const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
 
 
+signal modified()
+
+
 @export
 var type : VariableType
 
@@ -19,3 +22,7 @@ func _ready():
 # this method must be called after the node is ready.
 func configure():
 	pass
+
+
+func validate():
+	return null

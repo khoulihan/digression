@@ -17,3 +17,5 @@ theme_override_constants/margin_right = 11
 
 [node name="ChildExpression" parent="PanelContainer/MC/ExpressionContainer/MC" index="0" instance=ExtResource("2_nmkt4")]
 layout_mode = 2
+
+[connection signal="modified" from="PanelContainer/MC/ExpressionContainer/MC/ChildExpression" to="." method="_on_child_expression_modified"]

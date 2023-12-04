@@ -12,3 +12,5 @@ visible = false
 
 [node name="VariableValueEdit" parent="PanelContainer/MC/ExpressionContainer/Header" index="2" instance=ExtResource("2_y8w3o")]
 layout_mode = 2
+
+[connection signal="value_changed" from="PanelContainer/MC/ExpressionContainer/Header/VariableValueEdit" to="." method="_on_variable_value_edit_value_changed"]

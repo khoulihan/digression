@@ -17,6 +17,7 @@ signal remove_requested()
 @onready var _drag_handle : TextureRect = get_node("PanelContainer/MC/ExpressionContainer/Header/DragHandle")
 @onready var _title : Label = get_node("PanelContainer/MC/ExpressionContainer/Header/Title")
 @onready var _remove_button = get_node("PanelContainer/MC/ExpressionContainer/Header/RemoveButton")
+@onready var _validation_warning : TextureRect = get_node("PanelContainer/MC/ExpressionContainer/Header/ValidationWarning")
 
 
 func _ready():
@@ -29,6 +30,7 @@ func configure():
 	super()
 	_drag_handle.target = self
 	_drag_handle.type = type
+	_validation_warning.visible = false
 
 
 func set_title(text):

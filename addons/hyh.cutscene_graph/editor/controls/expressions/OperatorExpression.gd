@@ -75,3 +75,21 @@ func _operator_to_keep(previous, current, to_remove):
 		return previous
 	to_remove.append(previous)
 	return current
+
+
+func validate():
+	var children = get_children().slice(0, -1)
+	if len(children) == 0:
+		return "Group expression has no children."
+	var child_warnings = []
+	for child in children:
+		if child is OperatorClass:
+			continue
+		var warning = child.validate()
+		if warning == null:
+			continue
+		child_warnings.append(warning)
+	if len(child_warnings) == 0:
+		return null
+	else:
+		return child_warnings
