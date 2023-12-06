@@ -22,6 +22,9 @@ func _ready():
 
 
 func configure():
+	if _arguments_container.get_child_count() > 0:
+		# Already configured
+		return
 	super()
 	var function_spec = FUNCTIONS[type][function_type]
 	set_title(
@@ -85,17 +88,36 @@ func _serialise_arguments():
 		for i in range(0, spec_args.size()):
 			args[spec_args.keys()[i]] = _arguments_container.get_child((i*2) + 1).serialise()
 		return args
-	# Collection of arguments
-	var arg_array = []
-	for child in _arguments_container.get_children():
-		arg_array.append(child.serialise())
-	return arg_array
+	# Collection of arguments - but it is just one GroupExpression
+	return _arguments_container.get_child(0).serialise()
 	
 	
 func deserialise(serialised):
 	super(serialised)
-	pass
+	function_type = serialised["function_type"]
+	# This will create the argument expressions for us to populate
+	configure()
+	var arguments = serialised["arguments"]
+	_deserialise_arguments(arguments)
 
+
+func _deserialise_arguments(serialised):
+	var spec = FUNCTIONS[type][function_type]
+	var spec_args = spec["arguments"]
+	if spec_args == null:
+		# No arguments - unlikely, but ok
+		return null
+	if typeof(spec_args) == TYPE_DICTIONARY:
+		# Named arguments
+		for i in range(0, len(spec_args.keys())):
+			var k = spec_args.keys()[i]
+			var arg = serialised[k]
+			_arguments_container.get_child((i * 2) + 1).deserialise(arg)
+		return
+	# Collection of arguments - but it is just one GroupExpression
+	var group = _arguments_container.get_child(0)
+	group.deserialise(serialised)
+	
 
 # TODO: Might only need this for testing?
 func clear():
