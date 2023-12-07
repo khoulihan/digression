@@ -5,6 +5,7 @@ const OperatorClass = preload("res://addons/hyh.cutscene_graph/editor/controls/e
 const OperatorType = preload("../../../resources/graph/expressions/ExpressionResource.gd").OperatorType
 const ExpressionType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionType
 
+const _group_panel_style = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/group_panel_style.tres")
 
 # TODO: For some reason chose a different style for these variables
 @onready var LeftExpression = get_node("PanelContainer/MC/ExpressionContainer/MC/VBoxContainer/LeftPanel/MC/LeftExpression")
@@ -16,7 +17,7 @@ const ExpressionType = preload("../../../resources/graph/expressions/ExpressionR
 
 
 func _ready():
-	_panel.remove_theme_stylebox_override("panel")
+	_panel.add_theme_stylebox_override("panel", _group_panel_style)
 	_panel.get_child(0).add_theme_constant_override("margin_bottom", 10)
 	_title.tooltip_text = "Compares two values, returning a boolean result."
 

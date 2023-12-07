@@ -10,6 +10,7 @@ const ExpressionType = preload("../../../resources/graph/expressions/ExpressionR
 const FunctionType = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").FunctionType
 const FUNCTIONS = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").EXPRESSION_FUNCTIONS
 
+const _group_panel_style = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/group_panel_style.tres")
 
 @onready var _arguments_container : VBoxContainer = get_node("PanelContainer/MC/ExpressionContainer/MC/ArgumentsContainer")
 
@@ -18,7 +19,7 @@ const FUNCTIONS = preload("res://addons/hyh.cutscene_graph/resources/graph/expre
 
 
 func _ready():
-	_panel.remove_theme_stylebox_override("panel")
+	_panel.add_theme_stylebox_override("panel", _group_panel_style)
 
 
 func configure():

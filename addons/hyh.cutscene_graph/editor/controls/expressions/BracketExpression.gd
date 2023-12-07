@@ -4,13 +4,14 @@ extends "res://addons/hyh.cutscene_graph/editor/controls/expressions/MoveableExp
 
 const ExpressionType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionType
 
+const _group_panel_style = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/group_panel_style.tres")
 
 @onready var _child_expression = get_node("PanelContainer/MC/ExpressionContainer/MC/ChildExpression")
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	_panel.remove_theme_stylebox_override("panel")
+	_panel.add_theme_stylebox_override("panel", _group_panel_style)
 	_title.tooltip_text = "Groups expressions to be evaluated with priority."
 
 
