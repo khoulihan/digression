@@ -53,6 +53,7 @@ func _add_named_arguments(args):
 		arg_expression.type = args[arg]
 		_arguments_container.add_child(arg_expression)
 		arg_expression.configure()
+		arg_expression.modified.connect(_argument_expression_modified)
 
 
 func _add_set_arguments(type):
@@ -60,12 +61,57 @@ func _add_set_arguments(type):
 	group.type = type
 	_arguments_container.add_child(group)
 	group.configure()
+	group.modified.connect(_argument_expression_modified)
+
+
+func _argument_expression_modified():
+	modified.emit()
 
 
 func validate():
-	# TODO: Check all arguments are valid for the selected function
-	return null
+	var validation_result = _validate()
+	if validation_result == null:
+		_validation_warning.visible = false
+		return null
+	
+	_validation_warning.visible = true
+	if typeof(validation_result) == TYPE_STRING:
+		_validation_warning.tooltip_text = validation_result
+	else:
+		if len(validation_result) > 1:
+			_validation_warning.tooltip_text = "Invalid arguments."
+		else:
+			_validation_warning.tooltip_text = "Invalid argument."
+	
+	return validation_result
 
+
+func _validate():
+	var spec = FUNCTIONS[type][function_type]
+	var spec_args = spec["arguments"]
+	if spec_args == null:
+		# No arguments - unlikely, but ok
+		return null
+	if typeof(spec_args) == TYPE_DICTIONARY:
+		# Named arguments
+		var child_warnings = []
+		# Every second child of the arguments container will be an expression
+		for i in range(0, spec_args.size()):
+			var arg_val = _arguments_container.get_child((i*2) + 1).validate()
+			if arg_val != null:
+				child_warnings.append(arg_val)
+		if len(child_warnings) == 0:
+			return null
+		else:
+			return child_warnings
+	# Collection of arguments - but it is just one GroupExpression
+	var group = _arguments_container.get_child(0)
+	var group_validation = group.validate()
+	if typeof(group_validation) == TYPE_STRING:
+		# Dodgy assumption that this is what a string response means...
+		return "Argument list is empty."
+	return group_validation
+	
 
 func serialise():
 	var exp = super()
