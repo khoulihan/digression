@@ -21,7 +21,7 @@ enum VariableType {
 @export var variable: String
 @export var variable_type: VariableType
 
-var value
+var value_expression
 
 # This is used only for recreating the node state in the editor
 @export var size: Vector2
@@ -31,19 +31,19 @@ var value
 func _get_property_list():
 	var properties = []
 	properties.append({
-		"name": "value",
+		"name": "value_expression",
 		"type": null,
 		"usage": PROPERTY_USAGE_STORAGE,
 	})
 	return properties
 
 
-func get_value():
-	return value
+func get_value_expression():
+	return value_expression
 
 
-func set_value(val):
-	value = val
+func set_value_expression(val):
+	value_expression = val
 
 
 func _init():

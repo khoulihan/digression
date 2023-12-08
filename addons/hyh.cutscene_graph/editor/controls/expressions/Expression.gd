@@ -41,5 +41,7 @@ func deserialise(serialised):
 
 
 # TODO: Might only need this for testing?
+# Have ended up using it in the Set node, but maybe should incorporate
+# it into deserialise?
 func clear():
 	pass

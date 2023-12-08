@@ -5,11 +5,7 @@
 
 [node name="Operator" type="MarginContainer"]
 theme_override_constants/margin_left = 50
-theme_override_constants/margin_top = -4
-theme_override_constants/margin_bottom = -4
 script = ExtResource("1_p1kyc")
-variable_type = null
-operator_type = null
 
 [node name="OperatorOptionButton" type="OptionButton" parent="."]
 layout_mode = 2

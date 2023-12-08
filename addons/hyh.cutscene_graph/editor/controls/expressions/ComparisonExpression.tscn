@@ -44,8 +44,6 @@ layout_mode = 2
 
 [node name="ComparisonOperator" parent="PanelContainer/MC/ExpressionContainer/MC/VBoxContainer" index="1" instance=ExtResource("3_d2b3s")]
 layout_mode = 2
-variable_type = 0
-operator_type = 0
 
 [node name="RightPanel" type="PanelContainer" parent="PanelContainer/MC/ExpressionContainer/MC/VBoxContainer" index="2"]
 layout_mode = 2

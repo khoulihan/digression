@@ -1,15 +1,20 @@
-[gd_scene load_steps=7 format=3 uid="uid://oaxce7kcotie"]
+[gd_scene load_steps=9 format=3 uid="uid://oaxce7kcotie"]
 
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorSetNode.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://c0pw3rdictm2v" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorGraphNodeBase.tscn" id="2"]
 [ext_resource type="StyleBox" uid="uid://bie6450rn7l44" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node.tres" id="2_jcxhc"]
-[ext_resource type="PackedScene" uid="uid://c1584iplg8kg5" path="res://addons/hyh.cutscene_graph/editor/controls/VariableValueEditControl.tscn" id="3"]
 [ext_resource type="StyleBox" uid="uid://oujfit2l7l4s" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node_selected.tres" id="3_5vwt0"]
+[ext_resource type="Script" path="res://test/TestLabel.gd" id="5_j5rg0"]
 [ext_resource type="PackedScene" uid="uid://c31q0dbk4i25w" path="res://addons/hyh.cutscene_graph/editor/controls/VariableSelectionControl.tscn" id="5_pyyww"]
+[ext_resource type="PackedScene" uid="uid://b46vwf6pxf1tl" path="res://addons/hyh.cutscene_graph/editor/controls/expressions/OperatorExpression.tscn" id="6_bffs7"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_hmss4"]
+font_size = 14
+font_color = Color(0.384314, 0.384314, 0.384314, 1)
 
 [node name="EditorSetNode" instance=ExtResource("2")]
-offset_right = 399.0
-offset_bottom = 113.0
+offset_right = 540.0
+offset_bottom = 114.0
 theme_override_styles/frame = ExtResource("2_jcxhc")
 theme_override_styles/selected_frame = ExtResource("3_5vwt0")
 title = "Set Variable"
@@ -41,18 +46,31 @@ columns = 2
 [node name="Label" type="Label" parent="MarginContainer/GridContainer" index="0"]
 layout_mode = 2
 text = "Variable:"
+script = ExtResource("5_j5rg0")
 
 [node name="VariableSelectionControl" parent="MarginContainer/GridContainer" index="1" instance=ExtResource("5_pyyww")]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="Label2" type="Label" parent="MarginContainer/GridContainer" index="2"]
 layout_mode = 2
+size_flags_vertical = 0
 text = "Value:"
 
-[node name="ValueEdit" parent="MarginContainer/GridContainer" index="3" instance=ExtResource("3")]
+[node name="SelectVariableLabel" type="Label" parent="MarginContainer/GridContainer" index="3"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "Select a variable above"
+label_settings = SubResource("LabelSettings_hmss4")
+
+[node name="Expression" parent="MarginContainer/GridContainer" index="4" instance=ExtResource("6_bffs7")]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+type = 1
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="resize_request" from="." to="." method="_on_resize_request"]
 [connection signal="variable_selected" from="MarginContainer/GridContainer/VariableSelectionControl" to="." method="_on_variable_selection_control_variable_selected"]
-[connection signal="value_changed" from="MarginContainer/GridContainer/ValueEdit" to="." method="_on_ValueEdit_value_changed"]
+[connection signal="modified" from="MarginContainer/GridContainer/Expression" to="." method="_on_expression_modified"]
