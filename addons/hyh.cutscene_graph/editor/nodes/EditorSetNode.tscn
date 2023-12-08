@@ -1,10 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://oaxce7kcotie"]
+[gd_scene load_steps=8 format=3 uid="uid://oaxce7kcotie"]
 
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorSetNode.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://c0pw3rdictm2v" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorGraphNodeBase.tscn" id="2"]
 [ext_resource type="StyleBox" uid="uid://bie6450rn7l44" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node.tres" id="2_jcxhc"]
 [ext_resource type="StyleBox" uid="uid://oujfit2l7l4s" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node_selected.tres" id="3_5vwt0"]
-[ext_resource type="Script" path="res://test/TestLabel.gd" id="5_j5rg0"]
 [ext_resource type="PackedScene" uid="uid://c31q0dbk4i25w" path="res://addons/hyh.cutscene_graph/editor/controls/VariableSelectionControl.tscn" id="5_pyyww"]
 [ext_resource type="PackedScene" uid="uid://b46vwf6pxf1tl" path="res://addons/hyh.cutscene_graph/editor/controls/expressions/OperatorExpression.tscn" id="6_bffs7"]
 
@@ -46,7 +45,6 @@ columns = 2
 [node name="Label" type="Label" parent="MarginContainer/GridContainer" index="0"]
 layout_mode = 2
 text = "Variable:"
-script = ExtResource("5_j5rg0")
 
 [node name="VariableSelectionControl" parent="MarginContainer/GridContainer" index="1" instance=ExtResource("5_pyyww")]
 layout_mode = 2
