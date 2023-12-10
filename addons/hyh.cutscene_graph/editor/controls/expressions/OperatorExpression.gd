@@ -95,6 +95,12 @@ func validate():
 		return child_warnings
 
 
+func serialise():
+	var exp = super()
+	exp["expression_type"] = ExpressionType.OPERATOR_GROUP
+	return exp
+
+
 func _deserialise_child(serialised):
 	var child
 	var component_type = serialised["component_type"]

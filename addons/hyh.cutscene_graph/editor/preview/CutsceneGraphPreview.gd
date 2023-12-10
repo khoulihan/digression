@@ -442,6 +442,7 @@ func _start_processing():
 	starting_preview.emit()
 	_clear_dialogue()
 	_transient_state = _controller._transient_store.duplicate()
+	_controller._expression_evaluator.transient_store = _controller._transient_store
 	_cutscene.trigger()
 
 
@@ -450,6 +451,7 @@ func _stop_processing():
 	_set_control_states(false)
 	_controller.cancel()
 	_controller._transient_store = _transient_state.duplicate()
+	_controller._expression_evaluator.transient_store = _controller._transient_store
 	_hide_continue()
 	if _dialogue_container.get_child_count() >= 2:
 		var last_event = _dialogue_container.get_child(-2)
@@ -485,6 +487,7 @@ func _on_cutscene_controller_cutscene_started(cutscene_name, graph_type):
 	# Restore the backup of the transient store from before the
 	# cutscene was triggered, as the controller will have cleared it.
 	_controller._transient_store = _transient_state.duplicate()
+	_controller._expression_evaluator.transient_store = _controller._transient_store
 	var n = StaticInformationalEvent.instantiate()
 	_insert_event(n)
 	n.populate("Cutscene started...")
@@ -495,6 +498,7 @@ func _on_cutscene_controller_cutscene_started(cutscene_name, graph_type):
 func _on_cutscene_controller_cutscene_completed():
 	Logger.debug("Cutscene Completed")
 	_controller._transient_store = _transient_state.duplicate()
+	_controller._expression_evaluator.transient_store = _controller._transient_store
 	var n = StaticInformationalEvent.instantiate()
 	_insert_event(n)
 	n.populate("Cutscene complete.")

@@ -25,6 +25,10 @@ const BooleanCondition = preload("../resources/graph/branches/conditions/Boolean
 const ValueCondition = preload("../resources/graph/branches/conditions/ValueCondition.gd")
 const BooleanType = BooleanCondition.BooleanType
 
+
+const ExpressionEvaluator = preload("./expressions/ExpressionEvaluator.gd")
+
+
 ## Emitted when processing of a cutscene graph begins.
 signal cutscene_started(cutscene_name, graph_type)
 ## Emitted when a sub-graph has been entered.
@@ -150,6 +154,8 @@ var _last_choice_node_id
 var _internal: ControllerInternal
 var _currently_awaiting: ProceedSignal
 
+var _expression_evaluator: ExpressionEvaluator
+
 
 ## Register a global variable store
 func register_global_store(store):
@@ -182,6 +188,11 @@ func _ready():
 	)
 	
 	_transient_store = {}
+	
+	_expression_evaluator = ExpressionEvaluator.new()
+	_expression_evaluator.transient_store = _transient_store
+	_expression_evaluator.local_store = _local_store
+	_expression_evaluator.global_store = _global_store
 	
 	# Only expose the internals if we are running in the editor.
 	if Engine.is_editor_hint():
@@ -266,6 +277,7 @@ func process_cutscene(cutscene, state_store):
 	_graph_stack = []
 	_transient_store = {}
 	_cutscene_state_store = state_store
+	_expression_evaluator.cutscene_state_store = _cutscene_state_store
 	_current_graph = cutscene
 	_current_node = _current_graph.root_node
 	Logger.info("Processing cutscene \"%s\"" % _current_graph.name)
@@ -687,7 +699,9 @@ func _process_set_node():
 	_set_variable(
 		_current_node.variable,
 		_current_node.scope,
-		_current_node.get_value()
+		_expression_evaluator.evaluate(
+			_current_node.get_value_expression()
+		)
 	)
 	_current_node = _get_node_by_id(
 		_current_node.next
@@ -697,10 +711,14 @@ func _process_set_node():
 func _internal_notify_set_node():
 	if _internal == null:
 		return
+	# TODO: This involves evaluating the expression a second time
+	# This is both wasteful and might produce incorrect results!
 	_internal.processed_set_node.emit(
 		_current_node.variable,
 		_current_node.scope,
-		_current_node.get_value()
+		_expression_evaluator.evaluate(
+			_current_node.get_value_expression()
+		)
 	)
 
 
