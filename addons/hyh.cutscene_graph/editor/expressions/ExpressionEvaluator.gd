@@ -43,7 +43,6 @@ func evaluate(expression):
 			return _evaluate_group(variable_type, expression)
 		ExpressionType.OPERATOR_GROUP:
 			return _evaluate_operator_group(variable_type, expression)
-		
 
 
 func _evaluate_value(variable_type, expression):
@@ -94,7 +93,104 @@ func _evaluate_function(variable_type, expression):
 	# This function will basically just need to branch to various more specific
 	# functions for each function (or maybe function type), and could probably
 	# pull out the arguments based on the function spec as well?
-	pass
+	var function_type = expression["function_type"]
+	var function_spec = EXPRESSION_FUNCTIONS[variable_type][function_type]
+	if function_spec == null:
+		Logger.error("Unrecognised function in serialised expression.")
+		return null
+	var arguments_spec = function_spec["arguments"]
+	var exp_arguments = expression["arguments"]
+	var arguments
+	if typeof(arguments_spec) == TYPE_DICTIONARY:
+		arguments = {}
+		for key in arguments_spec.keys():
+			arguments[key] = evaluate(exp_arguments[key])
+	else:
+		arguments = _evaluate_group(arguments_spec, expression["arguments"])
+	
+	return _match_function(
+		variable_type,
+		function_type,
+		expression,
+		function_spec,
+		arguments
+	)
+
+
+func _match_function(
+	variable_type,
+	function_type,
+	expression,
+	function_spec,
+	arguments
+):
+	match variable_type:
+		VariableType.TYPE_BOOL:
+			return _match_bool_function(
+				function_type,
+				expression,
+				function_spec,
+				arguments
+			)
+		VariableType.TYPE_INT, VariableType.TYPE_FLOAT:
+			return _match_numeric_function(
+				variable_type,
+				function_type,
+				expression,
+				function_spec,
+				arguments
+			)
+		VariableType.TYPE_STRING:
+			return _match_string_function(
+				function_type,
+				expression,
+				function_spec,
+				arguments
+			)
+
+
+func _match_bool_function(
+	function_type,
+	expression,
+	function_spec,
+	arguments
+):
+	match function_type:
+		FunctionType.NOT:
+			return not arguments["x"]
+		FunctionType.CONTAINS:
+			return arguments["in"].contains(arguments["query"])
+	Logger.error("Unrecognised boolean function type.")
+	return null
+
+
+func _match_numeric_function(
+	variable_type,
+	function_type,
+	expression,
+	function_spec,
+	arguments
+):
+	match function_type:
+		FunctionType.MIN:
+			return arguments.min()
+		FunctionType.MAX:
+			return arguments.max()
+	Logger.error("Unrecognised numeric function type.")
+	return null
+
+
+func _match_string_function(
+	function_type,
+	expression,
+	function_spec,
+	arguments
+):
+	match function_type:
+		FunctionType.TO_LOWER:
+			return arguments["what"].to_lower()
+	Logger.error("Unrecognised string function type.")
+	return null
 
 
 func _evaluate_brackets(variable_type, expression):
@@ -107,8 +203,11 @@ func _evaluate_group(variable_type, expression):
 	# Group expressions only make sense in a context that gives them meaning
 	# e.g. as a list of arguments to a function.
 	# Evaluating one returns a list with all child expressions evaluated.
-	Logger.error("Group expression evaluation not yet implemented.")
-	pass
+	var children = expression["children"]
+	var result = []
+	for child in children:
+		result.append(evaluate(child))
+	return result
 
 
 func _evaluate_operator_group(variable_type, expression):
