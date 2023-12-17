@@ -40,6 +40,7 @@ func set_title(text, tooltip):
 
 func _on_remove_button_pressed():
 	var confirm = ConfirmationDialog.new()
+	confirm.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
 	confirm.title = "Please confirm"
 	confirm.dialog_text = "Are you sure you want to remove this expression? This action cannot be undone."
 	confirm.canceled.connect(_remove_cancelled.bind(confirm))
