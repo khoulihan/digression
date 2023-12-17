@@ -41,12 +41,16 @@ func configure(t: VariableType):
 	_type = t
 	var menu = get_popup()
 	menu.clear()
+	# Children need to be removed or the wrong submenus may show up
+	for child in menu.get_children():
+		menu.remove_child(child)
 	menu.add_item("Value", ExpressionMenuId.VALUE)
 	menu.add_item("Brackets", ExpressionMenuId.BRACKETS)
 	if (t == VariableType.TYPE_BOOL):
 		_add_comparisons_sub_menu(menu)
 	_add_functions_sub_menu(menu, t)
-	menu.id_pressed.connect(_menu_item_selected)
+	if not menu.id_pressed.is_connected(_menu_item_selected):
+		menu.id_pressed.connect(_menu_item_selected)
 
 
 func _menu_item_selected(id: int):
