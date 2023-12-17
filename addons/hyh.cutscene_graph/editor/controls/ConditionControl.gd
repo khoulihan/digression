@@ -46,9 +46,25 @@ func _on_set_condition_button_pressed():
 
 
 func _on_clear_button_pressed():
+	var confirm = ConfirmationDialog.new()
+	confirm.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
+	confirm.title = "Please confirm"
+	confirm.dialog_text = "Are you sure you want to remove this condition? This action cannot be undone."
+	confirm.canceled.connect(_on_clear_cancelled.bind(confirm))
+	confirm.confirmed.connect(_on_clear_confirmed.bind(confirm))
+	get_tree().root.add_child(confirm)
+	confirm.show()
+
+
+func _on_clear_confirmed(confirm):
+	get_tree().root.remove_child(confirm)
 	self.condition_resource = null
 	$Condition.visible = false
 	$SetConditionButton.visible = true
+
+
+func _on_clear_cancelled(confirm):
+	get_tree().root.remove_child(confirm)
 
 
 func _on_condition_expression_modified():
