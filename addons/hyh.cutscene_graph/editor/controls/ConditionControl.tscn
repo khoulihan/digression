@@ -1,8 +1,18 @@
-[gd_scene load_steps=4 format=3 uid="uid://mvafher5yr07"]
+[gd_scene load_steps=5 format=3 uid="uid://mvafher5yr07"]
 
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/controls/ConditionControl.gd" id="1_elv8o"]
-[ext_resource type="Texture2D" uid="uid://cokaiidw4802f" path="res://addons/hyh.cutscene_graph/icons/icon_edit.svg" id="2_add5l"]
 [ext_resource type="Texture2D" uid="uid://bta3jvd470c36" path="res://addons/hyh.cutscene_graph/icons/icon_close.svg" id="3_hasyr"]
+[ext_resource type="PackedScene" uid="uid://b46vwf6pxf1tl" path="res://addons/hyh.cutscene_graph/editor/controls/expressions/OperatorExpression.tscn" id="3_slwmy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x6p1j"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 3
+border_width_right = 3
+border_color = Color(0, 0, 0, 0.490196)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
 
 [node name="ConditionControl" type="MarginContainer"]
 theme_override_constants/margin_right = 20
@@ -18,35 +28,33 @@ text = "Set condition..."
 visible = false
 layout_mode = 2
 
-[node name="EditButton" type="Button" parent="Condition"]
+[node name="Label" type="Label" parent="Condition"]
 layout_mode = 2
-icon = ExtResource("2_add5l")
-flat = true
+text = "if "
+
+[node name="PC" type="PanelContainer" parent="Condition"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_x6p1j")
+
+[node name="MarginContainer" type="MarginContainer" parent="Condition/PC"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 9
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 9
+theme_override_constants/margin_bottom = 3
+
+[node name="ConditionExpression" parent="Condition/PC/MarginContainer" instance=ExtResource("3_slwmy")]
+layout_mode = 2
+type = 1
 
 [node name="ClearButton" type="Button" parent="Condition"]
 layout_mode = 2
+tooltip_text = "Clear the condition"
 theme_override_colors/icon_normal_color = Color(1, 0, 0, 1)
 icon = ExtResource("3_hasyr")
 flat = true
 
-[node name="MarginContainer" type="MarginContainer" parent="Condition"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/margin_left = 9
-
-[node name="ConditionLabel" type="RichTextLabel" parent="Condition/MarginContainer"]
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/default_color = Color(0.803922, 0.811765, 0.823529, 1)
-theme_override_constants/line_separation = -3
-theme_override_font_sizes/normal_font_size = 14
-theme_override_font_sizes/mono_font_size = 14
-bbcode_enabled = true
-text = "[code][color=#ff7085]if[/color] [color=#abc9ff]([/color]var_a [color=#abc9ff]==[/color] [color=#ffeda1]\"example\"[/color] [color=#ff7085]and[/color] var_b [color=#abc9ff]==[/color] [color=#8fffdb]49[/color][color=#abc9ff])[/color] [color=#ff7085]or[/color] always_true[/code]"
-fit_content = true
-scroll_active = false
-
 [connection signal="pressed" from="SetConditionButton" to="." method="_on_set_condition_button_pressed"]
-[connection signal="pressed" from="Condition/EditButton" to="." method="_on_edit_button_pressed"]
+[connection signal="modified" from="Condition/PC/MarginContainer/ConditionExpression" to="." method="_on_condition_expression_modified"]
 [connection signal="pressed" from="Condition/ClearButton" to="." method="_on_clear_button_pressed"]

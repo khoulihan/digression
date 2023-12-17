@@ -618,7 +618,7 @@ func _process_choice_node():
 		var valid = true
 		
 		if choice.condition != null:
-			valid = _evaluate_condition(choice.condition)
+			valid = _evaluate_boolean_expression_resource(choice.condition)
 		
 		if valid:
 			var choice_obj = Choice.new()
@@ -788,7 +788,7 @@ func _process_random_node():
 	for i in range(len(_current_node.branches)):
 		var branch = _current_node.branches[i]
 		
-		if _evaluate_condition(branch.condition):
+		if _evaluate_boolean_expression_resource(branch.condition):
 			viable.append(branch.next)
 
 	if len(viable) == 0:
@@ -801,25 +801,12 @@ func _process_random_node():
 		)
 
 
-func _evaluate_condition(condition) -> bool:
-	if condition == null:
+func _evaluate_boolean_expression_resource(res):
+	if res == null:
 		return true
-	
-	if condition is ValueCondition:
-		return condition.evaluate(
-			_get_variable(
-				condition.variable,
-				condition.scope
-			)
-		)
-	var result: bool = (condition.operator == BooleanType.BOOLEAN_AND)
-	for child in condition.children:
-		if condition.operator == BooleanType.BOOLEAN_AND:
-			result = result and _evaluate_condition(child)
-			if not result:
-				return result
-		else:
-			result = result or _evaluate_condition(child)
-			if result:
-				return result
+	var result = _expression_evaluator.evaluate(
+		res.expression
+	)
+	if result == null:
+		return false
 	return result
