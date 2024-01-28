@@ -20,11 +20,6 @@ const JumpNode = preload("../resources/graph/JumpNode.gd")
 const RoutingNode = preload("../resources/graph/RoutingNode.gd")
 const RepeatNode = preload("../resources/graph/RepeatNode.gd")
 
-# Condition resource types
-const BooleanCondition = preload("../resources/graph/branches/conditions/BooleanCondition.gd")
-const ValueCondition = preload("../resources/graph/branches/conditions/ValueCondition.gd")
-const BooleanType = BooleanCondition.BooleanType
-
 
 const ExpressionEvaluator = preload("./expressions/ExpressionEvaluator.gd")
 
