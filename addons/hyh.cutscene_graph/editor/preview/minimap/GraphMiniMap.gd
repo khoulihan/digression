@@ -48,6 +48,7 @@ func _ready():
 
 
 func clear():
+	Logger.debug("Clearing graph mini-map")
 	for child in self.get_children():
 		self.remove_child(child)
 		child.free()
