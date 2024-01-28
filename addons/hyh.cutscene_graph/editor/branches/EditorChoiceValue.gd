@@ -13,9 +13,7 @@ const ChoiceBranch = preload("../../resources/graph/branches/ChoiceBranch.gd")
 
 signal remove_requested()
 signal modified()
-signal set_condition_requested()
-signal edit_condition_requested()
-signal clear_condition_requested()
+signal size_changed(size_change)
 
 
 var choice_resource
@@ -45,12 +43,12 @@ func _on_RemoveButton_pressed():
 
 
 func _on_DisplayEdit_text_changed(new_text):
-	emit_signal("modified")
+	modified.emit()
 
 
 func _on_TranslationKeyEdit_text_changed(new_text):
-	emit_signal("modified")
+	modified.emit()
 
 
-func _on_conditional_control_set_condition_requested():
-	emit_signal("set_condition_requested")
+func _on_condition_control_size_changed(size_change):
+	size_changed.emit(size_change)

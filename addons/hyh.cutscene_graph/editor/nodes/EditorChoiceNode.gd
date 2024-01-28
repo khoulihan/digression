@@ -62,6 +62,8 @@ func remove_choice(index):
 	var height = node.size.y
 	remove_child(node)
 	node.disconnect("remove_requested", Callable(self, "_value_remove_requested"))
+	node.disconnect("modified", _line_modified)
+	node.disconnect("size_changed", _line_size_changed)
 	reconnect_removal_signals()
 	# This should restore the control to the minimum required for the remaining
 	# choices, but a bit more than strictly necessary horizontally.
@@ -113,6 +115,7 @@ func _create_line(adjust_size):
 		size = Vector2(size.x, size.y + 130)
 	new_value_line.connect("remove_requested", Callable(self, "_value_remove_requested").bind(get_child_count() - 1))
 	new_value_line.connect("modified", Callable(self, "_line_modified").bind(get_child_count() - 1))
+	new_value_line.connect("size_changed", Callable(self, "_line_size_changed").bind(get_child_count() - 1))
 	set_slot(get_child_count() - 1, false, 0, CONNECTOR_COLOUR, true, 0, CONNECTOR_COLOUR)
 	return new_value_line
 
@@ -208,6 +211,11 @@ func _value_remove_requested(index):
 
 func _line_modified(index):
 	emit_signal("modified")
+
+
+func _line_size_changed(change, index):
+	Logger.debug("Choice line %s size changed by %s" % [index, change])
+	self.size = Vector2(self.size.x, self.size.y + change)
 
 
 func _get_theme(control):

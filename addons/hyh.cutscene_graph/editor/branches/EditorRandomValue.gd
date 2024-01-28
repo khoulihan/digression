@@ -4,9 +4,7 @@ extends MarginContainer
 
 signal remove_requested()
 signal modified()
-signal set_condition_requested()
-signal edit_condition_requested()
-signal clear_condition_requested()
+signal size_changed(size_change)
 
 
 const RandomBranch = preload("../../resources/graph/branches/RandomBranch.gd")
@@ -32,5 +30,5 @@ func _on_RemoveButton_pressed():
 	emit_signal("remove_requested")
 
 
-func _on_condition_control_set_condition_requested():
-	emit_signal("set_condition_requested")
+func _on_condition_control_size_changed(size_change):
+	size_changed.emit(size_change)

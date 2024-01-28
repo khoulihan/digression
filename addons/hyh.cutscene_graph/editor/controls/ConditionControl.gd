@@ -10,11 +10,9 @@ const ExpressionResource = preload("res://addons/hyh.cutscene_graph/resources/gr
 
 @onready var ConditionExpression = get_node("Condition/PC/MarginContainer/ConditionExpression")
 
-signal condition_set(condition)
-signal condition_cleared()
-signal set_condition_requested()
-signal edit_condition_requested()
-signal clear_condition_requested()
+
+signal size_changed(size_change)
+
 
 var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
 
@@ -37,12 +35,23 @@ func _configure_for_condition(condition):
 	ConditionExpression.configure()
 
 
+func _emit_size_changed(size_before, second_deferral=false):
+	# When removing a condition, the size doesn't change on
+	# the first idle frame - have to defer a second time.
+	if second_deferral:
+		size_changed.emit(self.size.y - size_before)
+		return
+	call_deferred("_emit_size_changed", size_before, true)
+
+
 func _on_set_condition_button_pressed():
 	Logger.debug("Set condition button pressed")
+	var size_before = self.size.y
 	$SetConditionButton.visible = false
 	$Condition.visible = true
 	ConditionExpression.clear()
 	ConditionExpression.configure()
+	call_deferred("_emit_size_changed", size_before)
 
 
 func _on_clear_button_pressed():
@@ -59,8 +68,10 @@ func _on_clear_button_pressed():
 func _on_clear_confirmed(confirm):
 	get_tree().root.remove_child(confirm)
 	self.condition_resource = null
+	var size_before = self.size.y
 	$Condition.visible = false
 	$SetConditionButton.visible = true
+	call_deferred("_emit_size_changed", size_before)
 
 
 func _on_clear_cancelled(confirm):

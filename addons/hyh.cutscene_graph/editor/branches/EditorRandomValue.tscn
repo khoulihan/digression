@@ -38,5 +38,5 @@ size_flags_vertical = 0
 icon = ExtResource("2")
 flat = true
 
-[connection signal="set_condition_requested" from="VBoxContainer/HBoxContainer/VariableContainer/ConditionControl" to="." method="_on_condition_control_set_condition_requested"]
+[connection signal="size_changed" from="VBoxContainer/HBoxContainer/VariableContainer/ConditionControl" to="." method="_on_condition_control_size_changed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/RemoveButton" to="." method="_on_RemoveButton_pressed"]

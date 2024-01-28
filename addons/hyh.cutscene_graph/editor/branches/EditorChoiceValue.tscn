@@ -60,4 +60,4 @@ layout_mode = 2
 [connection signal="text_changed" from="HBoxContainer/VariableContainer/DisplayContainer/DisplayEdit" to="." method="_on_DisplayEdit_text_changed"]
 [connection signal="text_changed" from="HBoxContainer/VariableContainer/DisplayContainer/TranslationKeyEdit" to="." method="_on_TranslationKeyEdit_text_changed"]
 [connection signal="pressed" from="HBoxContainer/VariableContainer/RemoveButton" to="." method="_on_RemoveButton_pressed"]
-[connection signal="set_condition_requested" from="HBoxContainer/ConditionControl" to="." method="_on_conditional_control_set_condition_requested"]
+[connection signal="size_changed" from="HBoxContainer/ConditionControl" to="." method="_on_condition_control_size_changed"]
