@@ -139,7 +139,7 @@ func _set_tooltip(node, resource):
 	elif resource is RoutingNode:
 		node.tooltip_text = "Routing"
 	elif resource is VariableSetNode:
-		node.tooltip_text = "Set variable \"%s\" to \"%s\"" % [resource.variable, resource.value]
+		node.tooltip_text = "Set variable \"%s\"" % [resource.variable]
 	elif resource is SubGraph:
 		node.tooltip_text = "Sub-graph \"%s\"" % resource.sub_graph.name
 	else:
