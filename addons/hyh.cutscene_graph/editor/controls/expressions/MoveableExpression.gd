@@ -96,34 +96,3 @@ func _get_type_name(t):
 			return "Float"
 		VariableType.TYPE_STRING:
 			return "String"
-
-
-#func _on_drag_handle_button_down():
-#	#set_drag_preview(_header)
-#	print("Forcing drag")
-#	var preview = Label.new()
-#	preview.text = "Being dragged rn"
-#	force_drag({
-#		"control": self,
-#		"type": type,
-#	}, preview)
-#	pass
-#
-#
-#func _get_drag_data(at_position):
-#	print("Regular drag")
-#	var preview = Label.new()
-#	preview.text = "Being dragged rn"
-#	set_drag_preview(preview)
-#	return {
-#		"control": self,
-#		"type": type,
-#	}
-#
-#
-#func _can_drop_data(at_position, data):
-#	return false
-#
-#
-#func _drop_data(at_position, data):
-#	pass
