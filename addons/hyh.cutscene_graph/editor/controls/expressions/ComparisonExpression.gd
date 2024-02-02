@@ -94,3 +94,7 @@ func clear():
 	LeftExpression.clear()
 	RightExpression.clear()
 	ComparisonOperator.clear()
+
+
+func _on_expression_size_changed(amount):
+	size_changed.emit(amount)

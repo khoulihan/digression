@@ -6,6 +6,7 @@ const ExpressionComponentType = preload("../../../resources/graph/expressions/Ex
 
 
 signal modified()
+signal size_changed(amount)
 
 
 @export
@@ -45,3 +46,12 @@ func deserialise(serialised):
 # it into deserialise?
 func clear():
 	pass
+
+
+func _emit_size_changed(size_before, deferrals_required=2, deferral_count=0):
+	# Some changes to the UI aren't reflected in the controls
+	# size on the next idle frame, so have to defer until they are.
+	if deferral_count == deferrals_required:
+		size_changed.emit(self.size.y - size_before)
+		return
+	call_deferred("_emit_size_changed", size_before, deferrals_required, deferral_count + 1)

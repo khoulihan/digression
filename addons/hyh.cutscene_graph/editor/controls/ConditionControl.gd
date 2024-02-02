@@ -86,3 +86,7 @@ func _on_condition_expression_modified():
 	# TODO: Serialising the expression every time it is modified like this
 	# seems wasteful.
 	condition_resource.expression = ConditionExpression.serialise()
+
+
+func _on_condition_expression_size_changed(amount):
+	size_changed.emit(amount)

@@ -55,6 +55,7 @@ func _add_named_arguments(args):
 		_arguments_container.add_child(arg_expression)
 		arg_expression.configure()
 		arg_expression.modified.connect(_argument_expression_modified)
+		arg_expression.size_changed.connect(_argument_expression_size_changed)
 
 
 func _add_set_arguments(type):
@@ -63,10 +64,15 @@ func _add_set_arguments(type):
 	_arguments_container.add_child(group)
 	group.configure()
 	group.modified.connect(_argument_expression_modified)
+	group.size_changed.connect(_argument_expression_size_changed)
 
 
 func _argument_expression_modified():
 	modified.emit()
+
+
+func _argument_expression_size_changed(amount):
+	size_changed.emit(amount)
 
 
 func validate():

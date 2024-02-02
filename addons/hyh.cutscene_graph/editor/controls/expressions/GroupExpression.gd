@@ -46,12 +46,15 @@ func _on_add_element_button_add_requested(
 
 
 func _add_to_bottom(child):
+	var size_before = self.size.y
 	add_child(child)
 	move_child(_add_element_button, -1)
 	child.remove_requested.connect(_remove_child_requested.bind(child))
 	child.modified.connect(_child_modified)
+	child.size_changed.connect(_child_size_changed)
 	call_deferred("_configure_child", child)
 	call_deferred("_emit_modified")
+	call_deferred("_emit_size_changed", size_before)
 
 
 func _emit_modified():
@@ -94,19 +97,28 @@ func _add_function(variable_type, function_type):
 
 
 func _remove_child_requested(child):
+	var size_before = self.size.y
 	remove_child(child)
 	child.queue_free()
 	call_deferred("_emit_modified")
+	call_deferred("_emit_size_changed", size_before, 10)
 
 
 func _child_modified():
 	modified.emit()
 
 
+func _child_size_changed(amount):
+	size_changed.emit(amount)
+
+
 func remove_child_expression(child):
+	var size_before = self.size.y
 	remove_child(child)
 	child.remove_requested.disconnect(_remove_child_requested)
 	child.modified.disconnect(_child_modified)
+	child.size_changed.disconnect(_child_size_changed)
+	call_deferred("_emit_size_changed", size_before, 10)
 
 
 func _can_drop_data(at_position, data):
@@ -162,6 +174,7 @@ func _add_at_position(at_position, target):
 				distance_to_child = bottom - y
 			
 	
+	var size_before = self.size.y
 	add_child(target)
 	if closest != null:
 		if add_before:
@@ -173,7 +186,9 @@ func _add_at_position(at_position, target):
 		move_child(_add_element_button, -1)
 	target.remove_requested.connect(_remove_child_requested.bind(target))
 	target.modified.connect(_child_modified)
+	target.size_changed.connect(_child_size_changed)
 	call_deferred("_emit_modified")
+	call_deferred("_emit_size_changed", size_before)
 
 
 func _get_child_expression_at_position(at_position):

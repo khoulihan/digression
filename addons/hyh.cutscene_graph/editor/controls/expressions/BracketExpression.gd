@@ -59,3 +59,7 @@ func deserialise(serialised):
 # TODO: Might only need this for testing?
 func clear():
 	_child_expression.clear()
+
+
+func _on_child_expression_size_changed(amount):
+	size_changed.emit(amount)

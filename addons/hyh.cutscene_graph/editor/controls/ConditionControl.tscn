@@ -57,4 +57,5 @@ flat = true
 
 [connection signal="pressed" from="SetConditionButton" to="." method="_on_set_condition_button_pressed"]
 [connection signal="modified" from="Condition/PC/MarginContainer/ConditionExpression" to="." method="_on_condition_expression_modified"]
+[connection signal="size_changed" from="Condition/PC/MarginContainer/ConditionExpression" to="." method="_on_condition_expression_size_changed"]
 [connection signal="pressed" from="Condition/ClearButton" to="." method="_on_clear_button_pressed"]

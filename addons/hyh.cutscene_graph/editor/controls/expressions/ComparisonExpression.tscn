@@ -60,4 +60,6 @@ theme_override_constants/margin_bottom = 5
 layout_mode = 2
 
 [connection signal="modified" from="PanelContainer/MC/ExpressionContainer/MC/VBoxContainer/LeftPanel/MC/LeftExpression" to="." method="_on_left_expression_modified"]
+[connection signal="size_changed" from="PanelContainer/MC/ExpressionContainer/MC/VBoxContainer/LeftPanel/MC/LeftExpression" to="." method="_on_expression_size_changed"]
 [connection signal="modified" from="PanelContainer/MC/ExpressionContainer/MC/VBoxContainer/RightPanel/MC/RightExpression" to="." method="_on_right_expression_modified"]
+[connection signal="size_changed" from="PanelContainer/MC/ExpressionContainer/MC/VBoxContainer/RightPanel/MC/RightExpression" to="." method="_on_expression_size_changed"]
