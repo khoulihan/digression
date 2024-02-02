@@ -45,7 +45,7 @@ func _on_add_element_button_add_requested(
 	# TODO: Have skipped custom functions for now
 
 
-func _add_to_bottom(child):
+func _add_to_bottom(child, deserialising=false):
 	var size_before = self.size.y
 	add_child(child)
 	move_child(_add_element_button, -1)
@@ -54,7 +54,8 @@ func _add_to_bottom(child):
 	child.size_changed.connect(_child_size_changed)
 	call_deferred("_configure_child", child)
 	call_deferred("_emit_modified")
-	call_deferred("_emit_size_changed", size_before)
+	if not deserialising:
+		call_deferred("_emit_size_changed", size_before)
 
 
 func _emit_modified():
@@ -65,34 +66,34 @@ func _configure_child(child):
 	child.configure()
 
 
-func _add_value(variable_type):
+func _add_value(variable_type, deserialising=false):
 	var exp = load("res://addons/hyh.cutscene_graph/editor/controls/expressions/ValueExpression.tscn").instantiate()
 	exp.type = variable_type
-	_add_to_bottom(exp)
+	_add_to_bottom(exp, deserialising)
 	return exp
 
 
-func _add_brackets(variable_type):
+func _add_brackets(variable_type, deserialising=false):
 	var exp = load("res://addons/hyh.cutscene_graph/editor/controls/expressions/BracketExpression.tscn").instantiate()
 	exp.type = variable_type
-	_add_to_bottom(exp)
+	_add_to_bottom(exp, deserialising)
 	return exp
 
 
-func _add_comparison(variable_type, comparison_type):
+func _add_comparison(variable_type, comparison_type, deserialising=false):
 	var exp = load("res://addons/hyh.cutscene_graph/editor/controls/expressions/ComparisonExpression.tscn").instantiate()
 	# I think the type will always be boolean here
 	exp.type = variable_type
 	exp.comparison_type = comparison_type
-	_add_to_bottom(exp)
+	_add_to_bottom(exp, deserialising)
 	return exp
 
 
-func _add_function(variable_type, function_type):
+func _add_function(variable_type, function_type, deserialising=false):
 	var exp = load("res://addons/hyh.cutscene_graph/editor/controls/expressions/FunctionExpression.tscn").instantiate()
 	exp.type = variable_type
 	exp.function_type = function_type
-	_add_to_bottom(exp)
+	_add_to_bottom(exp, deserialising)
 	return exp
 
 
@@ -237,13 +238,13 @@ func _deserialise_child(serialised):
 	var expression_type = serialised["expression_type"]
 	match expression_type:
 		ExpressionType.VALUE:
-			child = _add_value(type)
+			child = _add_value(type, true)
 		ExpressionType.BRACKETS:
-			child = _add_brackets(type)
+			child = _add_brackets(type, true)
 		ExpressionType.COMPARISON:
-			child = _add_comparison(type, serialised["comparison_type"])
+			child = _add_comparison(type, serialised["comparison_type"], true)
 		ExpressionType.FUNCTION:
-			child = _add_function(type, serialised["function_type"])
+			child = _add_function(type, serialised["function_type"], true)
 	child.deserialise(serialised)
 
 

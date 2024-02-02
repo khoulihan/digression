@@ -11,8 +11,8 @@ func refresh():
 	_rectify_operators()
 
 
-func _add_to_bottom(child):
-	super(child)
+func _add_to_bottom(child, deserialising=false):
+	super(child, deserialising)
 	_rectify_operators()
 
 
@@ -108,13 +108,13 @@ func _deserialise_child(serialised):
 		var expression_type = serialised["expression_type"]
 		match expression_type:
 			ExpressionType.VALUE:
-				child = _add_value(type)
+				child = _add_value(type, true)
 			ExpressionType.BRACKETS:
-				child = _add_brackets(type)
+				child = _add_brackets(type, true)
 			ExpressionType.COMPARISON:
-				child = _add_comparison(type, serialised["comparison_type"])
+				child = _add_comparison(type, serialised["comparison_type"], true)
 			ExpressionType.FUNCTION:
-				child = _add_function(type, serialised["function_type"])
+				child = _add_function(type, serialised["function_type"], true)
 	else:
 		child = Operator.instantiate()
 		child.operator_type = OperatorClass.OperatorType.OPERATION
