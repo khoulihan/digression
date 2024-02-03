@@ -153,36 +153,43 @@ func _add_at_position(at_position, target):
 	var closest = null
 	var add_before = false
 	var y = at_position.y
+	var distances = {}
+
+	# Calculate the distance to each child.
 	for child in children:
 		var top = child.offset_top
 		var bottom = child.offset_bottom
-		if y >= top and y <= bottom:
-			# We are over this child!
+		# This calculates the centre of the child.
+		distances[child] = abs(y - (top + bottom) / 2.0)
+	
+	# Determine which child is the closest.
+	for child in distances:
+		if distance_to_child == null:
+			distance_to_child = distances[child]
 			closest = child
-			if y - top < bottom - y:
-				add_before = true
-				distance_to_child = y - top
-			else:
-				add_before = false
-				distance_to_child = bottom - y
-			break
-		if closest == null or y - top < distance_to_child or bottom - y < distance_to_child:
+			continue
+		if distances[child] < distance_to_child:
+			distance_to_child = distances[child]
 			closest = child
-			if y - top < bottom - y:
-				add_before = true
-				distance_to_child = y - top
-			else:
-				add_before = false
-				distance_to_child = bottom - y
-			
+	
+	# Determine if we are before or after the identified closest child
+	if closest != null:
+		var top = closest.offset_top
+		var bottom = closest.offset_bottom
+		var centre = (top + bottom) / 2.0
+		add_before = y < centre
 	
 	var size_before = self.size.y
-	add_child(target)
+	# Don't insert if the target was closest to itself!
+	if closest == null or closest != target:
+		add_child(target)
 	if closest != null:
-		if add_before:
-			move_child(target, closest.get_index())
-		else:
-			move_child(target, closest.get_index() + 1)
+		# Don't move if the target was closest to itself!
+		if closest != target:
+			if add_before:
+				move_child(target, closest.get_index())
+			else:
+				move_child(target, closest.get_index() + 1)
 	else:
 		# Leave it at the bottom, but move the add button down
 		move_child(_add_element_button, -1)
