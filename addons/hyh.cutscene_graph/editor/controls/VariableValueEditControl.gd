@@ -128,7 +128,7 @@ func get_selected_variable():
 	return null
 
 
-func set_variable(variable):
+func set_variable(variable, deserialising=false):
 	_selecting_variable = true
 	_selected_variable = variable
 	VariableSelectionControl.configure_for_variable(
@@ -136,7 +136,8 @@ func set_variable(variable):
 		variable["scope"],
 		variable["type"],
 	)
-	value_changed.emit()
+	if not deserialising:
+		value_changed.emit()
 
 
 func set_validation_warning(t):

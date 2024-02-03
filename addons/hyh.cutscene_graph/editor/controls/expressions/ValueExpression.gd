@@ -50,6 +50,6 @@ func deserialise(serialised):
 	super(serialised)
 	_value_edit.set_variable_type(type)
 	if "variable" in serialised:
-		_value_edit.set_variable(serialised["variable"])
+		_value_edit.set_variable(serialised["variable"], true)
 	else:
 		_value_edit.set_value(serialised["value"])

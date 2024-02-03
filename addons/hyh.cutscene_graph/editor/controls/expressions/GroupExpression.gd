@@ -53,8 +53,8 @@ func _add_to_bottom(child, deserialising=false):
 	child.modified.connect(_child_modified)
 	child.size_changed.connect(_child_size_changed)
 	call_deferred("_configure_child", child)
-	call_deferred("_emit_modified")
 	if not deserialising:
+		call_deferred("_emit_modified")
 		call_deferred("_emit_size_changed", size_before)
 
 
@@ -119,6 +119,7 @@ func remove_child_expression(child):
 	child.remove_requested.disconnect(_remove_child_requested)
 	child.modified.disconnect(_child_modified)
 	child.size_changed.disconnect(_child_size_changed)
+	call_deferred("_emit_modified")
 	call_deferred("_emit_size_changed", size_before, 10)
 
 
