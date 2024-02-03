@@ -661,7 +661,7 @@ func _process_connection_for_slot_removal(
 		)
 
 
-func _node_close_request(node_name):
+func _node_delete_request(node_name):
 	_confirmation_action = ConfirmationActions.REMOVE_NODE
 	_node_to_remove = node_name
 	if not _node_to_remove is Array:
@@ -923,8 +923,8 @@ func _connect_node_signals(node):
 			node.name
 		)
 	)
-	node.close_request.connect(
-		_node_close_request.bind(
+	node.delete_request.connect(
+		_node_delete_request.bind(
 			node.name
 		)
 	)

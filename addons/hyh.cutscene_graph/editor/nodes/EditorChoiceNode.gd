@@ -1,6 +1,8 @@
 @tool
 extends "EditorGraphNodeBase.gd"
 
+const TITLE_FONT = preload("res://addons/hyh.cutscene_graph/editor/nodes/styles/TitleOptionFont.tres")
+
 const TranslationKey = preload("../../utility/TranslationKey.gd")
 
 const ChoiceBranch = preload("../../resources/graph/branches/ChoiceBranch.gd")
@@ -11,9 +13,10 @@ const VariableType = preload("../../resources/graph/VariableSetNode.gd").Variabl
 @onready var Dialogue = get_node("DialogueMarginContainer/Dialogue")
 @onready var CharacterOptionsContainer = get_node("DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CharacterOptionsContainer")
 
-@onready var ChoiceTypeOption: OptionButton = get_node("ChoiceTypeParent/ChoiceTypeOption")
 @onready var DialogueTypeOption: OptionButton = get_node("DialogueMarginContainer/Dialogue/DialogueTypeParent/DialogueTypeOption")
 @onready var ShowDialogueForDefaultButton: CheckButton = get_node("HeaderContainer/VBoxContainer/HorizontalLayout/ShowDialogueForDefaultButton")
+
+var ChoiceTypeOption: OptionButton
 
 var _choice_value_scene = preload("../branches/EditorChoiceValue.tscn")
 
@@ -25,6 +28,23 @@ var _dialogue_types_by_id
 
 # TODO: Probably no longer required
 var _original_size: Vector2
+
+
+func _init():
+	ChoiceTypeOption = OptionButton.new()
+	ChoiceTypeOption.item_selected.connect(_on_choice_type_option_item_selected)
+	ChoiceTypeOption.flat = true
+	ChoiceTypeOption.fit_to_longest_item = true
+	ChoiceTypeOption.add_theme_font_override("font", TITLE_FONT)
+
+
+func _ready():
+	var titlebar = get_titlebar_hbox()
+	titlebar.add_child(ChoiceTypeOption)
+	# By moving to index 0, the empty title label serves as a spacer.
+	titlebar.move_child(ChoiceTypeOption, 0)
+	ChoiceTypeOption.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	super()
 
 
 func _get_dialogue_text_edit():
@@ -48,7 +68,7 @@ func _get_dialogue_type_select():
 
 
 func _get_choice_type_select():
-	return get_node("ChoiceTypeParent/ChoiceTypeOption")
+	return ChoiceTypeOption
 
 
 func clear_choices():

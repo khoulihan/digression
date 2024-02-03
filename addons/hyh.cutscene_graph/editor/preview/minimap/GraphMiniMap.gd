@@ -44,7 +44,13 @@ var _graph
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	get_zoom_hbox().visible = false
+	#get_zoom_hbox().visible = false
+	show_zoom_buttons = false
+	show_arrange_button = false
+	show_grid = false
+	show_grid_buttons = false
+	show_menu = false
+	show_minimap_button = false
 
 
 func clear():
@@ -78,7 +84,7 @@ func display_graph(graph):
 		#		node.size * SCALE
 		#	)
 		if graph.root_node == node:
-			n.overlay = GraphNode.OVERLAY_POSITION
+			#n.overlay = GraphNode.OVERLAY_POSITION
 			root_node = node
 	for node in graph.nodes.values():
 		_create_connections_for_node(node)
@@ -238,16 +244,16 @@ func _focus_on_node(node):
 	# Currently we are fixed at that zoom level.
 	self.scroll_offset = node.position_offset - (self.size / 2.0)
 	_unset_current_overlay(node)
-	if node.overlay != GraphNode.OVERLAY_POSITION:
-		node.overlay = GraphNode.OVERLAY_BREAKPOINT
+	#if node.overlay != GraphNode.OVERLAY_POSITION:
+		#node.overlay = GraphNode.OVERLAY_BREAKPOINT
 
 
 func _unset_current_overlay(except_node):
 	for node in self.get_children():
 		if node == except_node:
 			continue
-		if node.overlay == GraphNode.OVERLAY_BREAKPOINT:
-			node.overlay = GraphNode.OVERLAY_DISABLED
+		#if node.overlay == GraphNode.OVERLAY_BREAKPOINT:
+			#node.overlay = GraphNode.OVERLAY_DISABLED
 
 
 func _on_connection_drag_started(from_node, from_port, is_output):

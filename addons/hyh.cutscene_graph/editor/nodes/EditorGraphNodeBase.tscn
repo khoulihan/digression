@@ -8,5 +8,4 @@ offset_right = 304.0
 offset_bottom = 159.0
 theme = ExtResource("1_4dntx")
 title = "Node"
-show_close = true
 script = ExtResource("1")

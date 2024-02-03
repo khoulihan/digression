@@ -1,10 +1,10 @@
 @tool
 extends "EditorGraphNodeBase.gd"
 
+const TITLE_FONT = preload("res://addons/hyh.cutscene_graph/editor/nodes/styles/TitleOptionFont.tres")
 
-@onready var DialogueTypeOption: OptionButton = get_node("DialogueTypeParent/DialogueTypeOption")
 @onready var CharacterOptionsContainer: GridContainer = get_node("RootContainer/VerticalLayout/CharacterOptionsContainer")
-
+var DialogueTypeOption: OptionButton
 
 var _characters
 var _dialogue_types
@@ -12,6 +12,23 @@ var _dialogue_types_by_id
 
 # TODO: May not need this.
 var _original_size: Vector2
+
+
+func _init():
+	DialogueTypeOption = OptionButton.new()
+	DialogueTypeOption.item_selected.connect(_on_dialogue_type_option_item_selected)
+	DialogueTypeOption.flat = true
+	DialogueTypeOption.fit_to_longest_item = true
+	DialogueTypeOption.add_theme_font_override("font", TITLE_FONT)
+
+
+func _ready():
+	var titlebar = get_titlebar_hbox()
+	titlebar.add_child(DialogueTypeOption)
+	# By moving to index 0, the empty title label serves as a spacer.
+	titlebar.move_child(DialogueTypeOption, 0)
+	DialogueTypeOption.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	super()
 
 
 func _get_text_edit():
@@ -31,7 +48,7 @@ func _get_translation_key_edit():
 
 
 func _get_dialogue_type_select():
-	return get_node("DialogueTypeParent/DialogueTypeOption")
+	return DialogueTypeOption
 
 
 func configure_for_node(g, n):
@@ -105,7 +122,10 @@ func _configure_for_dialogue_type(dialogue_type, adjust_size):
 				size = Vector2(size.x, size.y - character_options_height)
 
 
-func set_dialogue_types(dialogue_types):
+func set_dialogue_types(dialogue_types, defer=true):
+	#if defer:
+	#	call_deferred("set_dialogue_types", dialogue_types, false)
+	#	return
 	Logger.debug("Setting dialogue types")
 	_dialogue_types = dialogue_types
 	_dialogue_types_by_id = {}
