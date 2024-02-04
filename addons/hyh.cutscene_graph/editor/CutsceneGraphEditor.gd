@@ -637,27 +637,32 @@ func _process_connection_for_slot_removal(
 	slot,
 	node_name
 ):
-	if connection.from == node_name and connection.from_port == slot:
+	var from_node = connection["from_node"]
+	var from_port = connection["from_port"]
+	var to_node = connection["to_node"]
+	var to_port = connection["to_port"]
+	
+	if from_node == node_name and from_port == slot:
 		# This one just gets removed
 		_graph_edit.disconnect_node(
-			connection.from,
-			connection.from_port,
-			connection.to,
-			connection.to_port
+			from_node,
+			from_port,
+			to_node,
+			to_port
 		)
-	elif connection.from == node_name and connection.from_port > slot:
+	elif from_node == node_name and from_port > slot:
 		# Remove and reconnect to slot + 1
 		_graph_edit.disconnect_node(
-			connection.from,
-			connection.from_port,
-			connection.to,
-			connection.to_port
+			from_node,
+			from_port,
+			to_node,
+			to_port
 		)
 		_graph_edit.connect_node(
-			connection.from,
-			connection.from_port - 1,
-			connection.to,
-			connection.to_port
+			from_node,
+			from_port - 1,
+			to_node,
+			to_port
 		)
 
 
@@ -700,7 +705,7 @@ func _remove_node(n, connections):
 	var node = _graph_edit.get_node(NodePath(n))
 	var is_anchor = node is EditorAnchorNodeClass
 	for connection in connections:
-		if connection.from == n or connection.to == n:
+		if connection["from_node"] == n or connection["to_node"] == n:
 			# This one just gets removed
 			_remove_connection_for_node(
 				connection,
@@ -713,14 +718,14 @@ func _remove_node(n, connections):
 
 func _remove_connection_for_node(connection, is_anchor):
 	_graph_edit.disconnect_node(
-		connection.from,
-		connection.from_port,
-		connection.to,
-		connection.to_port
+		connection["from_node"],
+		connection["from_port"],
+		connection["to_node"],
+		connection["to_port"]
 	)
 	if is_anchor:
 		var from_node = _graph_edit.get_node(
-			NodePath(connection.from)
+			NodePath(connection["from_node"])
 		)
 		from_node.set_destination(-1)
 
@@ -1037,10 +1042,10 @@ func _update_edited_graph():
 
 
 func _update_resource_graph_for_connection(connection):
-	var from = _graph_edit.get_node(NodePath(connection.from))
-	var from_slot = connection.from_port
-	var to = _graph_edit.get_node(NodePath(connection.to))
-	var to_slot = connection.to_port
+	var from = _graph_edit.get_node(NodePath(connection["from_node"]))
+	var from_slot = connection["from_port"]
+	var to = _graph_edit.get_node(NodePath(connection["to_node"]))
+	var to_slot = connection["to_port"]
 	var from_dialogue_node = from.node_resource
 	var to_dialogue_node = to.node_resource
 	if from_dialogue_node is BranchNode:
@@ -1105,7 +1110,7 @@ func _on_GraphEdit_connection_request(from, from_slot, to, to_slot):
 	var connections = _graph_edit.get_connection_list()
 	var allow = true
 	for connection in connections:
-		if connection.from == from and connection.from_port == from_slot:
+		if connection["from_node"] == from and connection["from_port"] == from_slot:
 			allow = false
 			break
 	if allow:
