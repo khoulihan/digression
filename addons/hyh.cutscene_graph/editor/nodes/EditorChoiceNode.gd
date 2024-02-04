@@ -72,7 +72,7 @@ func _get_choice_type_select():
 
 
 func clear_choices():
-	for index in range(get_child_count() - 1, 2, -1):
+	for index in range(get_child_count() - 1, 1, -1):
 		remove_choice(index)
 
 
@@ -104,7 +104,7 @@ func set_choices(
 
 func get_choices():
 	var t: Array[ChoiceBranch] = []
-	for index in range(3, get_child_count()):
+	for index in range(2, get_child_count()):
 		t.append(get_child(index).get_choice())
 	return t
 
@@ -249,7 +249,7 @@ func _get_theme(control):
 
 func reconnect_removal_signals():
 	if get_child_count() > 2:
-		for index in range(3, get_child_count()):
+		for index in range(2, get_child_count()):
 			get_child(index).disconnect("remove_requested", Callable(self, "_value_remove_requested"))
 			get_child(index).connect("remove_requested", Callable(self, "_value_remove_requested").bind(index))
 
