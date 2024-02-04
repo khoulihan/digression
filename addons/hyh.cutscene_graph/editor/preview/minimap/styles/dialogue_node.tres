@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=2 format=3 uid="uid://c6skrwiogi132"]
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://c6skrwiogi132"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mutjw"]
 bg_color = Color(0.329412, 0.847059, 0.741176, 1)
@@ -7,9 +7,14 @@ border_color = Color(0.329412, 0.847059, 0.741176, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_left = 5
+expand_margin_bottom = 6.0
 shadow_color = Color(0, 0, 0, 0.835294)
 shadow_size = 1
 shadow_offset = Vector2(4, 4)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_o7a8o"]
+
 [resource]
 GraphNode/styles/frame = SubResource("StyleBoxFlat_mutjw")
+GraphNode/styles/panel = SubResource("StyleBoxFlat_mutjw")
+GraphNode/styles/titlebar = SubResource("StyleBoxEmpty_o7a8o")
