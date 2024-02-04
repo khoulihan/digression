@@ -1,19 +1,23 @@
-[gd_scene load_steps=9 format=3 uid="uid://bygmop6vopi43"]
+[gd_scene load_steps=13 format=3 uid="uid://bygmop6vopi43"]
 
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.cutscene_graph/icons/icon_add.svg" id="1"]
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorChoiceNode.gd" id="2"]
+[ext_resource type="StyleBox" uid="uid://xsgb5pkw0muk" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/choice_node.tres" id="2_028dr"]
 [ext_resource type="PackedScene" uid="uid://cmr3aolsr6l35" path="res://addons/hyh.cutscene_graph/editor/branches/EditorChoiceValue.tscn" id="3"]
+[ext_resource type="StyleBox" uid="uid://dr44ikdpnsewh" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/choice_node_selected.tres" id="3_pqk3a"]
 [ext_resource type="PackedScene" uid="uid://c0pw3rdictm2v" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorGraphNodeBase.tscn" id="4"]
+[ext_resource type="StyleBox" uid="uid://b5ma0bjl3xxjm" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/dialogue_node_titlebar.tres" id="4_0jwpv"]
+[ext_resource type="StyleBox" uid="uid://nu4578dkhf2b" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/dialogue_node_titlebar_selected.tres" id="5_oirud"]
 [ext_resource type="StyleBox" uid="uid://q13kdbxbc8nb" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_style_invisible.tres" id="6_8ilf1"]
 [ext_resource type="Texture2D" uid="uid://cmpxsjfcm0kpq" path="res://addons/hyh.cutscene_graph/icons/icon_node_info.svg" id="7_k8avd"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kse8j"]
 bg_color = Color(0.388235, 0.905882, 0.796078, 1)
-border_width_left = 3
-border_width_top = 30
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.388235, 0.905882, 0.796078, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.105882, 0.105882, 0.105882, 0.392157)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_left = 10
@@ -25,9 +29,13 @@ shadow_offset = Vector2(2, 2)
 variation_embolden = 0.3
 
 [node name="EditorChoiceNode" instance=ExtResource("4")]
-offset_right = 540.0
-offset_bottom = 376.0
+offset_right = 511.0
+offset_bottom = 558.0
 theme_override_constants/separation = 0
+theme_override_styles/panel = ExtResource("2_028dr")
+theme_override_styles/panel_selected = ExtResource("3_pqk3a")
+theme_override_styles/titlebar = ExtResource("4_0jwpv")
+theme_override_styles/titlebar_selected = ExtResource("5_oirud")
 resizable = true
 title = ""
 slot/0/left_enabled = false
@@ -77,15 +85,21 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_kse8j")
 
-[node name="DialogueTypeParent" type="Control" parent="DialogueMarginContainer/Dialogue" index="0"]
+[node name="DialogueContainer" type="MarginContainer" parent="DialogueMarginContainer/Dialogue" index="0"]
 layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
-[node name="DialogueTypeOption" type="OptionButton" parent="DialogueMarginContainer/Dialogue/DialogueTypeParent" index="0"]
-layout_mode = 1
-offset_left = 5.0
-offset_top = -26.0
-offset_right = 103.0
-offset_bottom = -3.0
+[node name="VerticalLayout" type="VBoxContainer" parent="DialogueMarginContainer/Dialogue/DialogueContainer" index="0"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="DialogueTypeOption" type="OptionButton" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout" index="0"]
+layout_mode = 2
+size_flags_horizontal = 0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = SubResource("FontVariation_ldvhs")
 theme_override_styles/focus = ExtResource("6_8ilf1")
@@ -103,19 +117,7 @@ popup/item_1/id = 1
 popup/item_2/text = "A Really Long Type For Example Purposes"
 popup/item_2/id = 2
 
-[node name="DialogueContainer" type="MarginContainer" parent="DialogueMarginContainer/Dialogue" index="1"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="VerticalLayout" type="VBoxContainer" parent="DialogueMarginContainer/Dialogue/DialogueContainer" index="0"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 10
-
-[node name="CharacterOptionsContainer" type="GridContainer" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout" index="0"]
+[node name="CharacterOptionsContainer" type="GridContainer" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout" index="1"]
 layout_mode = 2
 theme_override_constants/h_separation = 25
 theme_override_constants/v_separation = 10
@@ -139,7 +141,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = false
 
-[node name="DialogueTextEdit" type="TextEdit" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout" index="1"]
+[node name="DialogueTextEdit" type="TextEdit" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout" index="2"]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_vertical = 3
@@ -149,7 +151,7 @@ theme_override_constants/line_spacing = 8
 placeholder_text = "Enter Dialogue Text..."
 wrap_mode = 1
 
-[node name="TranslationContainer" type="GridContainer" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout" index="2"]
+[node name="TranslationContainer" type="GridContainer" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout" index="3"]
 layout_mode = 2
 theme_override_constants/h_separation = 10
 theme_override_constants/v_separation = 10
@@ -220,7 +222,7 @@ layout_mode = 2
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="resize_request" from="." to="." method="_on_resize_request"]
-[connection signal="item_selected" from="DialogueMarginContainer/Dialogue/DialogueTypeParent/DialogueTypeOption" to="." method="_on_dialogue_type_option_item_selected"]
+[connection signal="item_selected" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/DialogueTypeOption" to="." method="_on_dialogue_type_option_item_selected"]
 [connection signal="item_selected" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CharacterOptionsContainer/CharacterSelect" to="." method="_on_character_select_item_selected"]
 [connection signal="item_selected" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CharacterOptionsContainer/VariantSelect" to="." method="_on_variant_select_item_selected"]
 [connection signal="text_changed" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/DialogueTextEdit" to="." method="_on_text_edit_text_changed"]
@@ -230,5 +232,5 @@ layout_mode = 2
 [connection signal="remove_requested" from="ChoiceValue" to="." method="_value_remove_requested" binds= [1]]
 [connection signal="size_changed" from="ChoiceValue" to="." method="_line_size_changed"]
 [connection signal="modified" from="ChoiceValue2" to="." method="_line_modified"]
-[connection signal="remove_requested" from="ChoiceValue2" to="." method="_value_remove_requested" binds= [2]]
+[connection signal="remove_requested" from="ChoiceValue2" to="." method="_value_remove_requested" binds= [1]]
 [connection signal="size_changed" from="ChoiceValue2" to="." method="_line_size_changed"]

@@ -8,6 +8,7 @@ var _selected = 0
 
 
 func _ready():
+	super()
 	for child in ChevronContainer.get_children():
 		child.modulate = Color.SLATE_GRAY
 

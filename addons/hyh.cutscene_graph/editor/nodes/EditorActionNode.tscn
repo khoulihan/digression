@@ -1,18 +1,21 @@
-[gd_scene load_steps=5 format=3 uid="uid://cbist3rdatmmi"]
+[gd_scene load_steps=7 format=3 uid="uid://cbist3rdatmmi"]
 
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorActionNode.gd" id="1"]
 [ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/node_theme.tres" id="1_q2xpx"]
-[ext_resource type="StyleBox" uid="uid://bs3gx5vg1nqrp" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/action_node.tres" id="2_wbvcw"]
-[ext_resource type="StyleBox" uid="uid://cl5gqrfrvnxdr" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/action_node_selected.tres" id="3_4j8w5"]
+[ext_resource type="StyleBox" uid="uid://cav483j7746ud" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/action_node.tres" id="2_8ql20"]
+[ext_resource type="StyleBox" uid="uid://bawhxiixc3r2i" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/action_node_selected.tres" id="3_pssg0"]
+[ext_resource type="StyleBox" uid="uid://cohhm3hommye4" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/action_node_titlebar.tres" id="4_soa33"]
+[ext_resource type="StyleBox" uid="uid://tvd8fygqmp6h" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/action_node_titlebar_selected.tres" id="5_ut8qf"]
 
 [node name="EditorActionNode" type="GraphNode"]
 offset_right = 416.0
 offset_bottom = 121.0
 theme = ExtResource("1_q2xpx")
-theme_override_styles/frame = ExtResource("2_wbvcw")
-theme_override_styles/selected_frame = ExtResource("3_4j8w5")
+theme_override_styles/panel = ExtResource("2_8ql20")
+theme_override_styles/panel_selected = ExtResource("3_pssg0")
+theme_override_styles/titlebar = ExtResource("4_soa33")
+theme_override_styles/titlebar_selected = ExtResource("5_ut8qf")
 title = "Action"
-show_close = true
 slot/0/left_enabled = true
 slot/0/left_type = 0
 slot/0/left_color = Color(0.94902, 0.94902, 0.94902, 0.882353)

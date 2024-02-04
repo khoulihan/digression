@@ -13,7 +13,7 @@ const VariableType = preload("../../resources/graph/VariableSetNode.gd").Variabl
 @onready var Dialogue = get_node("DialogueMarginContainer/Dialogue")
 @onready var CharacterOptionsContainer = get_node("DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CharacterOptionsContainer")
 
-@onready var DialogueTypeOption: OptionButton = get_node("DialogueMarginContainer/Dialogue/DialogueTypeParent/DialogueTypeOption")
+@onready var DialogueTypeOption: OptionButton = get_node("DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/DialogueTypeOption")
 @onready var ShowDialogueForDefaultButton: CheckButton = get_node("HeaderContainer/VBoxContainer/HorizontalLayout/ShowDialogueForDefaultButton")
 
 var ChoiceTypeOption: OptionButton
@@ -64,7 +64,7 @@ func _get_translation_key_edit():
 
 
 func _get_dialogue_type_select():
-	return get_node("DialogueMarginContainer/Dialogue/DialogueTypeParent/DialogueTypeOption")
+	return get_node("DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/DialogueTypeOption")
 
 
 func _get_choice_type_select():

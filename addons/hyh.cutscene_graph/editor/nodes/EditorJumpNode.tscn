@@ -1,18 +1,21 @@
-[gd_scene load_steps=5 format=3 uid="uid://bgn7vrh6tbdo0"]
+[gd_scene load_steps=7 format=3 uid="uid://bgn7vrh6tbdo0"]
 
 [ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/node_theme.tres" id="1_bs0dt"]
-[ext_resource type="StyleBox" uid="uid://bie6450rn7l44" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node.tres" id="2_wpdey"]
-[ext_resource type="StyleBox" uid="uid://oujfit2l7l4s" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node_selected.tres" id="3_xrusj"]
+[ext_resource type="StyleBox" uid="uid://cy2mtyhieui8q" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node.tres" id="2_wpdey"]
+[ext_resource type="StyleBox" uid="uid://dt03i76r27rvt" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node_selected.tres" id="3_xrusj"]
+[ext_resource type="StyleBox" uid="uid://bfb7qelnfi6bj" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node_titlebar.tres" id="4_1p3pp"]
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorJumpNode.gd" id="4_823kx"]
+[ext_resource type="StyleBox" uid="uid://cg1qeowcx5883" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node_titlebar_selected.tres" id="5_131bv"]
 
 [node name="EditorJumpNode" type="GraphNode"]
 offset_right = 384.0
 offset_bottom = 74.0
 theme = ExtResource("1_bs0dt")
-theme_override_styles/frame = ExtResource("2_wpdey")
-theme_override_styles/selected_frame = ExtResource("3_xrusj")
+theme_override_styles/panel = ExtResource("2_wpdey")
+theme_override_styles/panel_selected = ExtResource("3_xrusj")
+theme_override_styles/titlebar = ExtResource("4_1p3pp")
+theme_override_styles/titlebar_selected = ExtResource("5_131bv")
 title = "Jump To..."
-show_close = true
 slot/0/left_enabled = true
 slot/0/left_type = 0
 slot/0/left_color = Color(0.94902, 0.94902, 0.94902, 0.882353)

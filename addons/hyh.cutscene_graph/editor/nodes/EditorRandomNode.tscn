@@ -1,20 +1,23 @@
-[gd_scene load_steps=7 format=3 uid="uid://bmujw01w7k14k"]
+[gd_scene load_steps=9 format=3 uid="uid://bmujw01w7k14k"]
 
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorRandomNode.gd" id="1"]
 [ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/node_theme.tres" id="1_w7up8"]
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.cutscene_graph/icons/icon_add.svg" id="2"]
-[ext_resource type="StyleBox" uid="uid://bie6450rn7l44" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node.tres" id="2_yl5ej"]
+[ext_resource type="StyleBox" uid="uid://cy2mtyhieui8q" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node.tres" id="2_yl5ej"]
 [ext_resource type="PackedScene" uid="uid://dk0btqqtgur07" path="res://addons/hyh.cutscene_graph/editor/branches/EditorRandomValue.tscn" id="3"]
-[ext_resource type="StyleBox" uid="uid://oujfit2l7l4s" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node_selected.tres" id="3_4pbor"]
+[ext_resource type="StyleBox" uid="uid://dt03i76r27rvt" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node_selected.tres" id="3_4pbor"]
+[ext_resource type="StyleBox" uid="uid://bfb7qelnfi6bj" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node_titlebar.tres" id="4_7m3no"]
+[ext_resource type="StyleBox" uid="uid://cg1qeowcx5883" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node_titlebar_selected.tres" id="5_vtskd"]
 
 [node name="EditorRandomNode" type="GraphNode"]
 offset_right = 500.0
 offset_bottom = 164.0
 theme = ExtResource("1_w7up8")
-theme_override_styles/frame = ExtResource("2_yl5ej")
-theme_override_styles/selected_frame = ExtResource("3_4pbor")
+theme_override_styles/panel = ExtResource("2_yl5ej")
+theme_override_styles/panel_selected = ExtResource("3_4pbor")
+theme_override_styles/titlebar = ExtResource("4_7m3no")
+theme_override_styles/titlebar_selected = ExtResource("5_vtskd")
 title = "Random"
-show_close = true
 slot/0/left_enabled = true
 slot/0/left_type = 0
 slot/0/left_color = Color(0.94902, 0.94902, 0.94902, 0.882353)

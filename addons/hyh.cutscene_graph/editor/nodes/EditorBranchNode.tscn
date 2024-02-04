@@ -1,16 +1,24 @@
-[gd_scene load_steps=6 format=3 uid="uid://cs8d2h3ldiamk"]
+[gd_scene load_steps=10 format=3 uid="uid://cs8d2h3ldiamk"]
 
 [ext_resource type="PackedScene" uid="uid://blu15ehhb5avh" path="res://addons/hyh.cutscene_graph/editor/branches/EditorBranchValue.tscn" id="1"]
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorBranchNode.gd" id="2"]
+[ext_resource type="StyleBox" uid="uid://cy2mtyhieui8q" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node.tres" id="2_0hfr5"]
 [ext_resource type="PackedScene" uid="uid://c0pw3rdictm2v" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorGraphNodeBase.tscn" id="3"]
+[ext_resource type="StyleBox" uid="uid://dt03i76r27rvt" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node_selected.tres" id="3_hbfhp"]
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.cutscene_graph/icons/icon_add.svg" id="4"]
+[ext_resource type="StyleBox" uid="uid://bfb7qelnfi6bj" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node_titlebar.tres" id="4_dvfrh"]
 [ext_resource type="PackedScene" uid="uid://c31q0dbk4i25w" path="res://addons/hyh.cutscene_graph/editor/controls/VariableSelectionControl.tscn" id="5_78wov"]
+[ext_resource type="StyleBox" uid="uid://cg1qeowcx5883" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_node_titlebar_selected.tres" id="5_mjmxe"]
 
 [node name="EditorBranchNode" instance=ExtResource("3")]
 offset_top = 1.0
 offset_right = 471.0
 offset_bottom = 196.0
 theme_override_constants/separation = 10
+theme_override_styles/panel = ExtResource("2_0hfr5")
+theme_override_styles/panel_selected = ExtResource("3_hbfhp")
+theme_override_styles/titlebar = ExtResource("4_dvfrh")
+theme_override_styles/titlebar_selected = ExtResource("5_mjmxe")
 title = "Branch"
 slot/0/left_enabled = true
 slot/0/left_type = 0
