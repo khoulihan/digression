@@ -42,9 +42,9 @@ size_flags_vertical = 3
 [node name="GraphEdit" type="GraphEdit" parent="MarginContainer"]
 layout_mode = 2
 right_disconnects = true
+zoom_min = 0.25
 zoom_max = 1.0
 show_zoom_label = true
-arrange_nodes_button_hidden = true
 
 [node name="GraphContextMenu" type="PopupMenu" parent="."]
 size = Vector2i(255, 424)
