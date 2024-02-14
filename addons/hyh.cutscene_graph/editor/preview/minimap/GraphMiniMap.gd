@@ -124,7 +124,7 @@ func _instantiate_mini_map_node(node):
 
 func _set_tooltip(node, resource):
 	if resource is ActionNode:
-		node.tooltip_text = "Action \"%s\"" % resource.action_name
+		node.tooltip_text = "Action \"%s\"" % resource.action_or_method_name
 	elif resource is AnchorNode:
 		node.tooltip_text = "Anchor \"%s\"" % resource.name
 	elif resource is BranchNode:

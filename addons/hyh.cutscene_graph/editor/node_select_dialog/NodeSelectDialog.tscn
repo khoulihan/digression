@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://dbupbfy68060q"]
+
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/node_select_dialog/NodeSelectDialog.gd" id="1_tvngv"]
+[ext_resource type="PackedScene" uid="uid://dqx2iehi8dl0f" path="res://addons/hyh.cutscene_graph/editor/node_select_dialog/NodeSelectDialogContents.tscn" id="2_gacjr"]
+
+[node name="NodeSelectDialog" type="Window"]
+title = "Pick a node"
+size = Vector2i(250, 300)
+script = ExtResource("1_tvngv")
+
+[node name="NodeSelectDialogContents" parent="." instance=ExtResource("2_gacjr")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="cancelled" from="NodeSelectDialogContents" to="." method="_on_node_select_dialog_contents_cancelled"]
+[connection signal="selected" from="NodeSelectDialogContents" to="." method="_on_node_select_dialog_contents_selected"]

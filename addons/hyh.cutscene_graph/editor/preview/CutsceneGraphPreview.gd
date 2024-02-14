@@ -53,6 +53,9 @@ const VariableSelectDialog = preload("../variable_select_dialog/VariableSelectDi
 
 const VariableScope = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableScope
 const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
+const Controller = preload("res://addons/hyh.cutscene_graph/editor/CutsceneController.gd")
+const ProceedSignal = Controller.ProceedSignal
+const CharacterDetails = Controller.CharacterDetails
 
 
 const DialoguePanelStyleBoxLeftResource = preload("res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/styles/dialogue_box_panel_green_left.tres")
@@ -508,36 +511,85 @@ func _on_cutscene_controller_cutscene_completed():
 	stopping_preview.emit()
 
 
-func _on_cutscene_controller_action_requested(action, character, character_variant, argument, process):
+func _on_cutscene_controller_action_requested(action, arguments, process):
 	Logger.debug("Action Requested")
 	var n = StaticInformationalEvent.instantiate()
 	_insert_event(n)
 	var event_text = "Action \"%s\" requested" % action
-	if character != null:
-		event_text = "%s with character \"%s\"" % [event_text, character.get_full_name()]
-	if character_variant != null:
-		var conjunction = "and"
-		event_text = "%s %s variant \"%s\"" % [
+	
+	var arguments_text = _prepare_arguments_text(arguments)
+	
+	if not arguments_text.is_empty():
+		event_text = "%s with arguments: %s" % [
 			event_text,
-			conjunction,
-			character_variant.get_full_name()
+			arguments_text
 		]
-	if argument != null and argument != "":
-		var conjunction = "and"
-		if character == null:
-			conjunction = "with"
-		event_text = "%s %s argument \"%s\"" % [
-			event_text,
-			conjunction,
-			argument
-		]
-	n.populate(event_text)
+	n.populate(event_text, "The effects of actions cannot be modelled by the previewer.")
 	_update_variable_stores_tree()
 	_focus_current_node_in_minimap()
 	if _fast_forward:
 		process.proceed()
 	else:
 		_prepare_to_wait(process)
+
+
+func _action_method(method_name, immediate_return, arguments):
+	Logger.debug("Action Method Called")
+	var user_arguments = arguments
+	if not immediate_return:
+		user_arguments = arguments.slice(0, -1)
+	
+	var n = StaticInformationalEvent.instantiate()
+	_insert_event(n)
+	var event_text = "Action method \"%s\" called" % method_name
+	
+	var arguments_text = _prepare_arguments_text(arguments)
+	
+	if not arguments_text.is_empty():
+		event_text = "%s with arguments: %s" % [
+			event_text,
+			arguments_text
+		]
+	n.populate(event_text, "The effects of actions cannot be modelled by the previewer.")
+	_update_variable_stores_tree()
+	_focus_current_node_in_minimap()
+	
+	if not immediate_return:
+		var process = arguments[-1]
+		if _fast_forward:
+			process.proceed()
+		else:
+			_prepare_to_wait(process)
+
+
+func _prepare_arguments_text(arguments):
+	var argument_descriptions = []
+	for argument in arguments:
+		match typeof(argument):
+			TYPE_NIL:
+				argument_descriptions.append("null")
+			TYPE_OBJECT:
+				if argument is ProceedSignal:
+					argument_descriptions.append(
+						"Proceed signal object"
+					)
+				elif argument is CharacterDetails:
+					argument_descriptions.append(
+						"Character (%s)" % argument.character.character_display_name
+					)
+				elif argument is Node:
+					argument_descriptions.append("Data store")
+				else:
+					# TODO: Handle custom 
+					argument_descriptions.append("Object")
+			TYPE_DICTIONARY:
+				argument_descriptions.append("Data store")
+			TYPE_STRING, TYPE_STRING_NAME:
+				argument_descriptions.append('"%s"' % argument)
+			_:
+				argument_descriptions.append(str(argument))
+	return ", ".join(argument_descriptions)
+		
 
 
 func _on_cutscene_controller_choice_dialogue_display_requested(choice_type, dialogue_type, text, character, character_variant, process):

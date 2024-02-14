@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://b7d0dq7n58gk1"]
+
+[ext_resource type="PackedScene" uid="uid://bwdtji5o7o3kv" path="res://addons/hyh.cutscene_graph/editor/controls/arguments/Argument.tscn" id="1_kq20n"]
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/controls/arguments/CharacterArgument.gd" id="2_dee4g"]
+
+[node name="CharacterArgument" instance=ExtResource("1_kq20n")]
+script = ExtResource("2_dee4g")
+
+[node name="GC" type="GridContainer" parent="ExpressionContainer/PC/ArgumentValueContainer" index="0"]
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="ExpressionContainer/PC/ArgumentValueContainer/GC" index="0"]
+layout_mode = 2
+text = "Character:"
+
+[node name="CharacterOption" type="OptionButton" parent="ExpressionContainer/PC/ArgumentValueContainer/GC" index="1"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="ExpressionContainer/PC/ArgumentValueContainer/GC" index="2"]
+layout_mode = 2
+text = "Variant:"
+
+[node name="VariantOption" type="OptionButton" parent="ExpressionContainer/PC/ArgumentValueContainer/GC" index="3"]
+layout_mode = 2
+
+[connection signal="item_selected" from="ExpressionContainer/PC/ArgumentValueContainer/GC/CharacterOption" to="." method="_on_character_option_item_selected"]
+[connection signal="item_selected" from="ExpressionContainer/PC/ArgumentValueContainer/GC/VariantOption" to="." method="_on_variant_option_item_selected"]

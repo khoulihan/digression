@@ -24,6 +24,13 @@ const RepeatNode = preload("../resources/graph/RepeatNode.gd")
 const ExpressionEvaluator = preload("./expressions/ExpressionEvaluator.gd")
 
 
+const ActionMechanism = ActionNode.ActionMechanism
+const ActionReturnType = ActionNode.ActionReturnType
+const ActionArgumentType = ActionNode.ActionArgumentType
+const VariableScope = VariableSetNode.VariableScope
+const VariableType = VariableSetNode.VariableType
+
+
 ## Emitted when processing of a cutscene graph begins.
 signal cutscene_started(cutscene_name, graph_type)
 ## Emitted when a sub-graph has been entered.
@@ -45,9 +52,7 @@ signal dialogue_display_requested(
 ## A request to perform an action.
 signal action_requested(
 	action,
-	character,
-	character_variant,
-	argument,
+	arguments,
 	process
 )
 ## A request to display dialogue that is related to
@@ -86,14 +91,16 @@ class GraphState:
 
 
 class ProceedSignal:
-	signal ready_to_proceed(choice)
+	signal ready_to_proceed(return_value)
 	
 	var _cancelled = false
 	var _signalled = false
+	var return_value = null
 	
-	func proceed(choice: int = -1):
+	func proceed(return_value=null):
 		_signalled = true
-		ready_to_proceed.emit(choice)
+		self.return_value = return_value
+		ready_to_proceed.emit(return_value)
 	
 	func cancel():
 		_signalled = true
@@ -113,6 +120,14 @@ class Choice:
 		get:
 			return visit_count > 0
 	var visit_count: int
+
+
+class CharacterDetails:
+	var character
+	var variant
+	
+	func has_variant():
+		return self.variant != null
 
 
 # This class is for communicating the internal state of the controller to
@@ -192,6 +207,10 @@ func _ready():
 	# Only expose the internals if we are running in the editor.
 	if Engine.is_editor_hint():
 		_internal = ControllerInternal.new()
+
+
+func _is_previewing():
+	return _internal != null
 
 
 func _get_variable(variable_name, scope):
@@ -455,18 +474,18 @@ func _process_repeat_node():
 
 
 func _internal_notify_repeat_node():
-	if _internal == null:
+	if not _is_previewing():
 		return
 	_internal.processed_repeat_node.emit()
 
 
 ## Process any type of node that just involves moving directly to the next node.
 func _process_passthrough_node():
-	_current_node = _get_node_by_id(_current_node.next)
+	_advance_to_next_node()
 
 
 func _internal_notify_jump_node():
-	if _internal == null:
+	if not _is_previewing():
 		return
 	var target = _get_node_by_id(_current_node.next)
 	var destination_name = null
@@ -476,13 +495,13 @@ func _internal_notify_jump_node():
 
 
 func _internal_notify_anchor_node():
-	if _internal == null:
+	if not _is_previewing():
 		return
 	_internal.processed_anchor_node.emit(_current_node.name)
 
 
 func _internal_notify_routing_node():
-	if _internal == null:
+	if not _is_previewing():
 		return
 	_internal.processed_routing_node.emit()
 
@@ -540,6 +559,7 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 			)
 			await process.ready_to_proceed
 			if process.was_cancelled():
+				_current_graph = null
 				return
 	else:
 		var process = _await_response()
@@ -554,6 +574,7 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 		)
 		await process.ready_to_proceed
 		if process.was_cancelled():
+			_current_graph = null
 			return
 	# If this dialogue is the child of a choice node,
 	# it is the choice node that needs to decide the
@@ -576,9 +597,7 @@ func _process_branch_node():
 			)
 			return
 	# Default case, no match or no branches
-	_current_node = _get_node_by_id(
-		_current_node.next
-	)
+	_advance_to_next_node()
 
 
 func _emit_choices_signal(
@@ -648,6 +667,7 @@ func _process_choice_node():
 		)
 		var choice = await process.ready_to_proceed
 		if process.was_cancelled():
+			_current_graph = null
 			return
 		if !choices.is_empty():
 			var c = _current_node.choices[choice]
@@ -656,13 +676,9 @@ func _process_choice_node():
 				c.next
 			)
 		else:
-			_current_node = _get_node_by_id(
-				_current_node.next
-			)
+			_advance_to_next_node()
 	else:
-		_current_node = _get_node_by_id(
-			_current_node.next
-		)
+		_advance_to_next_node()
 
 
 func _get_meta_variable_root(res):
@@ -698,13 +714,11 @@ func _process_set_node():
 			_current_node.get_value_expression()
 		)
 	)
-	_current_node = _get_node_by_id(
-		_current_node.next
-	)
+	_advance_to_next_node()
 
 
 func _internal_notify_set_node():
-	if _internal == null:
+	if not _is_previewing():
 		return
 	# TODO: This involves evaluating the expression a second time
 	# This is both wasteful and might produce incorrect results!
@@ -719,16 +733,12 @@ func _internal_notify_set_node():
 
 func _emit_action_signal(
 	action,
-	character,
-	character_variant,
-	argument,
+	arguments,
 	process
 ):
 	action_requested.emit(
 		action,
-		character,
-		character_variant,
-		argument,
+		arguments,
 		process
 	)
 
@@ -738,26 +748,153 @@ func _process_action_node():
 	
 	var process = _await_response()
 	
-	var character = null
-	var variant = null
-	if _current_node.character != null:
-		character = _current_node.character
-	if _current_node.character_variant != null:
-		variant = _current_node.character_variant
+	var arguments = _get_action_arguments()
 	
-	_emit_action_signal.call_deferred(
-		_current_node.action_name,
-		character,
-		variant,
-		_current_node.argument,
-		process
+	var ret_value = null
+	
+	if _current_node.action_mechanism == ActionMechanism.SIGNAL:
+		_emit_action_signal.call_deferred(
+			_current_node.action_or_method_name,
+			arguments,
+			process
+		)
+		ret_value = await process.ready_to_proceed
+		if process.was_cancelled():
+			_current_graph = null
+			return
+	else:
+		var action_node = \
+			owner.get_node(_current_node.node) \
+			if not _is_previewing() else owner
+		print("Node for method call action is %s" % action_node.name)
+		if not _is_previewing() and not action_node.has_method(_current_node.action_or_method_name):
+			Logger.error(
+				"Node specified for action does not have method %s" % [
+					_current_node.action_or_method_name
+				]
+			)
+			_advance_to_next_node()
+			return
+		
+		if _current_node.returns_immediately:
+			ret_value = _call_action_method(
+				action_node,
+				_current_node.action_or_method_name,
+				arguments,
+			)
+		else:
+			arguments.append(process)
+			_call_action_method(
+				action_node,
+				_current_node.action_or_method_name,
+				arguments,
+			)
+			ret_value = await process.ready_to_proceed
+			if process.was_cancelled():
+				_current_graph = null
+				return
+	
+	_handle_action_return(ret_value)
+	_advance_to_next_node()
+
+
+func _call_action_method(action_node, method, arguments):
+	if _is_previewing():
+		return _call_preview_action_method(
+			method,
+			arguments,
+		)
+	if _current_node.returns_immediately:
+		return action_node.callv(
+			method,
+			arguments
+		)
+	# `callv_deferred` does not exist, but I need it!
+	# Fake it by deferring a call to a method that will use `callv`
+	call_deferred(
+		"_node_callv",
+		action_node,
+		method,
+		arguments,
 	)
-	await process.ready_to_proceed
-	if process.was_cancelled():
-		return
+
+
+func _call_preview_action_method(method, arguments):
+	if _current_node.returns_immediately:
+		return owner.call(
+			'_action_method',
+			method,
+			_current_node.returns_immediately,
+			arguments,
+		)
+	owner.call_deferred(
+		'_action_method',
+		method,
+		_current_node.returns_immediately,
+		arguments,
+	)
+
+
+func _advance_to_next_node():
 	_current_node = _get_node_by_id(
 		_current_node.next
 	)
+
+
+func _get_action_arguments():
+	var arguments = []
+	for argument in _current_node.arguments:
+		match argument['argument_type']:
+			ActionArgumentType.DATA_STORE:
+				arguments.append(
+					_get_data_store(argument['data_store_type'])
+				)
+			ActionArgumentType.CHARACTER:
+				arguments.append(
+					_get_character_from_argument(argument)
+				)
+			ActionArgumentType.EXPRESSION:
+				arguments.append(
+					_expression_evaluator.evaluate(
+						argument['expression']
+					)
+				)
+	return arguments
+
+
+func _handle_action_return(return_value):
+	if _current_node.return_type == ActionReturnType.ASSIGN_TO_VARIABLE:
+		var v = _current_node.return_variable
+		if v == null or v.is_empty():
+			Logger.error("Variable not set for action node return value.")
+		else:
+			_set_variable(v['name'], v['scope'], return_value)
+
+
+func _node_callv(node, method, arguments):
+	node.callv(method, arguments)
+
+
+func _get_data_store(scope):
+	match scope:
+		VariableScope.SCOPE_TRANSIENT:
+			return _transient_store
+		VariableScope.SCOPE_CUTSCENE:
+			return _cutscene_state_store
+		VariableScope.SCOPE_LOCAL:
+			return _local_store
+		VariableScope.SCOPE_GLOBAL:
+			return _global_store
+
+
+func _get_character_from_argument(argument):
+	var c = CharacterDetails.new()
+	if argument['character'] == null:
+		return null
+	c.character = argument['character']
+	if argument['variant'] != null:
+		c.variant = argument['variant']
+	return c
 
 
 func _process_subgraph_node():
@@ -787,9 +924,7 @@ func _process_random_node():
 			viable.append(branch.next)
 
 	if len(viable) == 0:
-		_current_node = _get_node_by_id(
-			_current_node.next
-		)
+		_advance_to_next_node()
 	else:
 		_current_node = _get_node_by_id(
 			viable[randi() % len(viable)]

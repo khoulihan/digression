@@ -39,6 +39,8 @@ var _popup: PopupMenu
 
 var _type_restriction = null
 
+var _variable: Dictionary
+
 func _create_example_variable(
 	name,
 	scope,
@@ -80,7 +82,25 @@ func configure_for_variable(
 	SelectionName.text = name
 
 
+func set_variable(variable):
+	_variable = variable
+	if _variable == null or len(_variable) == 0:
+		clear()
+	else:
+		configure_for_variable(
+			_variable['name'],
+			_variable['scope'],
+			_variable['type'],
+		)
+	
+
+
+func get_variable():
+	return _variable
+
+
 func clear():
+	_variable = {}
 	ScopeMarginContainer.hide()
 	TypeMarginContainer.hide()
 	SelectionName.text = ""
@@ -151,6 +171,7 @@ func _show_selection_dialog():
 func _variable_selected(variable, dialog):
 	get_tree().root.remove_child(dialog)
 	dialog.queue_free()
+	_variable = variable
 	configure_for_variable(
 		variable['name'],
 		variable['scope'],
@@ -178,6 +199,7 @@ func _show_create_dialog():
 func _variable_created(variable, dialog):
 	get_tree().root.remove_child(dialog)
 	dialog.queue_free()
+	_variable = variable
 	configure_for_variable(
 		variable['name'],
 		variable['scope'],

@@ -1,0 +1,12 @@
+[gd_scene load_steps=4 format=3 uid="uid://bslis3e77d5in"]
+
+[ext_resource type="PackedScene" uid="uid://bwdtji5o7o3kv" path="res://addons/hyh.cutscene_graph/editor/controls/arguments/Argument.tscn" id="1_2gmx2"]
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/controls/arguments/ExpressionArgument.gd" id="2_g3he5"]
+[ext_resource type="PackedScene" uid="uid://b46vwf6pxf1tl" path="res://addons/hyh.cutscene_graph/editor/controls/expressions/OperatorExpression.tscn" id="3_6046o"]
+
+[node name="ExpressionArgument" instance=ExtResource("1_2gmx2")]
+script = ExtResource("2_g3he5")
+type = 0
+
+[node name="OperatorExpression" parent="ExpressionContainer/PC/ArgumentValueContainer" index="0" instance=ExtResource("3_6046o")]
+layout_mode = 2

@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://gjnoxtngguo5" path="res://addons/hyh.cutscene_graph/editor/variable_create_dialog/VariableCreateDialogContents.tscn" id="1_epo82"]
 
 [node name="VariableCreateDialog" type="Window"]
-size = Vector2i(360, 460)
+size = Vector2i(360, 454)
 script = ExtResource("1_buqw8")
 
 [node name="VariableCreateDialogContents" parent="." instance=ExtResource("1_epo82")]

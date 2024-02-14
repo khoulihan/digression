@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cbist3rdatmmi"]
+[gd_scene load_steps=11 format=3 uid="uid://cbist3rdatmmi"]
 
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorActionNode.gd" id="1"]
 [ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/node_theme.tres" id="1_q2xpx"]
@@ -6,6 +6,10 @@
 [ext_resource type="StyleBox" uid="uid://bawhxiixc3r2i" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/action_node_selected.tres" id="3_pssg0"]
 [ext_resource type="StyleBox" uid="uid://cohhm3hommye4" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/action_node_titlebar.tres" id="4_soa33"]
 [ext_resource type="StyleBox" uid="uid://tvd8fygqmp6h" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/action_node_titlebar_selected.tres" id="5_ut8qf"]
+[ext_resource type="PackedScene" uid="uid://buyggyfeoik2l" path="res://addons/hyh.cutscene_graph/editor/controls/NodeSelectionControl.tscn" id="7_d61r0"]
+[ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.cutscene_graph/icons/icon_add.svg" id="7_t8f01"]
+[ext_resource type="PackedScene" uid="uid://c31q0dbk4i25w" path="res://addons/hyh.cutscene_graph/editor/controls/VariableSelectionControl.tscn" id="8_1o0k2"]
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/nodes/ArgumentListDragTarget.gd" id="8_i3pr5"]
 
 [node name="EditorActionNode" type="GraphNode"]
 offset_right = 416.0
@@ -15,7 +19,6 @@ theme_override_styles/panel = ExtResource("2_8ql20")
 theme_override_styles/panel_selected = ExtResource("3_pssg0")
 theme_override_styles/titlebar = ExtResource("4_soa33")
 theme_override_styles/titlebar_selected = ExtResource("5_ut8qf")
-title = "Action"
 slot/0/left_enabled = true
 slot/0/left_type = 0
 slot/0/left_color = Color(0.94902, 0.94902, 0.94902, 0.882353)
@@ -25,6 +28,42 @@ slot/0/right_type = 0
 slot/0/right_color = Color(0.94902, 0.94902, 0.94902, 0.882353)
 slot/0/right_icon = null
 slot/0/draw_stylebox = true
+slot/1/left_enabled = false
+slot/1/left_type = 0
+slot/1/left_color = Color(1, 1, 1, 1)
+slot/1/left_icon = null
+slot/1/right_enabled = false
+slot/1/right_type = 0
+slot/1/right_color = Color(1, 1, 1, 1)
+slot/1/right_icon = null
+slot/1/draw_stylebox = true
+slot/2/left_enabled = false
+slot/2/left_type = 0
+slot/2/left_color = Color(1, 1, 1, 1)
+slot/2/left_icon = null
+slot/2/right_enabled = false
+slot/2/right_type = 0
+slot/2/right_color = Color(1, 1, 1, 1)
+slot/2/right_icon = null
+slot/2/draw_stylebox = true
+slot/3/left_enabled = false
+slot/3/left_type = 0
+slot/3/left_color = Color(1, 1, 1, 1)
+slot/3/left_icon = null
+slot/3/right_enabled = false
+slot/3/right_type = 0
+slot/3/right_color = Color(1, 1, 1, 1)
+slot/3/right_icon = null
+slot/3/draw_stylebox = true
+slot/4/left_enabled = false
+slot/4/left_type = 0
+slot/4/left_color = Color(1, 1, 1, 1)
+slot/4/left_icon = null
+slot/4/right_enabled = false
+slot/4/right_type = 0
+slot/4/right_color = Color(1, 1, 1, 1)
+slot/4/right_icon = null
+slot/4/draw_stylebox = true
 script = ExtResource("1")
 
 [node name="RootContainer" type="MarginContainer" parent="."]
@@ -34,44 +73,131 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="GridContainer" type="GridContainer" parent="RootContainer"]
+[node name="SignalContainer" type="GridContainer" parent="RootContainer"]
 layout_mode = 2
-theme_override_constants/h_separation = 10
-theme_override_constants/v_separation = 10
 columns = 2
 
-[node name="Label" type="Label" parent="RootContainer/GridContainer"]
+[node name="Label" type="Label" parent="RootContainer/SignalContainer"]
 layout_mode = 2
-text = "Action:"
+text = "Action Name:
+"
 
-[node name="ActionNameEdit" type="LineEdit" parent="RootContainer/GridContainer"]
+[node name="ActionNameEdit" type="LineEdit" parent="RootContainer/SignalContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label3" type="Label" parent="RootContainer/GridContainer"]
+[node name="MethodContainer" type="GridContainer" parent="RootContainer"]
+visible = false
 layout_mode = 2
-text = "Character:"
+columns = 2
 
-[node name="CharacterSelect" type="OptionButton" parent="RootContainer/GridContainer"]
+[node name="Label" type="Label" parent="RootContainer/MethodContainer"]
 layout_mode = 2
+text = "Node:"
 
-[node name="Label4" type="Label" parent="RootContainer/GridContainer"]
-layout_mode = 2
-text = "Variant:"
-
-[node name="VariantSelect" type="OptionButton" parent="RootContainer/GridContainer"]
+[node name="NodeSelectionControl" parent="RootContainer/MethodContainer" instance=ExtResource("7_d61r0")]
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="RootContainer/GridContainer"]
+[node name="Label3" type="Label" parent="RootContainer/MethodContainer"]
 layout_mode = 2
-text = "Argument:"
+text = "Method:"
 
-[node name="ArgumentEdit" type="LineEdit" parent="RootContainer/GridContainer"]
+[node name="MethodNameEdit" type="LineEdit" parent="RootContainer/MethodContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="Label4" type="Label" parent="RootContainer/MethodContainer"]
+layout_mode = 2
+
+[node name="ReturnsImmediatelyCheck" type="CheckBox" parent="RootContainer/MethodContainer"]
+layout_mode = 2
+text = "Returns Immediately"
+flat = true
+
+[node name="HSeparator2" type="HSeparator" parent="."]
+layout_mode = 2
+
+[node name="ArgumentsContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VB" type="VBoxContainer" parent="ArgumentsContainer"]
+layout_mode = 2
+
+[node name="HB" type="HBoxContainer" parent="ArgumentsContainer/VB"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ArgumentsContainer/VB/HB"]
+layout_mode = 2
+text = "Arguments:"
+
+[node name="AddArgumentButton" type="MenuButton" parent="ArgumentsContainer/VB/HB"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_stretch_ratio = 0.0
+icon = ExtResource("7_t8f01")
+item_count = 3
+popup/item_0/text = "Expression"
+popup/item_0/id = 1
+popup/item_1/text = "Character"
+popup/item_1/id = 0
+popup/item_2/text = "Data Store"
+popup/item_2/id = 6
+
+[node name="MC" type="MarginContainer" parent="ArgumentsContainer/VB"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 10
+script = ExtResource("8_i3pr5")
+
+[node name="ArgumentsListContainer" type="VBoxContainer" parent="ArgumentsContainer/VB/MC"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="HSeparator" type="HSeparator" parent="."]
+layout_mode = 2
+
+[node name="ReturnContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="GridContainer" type="GridContainer" parent="ReturnContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="ReturnContainer/GridContainer"]
+layout_mode = 2
+text = "Return Value:"
+
+[node name="ReturnOption" type="OptionButton" parent="ReturnContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+flat = true
+item_count = 2
+selected = 0
+popup/item_0/text = "None"
+popup/item_0/id = 0
+popup/item_1/text = "Assign to Variable"
+popup/item_1/id = 1
+
+[node name="ReturnVariableLabel" type="Label" parent="ReturnContainer/GridContainer"]
+visible = false
+layout_mode = 2
+text = "Variable:"
+
+[node name="ReturnVariableSelectionControl" parent="ReturnContainer/GridContainer" instance=ExtResource("8_1o0k2")]
+visible = false
+layout_mode = 2
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
-[connection signal="text_changed" from="RootContainer/GridContainer/ActionNameEdit" to="." method="_on_action_name_edit_text_changed"]
-[connection signal="item_selected" from="RootContainer/GridContainer/CharacterSelect" to="." method="_on_CharacterSelect_item_selected"]
-[connection signal="item_selected" from="RootContainer/GridContainer/VariantSelect" to="." method="_on_variant_select_item_selected"]
-[connection signal="text_changed" from="RootContainer/GridContainer/ArgumentEdit" to="." method="_on_argument_edit_text_changed"]
+[connection signal="argument_dropped" from="ArgumentsContainer/VB/MC" to="." method="_on_argument_dropped"]
+[connection signal="item_selected" from="ReturnContainer/GridContainer/ReturnOption" to="." method="_on_return_option_item_selected"]
