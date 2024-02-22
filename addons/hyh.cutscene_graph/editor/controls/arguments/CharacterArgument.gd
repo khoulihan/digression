@@ -37,6 +37,7 @@ func set_character(character):
 	CharacterOption.select(_characters.find(character))
 	if CharacterOption.selected != -1:
 		_populate_variants(_characters[CharacterOption.selected].character_variants)
+	validate()
 
 
 func set_variant(variant):
@@ -79,11 +80,17 @@ func _on_character_option_item_selected(index):
 	var id = CharacterOption.get_item_id(index)
 	var character = _characters[id]
 	_populate_variants(character.character_variants)
+	modified.emit()
+	validate()
 
 
 func _on_variant_option_item_selected(index):
-	CharacterOption.id
+	modified.emit()
 
 
 func _get_type_name():
 	return "Character"
+
+
+func validate():
+	ValidationWarning.visible = CharacterOption.selected == -1

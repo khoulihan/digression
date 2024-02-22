@@ -6,9 +6,11 @@ const ArgumentIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_triple_
 
 @onready var OrdinalLabel: Label = get_node("ExpressionContainer/OrdinalLabel")
 @onready var DragHandle: TextureRect = get_node("ExpressionContainer/DragHandle")
+@onready var ValidationWarning : TextureRect = get_node("ExpressionContainer/ValidationWarning")
 
 @export var ordinal: int
 
+signal modified()
 signal remove_requested(ord)
 signal remove_immediately(ord)
 
@@ -46,3 +48,7 @@ func _get_type_name():
 
 func remove_from_parent():
 	remove_immediately.emit(ordinal)
+
+
+func validate():
+	pass

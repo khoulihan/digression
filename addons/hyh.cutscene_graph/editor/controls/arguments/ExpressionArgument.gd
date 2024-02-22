@@ -25,3 +25,21 @@ func get_expression():
 
 func set_expression(expression):
 	OperatorExpression.deserialise(expression)
+	validate()
+
+
+func validate():
+	var warnings = OperatorExpression.validate()
+	if warnings == null:
+		ValidationWarning.visible = false
+	else:
+		ValidationWarning.visible = true
+		if typeof(warnings) == TYPE_STRING:
+			ValidationWarning.tooltip_text = warnings
+		else:
+			ValidationWarning.tooltip_text = "Invalid Expression"
+
+
+func _on_operator_expression_modified():
+	validate()
+	modified.emit()

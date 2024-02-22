@@ -10,3 +10,5 @@ type = 0
 
 [node name="OperatorExpression" parent="ExpressionContainer/PC/ArgumentValueContainer" index="0" instance=ExtResource("3_6046o")]
 layout_mode = 2
+
+[connection signal="modified" from="ExpressionContainer/PC/ArgumentValueContainer/OperatorExpression" to="." method="_on_operator_expression_modified"]

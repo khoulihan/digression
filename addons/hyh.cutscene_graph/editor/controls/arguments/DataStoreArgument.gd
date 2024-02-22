@@ -19,6 +19,7 @@ const GlobalIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_scope_glo
 func configure():
 	super()
 	_configure_for_scope()
+	validate()
 
 
 func _configure_for_scope():
@@ -40,3 +41,7 @@ func _set_controls(icon, label):
 
 func _get_type_name():
 	return "Data Store"
+
+
+func validate():
+	ValidationWarning.visible = false
