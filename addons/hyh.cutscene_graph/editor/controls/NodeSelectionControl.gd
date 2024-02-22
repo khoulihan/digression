@@ -11,6 +11,10 @@ const NodeSelectDialog = preload("res://addons/hyh.cutscene_graph/editor/node_se
 @export var required = true
 
 
+signal node_selected(path)
+signal node_cleared()
+
+
 var _path: NodePath
 
 
@@ -42,6 +46,7 @@ func _node_selected(path, dialog):
 	get_tree().root.remove_child(dialog)
 	dialog.queue_free()
 	populate(path)
+	node_selected.emit(_path)
 
 
 func _node_selection_cancelled(dialog):
@@ -54,3 +59,4 @@ func _on_clear_button_pressed():
 	_path = NodePath()
 	if required:
 		ValidationWarning.set_warning("A node is required.")
+	node_cleared.emit()

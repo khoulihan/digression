@@ -199,5 +199,10 @@ visible = false
 layout_mode = 2
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="node_cleared" from="RootContainer/MethodContainer/NodeSelectionControl" to="." method="_on_node_selection_control_node_cleared"]
+[connection signal="node_selected" from="RootContainer/MethodContainer/NodeSelectionControl" to="." method="_on_node_selection_control_node_selected"]
+[connection signal="text_changed" from="RootContainer/MethodContainer/MethodNameEdit" to="." method="_on_method_name_edit_text_changed"]
+[connection signal="pressed" from="RootContainer/MethodContainer/ReturnsImmediatelyCheck" to="." method="_on_returns_immediately_check_pressed"]
 [connection signal="argument_dropped" from="ArgumentsContainer/VB/MC" to="." method="_on_argument_dropped"]
 [connection signal="item_selected" from="ReturnContainer/GridContainer/ReturnOption" to="." method="_on_return_option_item_selected"]
+[connection signal="variable_selected" from="ReturnContainer/GridContainer/ReturnVariableSelectionControl" to="." method="_on_return_variable_selection_control_variable_selected"]

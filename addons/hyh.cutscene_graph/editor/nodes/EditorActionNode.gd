@@ -17,6 +17,7 @@ const ActionMechanism = preload("../../resources/graph/ActionNode.gd").ActionMec
 const ActionReturnType = preload("../../resources/graph/ActionNode.gd").ActionReturnType
 const ActionArgumentType = preload("../../resources/graph/ActionNode.gd").ActionArgumentType
 
+
 enum ActionAddArgumentMenuId {
 	CHARACTER,
 	EXPRESSION,
@@ -77,6 +78,7 @@ func _on_action_mechanism_option_item_selected(index):
 	_configure_for_action_mechanism(
 		id
 	)
+	modified.emit()
 
 
 func _configure_for_action_mechanism(id):
@@ -145,6 +147,7 @@ func _add_argument_menu_item_selected(id):
 	match id:
 		ActionAddArgumentMenuId.CHARACTER:
 			_add_character_argument()
+	modified.emit()
 
 
 func _add_expression_argument_menu_item_selected(id):
@@ -157,6 +160,7 @@ func _add_expression_argument_menu_item_selected(id):
 			_add_expression_argument(VariableType.TYPE_STRING)
 		ActionAddArgumentMenuId.EXPRESSION_BOOL:
 			_add_expression_argument(VariableType.TYPE_BOOL)
+	modified.emit()
 
 
 func _add_expression_argument(variable_type, expression=null):
@@ -165,7 +169,6 @@ func _add_expression_argument(variable_type, expression=null):
 	_add_argument_to_list(arg)
 	if expression != null:
 		arg.set_expression(expression)
-
 
 
 func _add_character_argument(character=null, variant=null):
@@ -188,6 +191,7 @@ func _add_data_store_argument_menu_item_selected(id):
 			_add_data_store_argument(VariableScope.SCOPE_LOCAL)
 		ActionAddArgumentMenuId.DATA_STORE_GLOBAL:
 			_add_data_store_argument(VariableScope.SCOPE_GLOBAL)
+	modified.emit()
 
 
 func _add_data_store_argument(scope):
@@ -201,7 +205,12 @@ func _add_argument_to_list(arg):
 	ArgumentsListContainer.add_child(arg)
 	arg.remove_requested.connect(_argument_remove_requested.bind(arg))
 	arg.remove_immediately.connect(_argument_remove_immediately.bind(arg))
+	arg.modified.connect(_argument_modified)
 	arg.configure()
+
+
+func _argument_modified():
+	modified.emit()
 
 
 func _argument_remove_requested(ordinal, argument):
@@ -218,6 +227,7 @@ func _argument_remove_requested(ordinal, argument):
 func _argument_remove_immediately(ordinal, argument):
 	argument.remove_requested.disconnect(_argument_remove_requested)
 	argument.remove_immediately.disconnect(_argument_remove_immediately)
+	argument.modified.disconnect(_argument_modified)
 	ArgumentsListContainer.remove_child(argument)
 	_recalculate_ordinals()
 	_correct_size()
@@ -230,6 +240,7 @@ func _on_argument_remove_confirmed(argument, confirm):
 	ArgumentsListContainer.remove_child(argument)
 	_recalculate_ordinals()
 	_correct_size()
+	modified.emit()
 
 
 func _on_argument_remove_cancelled(confirm):
@@ -394,17 +405,10 @@ func _on_gui_input(ev):
 	super._on_gui_input(ev)
 
 
-func _on_action_name_edit_text_changed(new_text):
-	emit_signal("modified")
-
-
-func _on_argument_edit_text_changed(new_text):
-	emit_signal("modified")
-
-
 func _on_return_option_item_selected(index):
 	var id = ReturnOption.get_item_id(index)
 	_configure_for_return_type(id)
+	modified.emit()
 
 
 func _configure_for_return_type(id):
@@ -421,6 +425,7 @@ func _on_argument_dropped(arg, at_position):
 		_add_at_position(at_position, arg)
 	_recalculate_ordinals()
 	_correct_size()
+	modified.emit()
 
 
 func _get_closest_argument(at_position, target):
@@ -489,3 +494,23 @@ func _move_to_position(at_position, target):
 		if target_index < closest_index:
 			move_index = move_index - 1
 		ArgumentsListContainer.move_child(target, move_index)
+
+
+func _on_method_name_edit_text_changed(new_text):
+	modified.emit()
+
+
+func _on_returns_immediately_check_pressed():
+	modified.emit()
+
+
+func _on_node_selection_control_node_cleared():
+	modified.emit()
+
+
+func _on_node_selection_control_node_selected(path):
+	modified.emit()
+
+
+func _on_return_variable_selection_control_variable_selected(variable):
+	modified.emit()
