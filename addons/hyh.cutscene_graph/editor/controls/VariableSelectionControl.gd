@@ -160,8 +160,7 @@ func _on_type_margin_container_gui_input(event):
 func _show_selection_dialog():
 	var dialog = VariableSelectDialog.instantiate()
 	dialog.type_restriction = _type_restriction
-	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_ABSOLUTE
-	dialog.position = get_tree().root.position + Vector2i(200, 200)
+	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
 	dialog.selected.connect(_variable_selected.bind(dialog))
 	dialog.cancelled.connect(_select_dialog_cancelled.bind(dialog))
 	get_tree().root.add_child(dialog)
@@ -188,8 +187,7 @@ func _select_dialog_cancelled(dialog):
 func _show_create_dialog():
 	var dialog = VariableCreateDialog.instantiate()
 	dialog.type_restriction = _type_restriction
-	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_ABSOLUTE
-	dialog.position = get_tree().root.position + Vector2i(200, 200)
+	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
 	dialog.created.connect(_variable_created.bind(dialog))
 	dialog.cancelled.connect(_create_dialog_cancelled.bind(dialog))
 	get_tree().root.add_child(dialog)

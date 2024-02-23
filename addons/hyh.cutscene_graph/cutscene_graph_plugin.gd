@@ -202,8 +202,7 @@ func _tool_menu_item_selected(id):
 
 func _show_edit_graph_types_dialog():
 	var dialog = GraphTypeEditDialog.instantiate()
-	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_ABSOLUTE
-	dialog.position = get_tree().root.position + Vector2i(300, 300)
+	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
 	self.add_child(dialog)
 	dialog.popup()
 	await (dialog as GraphTypeEditDialogClass).closing
@@ -213,8 +212,7 @@ func _show_edit_graph_types_dialog():
 
 func _show_edit_dialogue_types_dialog():
 	var dialog = DialogueTypesEditDialog.instantiate()
-	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_ABSOLUTE
-	dialog.position = get_tree().root.position + Vector2i(100, 100)
+	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
 	self.add_child(dialog)
 	dialog.popup()
 	await (dialog as DialogueTypesEditDialogClass).closing
@@ -224,8 +222,7 @@ func _show_edit_dialogue_types_dialog():
 
 func _show_edit_choice_types_dialog():
 	var dialog = ChoiceTypesEditDialog.instantiate()
-	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_ABSOLUTE
-	dialog.position = get_tree().root.position + Vector2i(100, 100)
+	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
 	self.add_child(dialog)
 	dialog.popup()
 	await (dialog as ChoiceTypesEditDialogClass).closing
