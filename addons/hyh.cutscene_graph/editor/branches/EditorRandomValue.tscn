@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://dk0btqqtgur07"]
+[gd_scene load_steps=5 format=3 uid="uid://dk0btqqtgur07"]
 
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/branches/EditorRandomValue.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.cutscene_graph/icons/icon_remove.svg" id="2"]
 [ext_resource type="PackedScene" uid="uid://mvafher5yr07" path="res://addons/hyh.cutscene_graph/editor/controls/ConditionControl.tscn" id="2_e0v4u"]
+[ext_resource type="PackedScene" uid="uid://m2fx01xh1uml" path="res://addons/hyh.cutscene_graph/editor/controls/WeightControl.tscn" id="2_kl24e"]
 
 [node name="RandomValue" type="MarginContainer"]
 offset_right = 324.0
@@ -28,6 +29,9 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/v_separation = 10
 
+[node name="WeightControl" parent="VBoxContainer/HBoxContainer/VariableContainer" instance=ExtResource("2_kl24e")]
+layout_mode = 2
+
 [node name="ConditionControl" parent="VBoxContainer/HBoxContainer/VariableContainer" instance=ExtResource("2_e0v4u")]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -38,5 +42,7 @@ size_flags_vertical = 0
 icon = ExtResource("2")
 flat = true
 
+[connection signal="changed" from="VBoxContainer/HBoxContainer/VariableContainer/WeightControl" to="." method="_on_weight_control_changed"]
+[connection signal="cleared" from="VBoxContainer/HBoxContainer/VariableContainer/WeightControl" to="." method="_on_weight_control_cleared"]
 [connection signal="size_changed" from="VBoxContainer/HBoxContainer/VariableContainer/ConditionControl" to="." method="_on_condition_control_size_changed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/RemoveButton" to="." method="_on_RemoveButton_pressed"]

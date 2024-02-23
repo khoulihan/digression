@@ -945,18 +945,35 @@ func _process_random_node():
 	Logger.debug("Processing random node \"%s\"." % _current_node)
 	
 	var viable = []
+	var accumulated_weight := 0
 	for i in range(len(_current_node.branches)):
 		var branch = _current_node.branches[i]
+		# No weight set actually means a weight of 1
+		var branch_weight: int = 1 if branch.weight < 1 else branch.weight
 		
 		if _evaluate_boolean_expression_resource(branch.condition):
-			viable.append(branch.next)
+			accumulated_weight += branch_weight
+			viable.append({
+				"next": branch.next,
+				"weight": branch_weight,
+				"accumulated_weight": accumulated_weight,
+			})
 
 	if len(viable) == 0:
 		_advance_to_next_node()
 	else:
+		var roll := (randi() % accumulated_weight) + 1
 		_current_node = _get_node_by_id(
-			viable[randi() % len(viable)]
+			_get_weighted_branch(viable, roll)
 		)
+
+
+func _get_weighted_branch(branches, roll) -> int:
+	for branch in branches:
+		if branch["accumulated_weight"] >= roll:
+			return branch["next"]
+	Logger.error("No branch found to satisfy roll.")
+	return -1
 
 
 func _evaluate_boolean_expression_resource(res):
