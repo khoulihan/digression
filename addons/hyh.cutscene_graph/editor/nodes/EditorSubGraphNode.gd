@@ -43,6 +43,8 @@ func _ready():
 	#get_node("MarginContainer/VBoxContainer").add_child(res_picker)
 	#res_picker.base_type = "CutsceneGraph"
 	#res_picker.theme = self.theme
+	
+	super()
 
 
 func set_resource_clipboard(clipboard):
