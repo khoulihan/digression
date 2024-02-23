@@ -8,6 +8,14 @@ title = "Select Variable"
 size = Vector2i(1200, 600)
 script = ExtResource("1_6k4s4")
 
+[node name="BackgroundPanel" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
 [node name="VariableSelectDialogContents" parent="." instance=ExtResource("1_rm0su")]
 
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]

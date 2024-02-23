@@ -14,6 +14,7 @@ signal stopping_preview()
 @onready var _graph_mini_map = $HSplitContainer/HSplitContainer/VSplitContainer/GraphMiniMap
 @onready var _dialogue_scroll_container = $HSplitContainer/HSplitContainer/VB/PanelContainer/MarginContainer/DialogueScrollContainer
 @onready var _dialogue_container = $HSplitContainer/HSplitContainer/VB/PanelContainer/MarginContainer/DialogueScrollContainer/MarginContainer/DialogueContainer
+@onready var _dialogue_container_panel = $HSplitContainer/HSplitContainer/VB/PanelContainer
 @onready var _begin_container = $HSplitContainer/HSplitContainer/VB/PanelContainer/MarginContainer/BeginContainer
 @onready var _breadcrumbs = $TitleBar/GraphBreadcrumbs
 @onready var _characters_tree = $HSplitContainer/HSplitContainer/VSplitContainer/VB/CharactersTree
@@ -135,6 +136,7 @@ var _transient_state
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	_dialogue_container_panel.add_theme_stylebox_override("panel", get_theme_stylebox("TextureRegionPreviewBG", "EditorStyles"))
 	_clear_dialogue()
 	_cutscene.set_controller(_controller)
 	_connect_internal_signals()

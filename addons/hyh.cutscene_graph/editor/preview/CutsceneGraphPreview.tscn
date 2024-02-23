@@ -323,6 +323,12 @@ custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 size_flags_vertical = 3
 scroll_offset = Vector2(-214, -107)
+show_grid = false
+show_menu = false
+show_zoom_buttons = false
+show_grid_buttons = false
+show_minimap_button = false
+show_arrange_button = false
 
 [node name="VB" type="VBoxContainer" parent="HSplitContainer/HSplitContainer/VSplitContainer"]
 layout_mode = 2

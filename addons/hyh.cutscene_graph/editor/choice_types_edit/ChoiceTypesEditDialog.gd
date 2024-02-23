@@ -5,6 +5,13 @@ extends Window
 signal closing()
 
 
+@onready var BackgroundPanel = get_node("BackgroundPanel")
+
+
+func _ready() -> void:
+	BackgroundPanel.color = get_theme_color("base_color", "Editor")
+
+
 func configure():
 	$ChoiceTypesEditDialogContents.configure()
 

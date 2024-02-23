@@ -12,11 +12,14 @@ signal created(variable)
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
 
 @onready var Contents = get_node("VariableCreateDialogContents")
+@onready var BackgroundPanel = get_node("BackgroundPanel")
 
 var type_restriction : Variant
 
-func _ready():
+
+func _ready() -> void:
 	self.size = get_node("VariableCreateDialogContents").size
+	BackgroundPanel.color = get_theme_color("base_color", "Editor")
 
 
 func _on_variable_create_dialog_contents_resized():
