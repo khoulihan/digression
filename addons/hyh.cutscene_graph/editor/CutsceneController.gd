@@ -165,6 +165,7 @@ var _internal: ControllerInternal
 var _currently_awaiting: ProceedSignal
 
 var _expression_evaluator: ExpressionEvaluator
+var _variable_regex: RegEx
 
 
 ## Register a global variable store
@@ -204,6 +205,11 @@ func _ready():
 	_expression_evaluator.local_store = _local_store
 	_expression_evaluator.global_store = _global_store
 	
+	_variable_regex = RegEx.new()
+	_variable_regex.compile(
+		r'(?<!\\){([\w\s:]+?)}',
+	)
+	
 	# Only expose the internals if we are running in the editor.
 	if Engine.is_editor_hint():
 		_internal = ControllerInternal.new()
@@ -234,17 +240,6 @@ func _get_variable(variable_name, scope):
 				)
 				return null
 			return _global_store.get_variable(variable_name)
-	return null
-
-
-# This shouldn't really be required anymore
-func _get_first_variable(variable_name):
-	if variable_name in _transient_store:
-		return _transient_store[variable_name]
-	if _local_store.has_variable(variable_name):
-		return _local_store.get_variable(variable_name)
-	if _global_store.has_variable(variable_name):
-		return _global_store.get_variable(variable_name)
 	return null
 
 
@@ -506,6 +501,38 @@ func _internal_notify_routing_node():
 	_internal.processed_routing_node.emit()
 
 
+func _substitute_variables(text: String) -> String:
+	var substituted := text
+	var substitutions := {}
+	for m in _variable_regex.search_all(text):
+		var variable_name := m.get_string(1)
+		var variable_value = _get_variable_any_store(variable_name)
+		if variable_value == null:
+			Logger.error("Variable \"%s\" not found in any store: substitution failed." % variable_name)
+			variable_value = ""
+		substitutions[variable_name] = variable_value
+	if len(substitutions) > 0:
+		substituted = substituted.format(substitutions)
+	# Actualise any escape sequences
+	substituted = substituted.c_unescape()
+	# Clean up the string by removing any escaped braces
+	substituted = substituted.replace(r'\{', "{")
+	substituted = substituted.replace(r'\}', "}")
+	return substituted
+
+
+func _get_variable_any_store(variable_name):
+	if variable_name in _transient_store:
+		return _transient_store[variable_name]
+	if variable_name in _cutscene_state_store:
+		return _cutscene_state_store[variable_name]
+	if _local_store.has_variable(variable_name):
+		return _local_store.get_variable(variable_name)
+	if _global_store.has_variable(variable_name):
+		return _global_store.get_variable(variable_name)
+	return null
+
+
 func _process_dialogue_node():
 	await _process_dialogue_node_internal(_current_node)
 
@@ -552,7 +579,7 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 				final_line,
 				choice_type,
 				dialogue_type_name,
-				lines[index],
+				_substitute_variables(lines[index]),
 				character,
 				variant,
 				process
@@ -567,7 +594,7 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 			for_choice,
 			choice_type,
 			dialogue_type_name,
-			text,
+			_substitute_variables(text),
 			character,
 			variant,
 			process
@@ -646,6 +673,7 @@ func _process_choice_node():
 			# Still no text, so use the default
 			if text == null:
 				text = choice.display
+			text = _substitute_variables(text)
 			choice_obj.text = text
 			choice_obj.visit_count = _get_visit_count(choice)
 			choices[i] = choice_obj
