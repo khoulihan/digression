@@ -1,0 +1,137 @@
+[gd_scene load_steps=5 format=3 uid="uid://bmpi77kqir088"]
+
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/property_select_dialog/PropertySelectDialogContents.gd" id="1_xyqn2"]
+[ext_resource type="Texture2D" uid="uid://dfvamw687u0qj" path="res://addons/hyh.cutscene_graph/icons/icon_search.svg" id="7_5ipwx"]
+[ext_resource type="Texture2D" uid="uid://bta3jvd470c36" path="res://addons/hyh.cutscene_graph/icons/icon_close.svg" id="8_75oca"]
+[ext_resource type="Texture2D" uid="uid://d1xqn6pvoeekw" path="res://addons/hyh.cutscene_graph/icons/icon_favourites.svg" id="9_2td71"]
+
+[node name="PropertySelectDialogContents" type="MarginContainer"]
+offset_right = 1200.0
+offset_bottom = 600.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_xyqn2")
+
+[node name="VB" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="BodyContainer" type="HSplitContainer" parent="VB"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FavouritesPane" type="MarginContainer" parent="VB/BodyContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HB" type="VBoxContainer" parent="VB/BodyContainer/FavouritesPane"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VB/BodyContainer/FavouritesPane/HB"]
+layout_mode = 2
+text = "Favourites:"
+
+[node name="FavouritesTree" type="Tree" parent="VB/BodyContainer/FavouritesPane/HB"]
+custom_minimum_size = Vector2(75, 75)
+layout_mode = 2
+size_flags_vertical = 3
+columns = 2
+allow_reselect = true
+hide_folding = true
+hide_root = true
+select_mode = 1
+
+[node name="Label2" type="Label" parent="VB/BodyContainer/FavouritesPane/HB"]
+layout_mode = 2
+text = "Recent:"
+
+[node name="RecentTree" type="Tree" parent="VB/BodyContainer/FavouritesPane/HB"]
+custom_minimum_size = Vector2(75, 75)
+layout_mode = 2
+size_flags_vertical = 3
+columns = 2
+allow_reselect = true
+hide_folding = true
+hide_root = true
+select_mode = 1
+
+[node name="SearchPane" type="MarginContainer" parent="VB/BodyContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.5
+
+[node name="VB" type="VBoxContainer" parent="VB/BodyContainer/SearchPane"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VB/BodyContainer/SearchPane/VB"]
+layout_mode = 2
+
+[node name="SearchContainer" type="HBoxContainer" parent="VB/BodyContainer/SearchPane/VB"]
+layout_mode = 2
+
+[node name="SearchEdit" type="LineEdit" parent="VB/BodyContainer/SearchPane/VB/SearchContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+clear_button_enabled = true
+right_icon = ExtResource("7_5ipwx")
+
+[node name="ClearSearchButton" type="Button" parent="VB/BodyContainer/SearchPane/VB/SearchContainer"]
+visible = false
+layout_mode = 2
+icon = ExtResource("8_75oca")
+
+[node name="MatchesTitleContainer" type="HBoxContainer" parent="VB/BodyContainer/SearchPane/VB"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VB/BodyContainer/SearchPane/VB/MatchesTitleContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Matches:"
+
+[node name="FavouriteButton" type="Button" parent="VB/BodyContainer/SearchPane/VB/MatchesTitleContainer"]
+layout_mode = 2
+icon = ExtResource("9_2td71")
+
+[node name="MatchesTree" type="Tree" parent="VB/BodyContainer/SearchPane/VB"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_vertical = 3
+columns = 4
+hide_folding = true
+hide_root = true
+select_mode = 1
+
+[node name="Label2" type="Label" parent="VB/BodyContainer/SearchPane/VB"]
+layout_mode = 2
+text = "Description:"
+
+[node name="DescriptionLabel" type="RichTextLabel" parent="VB/BodyContainer/SearchPane/VB"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_override_colors/default_color = Color(0.921569, 0.921569, 0.921569, 0.85098)
+
+[node name="FooterButtonsContainer" type="HBoxContainer" parent="VB"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_constants/separation = 30
+
+[node name="CancelButton" type="Button" parent="VB/FooterButtonsContainer"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="SelectButton" type="Button" parent="VB/FooterButtonsContainer"]
+layout_mode = 2
+text = "Select"
+
+[connection signal="item_selected" from="VB/BodyContainer/FavouritesPane/HB/FavouritesTree" to="." method="_on_favourites_tree_item_selected"]
+[connection signal="item_selected" from="VB/BodyContainer/FavouritesPane/HB/RecentTree" to="." method="_on_recent_tree_item_selected"]
+[connection signal="text_changed" from="VB/BodyContainer/SearchPane/VB/SearchContainer/SearchEdit" to="." method="_on_search_edit_text_changed"]
+[connection signal="pressed" from="VB/BodyContainer/SearchPane/VB/MatchesTitleContainer/FavouriteButton" to="." method="_on_favourite_button_pressed"]
+[connection signal="item_activated" from="VB/BodyContainer/SearchPane/VB/MatchesTree" to="." method="_on_matches_tree_item_activated"]
+[connection signal="item_selected" from="VB/BodyContainer/SearchPane/VB/MatchesTree" to="." method="_on_matches_tree_item_selected"]
+[connection signal="nothing_selected" from="VB/BodyContainer/SearchPane/VB/MatchesTree" to="." method="_on_matches_tree_nothing_selected"]
+[connection signal="pressed" from="VB/FooterButtonsContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="VB/FooterButtonsContainer/SelectButton" to="." method="_on_select_button_pressed"]

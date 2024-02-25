@@ -15,6 +15,7 @@ const PropertyDefinitionEditDialogClass = preload("editor/property_definition_ed
 #const CutsceneGraph = preload("resources/CutsceneGraph.gd")
 const CharacterPropertyInspectorPlugin = preload("editor/inspector/character_property_edit/CharacterPropertyInspectorPlugin.gd")
 
+
 var editor_host
 var editor
 var editor_button

@@ -12,6 +12,9 @@ var variant_name: String
 @export
 var variant_display_name: String
 
+@export
+var custom_properties: Array[VariantProperty]
+
 
 ## Returns the display name and name, formatted for display in the editor.
 func get_full_name() -> String:
