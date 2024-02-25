@@ -10,13 +10,17 @@ const DialogueTypesEditDialog = preload("editor/dialogue_types_edit/DialogueType
 const DialogueTypesEditDialogClass = preload("editor/dialogue_types_edit/DialogueTypesEditDialog.gd")
 const ChoiceTypesEditDialog = preload("editor/choice_types_edit/ChoiceTypesEditDialog.tscn")
 const ChoiceTypesEditDialogClass = preload("editor/choice_types_edit/ChoiceTypesEditDialog.gd")
+const PropertyDefinitionEditDialog = preload("editor/property_definition_edit/PropertyDefinitionEditDialog.tscn")
+const PropertyDefinitionEditDialogClass = preload("editor/property_definition_edit/PropertyDefinitionEditDialog.gd")
 #const CutsceneGraph = preload("resources/CutsceneGraph.gd")
+const CharacterPropertyInspectorPlugin = preload("editor/inspector/character_property_edit/CharacterPropertyInspectorPlugin.gd")
 
 var editor_host
 var editor
 var editor_button
 var expand_button
 var menu
+var _character_property_inspector : CharacterPropertyInspectorPlugin
 
 var _current_graph_is_in_scene
 
@@ -27,6 +31,7 @@ enum ToolMenuItems {
 	EDIT_GRAPH_TYPES,
 	EDIT_DIALOGUE_TYPES,
 	EDIT_CHOICE_TYPES,
+	EDIT_PROPERTY_DEFINITIONS,
 }
 
 
@@ -38,6 +43,10 @@ func _enter_tree():
 	add_custom_type("CutsceneController", "Node", preload("editor/CutsceneController.gd"), preload("icons/icon_cutscene_controller.svg"))
 	add_custom_type("Cutscene", "Node", preload("editor/Cutscene.gd"), preload("icons/icon_chat.svg"))
 	add_custom_type("CutsceneVariableStore", "Node", preload("editor/CutsceneVariableStore.gd"), preload("icons/icon_datastore.svg"))
+	
+	# Add inspector plugins
+	_character_property_inspector = CharacterPropertyInspectorPlugin.new()
+	add_inspector_plugin(_character_property_inspector)
 	
 	# Check if the settings exist, and create some defaults if necessary
 	_create_default_project_settings()
@@ -185,6 +194,7 @@ func _create_menu():
 	menu.add_item("Edit Graph Types...", ToolMenuItems.EDIT_GRAPH_TYPES)
 	menu.add_item("Edit Dialogue Types...", ToolMenuItems.EDIT_DIALOGUE_TYPES)
 	menu.add_item("Edit Choice Types...", ToolMenuItems.EDIT_CHOICE_TYPES)
+	menu.add_item("Edit Property Definitions...", ToolMenuItems.EDIT_PROPERTY_DEFINITIONS)
 	menu.id_pressed.connect(_tool_menu_item_selected)
 	
 	add_tool_submenu_item("Cutscene Graph Editor", menu)
@@ -198,6 +208,8 @@ func _tool_menu_item_selected(id):
 			_show_edit_dialogue_types_dialog()
 		ToolMenuItems.EDIT_CHOICE_TYPES:
 			_show_edit_choice_types_dialog()
+		ToolMenuItems.EDIT_PROPERTY_DEFINITIONS:
+			_show_edit_property_definitions_dialog()
 
 
 func _show_edit_graph_types_dialog():
@@ -226,6 +238,16 @@ func _show_edit_choice_types_dialog():
 	self.add_child(dialog)
 	dialog.popup()
 	await (dialog as ChoiceTypesEditDialogClass).closing
+	dialog.hide()
+	dialog.queue_free()
+
+
+func _show_edit_property_definitions_dialog():
+	var dialog = PropertyDefinitionEditDialog.instantiate()
+	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
+	self.add_child(dialog)
+	dialog.popup()
+	await (dialog as PropertyDefinitionEditDialogClass).closing
 	dialog.hide()
 	dialog.queue_free()
 
@@ -286,6 +308,7 @@ func _exit_tree():
 	remove_custom_type("CutsceneController")
 	remove_custom_type("Cutscene")
 	remove_custom_type("CutsceneVariableStore")
+	remove_inspector_plugin(_character_property_inspector)
 	if editor != null:
 		editor_host.expand_button_toggled.disconnect(
 			_editor_expand_button_toggled

@@ -21,6 +21,9 @@ var character_variants: Array[CharacterVariant]
 @export
 var is_player: bool = false
 
+@export
+var custom_properties: Array[CharacterProperty]
+
 var _character_variants
 
 func get_character_variants():

@@ -1,0 +1,214 @@
+[gd_scene load_steps=9 format=3 uid="uid://cvfmxv64m03ti"]
+
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/property_definition_edit/PropertyDefinitionEditDialogContents.gd" id="1_yc1ng"]
+[ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.cutscene_graph/icons/icon_add.svg" id="2_n5s1n"]
+[ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.cutscene_graph/icons/icon_remove.svg" id="3_xu0r6"]
+[ext_resource type="Texture2D" uid="uid://cmpxsjfcm0kpq" path="res://addons/hyh.cutscene_graph/icons/icon_node_info.svg" id="4_j6fru"]
+[ext_resource type="Texture2D" uid="uid://c3kvtyvnpubei" path="res://addons/hyh.cutscene_graph/icons/icon_type_bool.svg" id="5_t3wwj"]
+[ext_resource type="Texture2D" uid="uid://dhxdv15boo0xg" path="res://addons/hyh.cutscene_graph/icons/icon_type_float.svg" id="6_w5vk3"]
+[ext_resource type="Texture2D" uid="uid://dgqyr3ih37my0" path="res://addons/hyh.cutscene_graph/icons/icon_type_int.svg" id="7_swfln"]
+[ext_resource type="Texture2D" uid="uid://dpd5q8k0oueoh" path="res://addons/hyh.cutscene_graph/icons/icon_type_string.svg" id="8_03mxv"]
+
+[node name="PropertyDefinitionEditDialogContents" type="MarginContainer"]
+offset_right = 960.0
+offset_bottom = 420.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_yc1ng")
+
+[node name="VB" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HS" type="HSplitContainer" parent="VB"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PropertyDefinitionsPane" type="MarginContainer" parent="VB/HS"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.5
+
+[node name="VB" type="VBoxContainer" parent="VB/HS/PropertyDefinitionsPane"]
+layout_mode = 2
+
+[node name="HeaderButtonsContainer" type="HBoxContainer" parent="VB/HS/PropertyDefinitionsPane/VB"]
+layout_mode = 2
+
+[node name="AddButton" type="Button" parent="VB/HS/PropertyDefinitionsPane/VB/HeaderButtonsContainer"]
+layout_mode = 2
+tooltip_text = "Add a type"
+icon = ExtResource("2_n5s1n")
+flat = true
+
+[node name="RemoveButton" type="Button" parent="VB/HS/PropertyDefinitionsPane/VB/HeaderButtonsContainer"]
+layout_mode = 2
+tooltip_text = "Remove the selected type"
+icon = ExtResource("3_xu0r6")
+flat = true
+
+[node name="Help" type="TextureRect" parent="VB/HS/PropertyDefinitionsPane/VB/HeaderButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+tooltip_text = "Here you can define \"properties\" that can be attached to certain resources and nodes."
+texture = ExtResource("4_j6fru")
+stretch_mode = 2
+
+[node name="PropertyDefinitionsTree" type="Tree" parent="VB/HS/PropertyDefinitionsPane/VB"]
+custom_minimum_size = Vector2(200, 300)
+layout_mode = 2
+size_flags_vertical = 3
+columns = 3
+column_titles_visible = true
+allow_reselect = true
+allow_rmb_select = true
+hide_folding = true
+hide_root = true
+drop_mode_flags = 2
+select_mode = 1
+
+[node name="DetailPane" type="MarginContainer" parent="VB/HS"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DetailPaneContents" type="VBoxContainer" parent="VB/HS/DetailPane"]
+layout_mode = 2
+
+[node name="DetailPaneHeader" type="HBoxContainer" parent="VB/HS/DetailPane/DetailPaneContents"]
+layout_mode = 2
+
+[node name="DetailPaneHeaderLabel" type="Label" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneHeader"]
+layout_mode = 2
+
+[node name="Help2" type="TextureRect" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneHeader"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+tooltip_text = "Here you can set which graph types the selected dialogue type
+is available for. You can also set it as the default for one or more
+graph types."
+texture = ExtResource("4_j6fru")
+stretch_mode = 2
+
+[node name="DetailPaneContainer" type="MarginContainer" parent="VB/HS/DetailPane/DetailPaneContents"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VB" type="VBoxContainer" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer"]
+layout_mode = 2
+
+[node name="GC" type="GridContainer" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB"]
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC"]
+layout_mode = 2
+text = "Name:"
+
+[node name="NameEdit" type="LineEdit" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Property name..."
+
+[node name="Label2" type="Label" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC"]
+layout_mode = 2
+text = "Type:"
+
+[node name="TypeOption" type="OptionButton" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC"]
+layout_mode = 2
+item_count = 4
+selected = 0
+popup/item_0/text = "Boolean"
+popup/item_0/icon = ExtResource("5_t3wwj")
+popup/item_0/id = 1
+popup/item_1/text = "Float"
+popup/item_1/icon = ExtResource("6_w5vk3")
+popup/item_1/id = 3
+popup/item_2/text = "Integer"
+popup/item_2/icon = ExtResource("7_swfln")
+popup/item_2/id = 2
+popup/item_3/text = "String"
+popup/item_3/icon = ExtResource("8_03mxv")
+popup/item_3/id = 4
+
+[node name="Label3" type="Label" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC"]
+layout_mode = 2
+text = "Description:"
+
+[node name="DescriptionTextEdit" type="TextEdit" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+placeholder_text = "Property description..."
+
+[node name="Label4" type="Label" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC"]
+layout_mode = 2
+text = "Uses:"
+
+[node name="UsesContainer" type="VBoxContainer" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC"]
+layout_mode = 2
+
+[node name="ScenesCheckBox" type="CheckBox" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer"]
+layout_mode = 2
+text = "Scenes
+"
+
+[node name="CharactersCheckBox" type="CheckBox" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer"]
+layout_mode = 2
+text = "Characters"
+
+[node name="VariantsCheckBox" type="CheckBox" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer"]
+layout_mode = 2
+text = "Variants
+"
+
+[node name="ChoicesCheckBox" type="CheckBox" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer"]
+layout_mode = 2
+text = "Choices
+"
+
+[node name="DialogueCheckBox" type="CheckBox" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer"]
+layout_mode = 2
+text = "Dialogue
+"
+
+[node name="FooterButtonsContainer" type="HBoxContainer" parent="VB"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_constants/separation = 30
+
+[node name="CancelButton" type="Button" parent="VB/FooterButtonsContainer"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="SaveButton" type="Button" parent="VB/FooterButtonsContainer"]
+layout_mode = 2
+text = "Save"
+
+[node name="PopupMenu" type="PopupMenu" parent="."]
+size = Vector2i(151, 35)
+item_count = 1
+item_0/text = "Remove"
+item_0/icon = ExtResource("3_xu0r6")
+item_0/id = 0
+
+[connection signal="pressed" from="VB/HS/PropertyDefinitionsPane/VB/HeaderButtonsContainer/AddButton" to="." method="_on_add_button_pressed"]
+[connection signal="pressed" from="VB/HS/PropertyDefinitionsPane/VB/HeaderButtonsContainer/RemoveButton" to="." method="_on_remove_button_pressed"]
+[connection signal="item_mouse_selected" from="VB/HS/PropertyDefinitionsPane/VB/PropertyDefinitionsTree" to="." method="_on_property_definitions_tree_item_mouse_selected"]
+[connection signal="item_selected" from="VB/HS/PropertyDefinitionsPane/VB/PropertyDefinitionsTree" to="." method="_on_property_definitions_tree_item_selected"]
+[connection signal="nothing_selected" from="VB/HS/PropertyDefinitionsPane/VB/PropertyDefinitionsTree" to="." method="_on_property_definitions_tree_nothing_selected"]
+[connection signal="text_changed" from="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/NameEdit" to="." method="_on_name_edit_text_changed"]
+[connection signal="item_selected" from="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/TypeOption" to="." method="_on_type_option_item_selected"]
+[connection signal="text_changed" from="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/DescriptionTextEdit" to="." method="_on_description_text_edit_text_changed"]
+[connection signal="toggled" from="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/ScenesCheckBox" to="." method="_on_uses_check_box_toggled"]
+[connection signal="toggled" from="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/CharactersCheckBox" to="." method="_on_uses_check_box_toggled"]
+[connection signal="toggled" from="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/VariantsCheckBox" to="." method="_on_uses_check_box_toggled"]
+[connection signal="toggled" from="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/ChoicesCheckBox" to="." method="_on_uses_check_box_toggled"]
+[connection signal="toggled" from="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/DialogueCheckBox" to="." method="_on_uses_check_box_toggled"]
+[connection signal="pressed" from="VB/FooterButtonsContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="VB/FooterButtonsContainer/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="id_pressed" from="PopupMenu" to="." method="_on_popup_menu_id_pressed"]
