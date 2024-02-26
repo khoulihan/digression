@@ -67,15 +67,12 @@ func _ready():
 
 
 func _filter_by_use_restriction(props):
-	print(props)
-	print (_use_restriction)
 	if _use_restriction == null:
 		return props
 	var filtered = []
 	for p in props:
 		if _get_use_restriction_string() in p['uses']:
 			filtered.append(p)
-	print(filtered)
 	return filtered
 
 
