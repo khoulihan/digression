@@ -4,6 +4,11 @@ extends Resource
 
 class_name Character
 
+
+const PropertyCollection = preload("./properties/PropertyCollection.gd")
+const PropertyUse = preload("../editor/inspector/character_property_edit/CharacterPropertySelector.gd").PropertyUse
+
+
 ## An identifier for the character when referenced in code.
 @export
 var character_name: String
@@ -22,9 +27,14 @@ var character_variants: Array[CharacterVariant]
 var is_player: bool = false
 
 @export
-var custom_properties: Array[CharacterProperty]
+var custom_properties: PropertyCollection = PropertyCollection.new() # Array[CharacterProperty]
 
 var _character_variants
+
+
+func _init() -> void:
+	custom_properties.use_restriction = PropertyUse.CHARACTERS
+
 
 func get_character_variants():
 	if _character_variants == null:
@@ -45,3 +55,17 @@ func get_full_name() -> String:
 		actual = "unnamed"
 	
 	return "%s (%s)" % [display, actual]
+
+
+# Read-only usage flag did not work. This doesn't seem to work at all
+# for a resource property.
+#func _get_property_list():
+	#var properties = []
+	#properties.append({
+		#"name": "custom_properties",
+		#"type": Resource,
+		#"usage": PROPERTY_USAGE_STORAGE + PROPERTY_USAGE_EDITOR + PROPERTY_USAGE_READ_ONLY,
+		#"hint": PROPERTY_HINT_RESOURCE_TYPE,
+		#"hint_string": "PropertyCollection",
+	#})
+	#return properties
