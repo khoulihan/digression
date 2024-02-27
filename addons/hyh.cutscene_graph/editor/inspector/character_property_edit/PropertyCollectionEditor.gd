@@ -133,14 +133,16 @@ func _on_add_button_pressed():
 	print ("Add button pressed")
 	# TODO: Just adding a nonsense item for now, for testing.
 	var prop := CustomProperty.new()
-	prop.property = "test_time"
-	prop.type = VariableType.TYPE_FLOAT
-	property_collection.properties['test_time'] = prop
+	prop.property = "test_time_8"
+	prop.type = VariableType.TYPE_INT
+	property_collection.properties['test_time_8'] = prop
 	var item := PropertyTree.get_root().create_child()
 	_configure_item_for_property(item, prop)
 	#PropertyTree.get_root().add_child(item)
 	for i in PropertyTree.get_root().get_children():
 		print (i.get_text(PropertyTreeColumns.PROPERTY_NAME))
+	#property_collection.property_list_changed.emit()
+	property_collection.notify_property_list_changed()
 	PropertyTree.queue_redraw()
 	
 

@@ -7,6 +7,7 @@ class_name Character
 
 const PropertyCollection = preload("./properties/PropertyCollection.gd")
 const PropertyUse = preload("../editor/inspector/character_property_edit/CharacterPropertySelector.gd").PropertyUse
+const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
 
 
 ## An identifier for the character when referenced in code.
@@ -26,8 +27,7 @@ var character_variants: Array[CharacterVariant]
 @export
 var is_player: bool = false
 
-@export
-var custom_properties: PropertyCollection = PropertyCollection.new() # Array[CharacterProperty]
+var custom_properties: PropertyCollection = PropertyCollection.new()
 
 var _character_variants
 
@@ -57,15 +57,79 @@ func get_full_name() -> String:
 	return "%s (%s)" % [display, actual]
 
 
-# Read-only usage flag did not work. This doesn't seem to work at all
-# for a resource property.
-#func _get_property_list():
-	#var properties = []
-	#properties.append({
-		#"name": "custom_properties",
-		#"type": Resource,
-		#"usage": PROPERTY_USAGE_STORAGE + PROPERTY_USAGE_EDITOR + PROPERTY_USAGE_READ_ONLY,
-		#"hint": PROPERTY_HINT_RESOURCE_TYPE,
-		#"hint_string": "PropertyCollection",
-	#})
-	#return properties
+func _custom_properties_modified():
+	notify_property_list_changed()
+
+
+func _get_property_list():
+	# I think this will not be necessary if the properties are stored directly
+	# on this resource...
+	if not custom_properties.property_list_changed.is_connected(_custom_properties_modified):
+		custom_properties.property_list_changed.connect(_custom_properties_modified)
+	print ("Getting resource property list")
+	var properties = []
+	# Set the custom_properties property to read-only so the user
+	# can't overwrite it. The details of the resource remain editable.
+	properties.append({
+		"name": "custom_properties",
+		"type": TYPE_OBJECT,
+		"usage": PROPERTY_USAGE_STORAGE + PROPERTY_USAGE_EDITOR + PROPERTY_USAGE_READ_ONLY,
+		"hint": PROPERTY_HINT_RESOURCE_TYPE,
+		"hint_string": "PropertyCollection",
+	})
+	
+	properties.append({
+		"name": "Custom",
+		"type": TYPE_NIL,
+		"hint_string": "custom_",
+		"usage": PROPERTY_USAGE_GROUP,
+	})
+	
+	for prop_name in custom_properties.properties:
+		var prop = custom_properties.properties[prop_name]
+		var t = TYPE_BOOL
+		var hint = PROPERTY_HINT_NONE
+		var hint_string = ""
+		match prop.type:
+			VariableType.TYPE_INT:
+				t = TYPE_INT
+				#hint = PROPERTY_HINT_RANGE
+				#hint_string = "-1000,1000,1"
+			VariableType.TYPE_FLOAT:
+				t = TYPE_FLOAT
+				#hint = PROPERTY_HINT_RANGE
+				#hint_string = "-1000.0,1000.0,0.0001"
+			VariableType.TYPE_STRING:
+				t = TYPE_STRING
+		properties.append({
+			"name": "custom_%s" % prop_name,
+			"type": t,
+			"usage": PROPERTY_USAGE_EDITOR,
+			"hint": hint,
+			"hint_string": hint_string,
+		})
+				
+	return properties
+
+
+func _strip_group(property: String) -> String:
+	if not property.begins_with("custom_"):
+		return property
+	return property.erase(0, len("custom_"))
+
+
+func _get(property):
+	if not property.begins_with("custom_"):
+		return
+	return custom_properties.properties[
+		_strip_group(property)
+	].value
+
+
+func _set(property, value):
+	if not property.begins_with("custom_"):
+		return false
+	custom_properties.properties[
+		_strip_group(property)
+	].value = value
+	return true
