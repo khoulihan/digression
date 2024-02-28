@@ -11,15 +11,19 @@ var AddPropertyButton: Button
 
 
 func _can_handle(object: Variant) -> bool:
-	if object is Character:
-		print("Handling character resource")
-		return true
-	return false
+	return object is Character or object is CharacterVariant
+
+
+func _is_variant(object) -> bool:
+	return object is CharacterVariant
 
 
 func _add_property_button_pressed(object) -> void:
 	var dialog := PropertySelectDialog.instantiate()
-	dialog.use_restriction = PropertyUse.CHARACTERS
+	if _is_variant(object):
+		dialog.use_restriction = PropertyUse.VARIANTS
+	else:
+		dialog.use_restriction = PropertyUse.CHARACTERS
 	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
 	dialog.cancelled.connect(
 		_property_select_dialog_cancelled.bind(dialog)
