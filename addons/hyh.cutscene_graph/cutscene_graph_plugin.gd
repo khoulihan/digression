@@ -14,6 +14,7 @@ const PropertyDefinitionEditDialog = preload("editor/property_definition_edit/Pr
 const PropertyDefinitionEditDialogClass = preload("editor/property_definition_edit/PropertyDefinitionEditDialog.gd")
 #const CutsceneGraph = preload("resources/CutsceneGraph.gd")
 const CharacterPropertyInspectorPlugin = preload("editor/inspector/character_property_edit/CharacterPropertyInspectorPlugin.gd")
+const CharacterInspectorPlugin = preload("editor/inspector/character_property_edit/CharacterInspectorPlugin.gd")
 
 
 var editor_host
@@ -22,6 +23,7 @@ var editor_button
 var expand_button
 var menu
 var _character_property_inspector : CharacterPropertyInspectorPlugin
+var _character_inspector : CharacterInspectorPlugin
 
 var _current_graph_is_in_scene
 
@@ -48,6 +50,8 @@ func _enter_tree():
 	# Add inspector plugins
 	_character_property_inspector = CharacterPropertyInspectorPlugin.new()
 	add_inspector_plugin(_character_property_inspector)
+	_character_inspector = CharacterInspectorPlugin.new()
+	add_inspector_plugin(_character_inspector)
 	
 	# Check if the settings exist, and create some defaults if necessary
 	_create_default_project_settings()
@@ -310,6 +314,7 @@ func _exit_tree():
 	remove_custom_type("Cutscene")
 	remove_custom_type("CutsceneVariableStore")
 	remove_inspector_plugin(_character_property_inspector)
+	remove_inspector_plugin(_character_inspector)
 	if editor != null:
 		editor_host.expand_button_toggled.disconnect(
 			_editor_expand_button_toggled

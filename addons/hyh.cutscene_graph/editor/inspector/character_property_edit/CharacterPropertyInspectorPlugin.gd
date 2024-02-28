@@ -10,8 +10,6 @@ const PropertyUse = CharacterPropertySelector.PropertyUse
 
 
 func _can_handle(object: Variant) -> bool:
-	if object is Character:
-		print("What a character!")
 	return object is PropertyCollection
 
 
