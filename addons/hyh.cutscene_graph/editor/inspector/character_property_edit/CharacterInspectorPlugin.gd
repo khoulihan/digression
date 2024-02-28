@@ -2,9 +2,8 @@
 extends EditorInspectorPlugin
 
 
-const PropertyUse = preload("CharacterPropertySelector.gd").PropertyUse
+const PropertyUse = preload("../../property_select_dialog/PropertySelectDialog.gd").PropertyUse
 const PropertySelectDialog = preload("../../property_select_dialog/PropertySelectDialog.tscn")
-const RemovePropertyButton = preload("RemovePropertyButton.gd")
 const CharacterEditorProperty = preload("CharacterEditorProperty.gd")
 
 

@@ -29,8 +29,6 @@ func _init(type: VariableType) -> void:
 			control.step = 1.0
 			control.allow_greater = true
 			control.allow_lesser = true
-			#control.min_value = -9223372036854775807
-			#control.max_value = 9223372036854775807
 			control.min_value = -1000
 			control.max_value = 1000
 			control.value_changed.connect(_control_int_value_changed)
@@ -39,8 +37,6 @@ func _init(type: VariableType) -> void:
 			control.step = 0.0001
 			control.allow_greater = true
 			control.allow_lesser = true
-			#control.min_value = -9223372036854775807
-			#control.max_value = 9223372036854775807
 			control.min_value = -1000
 			control.max_value = 1000
 			control.value_changed.connect(_control_float_value_changed)

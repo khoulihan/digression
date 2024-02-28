@@ -5,8 +5,7 @@ extends Resource
 class_name Character
 
 
-const PropertyCollection = preload("./properties/PropertyCollection.gd")
-const PropertyUse = preload("../editor/inspector/character_property_edit/CharacterPropertySelector.gd").PropertyUse
+const PropertyUse = preload("../editor/property_select_dialog/PropertySelectDialog.gd").PropertyUse
 const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
 
 
