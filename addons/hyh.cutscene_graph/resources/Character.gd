@@ -82,14 +82,8 @@ func custom_properties_modified():
 
 func _get_property_list():
 	var properties = []
-	# Set the custom_properties property to read-only so the user
-	# can't overwrite it. The details of the resource remain editable.
-	properties.append({
-		"name": "custom_properties",
-		"type": TYPE_DICTIONARY,
-		"usage": PROPERTY_USAGE_STORAGE + PROPERTY_USAGE_EDITOR + PROPERTY_USAGE_READ_ONLY,
-	})
 	
+	# Add the custom group
 	properties.append({
 		"name": "Custom",
 		"type": TYPE_NIL,
@@ -116,7 +110,15 @@ func _get_property_list():
 			"hint": hint,
 			"hint_string": hint_string,
 		})
-				
+	
+	# Set the custom_properties property to read-only so the user
+	# can't overwrite it. The details of the resource remain editable.
+	properties.append({
+		"name": "custom_properties",
+		"type": TYPE_DICTIONARY,
+		"usage": PROPERTY_USAGE_STORAGE + PROPERTY_USAGE_EDITOR + PROPERTY_USAGE_READ_ONLY,
+	})
+	
 	return properties
 
 
