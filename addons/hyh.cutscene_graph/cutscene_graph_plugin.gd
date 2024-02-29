@@ -13,7 +13,7 @@ const ChoiceTypesEditDialogClass = preload("editor/choice_types_edit/ChoiceTypes
 const PropertyDefinitionEditDialog = preload("editor/property_definition_edit/PropertyDefinitionEditDialog.tscn")
 const PropertyDefinitionEditDialogClass = preload("editor/property_definition_edit/PropertyDefinitionEditDialog.gd")
 #const CutsceneGraph = preload("resources/CutsceneGraph.gd")
-const CharacterInspectorPlugin = preload("editor/inspector/character_property_edit/CharacterInspectorPlugin.gd")
+const CustomPropertyInspectorPlugin = preload("editor/inspector/custom_property_edit/CustomPropertyInspectorPlugin.gd")
 
 
 var editor_host
@@ -21,7 +21,7 @@ var editor
 var editor_button
 var expand_button
 var menu
-var _character_inspector : CharacterInspectorPlugin
+var _custom_inspector : CustomPropertyInspectorPlugin
 
 var _current_graph_is_in_scene
 
@@ -46,8 +46,8 @@ func _enter_tree():
 	add_custom_type("CutsceneVariableStore", "Node", preload("editor/CutsceneVariableStore.gd"), preload("icons/icon_datastore.svg"))
 	
 	# Add inspector plugins
-	_character_inspector = CharacterInspectorPlugin.new()
-	add_inspector_plugin(_character_inspector)
+	_custom_inspector = CustomPropertyInspectorPlugin.new()
+	add_inspector_plugin(_custom_inspector)
 	
 	# Check if the settings exist, and create some defaults if necessary
 	_create_default_project_settings()
@@ -309,7 +309,7 @@ func _exit_tree():
 	remove_custom_type("CutsceneController")
 	remove_custom_type("Cutscene")
 	remove_custom_type("CutsceneVariableStore")
-	remove_inspector_plugin(_character_inspector)
+	remove_inspector_plugin(_custom_inspector)
 	if editor != null:
 		editor_host.expand_button_toggled.disconnect(
 			_editor_expand_button_toggled

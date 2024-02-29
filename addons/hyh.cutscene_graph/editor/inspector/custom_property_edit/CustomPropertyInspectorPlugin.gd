@@ -4,7 +4,7 @@ extends EditorInspectorPlugin
 
 const PropertyUse = preload("../../property_select_dialog/PropertySelectDialog.gd").PropertyUse
 const PropertySelectDialog = preload("../../property_select_dialog/PropertySelectDialog.tscn")
-const CharacterEditorProperty = preload("CharacterEditorProperty.gd")
+const CustomEditorProperty = preload("CustomEditorProperty.gd")
 
 
 var AddPropertyButton: Button
@@ -75,7 +75,7 @@ func _parse_property(object, type, name, hint_type, hint_string, usage_flags, wi
 		return true
 	if name.begins_with("custom_"):
 		var actual_name: String = name.erase(0, len("custom_"))
-		var property_edit = CharacterEditorProperty.new(
+		var property_edit = CustomEditorProperty.new(
 			object.custom_properties[actual_name]['type']
 		)
 		property_edit.remove_requested.connect(
