@@ -594,9 +594,9 @@ func _prepare_arguments_text(arguments):
 		
 
 
-func _on_cutscene_controller_choice_dialogue_display_requested(choice_type, dialogue_type, text, character, character_variant, process):
+func _on_cutscene_controller_choice_dialogue_display_requested(choice_type, dialogue_type, text, character, character_variant, properties, process):
 	# TODO: Do actually need to display the choice type here
-	_on_cutscene_controller_dialogue_display_requested(dialogue_type, text, character, character_variant, process)
+	_on_cutscene_controller_dialogue_display_requested(dialogue_type, text, character, character_variant, properties, process)
 
 
 func _on_cutscene_controller_choice_display_requested(choice_type, choices, process):
@@ -615,7 +615,7 @@ func _on_cutscene_controller_choice_display_requested(choice_type, choices, proc
 		_dialogue_displayed_player.play()
 
 
-func _on_cutscene_controller_dialogue_display_requested(dialogue_type, text, character, character_variant, process):
+func _on_cutscene_controller_dialogue_display_requested(dialogue_type, text, character, character_variant, properties, process):
 	Logger.debug("Dialogue Display Requested")
 	var n
 	var panel
@@ -642,7 +642,8 @@ func _on_cutscene_controller_dialogue_display_requested(dialogue_type, text, cha
 		text,
 		panel,
 		indicator,
-		_use_characterwise()
+		_use_characterwise(),
+		properties,
 	)
 	n.character_displayed.connect(
 		_dialogue_node_character_displayed

@@ -47,6 +47,7 @@ signal dialogue_display_requested(
 	text,
 	character,
 	character_variant,
+	properties,
 	process
 )
 ## A request to perform an action.
@@ -63,6 +64,7 @@ signal choice_dialogue_display_requested(
 	text,
 	character,
 	character_variant,
+	properties,
 	process
 )
 ## A request to display choices to the player.
@@ -120,6 +122,7 @@ class Choice:
 		get:
 			return visit_count > 0
 	var visit_count: int
+	var properties: Dictionary
 
 
 class CharacterDetails:
@@ -406,6 +409,7 @@ func _emit_dialogue_signal_variant(
 	text,
 	character,
 	character_variant,
+	properties,
 	process
 ):
 	if for_choice:
@@ -415,6 +419,7 @@ func _emit_dialogue_signal_variant(
 			text,
 			character,
 			character_variant,
+			properties,
 			process
 		)
 	else:
@@ -423,6 +428,7 @@ func _emit_dialogue_signal_variant(
 			text,
 			character,
 			character_variant,
+			properties,
 			process
 		)
 
@@ -432,6 +438,7 @@ func _emit_dialogue_signal(
 	text,
 	character,
 	character_variant,
+	properties,
 	process
 ):
 	dialogue_display_requested.emit(
@@ -439,6 +446,7 @@ func _emit_dialogue_signal(
 		text,
 		character,
 		character_variant,
+		properties,
 		process
 	)
 
@@ -449,6 +457,7 @@ func _emit_choice_dialogue_signal(
 	text,
 	character,
 	character_variant,
+	properties,
 	process
 ):
 	choice_dialogue_display_requested.emit(
@@ -457,6 +466,7 @@ func _emit_choice_dialogue_signal(
 		text,
 		character,
 		character_variant,
+		properties,
 		process
 	)
 
@@ -565,6 +575,13 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 		if node.character_variant != null:
 			variant = node.character_variant
 	
+	# Process the custom properties
+	var properties := {}
+	for property_name in node.custom_properties:
+		properties[property_name] = _expression_evaluator.evaluate(
+			node.custom_properties[property_name]['expression']
+		)
+	
 	if _split_dialogue_for_node(dialogue_type, _split_dialogue):
 		# TODO: This should strip before splitting in case there
 		# are blank lines before or after the interesting text.
@@ -582,6 +599,7 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 				_substitute_variables(lines[index]),
 				character,
 				variant,
+				properties,
 				process
 			)
 			await process.ready_to_proceed
@@ -597,6 +615,7 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 			_substitute_variables(text),
 			character,
 			variant,
+			properties,
 			process
 		)
 		await process.ready_to_proceed
@@ -674,8 +693,17 @@ func _process_choice_node():
 			if text == null:
 				text = choice.display
 			text = _substitute_variables(text)
+			
+			# Process the custom properties
+			var properties := {}
+			for property_name in choice.custom_properties:
+				properties[property_name] = _expression_evaluator.evaluate(
+					choice.custom_properties[property_name]['expression']
+				)
+			
 			choice_obj.text = text
 			choice_obj.visit_count = _get_visit_count(choice)
+			choice_obj.properties = properties
 			choices[i] = choice_obj
 	
 	if !choices.is_empty() or (include_dialogue and show_dialogue_for_default):

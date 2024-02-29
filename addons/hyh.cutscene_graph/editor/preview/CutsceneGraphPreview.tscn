@@ -89,12 +89,18 @@ keycode = 4194337
 resource_name = "Restart Cutscene"
 events = [SubResource("InputEventKey_3y117")]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t5yux"]
-bg_color = Color(0.129412, 0.14902, 0.180392, 1)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cqht0"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 0.365, 0.365, 1)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_detail = 1
 
 [sub_resource type="InputEventKey" id="InputEventKey_0cx2p"]
 device = -1
@@ -264,7 +270,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_t5yux")
+theme_override_styles/panel = SubResource("StyleBoxFlat_cqht0")
 
 [node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/HSplitContainer/VB/PanelContainer"]
 layout_mode = 2

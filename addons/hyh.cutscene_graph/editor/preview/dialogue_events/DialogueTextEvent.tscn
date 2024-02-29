@@ -70,6 +70,14 @@ theme_override_colors/font_color = Color(0.941176, 0.941176, 0.941176, 0.862745)
 theme_override_font_sizes/font_size = 10
 text = "Dialogue Type"
 
+[node name="MC" type="MarginContainer" parent="VB/VB"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="PropertiesContainer" type="VBoxContainer" parent="VB/VB/MC"]
+layout_mode = 2
+
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.07
 

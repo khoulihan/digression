@@ -13,7 +13,8 @@ func populate(
 	dialogue,
 	panel_resource,
 	indicator_resource,
-	display_characterwise
+	display_characterwise,
+	properties
 ):
 	super(
 		type,
@@ -22,7 +23,8 @@ func populate(
 		dialogue,
 		panel_resource,
 		indicator_resource,
-		display_characterwise
+		display_characterwise,
+		properties,
 	)
 	if type == null:
 		_type_label_player.hide()
@@ -30,3 +32,5 @@ func populate(
 		_type_label_player.text = type
 	if indicator_resource != null:
 		_dialogue_indicator_right.add_theme_stylebox_override("panel", indicator_resource)
+	for property_label: Label in _properties_container.get_children():
+		property_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT

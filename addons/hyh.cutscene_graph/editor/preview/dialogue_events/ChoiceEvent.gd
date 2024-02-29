@@ -24,7 +24,7 @@ func populate(choices):
 	for i in choices:
 		var c = ChoiceEventChoice.instantiate()
 		_choices_container.add_child(c)
-		c.populate(choices[i].text, choices[i].visit_count, i)
+		c.populate(choices[i].text, choices[i].visit_count, i, choices[i].properties)
 		c.choice_selected.connect(
 			_choice_selected.bind(i)
 		)

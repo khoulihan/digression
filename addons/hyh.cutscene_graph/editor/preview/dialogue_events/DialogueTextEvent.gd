@@ -12,6 +12,7 @@ signal ready_to_continue()
 @onready var _dialogue_label = $VB/VB/HB/HB/DialogueContainer/DialogueLabel
 @onready var _dialogue_container = $VB/VB/HB/HB/DialogueContainer
 @onready var _dialogue_indicator = $VB/VB/HB/DialogueIndicator
+@onready var _properties_container = $VB/VB/MC/PropertiesContainer
 
 
 func populate(
@@ -21,7 +22,8 @@ func populate(
 	dialogue,
 	panel_resource,
 	indicator_resource,
-	display_characterwise
+	display_characterwise,
+	properties,
 ):
 	if type == null:
 		_type_label.hide()
@@ -50,6 +52,20 @@ func populate(
 		_dialogue_container.add_theme_stylebox_override("panel", panel_resource)
 	if indicator_resource != null:
 		_dialogue_indicator.add_theme_stylebox_override("panel", indicator_resource)
+	
+	for property_name in properties:
+		var property_label: Label = Label.new()
+		# TODO: Maybe format like in the editor here?
+		property_label.text = "%s: %s" % [
+			property_name,
+			properties[property_name],
+		]
+		property_label.add_theme_color_override(
+			"font_color",
+			Color.from_string("#f0f0f0dc", Color.WHITE)
+		)
+		property_label.add_theme_font_size_override("font_size", 10)
+		_properties_container.add_child(property_label)
 	
 	if display_characterwise:
 		$Timer.start()
