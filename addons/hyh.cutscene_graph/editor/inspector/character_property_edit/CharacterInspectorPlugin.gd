@@ -11,17 +11,25 @@ var AddPropertyButton: Button
 
 
 func _can_handle(object: Variant) -> bool:
-	return object is Character or object is CharacterVariant
+	return object is Character \
+		or object is CharacterVariant \
+		or object is CutsceneGraph
 
 
 func _is_variant(object) -> bool:
 	return object is CharacterVariant
 
 
+func _is_graph(object) -> bool:
+	return object is CutsceneGraph
+
+
 func _add_property_button_pressed(object) -> void:
 	var dialog := PropertySelectDialog.instantiate()
 	if _is_variant(object):
 		dialog.use_restriction = PropertyUse.VARIANTS
+	if _is_graph(object):
+		dialog.use_restriction = PropertyUse.SCENES
 	else:
 		dialog.use_restriction = PropertyUse.CHARACTERS
 	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
