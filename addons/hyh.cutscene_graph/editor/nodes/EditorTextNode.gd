@@ -5,6 +5,7 @@ const TITLE_FONT = preload("res://addons/hyh.cutscene_graph/editor/nodes/styles/
 
 @onready var CharacterOptionsContainer: GridContainer = get_node("RootContainer/VerticalLayout/CharacterOptionsContainer")
 var DialogueTypeOption: OptionButton
+@onready var CustomPropertiesControl = get_node("RootContainer/VerticalLayout/CustomPropertiesControl")
 
 var _characters
 var _dialogue_types
@@ -63,6 +64,11 @@ func configure_for_node(g, n):
 	select_character(n.character)
 	select_variant(n.character_variant)
 	select_dialogue_type(n.dialogue_type, false)
+	_populate_properties(n.custom_properties)
+
+
+func _populate_properties(properties: Dictionary) -> void:
+	CustomPropertiesControl.configure(properties)
 
 
 func persist_changes_to_node():
@@ -79,6 +85,11 @@ func persist_changes_to_node():
 			node_resource.character_variant = node_resource.character.character_variants[selected_v]
 	else:
 		node_resource.character = null
+	node_resource.custom_properties = _get_properties()
+
+
+func _get_properties() -> Dictionary:
+	return CustomPropertiesControl.serialise()
 
 
 func get_dialogue_type():
@@ -270,3 +281,29 @@ func _on_dialogue_type_option_item_selected(index):
 		_dialogue_types_by_id[id],
 		true,
 	)
+
+
+func _on_custom_properties_control_add_property_requested(property_definition):
+	var name = property_definition['name']
+	if name in node_resource.custom_properties:
+		return
+	var property = node_resource.add_custom_property(
+		property_definition['name'],
+		property_definition['type'],
+	)
+	CustomPropertiesControl.add_property(property)
+
+
+func _on_custom_properties_control_remove_property_requested(property_name):
+	if not property_name in node_resource.custom_properties:
+		return
+	node_resource.remove_custom_property(property_name)
+	CustomPropertiesControl.remove_property(property_name)
+
+
+func _on_custom_properties_control_size_changed(size_change):
+	self.size = Vector2(self.size.x, self.size.y + size_change)
+
+
+func _on_custom_properties_control_modified():
+	modified.emit()

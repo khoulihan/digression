@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bygmop6vopi43"]
+[gd_scene load_steps=14 format=3 uid="uid://bygmop6vopi43"]
 
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.cutscene_graph/icons/icon_add.svg" id="1"]
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorChoiceNode.gd" id="2"]
@@ -10,6 +10,7 @@
 [ext_resource type="StyleBox" uid="uid://nu4578dkhf2b" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/dialogue_node_titlebar_selected.tres" id="5_oirud"]
 [ext_resource type="StyleBox" uid="uid://q13kdbxbc8nb" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/control_style_invisible.tres" id="6_8ilf1"]
 [ext_resource type="Texture2D" uid="uid://cmpxsjfcm0kpq" path="res://addons/hyh.cutscene_graph/icons/icon_node_info.svg" id="7_k8avd"]
+[ext_resource type="PackedScene" uid="uid://rg4q2rccwgo5" path="res://addons/hyh.cutscene_graph/editor/controls/properties/CustomPropertiesControl.tscn" id="8_08e3u"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kse8j"]
 bg_color = Color(0.388235, 0.905882, 0.796078, 1)
@@ -165,6 +166,10 @@ text = "Translation Key:"
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="CustomPropertiesControl" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout" index="4" instance=ExtResource("8_08e3u")]
+layout_mode = 2
+use_restriction = 4
+
 [node name="HeaderContainer" type="MarginContainer" parent="." index="2"]
 layout_mode = 2
 size_flags_stretch_ratio = 0.0
@@ -227,6 +232,10 @@ layout_mode = 2
 [connection signal="item_selected" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CharacterOptionsContainer/VariantSelect" to="." method="_on_variant_select_item_selected"]
 [connection signal="text_changed" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/DialogueTextEdit" to="." method="_on_text_edit_text_changed"]
 [connection signal="text_changed" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/TranslationContainer/TranslationKeyEdit" to="." method="_on_translation_key_edit_text_changed"]
+[connection signal="add_property_requested" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_add_property_requested"]
+[connection signal="modified" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_modified"]
+[connection signal="remove_property_requested" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_remove_property_requested"]
+[connection signal="size_changed" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_size_changed"]
 [connection signal="pressed" from="HeaderContainer/VBoxContainer/HorizontalLayout/AddValueButton" to="." method="_on_AddValueButton_pressed"]
 [connection signal="modified" from="ChoiceValue" to="." method="_line_modified"]
 [connection signal="remove_requested" from="ChoiceValue" to="." method="_value_remove_requested" binds= [1]]

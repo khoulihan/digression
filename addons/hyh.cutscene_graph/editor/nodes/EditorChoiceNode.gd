@@ -15,6 +15,7 @@ const VariableType = preload("../../resources/graph/VariableSetNode.gd").Variabl
 
 @onready var DialogueTypeOption: OptionButton = get_node("DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/DialogueTypeOption")
 @onready var ShowDialogueForDefaultButton: CheckButton = get_node("HeaderContainer/VBoxContainer/HorizontalLayout/ShowDialogueForDefaultButton")
+@onready var CustomPropertiesControl = get_node("DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CustomPropertiesControl")
 
 var ChoiceTypeOption: OptionButton
 
@@ -157,8 +158,13 @@ func configure_for_node(g, n):
 	select_variant(n.dialogue.character_variant)
 	select_dialogue_type(n.dialogue.dialogue_type, false)
 	select_choice_type(n.choice_type, false)
+	_populate_properties(n.dialogue.custom_properties)
 	if n.size != null and n.size != Vector2.ZERO:
 		size = n.size
+	
+
+func _populate_properties(properties: Dictionary) -> void:
+	CustomPropertiesControl.configure(properties)
 
 
 func persist_changes_to_node():
@@ -179,6 +185,11 @@ func persist_changes_to_node():
 			node_resource.dialogue.character_variant = node_resource.dialogue.character.character_variants[selected_v]
 	else:
 		node_resource.dialogue.character = null
+	node_resource.dialogue.custom_properties = _get_properties()
+
+
+func _get_properties() -> Dictionary:
+	return CustomPropertiesControl.serialise()
 
 
 func get_dialogue_text():
@@ -489,3 +500,29 @@ func _on_choice_type_option_item_selected(index):
 		_choice_types_by_id[id],
 		true,
 	)
+
+
+func _on_custom_properties_control_add_property_requested(property_definition):
+	var name = property_definition['name']
+	if name in node_resource.dialogue.custom_properties:
+		return
+	var property = node_resource.dialogue.add_custom_property(
+		property_definition['name'],
+		property_definition['type'],
+	)
+	CustomPropertiesControl.add_property(property)
+
+
+func _on_custom_properties_control_modified():
+	modified.emit()
+
+
+func _on_custom_properties_control_remove_property_requested(property_name):
+	if not property_name in node_resource.dialogue.custom_properties:
+		return
+	node_resource.dialogue.remove_custom_property(property_name)
+	CustomPropertiesControl.remove_property(property_name)
+
+
+func _on_custom_properties_control_size_changed(size_change):
+	self.size = Vector2(self.size.x, self.size.y + size_change)

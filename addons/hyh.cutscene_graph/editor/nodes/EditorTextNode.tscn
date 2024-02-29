@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://ddh2fuxyvnktp"]
+[gd_scene load_steps=8 format=3 uid="uid://ddh2fuxyvnktp"]
 
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorTextNode.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://c0pw3rdictm2v" path="res://addons/hyh.cutscene_graph/editor/nodes/EditorGraphNodeBase.tscn" id="2"]
@@ -6,6 +6,7 @@
 [ext_resource type="StyleBox" uid="uid://chdfnwd6ls43v" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/dialogue_node_selected.tres" id="3_mjv4r"]
 [ext_resource type="StyleBox" uid="uid://b5ma0bjl3xxjm" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/dialogue_node_titlebar.tres" id="4_2212b"]
 [ext_resource type="StyleBox" uid="uid://nu4578dkhf2b" path="res://addons/hyh.cutscene_graph/editor/nodes/styles/dialogue_node_titlebar_selected.tres" id="5_cur1i"]
+[ext_resource type="PackedScene" uid="uid://rg4q2rccwgo5" path="res://addons/hyh.cutscene_graph/editor/controls/properties/CustomPropertiesControl.tscn" id="7_huiim"]
 
 [node name="EditorTextNode" instance=ExtResource("2")]
 offset_right = 545.0
@@ -88,9 +89,17 @@ text = "Translation Key:"
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="CustomPropertiesControl" parent="RootContainer/VerticalLayout" index="3" instance=ExtResource("7_huiim")]
+layout_mode = 2
+use_restriction = 4
+
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="resize_request" from="." to="." method="_on_resize_request"]
 [connection signal="item_selected" from="RootContainer/VerticalLayout/CharacterOptionsContainer/CharacterSelect" to="." method="_on_CharacterSelect_item_selected"]
 [connection signal="item_selected" from="RootContainer/VerticalLayout/CharacterOptionsContainer/VariantSelect" to="." method="_on_VariantSelect_item_selected"]
 [connection signal="text_changed" from="RootContainer/VerticalLayout/TextEdit" to="." method="_on_TextEdit_text_changed"]
 [connection signal="text_changed" from="RootContainer/VerticalLayout/TranslationContainer/TranslationKeyEdit" to="." method="_on_translation_key_edit_text_changed"]
+[connection signal="add_property_requested" from="RootContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_add_property_requested"]
+[connection signal="modified" from="RootContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_modified"]
+[connection signal="remove_property_requested" from="RootContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_remove_property_requested"]
+[connection signal="size_changed" from="RootContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_size_changed"]

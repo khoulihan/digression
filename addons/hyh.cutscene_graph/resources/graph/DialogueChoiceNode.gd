@@ -4,6 +4,7 @@ extends "GraphNodeBase.gd"
 
 const ChoiceBranch = preload("branches/ChoiceBranch.gd")
 const DialogueTextNode = preload("DialogueTextNode.gd")
+const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
 
 
 @export var choice_type: String
