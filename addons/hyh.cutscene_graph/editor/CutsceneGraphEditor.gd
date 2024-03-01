@@ -80,7 +80,7 @@ class OpenGraph:
 
 enum GraphPopupMenuItems {
 	ADD_TEXT_NODE,
-	ADD_BRANCH_NODE,
+	ADD_MATCH_BRANCH_NODE,
 	ADD_CHOICE_NODE,
 	ADD_SET_NODE,
 	ADD_ACTION_NODE,
@@ -506,7 +506,7 @@ func _create_node_objects(node_type):
 				_edited.graph.name,
 				"dialogue",
 			)
-		GraphPopupMenuItems.ADD_BRANCH_NODE:
+		GraphPopupMenuItems.ADD_MATCH_BRANCH_NODE:
 			new_editor_node = EditorMatchBranchNode.instantiate()
 			new_graph_node = MatchBranchNode.new()
 		GraphPopupMenuItems.ADD_CHOICE_NODE:
@@ -1344,7 +1344,7 @@ func _node_type_for_node(node):
 	if node is EditorActionNodeClass:
 		return GraphPopupMenuItems.ADD_ACTION_NODE
 	elif node is EditorMatchBranchNodeClass:
-		return GraphPopupMenuItems.ADD_BRANCH_NODE
+		return GraphPopupMenuItems.ADD_MATCH_BRANCH_NODE
 	elif node is EditorTextNodeClass:
 		return GraphPopupMenuItems.ADD_TEXT_NODE
 	elif node is EditorSetNodeClass:
