@@ -65,6 +65,7 @@ text = "Default"
 [node name="AddBranchButton" type="Button" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 icon = ExtResource("2")
+flat = true
 
 [node name="RandomValue" parent="." instance=ExtResource("3")]
 layout_mode = 2
