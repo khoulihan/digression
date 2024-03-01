@@ -16,7 +16,7 @@ const ResourceHelper = preload("../../utility/ResourceHelper.gd")
 const AnchorNode = preload("AnchorNode.gd")
 const SubGraph = preload("SubGraph.gd")
 const DialogueChoiceNode = preload("DialogueChoiceNode.gd")
-const BranchNode = preload("BranchNode.gd")
+const MatchBranchNode = preload("MatchBranchNode.gd")
 const RandomNode = preload("RandomNode.gd")
 
 const NEW_ANCHOR_PREFIX = "destination_"

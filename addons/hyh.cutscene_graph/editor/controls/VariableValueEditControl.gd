@@ -104,6 +104,7 @@ func set_value(val):
 				SpinBoxControl.value = 0
 			else:
 				SpinBoxControl.value = val
+	_configure()
 
 
 func get_value():
@@ -136,6 +137,7 @@ func set_variable(variable, deserialising=false):
 		variable["scope"],
 		variable["type"],
 	)
+	_configure()
 	if not deserialising:
 		value_changed.emit()
 

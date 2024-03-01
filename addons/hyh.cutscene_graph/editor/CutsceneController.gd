@@ -9,7 +9,7 @@ var Logger = Logging.new("Cutscene Graph Controller", Logging.CGE_NODES_LOG_LEVE
 
 #const CutsceneGraph = preload("../resources/CutsceneGraph.gd")
 const DialogueTextNode = preload("../resources/graph/DialogueTextNode.gd")
-const BranchNode = preload("../resources/graph/BranchNode.gd")
+const MatchBranchNode = preload("../resources/graph/MatchBranchNode.gd")
 const DialogueChoiceNode = preload("../resources/graph/DialogueChoiceNode.gd")
 const VariableSetNode = preload("../resources/graph/VariableSetNode.gd")
 const ActionNode = preload("../resources/graph/ActionNode.gd")
@@ -305,7 +305,7 @@ func process_cutscene(cutscene, state_store):
 		
 		if _current_node is DialogueTextNode:
 			await _process_dialogue_node()
-		elif _current_node is BranchNode:
+		elif _current_node is MatchBranchNode:
 			_process_branch_node()
 		elif _current_node is DialogueChoiceNode:
 			await _process_choice_node()
@@ -637,13 +637,26 @@ func _process_branch_node():
 		_current_node.scope
 	)
 	for i in range(_current_node.branch_count):
-		if val == _current_node.get_value(i):
+		var branch_value = _realise_value(
+			_current_node.get_value(i)
+		)
+		
+		if val == branch_value:
 			_current_node = _get_node_by_id(
 				_current_node.branches[i]
 			)
 			return
 	# Default case, no match or no branches
 	_advance_to_next_node()
+
+
+func _realise_value(value_or_var: Variant) -> Variant:
+	if typeof(value_or_var) == TYPE_DICTIONARY:
+		return _get_variable(
+			value_or_var['name'],
+			value_or_var['scope'],
+		)
+	return value_or_var
 
 
 func _emit_choices_signal(

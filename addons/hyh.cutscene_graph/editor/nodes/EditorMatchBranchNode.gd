@@ -1,7 +1,7 @@
 @tool
 extends "EditorGraphNodeBase.gd"
 
-var _branch_value_scene = preload("../branches/EditorBranchValue.tscn")
+var _branch_value_scene = preload("../branches/EditorMatchBranchValue.tscn")
 
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType

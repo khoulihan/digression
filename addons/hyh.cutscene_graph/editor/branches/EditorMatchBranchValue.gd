@@ -26,10 +26,15 @@ func set_type(t):
 
 func set_value(val):
 	if val != null:
-		ValueEdit.set_value(val)
+		if typeof(val) == TYPE_DICTIONARY:
+			ValueEdit.set_variable(val, true)
+		else:
+			ValueEdit.set_value(val)
 
 
 func get_value():
+	if ValueEdit.is_selecting_variable():
+		return ValueEdit.get_selected_variable()
 	return ValueEdit.get_value()
 
 

@@ -17,7 +17,7 @@ const TranslationKey = preload("../utility/TranslationKey.gd")
 
 # Resource graph nodes.
 const DialogueTextNode = preload("../resources/graph/DialogueTextNode.gd")
-const BranchNode = preload("../resources/graph/BranchNode.gd")
+const MatchBranchNode = preload("../resources/graph/MatchBranchNode.gd")
 const DialogueChoiceNode = preload("../resources/graph/DialogueChoiceNode.gd")
 const VariableSetNode = preload("../resources/graph/VariableSetNode.gd")
 const ActionNode = preload("../resources/graph/ActionNode.gd")
@@ -31,7 +31,7 @@ const RepeatNode = preload("../resources/graph/RepeatNode.gd")
 
 # Editor node classes.
 const EditorTextNodeClass = preload("./nodes/EditorTextNode.gd")
-const EditorBranchNodeClass = preload("./nodes/EditorBranchNode.gd")
+const EditorMatchBranchNodeClass = preload("./nodes/EditorMatchBranchNode.gd")
 const EditorChoiceNodeClass = preload("./nodes/EditorChoiceNode.gd")
 const EditorSetNodeClass = preload("./nodes/EditorSetNode.gd")
 const EditorGraphNodeBaseClass = preload("./nodes/EditorGraphNodeBase.gd")
@@ -46,7 +46,7 @@ const EditorRepeatNodeClass = preload("./nodes/EditorRepeatNode.gd")
 
 # Editor node scenes.
 const EditorTextNode = preload("./nodes/EditorTextNode.tscn")
-const EditorBranchNode = preload("./nodes/EditorBranchNode.tscn")
+const EditorMatchBranchNode = preload("./nodes/EditorMatchBranchNode.tscn")
 const EditorChoiceNode = preload("./nodes/EditorChoiceNode.tscn")
 const EditorSetNode = preload("./nodes/EditorSetNode.tscn")
 const EditorGraphNodeBase = preload("./nodes/EditorGraphNodeBase.tscn")
@@ -507,8 +507,8 @@ func _create_node_objects(node_type):
 				"dialogue",
 			)
 		GraphPopupMenuItems.ADD_BRANCH_NODE:
-			new_editor_node = EditorBranchNode.instantiate()
-			new_graph_node = BranchNode.new()
+			new_editor_node = EditorMatchBranchNode.instantiate()
+			new_graph_node = MatchBranchNode.new()
 		GraphPopupMenuItems.ADD_CHOICE_NODE:
 			new_editor_node = EditorChoiceNode.instantiate()
 			new_graph_node = DialogueChoiceNode.new()
@@ -856,8 +856,8 @@ func _instantiate_editor_node_for_graph_node(node):
 		editor_node = EditorTextNode.instantiate()
 		editor_node.populate_characters(_edited.graph.characters)
 		editor_node.set_dialogue_types(_dialogue_types)
-	elif node is BranchNode:
-		editor_node = EditorBranchNode.instantiate()
+	elif node is MatchBranchNode:
+		editor_node = EditorMatchBranchNode.instantiate()
 	elif node is VariableSetNode:
 		editor_node = EditorSetNode.instantiate()
 	elif node is DialogueChoiceNode:
@@ -896,7 +896,7 @@ func _create_connections_for_node(node):
 			_edited.graph.nodes[node.next]
 		)
 		_graph_edit.connect_node(from.name, 0, to.name, 0)
-	if node is BranchNode:
+	if node is MatchBranchNode:
 		var from = _get_editor_node_for_graph_node(node)
 		for index in range(0, node.branches.size()):
 			if node.branches[index]:
@@ -1048,7 +1048,7 @@ func _update_resource_graph_for_connection(connection):
 	var to_slot = connection["to_port"]
 	var from_dialogue_node = from.node_resource
 	var to_dialogue_node = to.node_resource
-	if from_dialogue_node is BranchNode:
+	if from_dialogue_node is MatchBranchNode:
 		if from_slot == 0:
 			from_dialogue_node.next = to_dialogue_node.id
 		else:
@@ -1343,7 +1343,7 @@ func _select_nodes(nodes):
 func _node_type_for_node(node):
 	if node is EditorActionNodeClass:
 		return GraphPopupMenuItems.ADD_ACTION_NODE
-	elif node is EditorBranchNodeClass:
+	elif node is EditorMatchBranchNodeClass:
 		return GraphPopupMenuItems.ADD_BRANCH_NODE
 	elif node is EditorTextNodeClass:
 		return GraphPopupMenuItems.ADD_TEXT_NODE
