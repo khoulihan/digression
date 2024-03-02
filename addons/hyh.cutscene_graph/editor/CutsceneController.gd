@@ -10,6 +10,7 @@ var Logger = Logging.new("Cutscene Graph Controller", Logging.CGE_NODES_LOG_LEVE
 #const CutsceneGraph = preload("../resources/CutsceneGraph.gd")
 const DialogueTextNode = preload("../resources/graph/DialogueTextNode.gd")
 const MatchBranchNode = preload("../resources/graph/MatchBranchNode.gd")
+const IfBranchNode = preload("../resources/graph/IfBranchNode.gd")
 const DialogueChoiceNode = preload("../resources/graph/DialogueChoiceNode.gd")
 const VariableSetNode = preload("../resources/graph/VariableSetNode.gd")
 const ActionNode = preload("../resources/graph/ActionNode.gd")
@@ -137,7 +138,8 @@ class CharacterDetails:
 # the graph previewer, and perhaps other debugging tools.
 class ControllerInternal:
 	signal processed_set_node(variable, scope, value)
-	signal processed_branch_node(variable, scope, value, branch_matched)
+	signal processed_match_branch_node(variable, scope, value, branch_matched)
+	signal processed_if_branch_node(branch_matched)
 	signal processed_random_node()
 	signal processed_repeat_node()
 	signal processed_jump_node(destination_name)
@@ -306,7 +308,9 @@ func process_cutscene(cutscene, state_store):
 		if _current_node is DialogueTextNode:
 			await _process_dialogue_node()
 		elif _current_node is MatchBranchNode:
-			_process_branch_node()
+			_process_match_branch_node()
+		elif _current_node is IfBranchNode:
+			_process_if_branch_node()
 		elif _current_node is DialogueChoiceNode:
 			await _process_choice_node()
 		elif _current_node is VariableSetNode:
@@ -629,8 +633,8 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 		_current_node = _get_node_by_id(node.next)
 	
 
-func _process_branch_node():
-	Logger.debug("Processing branch node \"%s\"." % _current_node)
+func _process_match_branch_node():
+	Logger.debug("Processing match branch node \"%s\"." % _current_node)
 	
 	var val = _get_variable(
 		_current_node.variable,
@@ -644,6 +648,23 @@ func _process_branch_node():
 		if val == branch_value:
 			_current_node = _get_node_by_id(
 				_current_node.branches[i]
+			)
+			return
+	# Default case, no match or no branches
+	_advance_to_next_node()
+
+
+func _process_if_branch_node():
+	Logger.debug("Processing if branch node \"%s\"." % _current_node)
+	
+	for i in range(len(_current_node.branches)):
+		var branch_true = _expression_evaluator.evaluate(
+			_current_node.branches[i].condition
+		)
+		
+		if branch_true:
+			_current_node = _get_node_by_id(
+				_current_node.branches[i].next
 			)
 			return
 	# Default case, no match or no branches

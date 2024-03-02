@@ -9,6 +9,7 @@ var Logger = Logging.new("Cutscene Graph Preview", Logging.CGE_NODES_LOG_LEVEL)
 # Resource graph nodes.
 const DialogueTextNode = preload("../../../resources/graph/DialogueTextNode.gd")
 const MatchBranchNode = preload("../../../resources/graph/MatchBranchNode.gd")
+const IfBranchNode = preload("../../../resources/graph/MatchBranchNode.gd")
 const DialogueChoiceNode = preload("../../../resources/graph/DialogueChoiceNode.gd")
 const VariableSetNode = preload("../../../resources/graph/VariableSetNode.gd")
 const ActionNode = preload("../../../resources/graph/ActionNode.gd")
@@ -27,6 +28,7 @@ const MiniMapNodeBase = preload("res://addons/hyh.cutscene_graph/editor/preview/
 const MiniMapActionNode = preload("res://addons/hyh.cutscene_graph/editor/preview/minimap/MiniMapActionNode.tscn")
 const MiniMapAnchorNode = preload("res://addons/hyh.cutscene_graph/editor/preview/minimap/MiniMapAnchorNode.tscn")
 const MiniMapMatchBranchNode = preload("res://addons/hyh.cutscene_graph/editor/preview/minimap/MiniMapMatchBranchNode.tscn")
+const MiniMapIfBranchNode = preload("res://addons/hyh.cutscene_graph/editor/preview/minimap/MiniMapIfBranchNode.tscn")
 const MiniMapChoiceNode = preload("res://addons/hyh.cutscene_graph/editor/preview/minimap/MiniMapChoiceNode.tscn")
 const MiniMapDialogueNode = preload("res://addons/hyh.cutscene_graph/editor/preview/minimap/MiniMapDialogueNode.tscn")
 const MiniMapJumpNode = preload("res://addons/hyh.cutscene_graph/editor/preview/minimap/MiniMapJumpNode.tscn")
@@ -99,6 +101,8 @@ func _instantiate_mini_map_node(node):
 		n = MiniMapAnchorNode.instantiate()
 	elif node is MatchBranchNode:
 		n = MiniMapMatchBranchNode.instantiate()
+	elif node is IfBranchNode:
+		n = MiniMapIfBranchNode.instantiate()
 	elif node is CommentNode:
 		n = MiniMapCommentNode.instantiate()
 	elif node is DialogueChoiceNode:
@@ -129,6 +133,8 @@ func _set_tooltip(node, resource):
 		node.tooltip_text = "Anchor \"%s\"" % resource.name
 	elif resource is MatchBranchNode:
 		node.tooltip_text = "Branch (Match) on \"%s\"" % resource.variable
+	elif resource is IfBranchNode:
+		node.tooltip_text = "Branch (If) on \"%s\"" % resource.variable
 	elif resource is DialogueChoiceNode:
 		node.tooltip_text = "Choice"
 	elif resource is DialogueTextNode:
@@ -203,6 +209,14 @@ func _create_connections_for_node(node):
 			if node.branches[index]:
 				var to = _get_minimap_node_for_graph_node(
 					_graph.nodes[node.branches[index]]
+				)
+				self.connect_node(from.name, index + 1, to.name, 0)
+	elif node is IfBranchNode:
+		var from = _get_minimap_node_for_graph_node(node)
+		for index in range(0, node.branches.size()):
+			if node.branches[index].next != -1:
+				var to = _get_minimap_node_for_graph_node(
+					_graph.nodes[node.branches[index].next]
 				)
 				self.connect_node(from.name, index + 1, to.name, 0)
 	elif node is RandomNode:

@@ -174,7 +174,8 @@ func _create_dialogue_colour_set(colour):
 func _connect_internal_signals():
 	var i = _controller._internal
 	i.processed_set_node.connect(_processed_set_node)
-	i.processed_branch_node.connect(_processed_branch_node)
+	i.processed_match_branch_node.connect(_processed_match_branch_node)
+	i.processed_if_branch_node.connect(_processed_if_branch_node)
 	i.processed_random_node.connect(_processed_random_node)
 	i.processed_repeat_node.connect(_processed_repeat_node)
 	i.processed_jump_node.connect(_processed_jump_node)
@@ -218,11 +219,18 @@ func _processed_random_node():
 	_add_static_processing_event("Processed random node...")
 
 
-func _processed_branch_node(variable, scope, value, branch_matched):
+func _processed_match_branch_node(variable, scope, value, branch_matched):
 	if not _show_processing:
 		return
 	# TODO: Will want to show more information on this.
-	_add_static_processing_event("Processed branch node...")
+	_add_static_processing_event("Processed branch (match) node...")
+
+
+func _processed_if_branch_node(branch_matched):
+	if not _show_processing:
+		return
+	# TODO: Will want to show more information on this.
+	_add_static_processing_event("Processed branch (if) node...")
 
 
 func _processed_set_node(variable, scope, value):

@@ -18,6 +18,7 @@ const TranslationKey = preload("../utility/TranslationKey.gd")
 # Resource graph nodes.
 const DialogueTextNode = preload("../resources/graph/DialogueTextNode.gd")
 const MatchBranchNode = preload("../resources/graph/MatchBranchNode.gd")
+const IfBranchNode = preload("../resources/graph/IfBranchNode.gd")
 const DialogueChoiceNode = preload("../resources/graph/DialogueChoiceNode.gd")
 const VariableSetNode = preload("../resources/graph/VariableSetNode.gd")
 const ActionNode = preload("../resources/graph/ActionNode.gd")
@@ -32,6 +33,7 @@ const RepeatNode = preload("../resources/graph/RepeatNode.gd")
 # Editor node classes.
 const EditorTextNodeClass = preload("./nodes/EditorTextNode.gd")
 const EditorMatchBranchNodeClass = preload("./nodes/EditorMatchBranchNode.gd")
+const EditorIfBranchNodeClass = preload("./nodes/EditorIfBranchNode.gd")
 const EditorChoiceNodeClass = preload("./nodes/EditorChoiceNode.gd")
 const EditorSetNodeClass = preload("./nodes/EditorSetNode.gd")
 const EditorGraphNodeBaseClass = preload("./nodes/EditorGraphNodeBase.gd")
@@ -47,6 +49,7 @@ const EditorRepeatNodeClass = preload("./nodes/EditorRepeatNode.gd")
 # Editor node scenes.
 const EditorTextNode = preload("./nodes/EditorTextNode.tscn")
 const EditorMatchBranchNode = preload("./nodes/EditorMatchBranchNode.tscn")
+const EditorIfBranchNode = preload("./nodes/EditorIfBranchNode.tscn")
 const EditorChoiceNode = preload("./nodes/EditorChoiceNode.tscn")
 const EditorSetNode = preload("./nodes/EditorSetNode.tscn")
 const EditorGraphNodeBase = preload("./nodes/EditorGraphNodeBase.tscn")
@@ -81,6 +84,7 @@ class OpenGraph:
 enum GraphPopupMenuItems {
 	ADD_TEXT_NODE,
 	ADD_MATCH_BRANCH_NODE,
+	ADD_IF_BRANCH_NODE,
 	ADD_CHOICE_NODE,
 	ADD_SET_NODE,
 	ADD_ACTION_NODE,
@@ -509,6 +513,9 @@ func _create_node_objects(node_type):
 		GraphPopupMenuItems.ADD_MATCH_BRANCH_NODE:
 			new_editor_node = EditorMatchBranchNode.instantiate()
 			new_graph_node = MatchBranchNode.new()
+		GraphPopupMenuItems.ADD_IF_BRANCH_NODE:
+			new_editor_node = EditorIfBranchNode.instantiate()
+			new_graph_node = IfBranchNode.new()
 		GraphPopupMenuItems.ADD_CHOICE_NODE:
 			new_editor_node = EditorChoiceNode.instantiate()
 			new_graph_node = DialogueChoiceNode.new()
@@ -858,6 +865,8 @@ func _instantiate_editor_node_for_graph_node(node):
 		editor_node.set_dialogue_types(_dialogue_types)
 	elif node is MatchBranchNode:
 		editor_node = EditorMatchBranchNode.instantiate()
+	elif node is IfBranchNode:
+		editor_node = EditorIfBranchNode.instantiate()
 	elif node is VariableSetNode:
 		editor_node = EditorSetNode.instantiate()
 	elif node is DialogueChoiceNode:
@@ -902,6 +911,14 @@ func _create_connections_for_node(node):
 			if node.branches[index]:
 				var to = _get_editor_node_for_graph_node(
 					_edited.graph.nodes[node.branches[index]]
+				)
+				_graph_edit.connect_node(from.name, index + 1, to.name, 0)
+	elif node is IfBranchNode:
+		var from = _get_editor_node_for_graph_node(node)
+		for index in range(0, node.branches.size()):
+			if node.branches[index].next != -1:
+				var to = _get_editor_node_for_graph_node(
+					_edited.graph.nodes[node.branches[index].next]
 				)
 				_graph_edit.connect_node(from.name, index + 1, to.name, 0)
 	elif node is RandomNode:
@@ -1053,6 +1070,11 @@ func _update_resource_graph_for_connection(connection):
 			from_dialogue_node.next = to_dialogue_node.id
 		else:
 			from_dialogue_node.branches[from_slot - 1] = to_dialogue_node.id
+	elif from_dialogue_node is IfBranchNode:
+		if from_slot == 0:
+			from_dialogue_node.next = to_dialogue_node.id
+		else:
+			from_dialogue_node.branches[from_slot - 1].next = to_dialogue_node.id
 	elif from_dialogue_node is RandomNode:
 		if from_slot == 0:
 			from_dialogue_node.next = to_dialogue_node.id
@@ -1345,6 +1367,8 @@ func _node_type_for_node(node):
 		return GraphPopupMenuItems.ADD_ACTION_NODE
 	elif node is EditorMatchBranchNodeClass:
 		return GraphPopupMenuItems.ADD_MATCH_BRANCH_NODE
+	elif node is EditorIfBranchNodeClass:
+		return GraphPopupMenuItems.ADD_IF_BRANCH_NODE
 	elif node is EditorTextNodeClass:
 		return GraphPopupMenuItems.ADD_TEXT_NODE
 	elif node is EditorSetNodeClass:
@@ -1413,7 +1437,6 @@ func _on_graph_edit_duplicate_nodes_request():
 	_create_duplicate_nodes(
 		_get_selected_nodes()
 	)
-
 
 
 func _on_graph_breadcrumbs_graph_open_requested(index):
