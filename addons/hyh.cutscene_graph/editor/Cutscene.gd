@@ -1,21 +1,14 @@
 @tool
 extends Node
-
 ## Stores a CutsceneGraph resource and allows it to be triggered.
 
-const Logging = preload("../utility/Logging.gd")
-var Logger = Logging.new("Cutscene Graph", Logging.CGE_NODES_LOG_LEVEL)
-
-const CutsceneController = preload("CutsceneController.gd")
 
 signal cutscene_triggered(cutscene)
 
+const Logging = preload("../utility/Logging.gd")
+const CutsceneController = preload("CutsceneController.gd")
+
 @export var cutscene: CutsceneGraph
-
-var _cutscene_controller
-
-var _state: Dictionary
-
 
 ## Indicates whether this Cutscene has ever been triggered.
 ## There is no need to update this property manually when a Cutscene is
@@ -32,7 +25,6 @@ var triggered: bool:
 		else:
 			_state['triggered_count'] += 1
 
-
 ## The number of times this Cutscene has been triggered.
 ## There is no need to update this property manually when a Cutscene is
 ## triggered normally, but it can be used to manipulate the count if necessary.
@@ -41,6 +33,10 @@ var triggered_count: int:
 		return _state['triggered_count']
 	set(value):
 		_state['triggered_count'] = value
+
+var _cutscene_controller
+var _state: Dictionary
+var _logger = Logging.new("Cutscene Graph", Logging.CGE_NODES_LOG_LEVEL)
 
 
 func _ready():
@@ -54,22 +50,6 @@ func _ready():
 	_state = {
 		'triggered_count': 0,
 	}
-
-
-func _find_controller(root):
-	if root is CutsceneController:
-		return root
-	# Breadth-first search on the assumption that the controller
-	# will be close to the root rather than deeply nested.
-	for child in root.get_children():
-		if child is CutsceneController:
-			return child
-	for child in root.get_children():
-		var result = _find_controller(child)
-		if result != null:
-			return result
-	Logger.warn("Cutscene controller not found in scene.")
-	return null
 
 
 func set_controller(controller):
@@ -94,13 +74,13 @@ func update_state(changes: Dictionary):
 ## Trigger the node's CutsceneGraph
 func trigger():
 	if cutscene == null:
-		Logger.error("Cutscene node \"%s\" triggered, but no graph is set." % self)
+		_logger.error("Cutscene node \"%s\" triggered, but no graph is set." % self)
 		return
 	
-	Logger.log("Cutscene \"%s\" triggered" % cutscene.name)
+	_logger.log("Cutscene \"%s\" triggered" % cutscene.name)
 	
 	if _cutscene_controller == null:
-		Logger.error(
+		_logger.error(
 			"Cutscene node \"%s\" triggered, but no CutsceneController is available." % self
 		)
 		return
@@ -110,3 +90,19 @@ func trigger():
 		_state['triggered_count'] = 1
 	emit_signal("cutscene_triggered", self.cutscene)
 	_cutscene_controller.process_cutscene(cutscene, _state)
+
+
+func _find_controller(root):
+	if root is CutsceneController:
+		return root
+	# Breadth-first search on the assumption that the controller
+	# will be close to the root rather than deeply nested.
+	for child in root.get_children():
+		if child is CutsceneController:
+			return child
+	for child in root.get_children():
+		var result = _find_controller(child)
+		if result != null:
+			return result
+	_logger.warn("Cutscene controller not found in scene.")
+	return null
