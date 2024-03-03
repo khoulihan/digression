@@ -1,13 +1,11 @@
 @tool
 @icon("res://addons/hyh.cutscene_graph/icons/icon_character.svg")
-extends Resource
-
-class_name Character
+class_name Character extends Resource
+## A character or entity to which dialogue can be assigned in a dialogue graph.
 
 
 const PropertyUse = preload("../editor/property_select_dialog/PropertySelectDialog.gd").PropertyUse
 const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
-
 
 ## An identifier for the character when referenced in code.
 @export
@@ -28,59 +26,10 @@ var is_player: bool = false
 
 var custom_properties: Dictionary = {}
 
-var _character_variants
+var _character_variants: Dictionary = {}
 
 
-func get_character_variants():
-	if _character_variants == null:
-		_character_variants = {}
-		for v in character_variants:
-			_character_variants[v.variant_name] = v
-	return _character_variants
-
-
-## Returns the display name and name, formatted for display in the editor.
-func get_full_name() -> String:
-	var display = self.character_display_name
-	if display == null or display == "":
-		display = "Unnamed Character"
-	
-	var actual = self.character_name
-	if actual == null or actual == "":
-		actual = "unnamed"
-	
-	return "%s (%s)" % [display, actual]
-
-
-func add_custom_property(name: String, type: VariableType) -> void:
-	var value
-	match type:
-		VariableType.TYPE_BOOL:
-			value = false
-		VariableType.TYPE_FLOAT:
-			value = 0.0
-		VariableType.TYPE_INT:
-			value = 0
-		VariableType.TYPE_STRING:
-			value = ""
-	custom_properties[name] = {
-		'name': name,
-		'type': type,
-		'value': value,
-	}
-	custom_properties_modified()
-
-
-func remove_custom_property(name: String) -> void:
-	custom_properties.erase(_strip_group(name))
-	custom_properties_modified()
-
-
-func custom_properties_modified():
-	notify_property_list_changed()
-
-
-func _get_property_list():
+func _get_property_list() -> Array:
 	var properties = []
 	
 	# Add the custom group
@@ -122,12 +71,6 @@ func _get_property_list():
 	return properties
 
 
-func _strip_group(property: String) -> String:
-	if not property.begins_with("custom_"):
-		return property
-	return property.erase(0, len("custom_"))
-
-
 func _get(property):
 	if not property.begins_with("custom_"):
 		return
@@ -143,3 +86,63 @@ func _set(property, value):
 		_strip_group(property)
 	]['value'] = value
 	return true
+
+
+## Get a dictionary of the variants for this character with their names
+## as the keys.
+func get_character_variants() -> Dictionary:
+	if len(_character_variants) == 0:
+		_character_variants = {}
+		for v in character_variants:
+			_character_variants[v.variant_name] = v
+	return _character_variants
+
+
+## Returns the display name and name, formatted for display in the editor.
+func get_full_name() -> String:
+	var display = self.character_display_name
+	if display == null or display == "":
+		display = "Unnamed Character"
+	
+	var actual = self.character_name
+	if actual == null or actual == "":
+		actual = "unnamed"
+	
+	return "%s (%s)" % [display, actual]
+
+
+## Add a custom property to this character.
+func add_custom_property(name: String, type: VariableType) -> void:
+	var value
+	match type:
+		VariableType.TYPE_BOOL:
+			value = false
+		VariableType.TYPE_FLOAT:
+			value = 0.0
+		VariableType.TYPE_INT:
+			value = 0
+		VariableType.TYPE_STRING:
+			value = ""
+	custom_properties[name] = {
+		'name': name,
+		'type': type,
+		'value': value,
+	}
+	_custom_properties_modified()
+
+
+## Remove a custom property from this character.
+func remove_custom_property(name: String) -> void:
+	custom_properties.erase(_strip_group(name))
+	_custom_properties_modified()
+
+
+func _custom_properties_modified() -> void:
+	notify_property_list_changed()
+
+
+func _strip_group(property: String) -> String:
+	if not property.begins_with("custom_"):
+		return property
+	return property.erase(0, len("custom_"))
+

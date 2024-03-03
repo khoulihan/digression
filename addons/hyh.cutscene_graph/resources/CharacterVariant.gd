@@ -1,13 +1,10 @@
 @tool
 @icon("res://addons/hyh.cutscene_graph/icons/icon_portrait.svg")
-extends Resource
-
-class_name CharacterVariant
+class_name CharacterVariant extends Resource
 
 
 const PropertyUse = preload("../editor/property_select_dialog/PropertySelectDialog.gd").PropertyUse
 const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
-
 
 ## An identifier for the variant to reference it in code.
 @export
@@ -18,47 +15,6 @@ var variant_name: String
 var variant_display_name: String
 
 var custom_properties: Dictionary = {}
-
-
-## Returns the display name and name, formatted for display in the editor.
-func get_full_name() -> String:
-	var display = self.variant_display_name
-	if display == null or display == "":
-		display = "Unnamed Variant"
-	
-	var actual = self.variant_name
-	if actual == null or actual == "":
-		actual = "unnamed"
-	
-	return "%s (%s)" % [display, actual]
-
-
-func add_custom_property(name: String, type: VariableType) -> void:
-	var value
-	match type:
-		VariableType.TYPE_BOOL:
-			value = false
-		VariableType.TYPE_FLOAT:
-			value = 0.0
-		VariableType.TYPE_INT:
-			value = 0
-		VariableType.TYPE_STRING:
-			value = ""
-	custom_properties[name] = {
-		'name': name,
-		'type': type,
-		'value': value,
-	}
-	custom_properties_modified()
-
-
-func remove_custom_property(name: String) -> void:
-	custom_properties.erase(_strip_group(name))
-	custom_properties_modified()
-
-
-func custom_properties_modified():
-	notify_property_list_changed()
 
 
 func _get_property_list():
@@ -103,12 +59,6 @@ func _get_property_list():
 	return properties
 
 
-func _strip_group(property: String) -> String:
-	if not property.begins_with("custom_"):
-		return property
-	return property.erase(0, len("custom_"))
-
-
 func _get(property):
 	if not property.begins_with("custom_"):
 		return
@@ -124,3 +74,54 @@ func _set(property, value):
 		_strip_group(property)
 	]['value'] = value
 	return true
+
+
+## Returns the display name and name, formatted for display in the editor.
+func get_full_name() -> String:
+	var display = self.variant_display_name
+	if display == null or display == "":
+		display = "Unnamed Variant"
+	
+	var actual = self.variant_name
+	if actual == null or actual == "":
+		actual = "unnamed"
+	
+	return "%s (%s)" % [display, actual]
+
+
+## Add a custom property to this variant.
+func add_custom_property(name: String, type: VariableType) -> void:
+	var value
+	match type:
+		VariableType.TYPE_BOOL:
+			value = false
+		VariableType.TYPE_FLOAT:
+			value = 0.0
+		VariableType.TYPE_INT:
+			value = 0
+		VariableType.TYPE_STRING:
+			value = ""
+	custom_properties[name] = {
+		'name': name,
+		'type': type,
+		'value': value,
+	}
+	_custom_properties_modified()
+
+
+## Remove a custom property.
+func remove_custom_property(name: String) -> void:
+	custom_properties.erase(_strip_group(name))
+	_custom_properties_modified()
+
+
+func _custom_properties_modified():
+	notify_property_list_changed()
+
+
+func _strip_group(property: String) -> String:
+	if not property.begins_with("custom_"):
+		return property
+	return property.erase(0, len("custom_"))
+
+
