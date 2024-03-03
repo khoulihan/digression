@@ -1,17 +1,14 @@
 @tool
 @icon("res://addons/hyh.cutscene_graph/icons/icon_chat.svg")
-extends Resource
-
-class_name CutsceneGraph
+class_name CutsceneGraph extends Resource
+## Dialogue graph resource.
 
 
 const PropertyUse = preload("../../editor/property_select_dialog/PropertySelectDialog.gd").PropertyUse
 const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
 
-
 # Utility classes.
 const ResourceHelper = preload("../../utility/ResourceHelper.gd")
-
 
 const AnchorNode = preload("AnchorNode.gd")
 const SubGraph = preload("SubGraph.gd")
@@ -28,54 +25,32 @@ const NEW_ANCHOR_PREFIX = "destination_"
 ## An optional display name to represent the cutscene to the player.
 @export var display_name: String
 
-## An arbitrary identifier for the type of cutscene.
-var graph_type: String
-
 ## The characters that are involved in this cutscene.
 @export var characters: Array[Character]
 
 ## Optional notes.
 @export_multiline var notes = ""
 
-
+## An arbitrary identifier for the type of cutscene.
+var graph_type: String
 var nodes: Dictionary
 var root_node: Resource
-
 var custom_properties: Dictionary = {}
 
 
-func add_custom_property(name: String, type: VariableType) -> void:
-	var value
-	match type:
-		VariableType.TYPE_BOOL:
-			value = false
-		VariableType.TYPE_FLOAT:
-			value = 0.0
-		VariableType.TYPE_INT:
-			value = 0
-		VariableType.TYPE_STRING:
-			value = ""
-	custom_properties[name] = {
-		'name': name,
-		'type': type,
-		'value': value,
-	}
-	custom_properties_modified()
-
-
-func remove_custom_property(name: String) -> void:
-	custom_properties.erase(_strip_group(name))
-	custom_properties_modified()
-
-
-func custom_properties_modified():
-	notify_property_list_changed()
-
-
-func _strip_group(property: String) -> String:
-	if not property.begins_with("custom_"):
-		return property
-	return property.erase(0, len("custom_"))
+func _init():
+	self.nodes = {}
+	self.characters = []
+	var graph_types = ProjectSettings.get_setting(
+		"cutscene_graph_editor/graph_types",
+		""
+	)
+	var default_graph_type = ""
+	for gt in graph_types:
+		if gt["default"]:
+			default_graph_type = gt["name"]
+			break
+	self.graph_type = default_graph_type
 
 
 # This is necessary to ensure that "nodes" and "root_node"
@@ -167,6 +142,33 @@ func _set(property, value):
 	return true
 
 
+## Add a custom property to the graph.
+func add_custom_property(name: String, type: VariableType) -> void:
+	var value
+	match type:
+		VariableType.TYPE_BOOL:
+			value = false
+		VariableType.TYPE_FLOAT:
+			value = 0.0
+		VariableType.TYPE_INT:
+			value = 0
+		VariableType.TYPE_STRING:
+			value = ""
+	custom_properties[name] = {
+		'name': name,
+		'type': type,
+		'value': value,
+	}
+	_custom_properties_modified()
+
+
+## Remove a custom property.
+func remove_custom_property(name: String) -> void:
+	custom_properties.erase(_strip_group(name))
+	_custom_properties_modified()
+
+
+## Get the next id to use for a node.
 func get_next_id():
 	var id = 1
 	var existing = nodes.keys()
@@ -206,21 +208,9 @@ func get_anchor_maps():
 	return [by_name, by_id]
 
 
-func _init():
-	self.nodes = {}
-	self.characters = []
-	var graph_types = ProjectSettings.get_setting(
-		"cutscene_graph_editor/graph_types",
-		""
-	)
-	var default_graph_type = ""
-	for gt in graph_types:
-		if gt["default"]:
-			default_graph_type = gt["name"]
-			break
-	self.graph_type = default_graph_type
-
-
+## Duplicate the graph, including all nodes.
+## Use this instead of the built-in `duplicate` method, as that does not copy
+## the nodes collection.
 func duplicate_with_nodes():
 	# Need this to replace built-in `duplicate` method, which is not
 	# copying the nodes collection.
@@ -271,6 +261,16 @@ func duplicate_with_nodes():
 	# work fine in the duplicate...
 	
 	return duplicate
+
+
+func _custom_properties_modified():
+	notify_property_list_changed()
+
+
+func _strip_group(property: String) -> String:
+	if not property.begins_with("custom_"):
+		return property
+	return property.erase(0, len("custom_"))
 
 
 func _duplicate_node(node, character_map, variant_map):
