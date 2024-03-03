@@ -1,7 +1,9 @@
 @tool
 extends RefCounted
+## Helper class with code related to resources.
 
 
+## Determines if a resource is embedded or if it had been saved to disk.
 static func is_embedded(res):
 	if res == null:
 		return false

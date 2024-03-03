@@ -1,10 +1,13 @@
 @tool
 extends RefCounted
+## Helper class for functions related to translation keys.
 
 
 const TR_KEY_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 
 
+## Generates a random unique string to use as a translation key for text in a
+## named graph.
 static func generate(graph_name, type):
 	var key = "%s_%s_%s" % [
 		graph_name,
