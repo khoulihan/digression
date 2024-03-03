@@ -1,13 +1,15 @@
 @tool
 extends Resource
+## A resource for storing an expression.
 
-const VariableType = preload("../VariableSetNode.gd").VariableType
 
+## Types of expression components - expressions and operators.
 enum ExpressionComponentType {
 	EXPRESSION,
 	OPERATOR,
 }
 
+## Expression types.
 enum ExpressionType {
 	VALUE,
 	BRACKETS,
@@ -18,9 +20,10 @@ enum ExpressionType {
 	OPERATOR_GROUP,
 }
 
-# This enum does not distinguish the variable type,
-# so MIN could refer to int or float variations of
-# the function, for example.
+## Possible function expression types.
+## This enum does not distinguish the variable type,
+## so MIN could refer to int or float variations of
+## the function, for example.
 enum FunctionType {
 	CUSTOM,
 	NOT,
@@ -30,6 +33,8 @@ enum FunctionType {
 	TO_LOWER,
 }
 
+## Possible operators. Operators are mostly specific to types, but `int` and
+## `float` types share operators (`NUMERIC_*`)
 enum ExpressionOperators {
 	COMPARISON_EQUALS,
 	COMPARISON_NOT_EQUALS,
@@ -47,11 +52,13 @@ enum ExpressionOperators {
 	STRING_CONCATENATE_WITH_SPACE,
 }
 
+## Operator types - comparisons or operations.
 enum OperatorType {
 	OPERATION,
 	COMPARISON,
 }
 
+const VariableType = preload("../VariableSetNode.gd").VariableType
 
 const EXPRESSION_FUNCTIONS = {
 	VariableType.TYPE_BOOL: {
@@ -106,5 +113,5 @@ const EXPRESSION_FUNCTIONS = {
 	},
 }
 
-
+## A dictionary describing the expression.
 @export var expression : Dictionary = {}

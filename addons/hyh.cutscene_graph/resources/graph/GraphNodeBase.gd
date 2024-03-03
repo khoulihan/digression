@@ -1,13 +1,12 @@
 @tool
 extends Resource
+## The base class of all dialogue graph node resources.
 
+## A unique ID for the node.
 @export var id: int
-# The node to move to next. This may be a default fallback for some node types.
-# TODO: Could maybe remove the type hint here and allow it to be null again.
+
+## The node to move to next. This may be a default fallback for some node types.
 @export var next: int = -1
-# Specifically for display in custom graph editor
+
+## The position of the node in the graph editor. Not relevant at runtime.
 @export var offset: Vector2
-
-
-func _init():
-	pass

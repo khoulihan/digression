@@ -1,19 +1,29 @@
 @tool
 extends "GraphNodeBase.gd"
+## A branch node with semantics similar to a "match" statement.
 
 
 const VariableScope = preload("VariableSetNode.gd").VariableScope
 const VariableType = preload("VariableSetNode.gd").VariableType
 
-
+## The name of the variable to compare to the branch values.
 @export var variable: String
+
+## The type of the variable.
 @export var variable_type = VariableType.TYPE_BOOL
+
+## The scope of the variable.
 @export var scope: VariableScope
+
+# TODO: This seems unnecessary...
+## The number of branches.
 @export var branch_count = 0
 
 # branches cannot be a typed array because then it would not be able
 # to store nulls where no connection is present.
+## An array of the nodes to connect to for each branch.
 var branches: Array
+## An array of the values to compare to for each branch.
 var values: Array
 
 
@@ -34,19 +44,18 @@ func _get_property_list():
 	return properties
 
 
+## Get the value for a specific branch.
 func get_value(index):
 	return values[index]
 
 
+## Get all the branch values.
 func get_values():
 	return values
 
 
+## Set all branch values.
 func set_values(vals):
 	values.resize(branch_count)
 	for i in range(branch_count):
 		values[i] = vals[i]
-
-
-func _init():
-	pass

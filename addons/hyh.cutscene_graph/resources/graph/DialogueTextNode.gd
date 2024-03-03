@@ -1,34 +1,30 @@
 @tool
 extends "GraphNodeBase.gd"
+## A node for dialogue text.
 
 
 const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
 
-
+## The user-defined type of the dialogue.
 @export var dialogue_type: String
-@export var text: String
-@export var text_translation_key: String
-@export var character: Character
-@export var character_variant: CharacterVariant
 
-var custom_properties: Dictionary = {}
+## The dialogue text.
+@export var text: String
+
+## A key to use for retrieving equivalent localised text for this dialogue.
+@export var text_translation_key: String
+
+## A character associated with this dialogue, if any.
+@export var character: Character
+
+## A character variant associated with this dialogue, if any.
+@export var character_variant: CharacterVariant
 
 # This is used only for recreating the node state in the editor
 @export var size: Vector2
 
-
-func add_custom_property(name: String, type: VariableType) -> Dictionary:
-	var cp := {
-		'name': name,
-		'type': type,
-		'expression': {},
-	}
-	custom_properties[name] = cp
-	return cp
-
-
-func remove_custom_property(name: String) -> void:
-	custom_properties.erase(name)
+## Details of the node's custom properties.
+var custom_properties: Dictionary = {}
 
 
 # This may not really be worthwhile for nodes. We will need to
@@ -73,4 +69,23 @@ func _set(property, value):
 		property
 	]['expression'] = value
 	return true
+
+
+## Add a custom property to the node.
+func add_custom_property(name: String, type: VariableType) -> Dictionary:
+	var cp := {
+		'name': name,
+		'type': type,
+		'expression': {},
+	}
+	custom_properties[name] = cp
+	return cp
+
+
+## Remove a custom property.
+func remove_custom_property(name: String) -> void:
+	custom_properties.erase(name)
+
+
+
 
