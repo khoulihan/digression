@@ -1,46 +1,51 @@
 @tool
 extends MarginContainer
+## Control for a branch in a Match Branch node.
 
-const Logging = preload("../../utility/Logging.gd")
-var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
 
 signal remove_requested()
 signal modified()
 
+const Logging = preload("../../utility/Logging.gd")
+const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
 
-@onready var ValueEdit = get_node("VBoxContainer/HorizontalLayout/GridContainer/ValueEdit")
-@onready var RemoveButton = get_node("VBoxContainer/HorizontalLayout/RemoveButton")
+var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
+var _type: VariableType
 
-var _type
+@onready var _value_edit = $VB/HorizontalLayout/GridContainer/ValueEdit
 
-func _ready():
+
+func _ready() -> void:
 	if _type != null:
-		ValueEdit.set_variable_type(_type)
+		_value_edit.set_variable_type(_type)
 
 
-func set_type(t):
+## Set the type of the variable involved with the parent node.
+func set_type(t: VariableType) -> void:
 	_type = t
-	if ValueEdit != null:
-		ValueEdit.set_variable_type(t)
+	if _value_edit != null:
+		_value_edit.set_variable_type(t)
 
 
-func set_value(val):
+## Set the current value to match.
+func set_value(val: Variant) -> void:
 	if val != null:
 		if typeof(val) == TYPE_DICTIONARY:
-			ValueEdit.set_variable(val, true)
+			_value_edit.set_variable(val, true)
 		else:
-			ValueEdit.set_value(val)
+			_value_edit.set_value(val)
 
 
-func get_value():
-	if ValueEdit.is_selecting_variable():
-		return ValueEdit.get_selected_variable()
-	return ValueEdit.get_value()
+## Get the current value from the UI.
+func get_value() -> Variant:
+	if _value_edit.is_selecting_variable():
+		return _value_edit.get_selected_variable()
+	return _value_edit.get_value()
 
 
-func _on_RemoveButton_pressed():
-	emit_signal("remove_requested")
+func _on_remove_button_pressed() -> void:
+	remove_requested.emit()
 
 
-func _on_ValueEdit_value_changed():
-	emit_signal("modified")
+func _on_value_edit_value_changed() -> void:
+	modified.emit()

@@ -1,38 +1,38 @@
 @tool
 extends MarginContainer
+## Branch control for Random nodes.
 
 
 signal remove_requested()
 signal modified()
 signal size_changed(size_change)
 
-
 const RandomBranch = preload("../../resources/graph/branches/RandomBranch.gd")
 
+var branch_resource: RandomBranch
 
-@onready var ConditionControl = get_node("VBoxContainer/HBoxContainer/VariableContainer/ConditionControl")
-@onready var WeightControl = get_node("VBoxContainer/HBoxContainer/VariableContainer/WeightControl")
-
-
-var branch_resource
+@onready var _condition_control = $VB/HB/VariableContainer/ConditionControl
+@onready var _weight_control = $VB/HB/VariableContainer/WeightControl
 
 
-func get_branch():
-	branch_resource.condition = ConditionControl.condition_resource
+## Get the branch resource with the current values.
+func get_branch() -> RandomBranch:
+	branch_resource.condition = _condition_control.condition_resource
 	return branch_resource
 
 
-func set_branch(branch):
+## Assign a branch resource to the control.
+func set_branch(branch: RandomBranch) -> void:
 	self.branch_resource = branch
-	ConditionControl.condition_resource = self.branch_resource.condition
-	WeightControl.configure_for_weight(self.branch_resource.weight)
+	_condition_control.condition_resource = self.branch_resource.condition
+	_weight_control.configure_for_weight(self.branch_resource.weight)
 
 
-func _on_RemoveButton_pressed():
-	emit_signal("remove_requested")
+func _on_remove_button_pressed() -> void:
+	remove_requested.emit()
 
 
-func _on_condition_control_size_changed(size_change):
+func _on_condition_control_size_changed(size_change) -> void:
 	size_changed.emit(size_change)
 
 

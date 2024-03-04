@@ -1,35 +1,37 @@
 @tool
 extends MarginContainer
+## Control for a branch of an IfBranch node.
 
 
 signal remove_requested()
 signal modified()
 signal size_changed(size_change)
 
-
 const IfBranch = preload("res://addons/hyh.cutscene_graph/resources/graph/branches/IfBranch.gd")
-
-
-@onready var ConditionExpression = $Condition/PC/MC/ConditionExpression
-@onready var IfLabel = $Condition/Label
-
 
 var _branch_resource: IfBranch
 
+@onready var _condition_expression = $Condition/PC/MC/ConditionExpression
+@onready var _if_label = $Condition/Label
 
+
+## Get the branch resource updated with the current values.
 func get_branch() -> IfBranch:
-	_branch_resource.condition = ConditionExpression.serialise()
+	_branch_resource.condition = _condition_expression.serialise()
 	return _branch_resource
 
 
+## Assign a branch resource to the UI.
 func set_branch(branch: IfBranch) -> void:
 	_branch_resource = branch
-	ConditionExpression.deserialise(_branch_resource.condition)
-	ConditionExpression.configure()
+	_condition_expression.deserialise(_branch_resource.condition)
+	_condition_expression.configure()
 
 
+# TODO: Since this should only be one of two values, an enum should maybe be used instead.
+## Set the text of the label that describes the branch (if/elif).
 func set_label(text: String) -> void:
-	IfLabel.text = text
+	_if_label.text = text
 
 
 func _on_remove_button_pressed() -> void:
