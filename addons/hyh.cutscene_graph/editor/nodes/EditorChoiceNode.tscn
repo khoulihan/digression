@@ -178,23 +178,23 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HeaderContainer" index="0"]
+[node name="VB" type="VBoxContainer" parent="HeaderContainer" index="0"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="HSeparator" type="HSeparator" parent="HeaderContainer/VBoxContainer" index="0"]
+[node name="HSeparator" type="HSeparator" parent="HeaderContainer/VB" index="0"]
 visible = false
 layout_mode = 2
 
-[node name="HorizontalLayout" type="HBoxContainer" parent="HeaderContainer/VBoxContainer" index="1"]
+[node name="HorizontalLayout" type="HBoxContainer" parent="HeaderContainer/VB" index="1"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="HeaderContainer/VBoxContainer/HorizontalLayout" index="0"]
+[node name="Label" type="Label" parent="HeaderContainer/VB/HorizontalLayout" index="0"]
 layout_mode = 2
 text = "Default"
 
-[node name="TextureRect" type="TextureRect" parent="HeaderContainer/VBoxContainer/HorizontalLayout" index="1"]
+[node name="TextureRect" type="TextureRect" parent="HeaderContainer/VB/HorizontalLayout" index="1"]
 layout_mode = 2
 size_flags_vertical = 4
 tooltip_text = "This path is followed if none of the choices
@@ -202,7 +202,7 @@ are valid due to unmet conditions."
 texture = ExtResource("7_k8avd")
 stretch_mode = 3
 
-[node name="ShowDialogueForDefaultButton" type="CheckButton" parent="HeaderContainer/VBoxContainer/HorizontalLayout" index="2"]
+[node name="ShowDialogueForDefaultButton" type="CheckButton" parent="HeaderContainer/VB/HorizontalLayout" index="2"]
 layout_mode = 2
 size_flags_horizontal = 10
 tooltip_text = "Indicates if the dialogue should be displayed
@@ -212,7 +212,7 @@ text = "Display Dialogue for Default
 "
 flat = true
 
-[node name="AddValueButton" type="Button" parent="HeaderContainer/VBoxContainer/HorizontalLayout" index="3"]
+[node name="AddBranchButton" type="Button" parent="HeaderContainer/VB/HorizontalLayout" index="3"]
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_stretch_ratio = 0.0
@@ -236,10 +236,10 @@ layout_mode = 2
 [connection signal="modified" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_modified"]
 [connection signal="remove_property_requested" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_remove_property_requested"]
 [connection signal="size_changed" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_size_changed"]
-[connection signal="pressed" from="HeaderContainer/VBoxContainer/HorizontalLayout/AddValueButton" to="." method="_on_AddValueButton_pressed"]
-[connection signal="modified" from="ChoiceValue" to="." method="_line_modified"]
-[connection signal="remove_requested" from="ChoiceValue" to="." method="_value_remove_requested" binds= [1]]
-[connection signal="size_changed" from="ChoiceValue" to="." method="_line_size_changed"]
-[connection signal="modified" from="ChoiceValue2" to="." method="_line_modified"]
-[connection signal="remove_requested" from="ChoiceValue2" to="." method="_value_remove_requested" binds= [1]]
-[connection signal="size_changed" from="ChoiceValue2" to="." method="_line_size_changed"]
+[connection signal="pressed" from="HeaderContainer/VB/HorizontalLayout/AddBranchButton" to="." method="_on_add_branch_button_pressed"]
+[connection signal="modified" from="ChoiceValue" to="." method="_on_branch_modified"]
+[connection signal="remove_requested" from="ChoiceValue" to="." method="_on_branch_remove_requested" binds= [0]]
+[connection signal="size_changed" from="ChoiceValue" to="." method="_on_branch_size_changed"]
+[connection signal="modified" from="ChoiceValue2" to="." method="_on_branch_modified"]
+[connection signal="remove_requested" from="ChoiceValue2" to="." method="_on_branch_remove_requested" binds= [1]]
+[connection signal="size_changed" from="ChoiceValue2" to="." method="_on_branch_size_changed"]

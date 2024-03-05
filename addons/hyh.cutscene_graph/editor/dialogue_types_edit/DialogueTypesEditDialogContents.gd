@@ -1,15 +1,9 @@
 @tool
 extends MarginContainer
+## Contents of dialogue type definition dialog.
 
 
-const Logging = preload("../../utility/Logging.gd")
-var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
-
-
-const DEFAULT_ICON = preload("../../icons/icon_favourites.svg")
-const WARNING_ICON = preload("../../icons/icon_node_warning.svg")
-const NEW_TYPE_NAME = "new_dialogue_type"
-
+signal closing()
 
 enum GraphTypesTreeColumns {
 	ALLOWED,
@@ -17,93 +11,89 @@ enum GraphTypesTreeColumns {
 	NAME,
 }
 
-
 enum DialogueTypesTreeColumns {
 	NAME,
 	INVOLVES_CHARACTER,
 	SPLIT_DIALOGUE,
 }
 
-
 enum DialogueTypesPopupMenuItem {
 	REMOVE,
 }
 
-
-@onready var DialogueTypesTree: Tree = get_node("VBoxContainer/HSplitContainer/DialogueTypesPane/VBoxContainer/DialogueTypesTree")
-@onready var GraphTypesTree: Tree = get_node("VBoxContainer/HSplitContainer/GraphTypesPane/VBoxContainer/GraphTypesTree")
-@onready var AddButton: Button = get_node("VBoxContainer/HSplitContainer/DialogueTypesPane/VBoxContainer/HeaderButtonsContainer/AddButton")
-@onready var RemoveButton: Button = get_node("VBoxContainer/HSplitContainer/DialogueTypesPane/VBoxContainer/HeaderButtonsContainer/RemoveButton")
-@onready var Help: TextureRect = get_node("VBoxContainer/HSplitContainer/DialogueTypesPane/VBoxContainer/HeaderButtonsContainer/Help")
-@onready var GraphTypesPane: MarginContainer = get_node("VBoxContainer/HSplitContainer/GraphTypesPane")
-@onready var GraphPanelHeader: HBoxContainer = get_node("VBoxContainer/HSplitContainer/GraphTypesPane/VBoxContainer/HBoxContainer")
-@onready var GraphPanelHeaderLabel: Label = get_node("VBoxContainer/HSplitContainer/GraphTypesPane/VBoxContainer/HBoxContainer/SecondPanelHeaderLabel")
-
-
-signal closing()
-
+const Logging = preload("../../utility/Logging.gd")
+const DEFAULT_ICON = preload("../../icons/icon_favourites.svg")
+const WARNING_ICON = preload("../../icons/icon_node_warning.svg")
+const NEW_TYPE_NAME = "new_dialogue_type"
 
 var _graph_types
 var _graph_types_per_dialogue_type = {}
+var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
+
+@onready var _dialogue_types_tree: Tree = $VB/HSplitContainer/DialogueTypesPane/VB/DialogueTypesTree
+@onready var _graph_types_tree: Tree = $VB/HSplitContainer/GraphTypesPane/VB/GraphTypesTree
+@onready var _remove_button: Button = $VB/HSplitContainer/DialogueTypesPane/VB/HeaderButtonsContainer/RemoveButton
+@onready var _graph_types_pane_header: HBoxContainer = $VB/HSplitContainer/GraphTypesPane/VB/GraphTypesPaneHeader
+@onready var _graph_types_pane_header_label: Label = $VB/HSplitContainer/GraphTypesPane/VB/GraphTypesPaneHeader/GraphTypesPaneHeaderLabel
 
 
-func _ready():
+func _ready() -> void:
 	_graph_types = ProjectSettings.get_setting(
 		"cutscene_graph_editor/graph_types",
 		[]
 	)
 	
-	var graph_types_root = GraphTypesTree.create_item()
-	GraphTypesTree.set_column_title(
+	var graph_types_root = _graph_types_tree.create_item()
+	_graph_types_tree.set_column_title(
 		GraphTypesTreeColumns.ALLOWED,
 		"Allowed"
 	)
-	GraphTypesTree.set_column_expand(
+	_graph_types_tree.set_column_expand(
 		GraphTypesTreeColumns.ALLOWED,
 		false
 	)
-	GraphTypesTree.set_column_title(
+	_graph_types_tree.set_column_title(
 		GraphTypesTreeColumns.IS_DEFAULT,
 		"Default"
 	)
-	GraphTypesTree.set_column_expand(
+	_graph_types_tree.set_column_expand(
 		GraphTypesTreeColumns.IS_DEFAULT,
 		false
 	)
-	GraphTypesTree.set_column_title(
+	_graph_types_tree.set_column_title(
 		GraphTypesTreeColumns.NAME,
 		"Name"
 	)
-	GraphTypesTree.set_column_expand(
+	_graph_types_tree.set_column_expand(
 		GraphTypesTreeColumns.NAME,
 		true
 	)
 	for t in _graph_types:
-		var item: TreeItem = GraphTypesTree.create_item(graph_types_root)
+		var item: TreeItem = _graph_types_tree.create_item(graph_types_root)
 		_populate_item_for_graph_type(item, t)
 	
-	var dialogue_types_root = DialogueTypesTree.create_item()
-	DialogueTypesTree.set_column_title(
+	var dialogue_types_root = _dialogue_types_tree.create_item()
+	_dialogue_types_tree.set_column_title(
 		DialogueTypesTreeColumns.NAME,
 		"Name"
 	)
-	DialogueTypesTree.set_column_expand(
+	_dialogue_types_tree.set_column_expand(
 		DialogueTypesTreeColumns.NAME,
 		true
 	)
-	DialogueTypesTree.set_column_title(
+	_dialogue_types_tree.set_column_title(
 		DialogueTypesTreeColumns.INVOLVES_CHARACTER,
 		"Involves Character?"
 	)
-	DialogueTypesTree.set_column_expand(
+	_dialogue_types_tree.set_column_expand(
 		DialogueTypesTreeColumns.INVOLVES_CHARACTER,
 		false
 	)
-	DialogueTypesTree.set_column_title(
+	_dialogue_types_tree.set_column_title(
 		DialogueTypesTreeColumns.SPLIT_DIALOGUE,
 		"Split Dialogue?"
 	)
-	DialogueTypesTree.set_column_expand(
+	_dialogue_types_tree.set_column_expand(
 		DialogueTypesTreeColumns.SPLIT_DIALOGUE,
 		false
 	)
@@ -112,20 +102,20 @@ func _ready():
 		[]
 	)
 	for t in types:
-		var item: TreeItem = DialogueTypesTree.create_item(dialogue_types_root)
+		var item: TreeItem = _dialogue_types_tree.create_item(dialogue_types_root)
 		_populate_item_for_type(item, t)
 	
 	_hide_graph_types()
 
 
 func _hide_graph_types():
-	GraphTypesTree.hide()
-	GraphPanelHeader.hide()
+	_graph_types_tree.hide()
+	_graph_types_pane_header.hide()
 
 
 func _show_graph_types():
-	GraphTypesTree.show()
-	GraphPanelHeader.show()
+	_graph_types_tree.show()
+	_graph_types_pane_header.show()
 
 
 func _populate_item_for_type(item, type):
@@ -215,36 +205,8 @@ func _populate_item_for_graph_type(item, type):
 	)
 
 
-func _on_cancel_button_pressed():
-	closing.emit()
-
-
-func _on_save_button_pressed():
-	if not _validate():
-		_perform_save()
-		closing.emit()
-	else:
-		var dialog = AcceptDialog.new()
-		dialog.title = "Validation Failed"
-		dialog.dialog_text = """There are dialogue types with invalid names.\n
-			Please correct the values and try again."""
-		self.add_child(dialog)
-		dialog.popup_on_parent(
-			Rect2i(
-				self.position + Vector2(60, 60),
-				Vector2i(200, 150)
-			)
-		)
-		dialog.confirmed.connect(
-			_validation_failed_dialog_closed.bind(dialog)
-		)
-		dialog.close_requested.connect(
-			_validation_failed_dialog_closed.bind(dialog)
-		)
-
-
 func _perform_save():
-	var root = DialogueTypesTree.get_root()
+	var root = _dialogue_types_tree.get_root()
 	var dialogue_types = []
 	for dt in root.get_children():
 		var t = {}
@@ -276,62 +238,14 @@ func _perform_save():
 	ProjectSettings.save()
 
 
-func _validation_failed_dialog_closed(dialog):
-	Logger.debug("Validation failed dialog closed.")
-	dialog.confirmed.disconnect(_validation_failed_dialog_closed)
-	dialog.close_requested.disconnect(_validation_failed_dialog_closed)
-	dialog.queue_free()
-
-
-func _on_dialogue_tree_item_mouse_selected(position, mouse_button_index):
-	if mouse_button_index == MOUSE_BUTTON_RIGHT:
-		# Adding a little offset seems to be required to prevent an item
-		# from being immediately chosen.
-		$PopupMenu.position = Vector2(
-			self.get_parent().position
-		) + position + Vector2(20, 10)
-		$PopupMenu.popup()
-
-
-func _on_dialogue_tree_nothing_selected():
-	_set_button_states(false)
-	_hide_graph_types()
-
-
-func _on_popup_menu_id_pressed(id):
-	if id == DialogueTypesPopupMenuItem.REMOVE:
-		_remove_selected()
-		_validate()
-
-
 func _remove_selected():
-	var selected = DialogueTypesTree.get_selected()
+	var selected = _dialogue_types_tree.get_selected()
 	if selected == null:
 		return
 	_graph_types_per_dialogue_type.erase(selected)
 	selected.free()
 	_hide_graph_types()
 	_set_button_states(false)
-
-
-func _on_add_button_pressed():
-	var root = DialogueTypesTree.get_root()
-	var item: TreeItem = DialogueTypesTree.create_item(root)
-	_populate_item_for_type(
-		item,
-		{
-			"name": _get_default_type_name(),
-			"involves_character": true,
-			"split_dialogue": null,
-			"allowed_in_graph_types": [],
-			"default_in_graph_types": [],
-		},
-	)
-	DialogueTypesTree.set_selected(
-		item,
-		DialogueTypesTreeColumns.NAME
-	)
-	DialogueTypesTree.edit_selected()
 
 
 func _get_default_type_name():
@@ -346,7 +260,7 @@ func _get_default_type_name():
 
 func _get_default_name_count():
 	var count = 0
-	var root = DialogueTypesTree.get_root()
+	var root = _dialogue_types_tree.get_root()
 	for gt in root.get_children():
 		var name = gt.get_text(DialogueTypesTreeColumns.NAME)
 		if name.begins_with(NEW_TYPE_NAME):
@@ -354,32 +268,15 @@ func _get_default_name_count():
 	return count
 
 
-func _on_remove_button_pressed():
-	_remove_selected()
-	_validate()
-
-
-func _on_dialogue_tree_item_selected():
-	_set_button_states(true)
-	_show_graph_types()
-	var item = DialogueTypesTree.get_selected()
-	_configure_graph_tree_for_item(
-		item
-	)
-	_set_graph_panel_header(
-		item
-	)
-
-
 func _set_graph_panel_header(item):
-	GraphPanelHeaderLabel.text = "Graph Types for \"%s\"" % item.get_text(
+	_graph_types_pane_header_label.text = "Graph Types for \"%s\"" % item.get_text(
 		DialogueTypesTreeColumns.NAME
 	)
 
 
 func _configure_graph_tree_for_item(item):
 	var gt_rels = _graph_types_per_dialogue_type[item]
-	var graph_type_root = GraphTypesTree.get_root()
+	var graph_type_root = _graph_types_tree.get_root()
 	for gt in graph_type_root.get_children():
 		var gt_name = gt.get_text(GraphTypesTreeColumns.NAME)
 		gt.set_checked(GraphTypesTreeColumns.ALLOWED, gt_rels[gt_name]['allowed'])
@@ -392,23 +289,13 @@ func _configure_graph_tree_for_item(item):
 
 
 func _set_button_states(item_selected):
-	#AddButton.disabled = not item_selected
-	RemoveButton.disabled = not item_selected
-
-
-func _on_help_gui_input(event):
-	var button_event = event as InputEventMouseButton
-	if button_event == null:
-		return
-	# TODO: Doesn't seem to be possible to manually display the tooltip.
-	# Maybe show a messagebox instead?
-	#Help.get_tooltip()
+	_remove_button.disabled = not item_selected
 
 
 func _validate():
 	var issues = false
 	var all_names = {}
-	var root = DialogueTypesTree.get_root()
+	var root = _dialogue_types_tree.get_root()
 	for dt in root.get_children():
 		dt.set_icon(
 			DialogueTypesTreeColumns.NAME,
@@ -450,17 +337,9 @@ func _validate():
 	return issues
 
 
-func _on_dialogue_tree_item_edited():
-	Logger.debug("Item edited")
-	_manage_split_dialogue_state()
-	var selected = DialogueTypesTree.get_selected()
-	_set_graph_panel_header(selected)
-	_validate()
-
-
 func _manage_split_dialogue_state():
-	var selected = DialogueTypesTree.get_selected()
-	var selected_column = DialogueTypesTree.get_selected_column()
+	var selected = _dialogue_types_tree.get_selected()
+	var selected_column = _dialogue_types_tree.get_selected_column()
 	if selected_column == DialogueTypesTreeColumns.SPLIT_DIALOGUE:
 		_set_split_dialogue_state(selected, selected_column)
 
@@ -481,15 +360,9 @@ func _set_split_dialogue_state(item, column):
 	item.set_meta("split_dialogue", state)
 
 
-func _on_graph_types_tree_item_edited():
-	_update_graph_tree_relations_for_item(
-		DialogueTypesTree.get_selected()
-	)
-
-
 func _update_graph_tree_relations_for_item(item):
 	var gt_rels = _graph_types_per_dialogue_type[item]
-	var graph_type_root = GraphTypesTree.get_root()
+	var graph_type_root = _graph_types_tree.get_root()
 	for gt in graph_type_root.get_children():
 		var gt_name = gt.get_text(GraphTypesTreeColumns.NAME)
 		gt_rels[gt_name]['allowed'] = gt.is_checked(GraphTypesTreeColumns.ALLOWED)
@@ -505,3 +378,119 @@ func _update_graph_tree_relations_for_item(item):
 				if other_item == item:
 					continue
 				_graph_types_per_dialogue_type[other_item][gt_name]['default'] = false
+
+
+func _on_cancel_button_pressed():
+	closing.emit()
+
+
+func _on_save_button_pressed():
+	if not _validate():
+		_perform_save()
+		closing.emit()
+	else:
+		var dialog = AcceptDialog.new()
+		dialog.title = "Validation Failed"
+		dialog.dialog_text = """There are dialogue types with invalid names.\n
+			Please correct the values and try again."""
+		self.add_child(dialog)
+		dialog.popup_on_parent(
+			Rect2i(
+				self.position + Vector2(60, 60),
+				Vector2i(200, 150)
+			)
+		)
+		dialog.confirmed.connect(
+			_validation_failed_dialog_closed.bind(dialog)
+		)
+		dialog.close_requested.connect(
+			_validation_failed_dialog_closed.bind(dialog)
+		)
+
+
+func _validation_failed_dialog_closed(dialog):
+	_logger.debug("Validation failed dialog closed.")
+	dialog.confirmed.disconnect(_validation_failed_dialog_closed)
+	dialog.close_requested.disconnect(_validation_failed_dialog_closed)
+	dialog.queue_free()
+
+
+func _on_dialogue_tree_item_mouse_selected(position, mouse_button_index):
+	if mouse_button_index == MOUSE_BUTTON_RIGHT:
+		# Adding a little offset seems to be required to prevent an item
+		# from being immediately chosen.
+		$PopupMenu.position = Vector2(
+			self.get_parent().position
+		) + position + Vector2(20, 10)
+		$PopupMenu.popup()
+
+
+func _on_dialogue_tree_nothing_selected():
+	_set_button_states(false)
+	_hide_graph_types()
+
+
+func _on_popup_menu_id_pressed(id):
+	if id == DialogueTypesPopupMenuItem.REMOVE:
+		_remove_selected()
+		_validate()
+
+
+func _on_add_button_pressed():
+	var root = _dialogue_types_tree.get_root()
+	var item: TreeItem = _dialogue_types_tree.create_item(root)
+	_populate_item_for_type(
+		item,
+		{
+			"name": _get_default_type_name(),
+			"involves_character": true,
+			"split_dialogue": null,
+			"allowed_in_graph_types": [],
+			"default_in_graph_types": [],
+		},
+	)
+	_dialogue_types_tree.set_selected(
+		item,
+		DialogueTypesTreeColumns.NAME
+	)
+	_dialogue_types_tree.edit_selected()
+
+
+func _on_remove_button_pressed():
+	_remove_selected()
+	_validate()
+
+
+func _on_dialogue_tree_item_selected():
+	_set_button_states(true)
+	_show_graph_types()
+	var item = _dialogue_types_tree.get_selected()
+	_configure_graph_tree_for_item(
+		item
+	)
+	_set_graph_panel_header(
+		item
+	)
+
+
+func _on_help_gui_input(event):
+	var button_event = event as InputEventMouseButton
+	if button_event == null:
+		return
+	# TODO: Doesn't seem to be possible to manually display the tooltip.
+	# Maybe show a messagebox instead?
+	#Help.get_tooltip()
+
+
+func _on_dialogue_tree_item_edited():
+	_logger.debug("Item edited")
+	_manage_split_dialogue_state()
+	var selected = _dialogue_types_tree.get_selected()
+	_set_graph_panel_header(selected)
+	_validate()
+
+
+func _on_graph_types_tree_item_edited():
+	_update_graph_tree_relations_for_item(
+		_dialogue_types_tree.get_selected()
+	)

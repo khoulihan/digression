@@ -1,32 +1,10 @@
 @tool
 extends MarginContainer
+## Property select dialog contents.
 
-const Logging = preload("../../utility/Logging.gd")
-var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
 
 signal selected(property)
 signal cancelled()
-
-
-const BoolIcon = preload("../../icons/icon_type_bool.svg")
-const IntIcon = preload("../../icons/icon_type_int.svg")
-const FloatIcon = preload("../../icons/icon_type_float.svg")
-const StringIcon = preload("../../icons/icon_type_string.svg")
-
-const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
-const PropertyUse = preload("./PropertySelectDialog.gd").PropertyUse
-
-
-@onready var FavouritesTree: Tree = get_node("VB/BodyContainer/FavouritesPane/HB/FavouritesTree")
-@onready var RecentTree: Tree = get_node("VB/BodyContainer/FavouritesPane/HB/RecentTree")
-@onready var SearchEdit: LineEdit = get_node("VB/BodyContainer/SearchPane/VB/SearchContainer/SearchEdit")
-@onready var FavouriteButton: Button = get_node("VB/BodyContainer/SearchPane/VB/MatchesTitleContainer/FavouriteButton")
-@onready var MatchesTree: Tree = get_node("VB/BodyContainer/SearchPane/VB/MatchesTree")
-@onready var DescriptionLabel: RichTextLabel = get_node("VB/BodyContainer/SearchPane/VB/DescriptionLabel")
-
-
-var _use_restriction: PropertyUse
-
 
 enum MatchesTreeColumns {
 	TYPE,
@@ -34,17 +12,27 @@ enum MatchesTreeColumns {
 	DESCRIPTION,
 }
 
+const Logging = preload("../../utility/Logging.gd")
+const BOOL_ICON = preload("../../icons/icon_type_bool.svg")
+const INT_ICON = preload("../../icons/icon_type_int.svg")
+const FLOAT_ICON = preload("../../icons/icon_type_float.svg")
+const STRING_ICON = preload("../../icons/icon_type_string.svg")
+const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
+const PropertyUse = preload("./PropertySelectDialog.gd").PropertyUse
 
-class PropertySelectDialogState:
-	var favourites: Array[String]
-	var recent: Array[String]
+var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
+var _use_restriction: PropertyUse
+var _all_properties := []
+var _properties_for_search := []
+
+@onready var _favourites_tree: Tree = $VB/BodyContainer/FavouritesPane/HB/FavouritesTree
+@onready var _recent_tree: Tree = $VB/BodyContainer/FavouritesPane/HB/RecentTree
+@onready var _search_edit: LineEdit = $VB/BodyContainer/SearchPane/VB/SearchContainer/SearchEdit
+@onready var _matches_tree: Tree = $VB/BodyContainer/SearchPane/VB/MatchesTree
+@onready var _description_label: RichTextLabel = $VB/BodyContainer/SearchPane/VB/DescriptionLabel
 
 
-var _all_properties = []
-var _properties_for_search = []
-
-
-func _ready():
+func _ready() -> void:
 	_use_restriction = get_parent().use_restriction
 	_all_properties = _filter_by_use_restriction(
 		ProjectSettings.get_setting(
@@ -53,15 +41,15 @@ func _ready():
 		)
 	)
 	_perform_search()
-	MatchesTree.set_column_expand(MatchesTreeColumns.TYPE, false)
-	MatchesTree.set_column_expand(MatchesTreeColumns.NAME, true)
-	MatchesTree.set_column_expand(MatchesTreeColumns.DESCRIPTION, true)
+	_matches_tree.set_column_expand(MatchesTreeColumns.TYPE, false)
+	_matches_tree.set_column_expand(MatchesTreeColumns.NAME, true)
+	_matches_tree.set_column_expand(MatchesTreeColumns.DESCRIPTION, true)
 	
-	FavouritesTree.set_column_expand(MatchesTreeColumns.TYPE, false)
-	FavouritesTree.set_column_expand(MatchesTreeColumns.NAME, true)
+	_favourites_tree.set_column_expand(MatchesTreeColumns.TYPE, false)
+	_favourites_tree.set_column_expand(MatchesTreeColumns.NAME, true)
 	
-	RecentTree.set_column_expand(MatchesTreeColumns.TYPE, false)
-	RecentTree.set_column_expand(MatchesTreeColumns.NAME, true)
+	_recent_tree.set_column_expand(MatchesTreeColumns.TYPE, false)
+	_recent_tree.set_column_expand(MatchesTreeColumns.NAME, true)
 	_populate_matches()
 	_load_favourites_and_recent()
 
@@ -92,10 +80,10 @@ func _get_use_restriction_string() -> String:
 
 
 func _perform_search():
-	if SearchEdit.text != "":
+	if _search_edit.text != "":
 		_properties_for_search = _filter_by_search(
 			_all_properties,
-			SearchEdit.text
+			_search_edit.text
 		)
 	else:
 		_properties_for_search = _all_properties
@@ -119,8 +107,8 @@ func _filter_by_search(props, search):
 
 
 func _populate_matches():
-	MatchesTree.clear()
-	var root = MatchesTree.create_item()
+	_matches_tree.clear()
+	var root = _matches_tree.create_item()
 	for p in _properties_for_search:
 		var item = root.create_child()
 		item.set_cell_mode(MatchesTreeColumns.TYPE, TreeItem.CELL_MODE_ICON)
@@ -157,25 +145,25 @@ func _tooltip_for_type(t):
 func _icon_for_type(t):
 	match t:
 		VariableType.TYPE_BOOL:
-			return BoolIcon
+			return BOOL_ICON
 		VariableType.TYPE_FLOAT:
-			return FloatIcon
+			return FLOAT_ICON
 		VariableType.TYPE_INT:
-			return IntIcon
+			return INT_ICON
 		VariableType.TYPE_STRING:
-			return StringIcon
+			return STRING_ICON
 	return null
 
 
 func _load_favourites_and_recent():
 	var state = _load_state()
-	FavouritesTree.clear()
-	FavouritesTree.create_item()
-	RecentTree.clear()
-	RecentTree.create_item()
+	_favourites_tree.clear()
+	_favourites_tree.create_item()
+	_recent_tree.clear()
+	_recent_tree.create_item()
 	if state != null:
-		_populate_sidebar(FavouritesTree, state.favourites)
-		_populate_sidebar(RecentTree, state.recent)
+		_populate_sidebar(_favourites_tree, state.favourites)
+		_populate_sidebar(_recent_tree, state.recent)
 
 
 func _populate_sidebar(sidebar, items):
@@ -214,17 +202,17 @@ func _add_to_sidebar(sidebar, p, index=-1):
 
 
 func _set_description_for_selection():
-	var selected = MatchesTree.get_selected()
+	var selected = _matches_tree.get_selected()
 	if selected == null:
-		DescriptionLabel.text = ""
+		_description_label.text = ""
 		return
 	var selected_property = _get_match_by_name(
 		selected.get_text(MatchesTreeColumns.NAME)
 	)
 	if selected_property == null:
-		DescriptionLabel.text = ""
+		_description_label.text = ""
 	else:
-		DescriptionLabel.text = selected_property.get('description')
+		_description_label.text = selected_property.get('description')
 
 
 func _save_to_recent(property_name):
@@ -260,20 +248,12 @@ func _save_state(favourites: Array[String], recent: Array[String]):
 	var config = ConfigFile.new()
 	config.set_value('state', 'favourites', favourites)
 	config.set_value('state', 'recent', recent)
-	Logger.debug("About to save property select dialog state")
+	_logger.debug("About to save property select dialog state")
 	var dir = DirAccess.open("res://.godot")
 	var dir_status = dir.make_dir("hyh.cutscene_graph")
-	Logger.debug("Directory create status: %s" % dir_status)
+	_logger.debug("Directory create status: %s" % dir_status)
 	var status = config.save("res://.godot/hyh.cutscene_graph/property_select_dialog.cfg")
-	Logger.debug("File save status: %s" % status)
-
-
-func _on_favourites_tree_item_selected():
-	_highlight_sidebar_selection(FavouritesTree)
-
-
-func _on_recent_tree_item_selected():
-	_highlight_sidebar_selection(RecentTree)
+	_logger.debug("File save status: %s" % status)
 
 
 func _highlight_sidebar_selection(sidebar: Tree):
@@ -281,12 +261,12 @@ func _highlight_sidebar_selection(sidebar: Tree):
 	if selection == null:
 		return
 	var selected_name = selection.get_text(MatchesTreeColumns.NAME)
-	SearchEdit.text = selected_name
+	_search_edit.text = selected_name
 	_perform_search_and_refresh()
-	var matches_root = MatchesTree.get_root()
+	var matches_root = _matches_tree.get_root()
 	for row in matches_root.get_children():
 		if row.get_text(MatchesTreeColumns.NAME) == selected_name:
-			MatchesTree.set_selected(row, MatchesTreeColumns.NAME)
+			_matches_tree.set_selected(row, MatchesTreeColumns.NAME)
 			break
 
 
@@ -295,13 +275,21 @@ func _perform_search_and_refresh():
 	_populate_matches()
 
 
+func _on_favourites_tree_item_selected():
+	_highlight_sidebar_selection(_favourites_tree)
+
+
+func _on_recent_tree_item_selected():
+	_highlight_sidebar_selection(_recent_tree)
+
+
 func _on_search_edit_text_changed(new_text):
 	_perform_search_and_refresh()
 	_set_description_for_selection()
 
 
 func _on_favourite_button_pressed():
-	var selection = MatchesTree.get_selected()
+	var selection = _matches_tree.get_selected()
 	if selection == null:
 		return
 	var selection_name = selection.get_text(MatchesTreeColumns.NAME)
@@ -317,7 +305,7 @@ func _on_favourite_button_pressed():
 	)
 	# Add to favourites sidebar
 	var p = _get_match_by_name(selection_name)
-	_add_to_sidebar(FavouritesTree, p, 0)
+	_add_to_sidebar(_favourites_tree, p, 0)
 
 
 func _on_matches_tree_item_activated():
@@ -337,7 +325,7 @@ func _on_cancel_button_pressed():
 
 
 func _on_select_button_pressed():
-	var selection = MatchesTree.get_selected()
+	var selection = _matches_tree.get_selected()
 	
 	if selection == null:
 		var alert = AcceptDialog.new()
@@ -355,3 +343,8 @@ func _on_select_button_pressed():
 	)
 	_save_to_recent(property_name)
 	selected.emit(property)
+
+
+class PropertySelectDialogState:
+	var favourites: Array[String]
+	var recent: Array[String]

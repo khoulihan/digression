@@ -1,7 +1,12 @@
 @tool
 extends Window
+## Dialog for selecting custom properties.
 
 
+signal selected(property)
+signal cancelled()
+
+## The use cases for custom properties.
 enum PropertyUse {
 	SCENES,
 	CHARACTERS,
@@ -10,17 +15,14 @@ enum PropertyUse {
 	DIALOGUE,
 }
 
-
-signal selected(property)
-signal cancelled()
-
-@onready var BackgroundPanel = get_node("BackgroundPanel")
-
+## The use that is applicable to the context in which the search is being performed.
 var use_restriction : PropertyUse
+
+@onready var _background_panel = get_node("BackgroundPanel")
 
 
 func _ready() -> void:
-	BackgroundPanel.color = get_theme_color("base_color", "Editor")
+	_background_panel.color = get_theme_color("base_color", "Editor")
 
 
 func _on_property_select_dialog_contents_selected(property):

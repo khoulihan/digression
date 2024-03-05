@@ -1,18 +1,19 @@
 @tool
 extends Window
-
-
-@onready var BackgroundPanel = get_node("BackgroundPanel")
+## Dialog for defining custom properties to be assigned to resources.
 
 
 signal closing()
 
+@onready var _background_panel = get_node("BackgroundPanel")
+
 
 func _ready() -> void:
-	BackgroundPanel.color = get_theme_color("base_color", "Editor")
+	_background_panel.color = get_theme_color("base_color", "Editor")
 
 
-func configure():
+## Prepare the dialog for display.
+func configure() -> void:
 	$PropertyDefinitionEditDialogContents.configure()
 
 

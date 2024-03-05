@@ -25,64 +25,64 @@ slot/0/right_icon = null
 slot/0/draw_stylebox = true
 script = ExtResource("1_qblwl")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MC" type="MarginContainer" parent="."]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="MC"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="MC/IndicatorContainer"]
 modulate = Color(0.439216, 0.501961, 0.564706, 1)
 layout_mode = 2
 texture = ExtResource("5_1bpki")
 
-[node name="TextureRect2" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+[node name="TextureRect2" type="TextureRect" parent="MC/IndicatorContainer"]
 modulate = Color(0.439216, 0.501961, 0.564706, 1)
 layout_mode = 2
 texture = ExtResource("5_1bpki")
 
-[node name="TextureRect3" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+[node name="TextureRect3" type="TextureRect" parent="MC/IndicatorContainer"]
 modulate = Color(0.439216, 0.501961, 0.564706, 1)
 layout_mode = 2
 texture = ExtResource("5_1bpki")
 
-[node name="TextureRect4" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+[node name="TextureRect4" type="TextureRect" parent="MC/IndicatorContainer"]
 modulate = Color(0.439216, 0.501961, 0.564706, 1)
 layout_mode = 2
 texture = ExtResource("5_1bpki")
 
-[node name="TextureRect5" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+[node name="TextureRect5" type="TextureRect" parent="MC/IndicatorContainer"]
 modulate = Color(0.439216, 0.501961, 0.564706, 1)
 layout_mode = 2
 texture = ExtResource("5_1bpki")
 
-[node name="TextureRect6" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+[node name="TextureRect6" type="TextureRect" parent="MC/IndicatorContainer"]
 modulate = Color(0.439216, 0.501961, 0.564706, 1)
 layout_mode = 2
 texture = ExtResource("5_1bpki")
 
-[node name="TextureRect7" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+[node name="TextureRect7" type="TextureRect" parent="MC/IndicatorContainer"]
 modulate = Color(0.439216, 0.501961, 0.564706, 1)
 layout_mode = 2
 texture = ExtResource("5_1bpki")
 
-[node name="TextureRect8" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+[node name="TextureRect8" type="TextureRect" parent="MC/IndicatorContainer"]
 modulate = Color(0.439216, 0.501961, 0.564706, 1)
 layout_mode = 2
 texture = ExtResource("5_1bpki")
 
-[node name="TextureRect9" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+[node name="TextureRect9" type="TextureRect" parent="MC/IndicatorContainer"]
 modulate = Color(0.439216, 0.501961, 0.564706, 1)
 layout_mode = 2
 texture = ExtResource("5_1bpki")
 
-[node name="Timer" type="Timer" parent="MarginContainer"]
+[node name="Timer" type="Timer" parent="MC"]
 wait_time = 0.1
 autostart = true
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
-[connection signal="timeout" from="MarginContainer/Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="MC/Timer" to="." method="_on_timer_timeout"]

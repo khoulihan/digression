@@ -1,17 +1,18 @@
 @tool
 extends Window
+## Dialogue type definition dialog.
 
 
 signal closing()
 
-
-@onready var BackgroundPanel = get_node("BackgroundPanel")
+@onready var _background_panel = $BackgroundPanel
 
 
 func _ready() -> void:
-	BackgroundPanel.color = get_theme_color("base_color", "Editor")
+	_background_panel.color = get_theme_color("base_color", "Editor")
 
 
+## Prepare the dialog for display.
 func configure():
 	$DialogueTypesEditDialogContents.configure()
 

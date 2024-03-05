@@ -1,49 +1,43 @@
 @tool
 extends MarginContainer
+## Variable creation dialog contents.
 
-
-const Logging = preload("../../utility/Logging.gd")
-var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
-
-
-@onready var ScopeOption: OptionButton = get_node("VBoxContainer/GridContainer/ScopeOption")
-@onready var ScopeValidationWarning: TextureRect = get_node("VBoxContainer/GridContainer/ScopeValidationWarning")
-@onready var TypeOption: OptionButton = get_node("VBoxContainer/GridContainer/TypeOption")
-@onready var TypeValidationWarning: TextureRect = get_node("VBoxContainer/GridContainer/TypeValidationWarning")
-@onready var NameEdit: LineEdit = get_node("VBoxContainer/GridContainer/NameEdit")
-@onready var NameValidationWarning: TextureRect = get_node("VBoxContainer/GridContainer/NameValidationWarning")
-@onready var DescriptionEdit: TextEdit = get_node("VBoxContainer/DescriptionEdit")
-
-@onready var TagContainer: HFlowContainer = get_node("VBoxContainer/TagContainer")
-@onready var TagEdit: LineEdit = get_node("VBoxContainer/TagContainer/TagEdit")
-@onready var TagSuggestionsContainer: HFlowContainer = get_node("VBoxContainer/TagContainer/SuggestionsContainer")
-
-const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
-
-const TagControlScene = preload("res://addons/hyh.cutscene_graph/editor/controls/TagControl.tscn")
-const WarningIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_node_warning.svg")
 
 signal tag_added()
 signal cancelled()
 signal created(variable)
 
+const Logging = preload("../../utility/Logging.gd")
+const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
+const TagControlScene = preload("res://addons/hyh.cutscene_graph/editor/controls/TagControl.tscn")
+const WARNING_ICON = preload("res://addons/hyh.cutscene_graph/icons/icon_node_warning.svg")
 
+var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
 var _type_restriction : Variant
-
-
 var _variables: Array[Dictionary]
 var _all_tags: Array[String]
 var _all_names: Array[String]
+
+@onready var _scope_option: OptionButton = $VB/GC/ScopeOption
+@onready var _scope_validation_warning: TextureRect = $VB/GC/ScopeValidationWarning
+@onready var _type_option: OptionButton = $VB/GC/TypeOption
+@onready var _type_validation_warning: TextureRect = $VB/GC/TypeValidationWarning
+@onready var _name_edit: LineEdit = $VB/GC/NameEdit
+@onready var _name_validation_warning: TextureRect = $VB/GC/NameValidationWarning
+@onready var _description_edit: TextEdit = $VB/DescriptionEdit
+@onready var _tag_container: HFlowContainer = $VB/TagContainer
+@onready var _tag_edit: LineEdit = $VB/TagContainer/TagEdit
+@onready var _tag_suggestions_container: HFlowContainer = $VB/TagContainer/SuggestionsContainer
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	_type_restriction = get_parent().type_restriction
 	if _type_restriction != null:
-		TypeOption.select(
-			TypeOption.get_item_index(_type_restriction)
+		_type_option.select(
+			_type_option.get_item_index(_type_restriction)
 		)
-		TypeOption.disabled = true
+		_type_option.disabled = true
 	_clear_tag_container()
 	_validate()
 	var default: Array[Dictionary] = []
@@ -80,30 +74,30 @@ func _get_all_names(variables) -> Array[String]:
 func _validate():
 	var valid = true
 	
-	ScopeValidationWarning.texture = null
-	ScopeValidationWarning.tooltip_text = ""
-	if ScopeOption.selected == -1:
-		ScopeValidationWarning.tooltip_text = "Scope is required."
-		ScopeValidationWarning.texture = WarningIcon
+	_scope_validation_warning.texture = null
+	_scope_validation_warning.tooltip_text = ""
+	if _scope_option.selected == -1:
+		_scope_validation_warning.tooltip_text = "Scope is required."
+		_scope_validation_warning.texture = WARNING_ICON
 		valid = false
 	
-	TypeValidationWarning.texture = null
-	TypeValidationWarning.tooltip_text = ""
-	if TypeOption.selected == -1:
-		TypeValidationWarning.tooltip_text = "Type is required."
-		TypeValidationWarning.texture = WarningIcon
+	_type_validation_warning.texture = null
+	_type_validation_warning.tooltip_text = ""
+	if _type_option.selected == -1:
+		_type_validation_warning.tooltip_text = "Type is required."
+		_type_validation_warning.texture = WARNING_ICON
 		valid = false
 	
-	NameValidationWarning.texture = null
-	NameValidationWarning.tooltip_text = ""
-	var name_entered = NameEdit.text.strip_edges()
+	_name_validation_warning.texture = null
+	_name_validation_warning.tooltip_text = ""
+	var name_entered = _name_edit.text.strip_edges()
 	if name_entered == "":
-		NameValidationWarning.tooltip_text = "Name is required, and must not\nconsist of whitespace."
-		NameValidationWarning.texture = WarningIcon
+		_name_validation_warning.tooltip_text = "Name is required, and must not\nconsist of whitespace."
+		_name_validation_warning.texture = WARNING_ICON
 		valid = false
 	if _is_name_in_use(name_entered):
-		NameValidationWarning.tooltip_text = "This name is already in use."
-		NameValidationWarning.texture = WarningIcon
+		_name_validation_warning.tooltip_text = "This name is already in use."
+		_name_validation_warning.texture = WARNING_ICON
 		valid = false
 	
 	return valid
@@ -117,101 +111,34 @@ func _is_name_in_use(n):
 
 
 func _clear_tag_container():
-	if TagContainer.get_child_count() <= 1:
+	if _tag_container.get_child_count() <= 1:
 		return
-	for index in range(TagContainer.get_child_count() - 3, -1, -1):
-		TagContainer.remove_child(TagContainer.get_child(index))
+	for index in range(_tag_container.get_child_count() - 3, -1, -1):
+		_tag_container.remove_child(_tag_container.get_child(index))
 
 
 func _tag_exists(new_tag):
-	for index in range(TagContainer.get_child_count() - 3, -1, -1):
-		var tag = TagContainer.get_child(index)
+	for index in range(_tag_container.get_child_count() - 3, -1, -1):
+		var tag = _tag_container.get_child(index)
 		if tag.tag == new_tag:
 			return true
 	return false
 
 
-func _on_tag_edit_text_submitted(new_text):
-	var real_text = new_text.strip_edges()
-	_clear_tag_suggestions()
-	if real_text == "":
-		TagEdit.clear()
-		return
-	if _tag_exists(real_text):
-		TagEdit.clear()
-		return
-	var t = TagControlScene.instantiate()
-	t.remove_requested.connect(
-		_on_tag_remove_requested.bind(t)
-	)
-	t.tag = real_text
-	TagContainer.add_child(t)
-	TagContainer.move_child(t, TagContainer.get_child_count() - 3)
-	TagEdit.clear()
-	tag_added.emit()
-
-
-func _on_tag_remove_requested(tag):
-	TagContainer.remove_child(tag)
-	tag.queue_free()
-
-
-func _on_name_edit_text_changed(new_text):
-	_validate()
-
-
-func _on_scope_option_item_selected(index):
-	_validate()
-
-
-func _on_type_option_item_selected(index):
-	_validate()
-
-
-func _on_create_button_pressed():
-	if not _validate():
-		var dialog = AcceptDialog.new()
-		dialog.title = "Validation Failed"
-		dialog.dialog_text = """There are graph items with duplicate names.\n
-			Please correct the values and try again."""
-		self.add_child(dialog)
-		dialog.popup_on_parent(
-			Rect2i(
-				self.position + Vector2(60, 60),
-				Vector2i(200, 150)
-			)
-		)
-		dialog.confirmed.connect(
-			_validation_failed_dialog_closed.bind(dialog)
-		)
-		dialog.close_requested.connect(
-			_validation_failed_dialog_closed.bind(dialog)
-		)
-	else:
-		created.emit(_perform_save())
-
-
-func _validation_failed_dialog_closed(dialog):
-	Logger.debug("Validation failed dialog closed.")
-	dialog.confirmed.disconnect(_validation_failed_dialog_closed)
-	dialog.close_requested.disconnect(_validation_failed_dialog_closed)
-	dialog.queue_free()
-
-
 func _get_tags():
 	var tags = []
-	for index in range(TagContainer.get_child_count() - 3, -1, -1):
-		var tag = TagContainer.get_child(index)
+	for index in range(_tag_container.get_child_count() - 3, -1, -1):
+		var tag = _tag_container.get_child(index)
 		tags.append(tag.tag)
 	return tags
 
 
 func _perform_save():
 	var new_variable = {
-		'name': NameEdit.text.strip_edges(),
-		"scope": ScopeOption.get_selected_id(),
-		"type": TypeOption.get_selected_id(),
-		"description": DescriptionEdit.text.strip_edges(),
+		'name': _name_edit.text.strip_edges(),
+		"scope": _scope_option.get_selected_id(),
+		"type": _type_option.get_selected_id(),
+		"description": _description_edit.text.strip_edges(),
 		"tags": _get_tags()
 	}
 	_variables.append(new_variable)
@@ -225,13 +152,9 @@ func _perform_save():
 	return new_variable
 
 
-func _on_cancel_button_pressed():
-	cancelled.emit()
-
-
 func _clear_tag_suggestions():
-	for child in TagSuggestionsContainer.get_children():
-		TagSuggestionsContainer.remove_child(child)
+	for child in _tag_suggestions_container.get_children():
+		_tag_suggestions_container.remove_child(child)
 
 
 func _generate_tag_suggestions(text):
@@ -240,19 +163,8 @@ func _generate_tag_suggestions(text):
 	for s in suggestions:
 		var b = Button.new()
 		b.text = s
-		b.pressed.connect(_tag_suggestion_pressed.bind(b))
-		TagSuggestionsContainer.add_child(b)
-
-
-func _tag_suggestion_pressed(button):
-	var tag = button.text
-	_on_tag_edit_text_submitted(tag)
-	TagEdit.grab_focus()
-
-
-class TagSimilarity:
-	var tag: String
-	var similarity: float
+		b.pressed.connect(_on_tag_suggestion_pressed.bind(b))
+		_tag_suggestions_container.add_child(b)
 
 
 func _get_tag_suggestions(starting_with, max_count):
@@ -293,8 +205,90 @@ func _get_tag_suggestions(starting_with, max_count):
 	return results
 
 
+func _on_tag_edit_text_submitted(new_text):
+	var real_text = new_text.strip_edges()
+	_clear_tag_suggestions()
+	if real_text == "":
+		_tag_edit.clear()
+		return
+	if _tag_exists(real_text):
+		_tag_edit.clear()
+		return
+	var t = TagControlScene.instantiate()
+	t.remove_requested.connect(
+		_on_tag_remove_requested.bind(t)
+	)
+	t.tag = real_text
+	_tag_container.add_child(t)
+	_tag_container.move_child(t, _tag_container.get_child_count() - 3)
+	_tag_edit.clear()
+	tag_added.emit()
+
+
+func _on_tag_remove_requested(tag):
+	_tag_container.remove_child(tag)
+	tag.queue_free()
+
+
+func _on_name_edit_text_changed(new_text):
+	_validate()
+
+
+func _on_scope_option_item_selected(index):
+	_validate()
+
+
+func _on_type_option_item_selected(index):
+	_validate()
+
+
+func _on_create_button_pressed():
+	if not _validate():
+		var dialog = AcceptDialog.new()
+		dialog.title = "Validation Failed"
+		dialog.dialog_text = """There are graph items with duplicate names.\n
+			Please correct the values and try again."""
+		self.add_child(dialog)
+		dialog.popup_on_parent(
+			Rect2i(
+				self.position + Vector2(60, 60),
+				Vector2i(200, 150)
+			)
+		)
+		dialog.confirmed.connect(
+			_on_validation_failed_dialog_closed.bind(dialog)
+		)
+		dialog.close_requested.connect(
+			_on_validation_failed_dialog_closed.bind(dialog)
+		)
+	else:
+		created.emit(_perform_save())
+
+
+func _on_validation_failed_dialog_closed(dialog):
+	_logger.debug("Validation failed dialog closed.")
+	dialog.confirmed.disconnect(_on_validation_failed_dialog_closed)
+	dialog.close_requested.disconnect(_on_validation_failed_dialog_closed)
+	dialog.queue_free()
+
+
+func _on_cancel_button_pressed():
+	cancelled.emit()
+
+
+func _on_tag_suggestion_pressed(button):
+	var tag = button.text
+	_on_tag_edit_text_submitted(tag)
+	_tag_edit.grab_focus()
+
+
 func _on_tag_edit_text_changed(new_text):
 	if len(new_text) <= 1:
 		_clear_tag_suggestions()
 		return
 	_generate_tag_suggestions(new_text)
+
+
+class TagSimilarity:
+	var tag: String
+	var similarity: float

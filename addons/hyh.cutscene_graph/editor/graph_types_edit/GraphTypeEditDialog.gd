@@ -1,18 +1,20 @@
 @tool
 extends Window
+## Graph type definition dialog.
 
 
 signal closing()
 
 
-@onready var BackgroundPanel = get_node("BackgroundPanel")
+@onready var _background_panel = $BackgroundPanel
 
 
 func _ready() -> void:
-	BackgroundPanel.color = get_theme_color("base_color", "Editor")
+	_background_panel.color = get_theme_color("base_color", "Editor")
 
 
-func configure():
+## Prepare the dialog for display.
+func configure() -> void:
 	$GraphTypeEditDialogContents.configure()
 
 

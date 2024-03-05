@@ -27,26 +27,26 @@ slot/0/right_icon = null
 slot/0/draw_stylebox = true
 script = ExtResource("4_wb78j")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MC" type="MarginContainer" parent="."]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="GridContainer" type="GridContainer" parent="MarginContainer"]
+[node name="GC" type="GridContainer" parent="MC"]
 layout_mode = 2
 columns = 2
 
-[node name="Label" type="Label" parent="MarginContainer/GridContainer"]
+[node name="Label" type="Label" parent="MC/GC"]
 layout_mode = 2
 text = "Name:"
 
-[node name="NameLineEdit" type="LineEdit" parent="MarginContainer/GridContainer"]
+[node name="NameLineEdit" type="LineEdit" parent="MC/GC"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 flat = true
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
-[connection signal="text_changed" from="MarginContainer/GridContainer/NameLineEdit" to="." method="_on_name_line_edit_text_changed"]
+[connection signal="text_changed" from="MC/GC/NameLineEdit" to="." method="_on_name_line_edit_text_changed"]

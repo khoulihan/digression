@@ -95,9 +95,9 @@ use_restriction = 4
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="resize_request" from="." to="." method="_on_resize_request"]
-[connection signal="item_selected" from="RootContainer/VerticalLayout/CharacterOptionsContainer/CharacterSelect" to="." method="_on_CharacterSelect_item_selected"]
-[connection signal="item_selected" from="RootContainer/VerticalLayout/CharacterOptionsContainer/VariantSelect" to="." method="_on_VariantSelect_item_selected"]
-[connection signal="text_changed" from="RootContainer/VerticalLayout/TextEdit" to="." method="_on_TextEdit_text_changed"]
+[connection signal="item_selected" from="RootContainer/VerticalLayout/CharacterOptionsContainer/CharacterSelect" to="." method="_on_character_select_item_selected"]
+[connection signal="item_selected" from="RootContainer/VerticalLayout/CharacterOptionsContainer/VariantSelect" to="." method="_on_variant_select_item_selected"]
+[connection signal="text_changed" from="RootContainer/VerticalLayout/TextEdit" to="." method="_on_text_edit_text_changed"]
 [connection signal="text_changed" from="RootContainer/VerticalLayout/TranslationContainer/TranslationKeyEdit" to="." method="_on_translation_key_edit_text_changed"]
 [connection signal="add_property_requested" from="RootContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_add_property_requested"]
 [connection signal="modified" from="RootContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_modified"]

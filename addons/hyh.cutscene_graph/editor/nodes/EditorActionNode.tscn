@@ -170,15 +170,15 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="GridContainer" type="GridContainer" parent="ReturnContainer"]
+[node name="GC" type="GridContainer" parent="ReturnContainer"]
 layout_mode = 2
 columns = 2
 
-[node name="Label" type="Label" parent="ReturnContainer/GridContainer"]
+[node name="Label" type="Label" parent="ReturnContainer/GC"]
 layout_mode = 2
 text = "Return Value:"
 
-[node name="ReturnOption" type="OptionButton" parent="ReturnContainer/GridContainer"]
+[node name="ReturnOption" type="OptionButton" parent="ReturnContainer/GC"]
 layout_mode = 2
 size_flags_horizontal = 3
 flat = true
@@ -189,12 +189,12 @@ popup/item_0/id = 0
 popup/item_1/text = "Assign to Variable"
 popup/item_1/id = 1
 
-[node name="ReturnVariableLabel" type="Label" parent="ReturnContainer/GridContainer"]
+[node name="ReturnVariableLabel" type="Label" parent="ReturnContainer/GC"]
 visible = false
 layout_mode = 2
 text = "Variable:"
 
-[node name="ReturnVariableSelectionControl" parent="ReturnContainer/GridContainer" instance=ExtResource("8_1o0k2")]
+[node name="ReturnVariableSelectionControl" parent="ReturnContainer/GC" instance=ExtResource("8_1o0k2")]
 visible = false
 layout_mode = 2
 
@@ -204,5 +204,5 @@ layout_mode = 2
 [connection signal="text_changed" from="RootContainer/MethodContainer/MethodNameEdit" to="." method="_on_method_name_edit_text_changed"]
 [connection signal="pressed" from="RootContainer/MethodContainer/ReturnsImmediatelyCheck" to="." method="_on_returns_immediately_check_pressed"]
 [connection signal="argument_dropped" from="ArgumentsContainer/VB/MC" to="." method="_on_argument_dropped"]
-[connection signal="item_selected" from="ReturnContainer/GridContainer/ReturnOption" to="." method="_on_return_option_item_selected"]
-[connection signal="variable_selected" from="ReturnContainer/GridContainer/ReturnVariableSelectionControl" to="." method="_on_return_variable_selection_control_variable_selected"]
+[connection signal="item_selected" from="ReturnContainer/GC/ReturnOption" to="." method="_on_return_option_item_selected"]
+[connection signal="variable_selected" from="ReturnContainer/GC/ReturnVariableSelectionControl" to="." method="_on_return_variable_selection_control_variable_selected"]

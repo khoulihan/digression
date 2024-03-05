@@ -74,8 +74,8 @@ layout_mode = 2
 layout_mode = 2
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/AddBranchButton" to="." method="_on_AddBranchButton_pressed"]
-[connection signal="modified" from="RandomValue" to="." method="_value_modified" binds= [1]]
-[connection signal="remove_requested" from="RandomValue" to="." method="_value_remove_requested" binds= [1]]
-[connection signal="modified" from="RandomValue2" to="." method="_value_modified" binds= [2]]
-[connection signal="remove_requested" from="RandomValue2" to="." method="_value_remove_requested" binds= [2]]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/AddBranchButton" to="." method="_on_add_branch_button_pressed"]
+[connection signal="modified" from="RandomValue" to="." method="_on_branch_modified" binds= [0]]
+[connection signal="remove_requested" from="RandomValue" to="." method="_on_branch_remove_requested" binds= [0]]
+[connection signal="modified" from="RandomValue2" to="." method="_on_branch_modified" binds= [1]]
+[connection signal="remove_requested" from="RandomValue2" to="." method="_on_branch_remove_requested" binds= [1]]

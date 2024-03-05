@@ -1,15 +1,9 @@
 @tool
 extends MarginContainer
+## Choice type definition dialog contents.
 
 
-const Logging = preload("../../utility/Logging.gd")
-var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
-
-
-const DEFAULT_ICON = preload("../../icons/icon_favourites.svg")
-const WARNING_ICON = preload("../../icons/icon_node_warning.svg")
-const NEW_TYPE_NAME = "new_choice_type"
-
+signal closing()
 
 enum GraphTypesTreeColumns {
 	ALLOWED,
@@ -17,93 +11,89 @@ enum GraphTypesTreeColumns {
 	NAME,
 }
 
-
 enum ChoiceTypesTreeColumns {
 	NAME,
 	INCLUDE_DIALOGUE,
 	SKIP_FOR_REPEAT,
 }
 
-
 enum ChoiceTypesPopupMenuItem {
 	REMOVE,
 }
 
+const Logging = preload("../../utility/Logging.gd")
+const DEFAULT_ICON = preload("../../icons/icon_favourites.svg")
+const WARNING_ICON = preload("../../icons/icon_node_warning.svg")
+const NEW_TYPE_NAME = "new_choice_type"
 
-@onready var ChoiceTypesTree: Tree = get_node("VBoxContainer/HSplitContainer/ChoiceTypesPane/VBoxContainer/ChoiceTypesTree")
-@onready var GraphTypesTree: Tree = get_node("VBoxContainer/HSplitContainer/GraphTypesPane/VBoxContainer/GraphTypesTree")
-@onready var AddButton: Button = get_node("VBoxContainer/HSplitContainer/ChoiceTypesPane/VBoxContainer/HeaderButtonsContainer/AddButton")
-@onready var RemoveButton: Button = get_node("VBoxContainer/HSplitContainer/ChoiceTypesPane/VBoxContainer/HeaderButtonsContainer/RemoveButton")
-@onready var Help: TextureRect = get_node("VBoxContainer/HSplitContainer/ChoiceTypesPane/VBoxContainer/HeaderButtonsContainer/Help")
-@onready var GraphTypesPane: MarginContainer = get_node("VBoxContainer/HSplitContainer/GraphTypesPane")
-@onready var GraphPanelHeader: HBoxContainer = get_node("VBoxContainer/HSplitContainer/GraphTypesPane/VBoxContainer/HBoxContainer")
-@onready var GraphPanelHeaderLabel: Label = get_node("VBoxContainer/HSplitContainer/GraphTypesPane/VBoxContainer/HBoxContainer/SecondPanelHeaderLabel")
-
-
-signal closing()
-
-
+var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
 var _graph_types
 var _graph_types_per_choice_type = {}
 
+@onready var _choice_types_tree: Tree = $VB/HSplitContainer/ChoiceTypesPane/VB/ChoiceTypesTree
+@onready var _graph_types_tree: Tree = $VB/HSplitContainer/GraphTypesPane/VB/GraphTypesTree
+@onready var _remove_button: Button = $VB/HSplitContainer/ChoiceTypesPane/VB/HeaderButtonsContainer/RemoveButton
+@onready var _graph_panel_header: HBoxContainer = $VB/HSplitContainer/GraphTypesPane/VB/GraphPanelHeader
+@onready var _graph_panel_header_label: Label = $VB/HSplitContainer/GraphTypesPane/VB/GraphPanelHeader/GraphPanelHeaderLabel
 
-func _ready():
+
+func _ready() -> void:
 	_graph_types = ProjectSettings.get_setting(
 		"cutscene_graph_editor/graph_types",
 		[]
 	)
 	
-	var graph_types_root = GraphTypesTree.create_item()
-	GraphTypesTree.set_column_title(
+	var graph_types_root = _graph_types_tree.create_item()
+	_graph_types_tree.set_column_title(
 		GraphTypesTreeColumns.ALLOWED,
 		"Allowed"
 	)
-	GraphTypesTree.set_column_expand(
+	_graph_types_tree.set_column_expand(
 		GraphTypesTreeColumns.ALLOWED,
 		false
 	)
-	GraphTypesTree.set_column_title(
+	_graph_types_tree.set_column_title(
 		GraphTypesTreeColumns.IS_DEFAULT,
 		"Default"
 	)
-	GraphTypesTree.set_column_expand(
+	_graph_types_tree.set_column_expand(
 		GraphTypesTreeColumns.IS_DEFAULT,
 		false
 	)
-	GraphTypesTree.set_column_title(
+	_graph_types_tree.set_column_title(
 		GraphTypesTreeColumns.NAME,
 		"Name"
 	)
-	GraphTypesTree.set_column_expand(
+	_graph_types_tree.set_column_expand(
 		GraphTypesTreeColumns.NAME,
 		true
 	)
 	for t in _graph_types:
-		var item: TreeItem = GraphTypesTree.create_item(graph_types_root)
+		var item: TreeItem = _graph_types_tree.create_item(graph_types_root)
 		_populate_item_for_graph_type(item, t)
 	
-	var choice_types_root = ChoiceTypesTree.create_item()
-	ChoiceTypesTree.set_column_title(
+	var choice_types_root = _choice_types_tree.create_item()
+	_choice_types_tree.set_column_title(
 		ChoiceTypesTreeColumns.NAME,
 		"Name"
 	)
-	ChoiceTypesTree.set_column_expand(
+	_choice_types_tree.set_column_expand(
 		ChoiceTypesTreeColumns.NAME,
 		true
 	)
-	ChoiceTypesTree.set_column_title(
+	_choice_types_tree.set_column_title(
 		ChoiceTypesTreeColumns.INCLUDE_DIALOGUE,
 		"Include Dialogue?"
 	)
-	ChoiceTypesTree.set_column_expand(
+	_choice_types_tree.set_column_expand(
 		ChoiceTypesTreeColumns.INCLUDE_DIALOGUE,
 		false
 	)
-	ChoiceTypesTree.set_column_title(
+	_choice_types_tree.set_column_title(
 		ChoiceTypesTreeColumns.SKIP_FOR_REPEAT,
 		"Skip for Repeat?"
 	)
-	ChoiceTypesTree.set_column_expand(
+	_choice_types_tree.set_column_expand(
 		ChoiceTypesTreeColumns.SKIP_FOR_REPEAT,
 		false
 	)
@@ -112,20 +102,20 @@ func _ready():
 		[]
 	)
 	for t in types:
-		var item: TreeItem = ChoiceTypesTree.create_item(choice_types_root)
+		var item: TreeItem = _choice_types_tree.create_item(choice_types_root)
 		_populate_item_for_type(item, t)
 	
 	_hide_graph_types()
 
 
 func _hide_graph_types():
-	GraphTypesTree.hide()
-	GraphPanelHeader.hide()
+	_graph_types_tree.hide()
+	_graph_panel_header.hide()
 
 
 func _show_graph_types():
-	GraphTypesTree.show()
-	GraphPanelHeader.show()
+	_graph_types_tree.show()
+	_graph_panel_header.show()
 
 
 func _populate_item_for_type(item, type):
@@ -208,36 +198,8 @@ func _populate_item_for_graph_type(item, type):
 	)
 
 
-func _on_cancel_button_pressed():
-	closing.emit()
-
-
-func _on_save_button_pressed():
-	if not _validate():
-		_perform_save()
-		closing.emit()
-	else:
-		var dialog = AcceptDialog.new()
-		dialog.title = "Validation Failed"
-		dialog.dialog_text = """There are choice types with invalid names.\n
-			Please correct the values and try again."""
-		self.add_child(dialog)
-		dialog.popup_on_parent(
-			Rect2i(
-				self.position + Vector2(60, 60),
-				Vector2i(200, 150)
-			)
-		)
-		dialog.confirmed.connect(
-			_validation_failed_dialog_closed.bind(dialog)
-		)
-		dialog.close_requested.connect(
-			_validation_failed_dialog_closed.bind(dialog)
-		)
-
-
 func _perform_save():
-	var root = ChoiceTypesTree.get_root()
+	var root = _choice_types_tree.get_root()
 	var choice_types = []
 	for dt in root.get_children():
 		var t = {}
@@ -266,47 +228,14 @@ func _perform_save():
 	ProjectSettings.save()
 
 
-func _validation_failed_dialog_closed(dialog):
-	Logger.debug("Validation failed dialog closed.")
-	dialog.confirmed.disconnect(_validation_failed_dialog_closed)
-	dialog.close_requested.disconnect(_validation_failed_dialog_closed)
-	dialog.queue_free()
-
-
-func _on_popup_menu_id_pressed(id):
-	if id == ChoiceTypesPopupMenuItem.REMOVE:
-		_remove_selected()
-		_validate()
-
-
 func _remove_selected():
-	var selected = ChoiceTypesTree.get_selected()
+	var selected = _choice_types_tree.get_selected()
 	if selected == null:
 		return
 	_graph_types_per_choice_type.erase(selected)
 	selected.free()
 	_hide_graph_types()
 	_set_button_states(false)
-
-
-func _on_add_button_pressed():
-	var root = ChoiceTypesTree.get_root()
-	var item: TreeItem = ChoiceTypesTree.create_item(root)
-	_populate_item_for_type(
-		item,
-		{
-			"name": _get_default_type_name(),
-			"include_dialogue": true,
-			"skip_for_repeat": false,
-			"allowed_in_graph_types": [],
-			"default_in_graph_types": [],
-		},
-	)
-	ChoiceTypesTree.set_selected(
-		item,
-		ChoiceTypesTreeColumns.NAME
-	)
-	ChoiceTypesTree.edit_selected()
 
 
 func _get_default_type_name():
@@ -321,7 +250,7 @@ func _get_default_type_name():
 
 func _get_default_name_count():
 	var count = 0
-	var root = ChoiceTypesTree.get_root()
+	var root = _choice_types_tree.get_root()
 	for gt in root.get_children():
 		var name = gt.get_text(ChoiceTypesTreeColumns.NAME)
 		if name.begins_with(NEW_TYPE_NAME):
@@ -329,32 +258,15 @@ func _get_default_name_count():
 	return count
 
 
-func _on_remove_button_pressed():
-	_remove_selected()
-	_validate()
-
-
-func _on_choice_tree_item_selected():
-	_set_button_states(true)
-	_show_graph_types()
-	var item = ChoiceTypesTree.get_selected()
-	_configure_graph_tree_for_item(
-		item
-	)
-	_set_graph_panel_header(
-		item
-	)
-
-
 func _set_graph_panel_header(item):
-	GraphPanelHeaderLabel.text = "Graph Types for \"%s\"" % item.get_text(
+	_graph_panel_header_label.text = "Graph Types for \"%s\"" % item.get_text(
 		ChoiceTypesTreeColumns.NAME
 	)
 
 
 func _configure_graph_tree_for_item(item):
 	var gt_rels = _graph_types_per_choice_type[item]
-	var graph_type_root = GraphTypesTree.get_root()
+	var graph_type_root = _graph_types_tree.get_root()
 	for gt in graph_type_root.get_children():
 		var gt_name = gt.get_text(GraphTypesTreeColumns.NAME)
 		gt.set_checked(GraphTypesTreeColumns.ALLOWED, gt_rels[gt_name]['allowed'])
@@ -367,23 +279,13 @@ func _configure_graph_tree_for_item(item):
 
 
 func _set_button_states(item_selected):
-	#AddButton.disabled = not item_selected
-	RemoveButton.disabled = not item_selected
-
-
-func _on_help_gui_input(event):
-	var button_event = event as InputEventMouseButton
-	if button_event == null:
-		return
-	# TODO: Doesn't seem to be possible to manually display the tooltip.
-	# Maybe show a messagebox instead?
-	#Help.get_tooltip()
+	_remove_button.disabled = not item_selected
 
 
 func _validate():
 	var issues = false
 	var all_names = {}
-	var root = ChoiceTypesTree.get_root()
+	var root = _choice_types_tree.get_root()
 	for dt in root.get_children():
 		dt.set_icon(
 			ChoiceTypesTreeColumns.NAME,
@@ -425,22 +327,9 @@ func _validate():
 	return issues
 
 
-func _on_choice_tree_item_edited():
-	Logger.debug("Item edited")
-	var selected = ChoiceTypesTree.get_selected()
-	_set_graph_panel_header(selected)
-	_validate()
-
-
-func _on_graph_types_tree_item_edited():
-	_update_graph_tree_relations_for_item(
-		ChoiceTypesTree.get_selected()
-	)
-
-
 func _update_graph_tree_relations_for_item(item):
 	var gt_rels = _graph_types_per_choice_type[item]
-	var graph_type_root = GraphTypesTree.get_root()
+	var graph_type_root = _graph_types_tree.get_root()
 	for gt in graph_type_root.get_children():
 		var gt_name = gt.get_text(GraphTypesTreeColumns.NAME)
 		gt_rels[gt_name]['allowed'] = gt.is_checked(GraphTypesTreeColumns.ALLOWED)
@@ -456,6 +345,106 @@ func _update_graph_tree_relations_for_item(item):
 				if other_item == item:
 					continue
 				_graph_types_per_choice_type[other_item][gt_name]['default'] = false
+
+
+func _on_cancel_button_pressed():
+	closing.emit()
+
+
+func _on_save_button_pressed():
+	if not _validate():
+		_perform_save()
+		closing.emit()
+	else:
+		var dialog = AcceptDialog.new()
+		dialog.title = "Validation Failed"
+		dialog.dialog_text = """There are choice types with invalid names.\n
+			Please correct the values and try again."""
+		self.add_child(dialog)
+		dialog.popup_on_parent(
+			Rect2i(
+				self.position + Vector2(60, 60),
+				Vector2i(200, 150)
+			)
+		)
+		dialog.confirmed.connect(
+			_validation_failed_dialog_closed.bind(dialog)
+		)
+		dialog.close_requested.connect(
+			_validation_failed_dialog_closed.bind(dialog)
+		)
+
+
+func _validation_failed_dialog_closed(dialog):
+	_logger.debug("Validation failed dialog closed.")
+	dialog.confirmed.disconnect(_validation_failed_dialog_closed)
+	dialog.close_requested.disconnect(_validation_failed_dialog_closed)
+	dialog.queue_free()
+
+
+func _on_popup_menu_id_pressed(id):
+	if id == ChoiceTypesPopupMenuItem.REMOVE:
+		_remove_selected()
+		_validate()
+
+
+func _on_add_button_pressed():
+	var root = _choice_types_tree.get_root()
+	var item: TreeItem = _choice_types_tree.create_item(root)
+	_populate_item_for_type(
+		item,
+		{
+			"name": _get_default_type_name(),
+			"include_dialogue": true,
+			"skip_for_repeat": false,
+			"allowed_in_graph_types": [],
+			"default_in_graph_types": [],
+		},
+	)
+	_choice_types_tree.set_selected(
+		item,
+		ChoiceTypesTreeColumns.NAME
+	)
+	_choice_types_tree.edit_selected()
+
+
+func _on_remove_button_pressed():
+	_remove_selected()
+	_validate()
+
+
+func _on_choice_tree_item_selected():
+	_set_button_states(true)
+	_show_graph_types()
+	var item = _choice_types_tree.get_selected()
+	_configure_graph_tree_for_item(
+		item
+	)
+	_set_graph_panel_header(
+		item
+	)
+
+
+func _on_help_gui_input(event):
+	var button_event = event as InputEventMouseButton
+	if button_event == null:
+		return
+	# TODO: Doesn't seem to be possible to manually display the tooltip.
+	# Maybe show a messagebox instead?
+	#Help.get_tooltip()
+
+
+func _on_choice_tree_item_edited():
+	_logger.debug("Item edited")
+	var selected = _choice_types_tree.get_selected()
+	_set_graph_panel_header(selected)
+	_validate()
+
+
+func _on_graph_types_tree_item_edited():
+	_update_graph_tree_relations_for_item(
+		_choice_types_tree.get_selected()
+	)
 
 
 func _on_choice_tree_item_mouse_selected(position, mouse_button_index):

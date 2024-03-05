@@ -1,24 +1,25 @@
 @tool
 extends Window
+## Choice type definition dialog.
 
 
 signal closing()
 
-
-@onready var BackgroundPanel = get_node("BackgroundPanel")
+@onready var _background_panel = $BackgroundPanel
 
 
 func _ready() -> void:
-	BackgroundPanel.color = get_theme_color("base_color", "Editor")
+	_background_panel.color = get_theme_color("base_color", "Editor")
 
 
-func configure():
+## Prepare the dialog for display.
+func configure() -> void:
 	$ChoiceTypesEditDialogContents.configure()
 
 
-func _on_close_requested():
+func _on_close_requested() -> void:
 	closing.emit()
 
 
-func _on_choice_types_edit_dialog_contents_closing():
+func _on_choice_types_edit_dialog_contents_closing() -> void:
 	closing.emit()

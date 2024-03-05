@@ -1,43 +1,44 @@
 @tool
 extends Window
-
-
-const Logging = preload("../../utility/Logging.gd")
-var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
+## Dialog for creating a variable definition.
 
 
 signal cancelled()
 signal created(variable)
 
+const Logging = preload("../../utility/Logging.gd")
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
 
-@onready var Contents = get_node("VariableCreateDialogContents")
-@onready var BackgroundPanel = get_node("BackgroundPanel")
-
+## The type to restrict the search to, if any.
 var type_restriction : Variant
+
+var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
+
+@onready var _contents = $VariableCreateDialogContents
+@onready var _background_panel = $BackgroundPanel
 
 
 func _ready() -> void:
 	self.size = get_node("VariableCreateDialogContents").size
-	BackgroundPanel.color = get_theme_color("base_color", "Editor")
+	_background_panel.color = get_theme_color("base_color", "Editor")
 
 
 func _on_variable_create_dialog_contents_resized():
-	Logger.debug("Resized signal")
-	if Contents != null:
-		self.size = Contents.size
+	_logger.debug("Resized signal")
+	if _contents != null:
+		self.size = _contents.size
 
 
 func _on_close_requested():
-	Logger.debug("Variable create dialog closed")
+	_logger.debug("Variable create dialog closed")
 	cancelled.emit()
 
 
 func _on_variable_create_dialog_contents_cancelled():
-	Logger.debug("Variable create dialog cancelled")
+	_logger.debug("Variable create dialog cancelled")
 	cancelled.emit()
 
 
 func _on_variable_create_dialog_contents_created(variable):
-	Logger.debug("Variable create dialog completed")
+	_logger.debug("Variable create dialog completed")
 	created.emit(variable)

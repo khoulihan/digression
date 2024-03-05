@@ -1,20 +1,21 @@
 @tool
 extends Window
-
-
-const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
+## Dialog for selecting variables.
 
 
 signal selected(variable)
 signal cancelled()
 
-@onready var BackgroundPanel = get_node("BackgroundPanel")
+const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
 
+## The type to limit the results to.
 var type_restriction : Variant
+
+@onready var _background_panel = $BackgroundPanel
 
 
 func _ready() -> void:
-	BackgroundPanel.color = get_theme_color("base_color", "Editor")
+	_background_panel.color = get_theme_color("base_color", "Editor")
 
 
 func _on_variable_select_dialog_contents_cancelled():

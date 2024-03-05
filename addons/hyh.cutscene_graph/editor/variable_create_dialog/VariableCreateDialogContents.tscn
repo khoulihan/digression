@@ -20,19 +20,19 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 script = ExtResource("1_dookr")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VB" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
+[node name="GC" type="GridContainer" parent="VB"]
 layout_mode = 2
 columns = 3
 
-[node name="Label2" type="Label" parent="VBoxContainer/GridContainer"]
+[node name="Label2" type="Label" parent="VB/GC"]
 layout_mode = 2
 text = "Scope:
 "
 
-[node name="ScopeOption" type="OptionButton" parent="VBoxContainer/GridContainer"]
+[node name="ScopeOption" type="OptionButton" parent="VB/GC"]
 layout_mode = 2
 size_flags_horizontal = 3
 item_count = 4
@@ -49,18 +49,18 @@ popup/item_3/text = "Global"
 popup/item_3/icon = ExtResource("3_u3s13")
 popup/item_3/id = 3
 
-[node name="ScopeValidationWarning" type="TextureRect" parent="VBoxContainer/GridContainer"]
+[node name="ScopeValidationWarning" type="TextureRect" parent="VB/GC"]
 custom_minimum_size = Vector2(16, 0)
 layout_mode = 2
 tooltip_text = "Scope is required."
 texture = ExtResource("5_pvmf8")
 stretch_mode = 3
 
-[node name="Label3" type="Label" parent="VBoxContainer/GridContainer"]
+[node name="Label3" type="Label" parent="VB/GC"]
 layout_mode = 2
 text = "Type:"
 
-[node name="TypeOption" type="OptionButton" parent="VBoxContainer/GridContainer"]
+[node name="TypeOption" type="OptionButton" parent="VB/GC"]
 layout_mode = 2
 size_flags_horizontal = 3
 item_count = 4
@@ -77,78 +77,78 @@ popup/item_3/text = "String"
 popup/item_3/icon = ExtResource("7_qfrlk")
 popup/item_3/id = 4
 
-[node name="TypeValidationWarning" type="TextureRect" parent="VBoxContainer/GridContainer"]
+[node name="TypeValidationWarning" type="TextureRect" parent="VB/GC"]
 layout_mode = 2
 tooltip_text = "Type is required."
 texture = ExtResource("5_pvmf8")
 stretch_mode = 3
 
-[node name="Label" type="Label" parent="VBoxContainer/GridContainer"]
+[node name="Label" type="Label" parent="VB/GC"]
 layout_mode = 2
 text = "Name:"
 
-[node name="NameEdit" type="LineEdit" parent="VBoxContainer/GridContainer"]
+[node name="NameEdit" type="LineEdit" parent="VB/GC"]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Enter Variable Name..."
 
-[node name="NameValidationWarning" type="TextureRect" parent="VBoxContainer/GridContainer"]
+[node name="NameValidationWarning" type="TextureRect" parent="VB/GC"]
 layout_mode = 2
 tooltip_text = "Name is required, and must not
 consist of whitespace."
 texture = ExtResource("5_pvmf8")
 stretch_mode = 3
 
-[node name="Label4" type="Label" parent="VBoxContainer"]
+[node name="Label4" type="Label" parent="VB"]
 layout_mode = 2
 text = "Description:"
 
-[node name="DescriptionEdit" type="TextEdit" parent="VBoxContainer"]
+[node name="DescriptionEdit" type="TextEdit" parent="VB"]
 custom_minimum_size = Vector2(0, 93)
 layout_mode = 2
 placeholder_text = "Enter a description..."
 wrap_mode = 1
 
-[node name="Label" type="Label" parent="VBoxContainer"]
+[node name="Label" type="Label" parent="VB"]
 layout_mode = 2
 text = "Tags:"
 
-[node name="TagContainer" type="HFlowContainer" parent="VBoxContainer"]
+[node name="TagContainer" type="HFlowContainer" parent="VB"]
 custom_minimum_size = Vector2(0, 133)
 layout_mode = 2
 
-[node name="TagEdit" type="LineEdit" parent="VBoxContainer/TagContainer"]
+[node name="TagEdit" type="LineEdit" parent="VB/TagContainer"]
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 placeholder_text = "Add New Tag..."
 
-[node name="SuggestionsContainer" type="HFlowContainer" parent="VBoxContainer/TagContainer"]
+[node name="SuggestionsContainer" type="HFlowContainer" parent="VB/TagContainer"]
 custom_minimum_size = Vector2(340, 31)
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+[node name="MC" type="MarginContainer" parent="VB"]
 layout_mode = 2
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="FooterButtonsContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer"]
+[node name="FooterButtonsContainer" type="HBoxContainer" parent="VB/MC"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 theme_override_constants/separation = 30
 
-[node name="CancelButton" type="Button" parent="VBoxContainer/MarginContainer/FooterButtonsContainer"]
+[node name="CancelButton" type="Button" parent="VB/MC/FooterButtonsContainer"]
 layout_mode = 2
 text = "Cancel"
 
-[node name="CreateButton" type="Button" parent="VBoxContainer/MarginContainer/FooterButtonsContainer"]
+[node name="CreateButton" type="Button" parent="VB/MC/FooterButtonsContainer"]
 layout_mode = 2
 text = "Create"
 
-[connection signal="item_selected" from="VBoxContainer/GridContainer/ScopeOption" to="." method="_on_scope_option_item_selected"]
-[connection signal="item_selected" from="VBoxContainer/GridContainer/TypeOption" to="." method="_on_type_option_item_selected"]
-[connection signal="text_changed" from="VBoxContainer/GridContainer/NameEdit" to="." method="_on_name_edit_text_changed"]
-[connection signal="text_changed" from="VBoxContainer/TagContainer/TagEdit" to="." method="_on_tag_edit_text_changed"]
-[connection signal="text_submitted" from="VBoxContainer/TagContainer/TagEdit" to="." method="_on_tag_edit_text_submitted"]
-[connection signal="pressed" from="VBoxContainer/MarginContainer/FooterButtonsContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/MarginContainer/FooterButtonsContainer/CreateButton" to="." method="_on_create_button_pressed"]
+[connection signal="item_selected" from="VB/GC/ScopeOption" to="." method="_on_scope_option_item_selected"]
+[connection signal="item_selected" from="VB/GC/TypeOption" to="." method="_on_type_option_item_selected"]
+[connection signal="text_changed" from="VB/GC/NameEdit" to="." method="_on_name_edit_text_changed"]
+[connection signal="text_changed" from="VB/TagContainer/TagEdit" to="." method="_on_tag_edit_text_changed"]
+[connection signal="text_submitted" from="VB/TagContainer/TagEdit" to="." method="_on_tag_edit_text_submitted"]
+[connection signal="pressed" from="VB/MC/FooterButtonsContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="VB/MC/FooterButtonsContainer/CreateButton" to="." method="_on_create_button_pressed"]

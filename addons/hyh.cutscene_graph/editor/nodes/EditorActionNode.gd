@@ -1,21 +1,6 @@
 @tool
 extends "EditorGraphNodeBase.gd"
-
-const TITLE_FONT = preload("res://addons/hyh.cutscene_graph/editor/nodes/styles/TitleOptionFont.tres")
-
-const ExpressionArgument = preload("res://addons/hyh.cutscene_graph/editor/controls/arguments/ExpressionArgument.tscn")
-const CharacterArgument = preload("res://addons/hyh.cutscene_graph/editor/controls/arguments/CharacterArgument.tscn")
-const DataStoreArgument = preload("res://addons/hyh.cutscene_graph/editor/controls/arguments/DataStoreArgument.tscn")
-const ExpressionArgumentClass = preload("res://addons/hyh.cutscene_graph/editor/controls/arguments/ExpressionArgument.gd")
-const CharacterArgumentClass = preload("res://addons/hyh.cutscene_graph/editor/controls/arguments/CharacterArgument.gd")
-const DataStoreArgumentClass = preload("res://addons/hyh.cutscene_graph/editor/controls/arguments/DataStoreArgument.gd")
-
-
-const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
-const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
-const ActionMechanism = preload("../../resources/graph/ActionNode.gd").ActionMechanism
-const ActionReturnType = preload("../../resources/graph/ActionNode.gd").ActionReturnType
-const ActionArgumentType = preload("../../resources/graph/ActionNode.gd").ActionArgumentType
+## Action node UI.
 
 
 enum ActionAddArgumentMenuId {
@@ -32,58 +17,94 @@ enum ActionAddArgumentMenuId {
 	DATA_STORE_GLOBAL,
 }
 
-@onready var SignalContainer = get_node("RootContainer/SignalContainer")
-@onready var ActionNameEdit = get_node("RootContainer/SignalContainer/ActionNameEdit")
+const TITLE_FONT = preload("res://addons/hyh.cutscene_graph/editor/nodes/styles/TitleOptionFont.tres")
 
-@onready var MethodContainer = get_node("RootContainer/MethodContainer")
-@onready var NodeSelectionControl = get_node("RootContainer/MethodContainer/NodeSelectionControl")
-@onready var MethodNameEdit = get_node("RootContainer/MethodContainer/MethodNameEdit")
-@onready var ReturnsImmediatelyCheck = get_node("RootContainer/MethodContainer/ReturnsImmediatelyCheck")
+const ExpressionArgument = preload("res://addons/hyh.cutscene_graph/editor/controls/arguments/ExpressionArgument.tscn")
+const CharacterArgument = preload("res://addons/hyh.cutscene_graph/editor/controls/arguments/CharacterArgument.tscn")
+const DataStoreArgument = preload("res://addons/hyh.cutscene_graph/editor/controls/arguments/DataStoreArgument.tscn")
+const ExpressionArgumentClass = preload("res://addons/hyh.cutscene_graph/editor/controls/arguments/ExpressionArgument.gd")
+const CharacterArgumentClass = preload("res://addons/hyh.cutscene_graph/editor/controls/arguments/CharacterArgument.gd")
+const DataStoreArgumentClass = preload("res://addons/hyh.cutscene_graph/editor/controls/arguments/DataStoreArgument.gd")
 
-@onready var ReturnContainer = get_node("ReturnContainer")
-@onready var ReturnOption = get_node("ReturnContainer/GridContainer/ReturnOption")
-@onready var ReturnVariableLabel = get_node("ReturnContainer/GridContainer/ReturnVariableLabel")
-@onready var ReturnVariableSelectionControl = get_node("ReturnContainer/GridContainer/ReturnVariableSelectionControl")
-
-@onready var AddArgumentButton = get_node("ArgumentsContainer/VB/HB/AddArgumentButton")
-@onready var ArgumentsListContainer = get_node("ArgumentsContainer/VB/MC/ArgumentsListContainer")
-
-var ActionMechanismOption: OptionButton
+const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
+const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
+const ActionMechanism = preload("../../resources/graph/ActionNode.gd").ActionMechanism
+const ActionReturnType = preload("../../resources/graph/ActionNode.gd").ActionReturnType
+const ActionArgumentType = preload("../../resources/graph/ActionNode.gd").ActionArgumentType
 
 var _characters
+var _action_mechanism_option: OptionButton
+
+@onready var _signal_container = $RootContainer/SignalContainer
+@onready var _action_name_edit = $RootContainer/SignalContainer/ActionNameEdit
+@onready var _method_container = $RootContainer/MethodContainer
+@onready var _node_selection_control = $RootContainer/MethodContainer/NodeSelectionControl
+@onready var _method_name_edit = $RootContainer/MethodContainer/MethodNameEdit
+@onready var _returns_immediately_check = $RootContainer/MethodContainer/ReturnsImmediatelyCheck
+@onready var _return_option = $ReturnContainer/GC/ReturnOption
+@onready var _return_variable_label = $ReturnContainer/GC/ReturnVariableLabel
+@onready var _return_variable_selection_control = $ReturnContainer/GC/ReturnVariableSelectionControl
+@onready var _add_argument_button = $ArgumentsContainer/VB/HB/AddArgumentButton
+@onready var _arguments_list_container = $ArgumentsContainer/VB/MC/ArgumentsListContainer
 
 
 func _init():
-	ActionMechanismOption = OptionButton.new()
-	ActionMechanismOption.item_selected.connect(_on_action_mechanism_option_item_selected)
-	ActionMechanismOption.flat = true
-	ActionMechanismOption.fit_to_longest_item = true
-	ActionMechanismOption.add_theme_font_override("font", TITLE_FONT)
-	ActionMechanismOption.add_item("Action (signal)", ActionMechanism.SIGNAL)
-	ActionMechanismOption.add_item("Action (method call)", ActionMechanism.METHOD)
+	_action_mechanism_option = OptionButton.new()
+	_action_mechanism_option.item_selected.connect(_on_action_mechanism_option_item_selected)
+	_action_mechanism_option.flat = true
+	_action_mechanism_option.fit_to_longest_item = true
+	_action_mechanism_option.add_theme_font_override("font", TITLE_FONT)
+	_action_mechanism_option.add_item("Action (signal)", ActionMechanism.SIGNAL)
+	_action_mechanism_option.add_item("Action (method call)", ActionMechanism.METHOD)
 
 
 func _ready():
 	var titlebar = get_titlebar_hbox()
-	titlebar.add_child(ActionMechanismOption)
+	titlebar.add_child(_action_mechanism_option)
 	# By moving to index 0, the empty title label serves as a spacer.
-	titlebar.move_child(ActionMechanismOption, 0)
-	ActionMechanismOption.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	titlebar.move_child(_action_mechanism_option, 0)
+	_action_mechanism_option.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	_configure_add_argument_button()
 	super()
 
 
-func _on_action_mechanism_option_item_selected(index):
-	var id = ActionMechanismOption.get_item_id(index)
+## Configure the editor node for a given graph node.
+func configure_for_node(g, n):
+	super.configure_for_node(g, n)
 	_configure_for_action_mechanism(
-		id
+		n.action_mechanism
 	)
-	modified.emit()
+	_populate_action_details(
+		n.action_mechanism,
+		n.node,
+		n.action_or_method_name,
+		n.returns_immediately,
+	)
+	_populate_return_details(
+		n.return_type,
+		n.return_variable,
+	)
+	_populate_arguments(
+		n.arguments
+	)
+
+
+func persist_changes_to_node():
+	super.persist_changes_to_node()
+	_persist_action_details()
+	_persist_return_details()
+	_persist_arguments()
+
+
+func populate_characters(characters):
+	_logger.debug("Populating characters")
+	_characters = characters
+	# TODO: Update any character arguments
 
 
 func _configure_for_action_mechanism(id):
-	SignalContainer.visible = (id == ActionMechanism.SIGNAL)
-	MethodContainer.visible = (id == ActionMechanism.METHOD)
+	_signal_container.visible = (id == ActionMechanism.SIGNAL)
+	_method_container.visible = (id == ActionMechanism.METHOD)
 	_correct_size()
 
 
@@ -92,7 +113,7 @@ func _correct_size():
 
 
 func _configure_add_argument_button():
-	var menu = AddArgumentButton.get_popup()
+	var menu = _add_argument_button.get_popup()
 	menu.clear()
 	# Children need to be removed or the wrong submenus may show up
 	for child in menu.get_children():
@@ -201,8 +222,8 @@ func _add_data_store_argument(scope):
 
 
 func _add_argument_to_list(arg):
-	arg.ordinal = ArgumentsListContainer.get_child_count()
-	ArgumentsListContainer.add_child(arg)
+	arg.ordinal = _arguments_list_container.get_child_count()
+	_arguments_list_container.add_child(arg)
 	arg.remove_requested.connect(_argument_remove_requested.bind(arg))
 	arg.remove_immediately.connect(_argument_remove_immediately.bind(arg))
 	arg.modified.connect(_argument_modified)
@@ -228,51 +249,17 @@ func _argument_remove_immediately(ordinal, argument):
 	argument.remove_requested.disconnect(_argument_remove_requested)
 	argument.remove_immediately.disconnect(_argument_remove_immediately)
 	argument.modified.disconnect(_argument_modified)
-	ArgumentsListContainer.remove_child(argument)
+	_arguments_list_container.remove_child(argument)
 	_recalculate_ordinals()
 	_correct_size()
-
-
-func _on_argument_remove_confirmed(argument, confirm):
-	get_tree().root.remove_child(confirm)
-	argument.remove_requested.disconnect(_argument_remove_requested)
-	argument.remove_immediately.disconnect(_argument_remove_immediately)
-	ArgumentsListContainer.remove_child(argument)
-	_recalculate_ordinals()
-	_correct_size()
-	modified.emit()
-
-
-func _on_argument_remove_cancelled(confirm):
-	get_tree().root.remove_child(confirm)
 
 
 func _recalculate_ordinals():
 	var ord = 0
-	for child in ArgumentsListContainer.get_children():
+	for child in _arguments_list_container.get_children():
 		child.ordinal = ord
 		child.refresh()
 		ord = ord + 1
-
-
-func configure_for_node(g, n):
-	super.configure_for_node(g, n)
-	_configure_for_action_mechanism(
-		n.action_mechanism
-	)
-	_populate_action_details(
-		n.action_mechanism,
-		n.node,
-		n.action_or_method_name,
-		n.returns_immediately,
-	)
-	_populate_return_details(
-		n.return_type,
-		n.return_variable,
-	)
-	_populate_arguments(
-		n.arguments
-	)
 
 
 func _populate_action_details(
@@ -281,22 +268,22 @@ func _populate_action_details(
 	action_or_method_name,
 	returns_immediately,
 ):
-	ActionMechanismOption.select(
-		ActionMechanismOption.get_item_index(
+	_action_mechanism_option.select(
+		_action_mechanism_option.get_item_index(
 			action_mechanism
 		)
 	)
 	if action_mechanism == ActionMechanism.SIGNAL:
-		ActionNameEdit.text = action_or_method_name
+		_action_name_edit.text = action_or_method_name
 	else:
-		NodeSelectionControl.populate(node_path)
-		MethodNameEdit.text = action_or_method_name
-		ReturnsImmediatelyCheck.button_pressed = returns_immediately
+		_node_selection_control.populate(node_path)
+		_method_name_edit.text = action_or_method_name
+		_returns_immediately_check.button_pressed = returns_immediately
 
 
 func _populate_arguments(arguments):
-	for child in ArgumentsListContainer.get_children():
-		ArgumentsListContainer.remove_child(child)
+	for child in _arguments_list_container.get_children():
+		_arguments_list_container.remove_child(child)
 	for argument in arguments:
 		_populate_argument(argument)
 	_recalculate_ordinals()
@@ -332,50 +319,43 @@ func _populate_expression_argument(argument):
 
 
 func _populate_return_details(return_type, variable):
-	ReturnOption.select(
-		ReturnOption.get_item_index(
+	_return_option.select(
+		_return_option.get_item_index(
 			return_type
 		)
 	)
 	_configure_for_return_type(return_type)
 	if return_type == ActionReturnType.ASSIGN_TO_VARIABLE:
 		if variable != null and not len(variable) == 0:
-			ReturnVariableSelectionControl.set_variable(
+			_return_variable_selection_control.set_variable(
 				variable,
 			)
 
 
-func persist_changes_to_node():
-	super.persist_changes_to_node()
-	_persist_action_details()
-	_persist_return_details()
-	_persist_arguments()
-
-
 func _persist_action_details():
-	node_resource.action_mechanism = ActionMechanismOption.get_selected_id()
+	node_resource.action_mechanism = _action_mechanism_option.get_selected_id()
 	
 	if node_resource.action_mechanism ==ActionMechanism.METHOD:
-		node_resource.action_or_method_name = MethodNameEdit.text
-		node_resource.node = NodeSelectionControl.get_selected_path()
-		node_resource.returns_immediately = ReturnsImmediatelyCheck.button_pressed
+		node_resource.action_or_method_name = _method_name_edit.text
+		node_resource.node = _node_selection_control.get_selected_path()
+		node_resource.returns_immediately = _returns_immediately_check.button_pressed
 	else:
-		node_resource.action_or_method_name = ActionNameEdit.text
+		node_resource.action_or_method_name = _action_name_edit.text
 		node_resource.node = NodePath()
 		node_resource.returns_immediately = false
 
 
 func _persist_return_details():
-	node_resource.return_type = ReturnOption.get_selected_id()
+	node_resource.return_type = _return_option.get_selected_id()
 	if node_resource.return_type == ActionReturnType.ASSIGN_TO_VARIABLE:
-		node_resource.return_variable = ReturnVariableSelectionControl.get_variable()
+		node_resource.return_variable = _return_variable_selection_control.get_variable()
 	else:
 		node_resource.return_variable = {}
 
 
 func _persist_arguments():
 	node_resource.arguments.clear()
-	for argument_node in ArgumentsListContainer.get_children():
+	for argument_node in _arguments_list_container.get_children():
 		_persist_argument(argument_node)
 
 
@@ -395,41 +375,14 @@ func _persist_argument(argument_node):
 	node_resource.arguments.append(argument)
 
 
-func populate_characters(characters):
-	Logger.debug("Populating characters")
-	_characters = characters
-	# TODO: Update any character arguments
-
-
-func _on_gui_input(ev):
-	super._on_gui_input(ev)
-
-
-func _on_return_option_item_selected(index):
-	var id = ReturnOption.get_item_id(index)
-	_configure_for_return_type(id)
-	modified.emit()
-
-
 func _configure_for_return_type(id):
-	ReturnVariableLabel.visible = (id == ActionReturnType.ASSIGN_TO_VARIABLE)
-	ReturnVariableSelectionControl.visible = (id == ActionReturnType.ASSIGN_TO_VARIABLE)
+	_return_variable_label.visible = (id == ActionReturnType.ASSIGN_TO_VARIABLE)
+	_return_variable_selection_control.visible = (id == ActionReturnType.ASSIGN_TO_VARIABLE)
 	_correct_size()
-
-
-func _on_argument_dropped(arg, at_position):
-	if arg.get_parent() == ArgumentsListContainer:
-		_move_to_position(at_position, arg)
-	else:
-		arg.remove_from_parent()
-		_add_at_position(at_position, arg)
-	_recalculate_ordinals()
-	_correct_size()
-	modified.emit()
 
 
 func _get_closest_argument(at_position, target):
-	var children = ArgumentsListContainer.get_children()
+	var children = _arguments_list_container.get_children()
 	var distance_to_child = null
 	var closest = null
 	var add_before = false
@@ -470,14 +423,14 @@ func _add_at_position(at_position, target):
 	
 	# Don't insert if the target was closest to itself!
 	if closest == null or closest != target:
-		ArgumentsListContainer.add_child(target)
+		_arguments_list_container.add_child(target)
 	if closest != null:
 		# Don't move if the target was closest to itself!
 		if closest != target:
 			if add_before:
-				ArgumentsListContainer.move_child(target, closest.get_index())
+				_arguments_list_container.move_child(target, closest.get_index())
 			else:
-				ArgumentsListContainer.move_child(target, closest.get_index() + 1)
+				_arguments_list_container.move_child(target, closest.get_index() + 1)
 	target.remove_requested.connect(_argument_remove_requested.bind(target))
 	target.remove_immediately.connect(_argument_remove_immediately.bind(target))
 
@@ -493,7 +446,50 @@ func _move_to_position(at_position, target):
 		var move_index = closest_index if add_before else closest_index + 1
 		if target_index < closest_index:
 			move_index = move_index - 1
-		ArgumentsListContainer.move_child(target, move_index)
+		_arguments_list_container.move_child(target, move_index)
+
+
+func _on_action_mechanism_option_item_selected(index):
+	var id = _action_mechanism_option.get_item_id(index)
+	_configure_for_action_mechanism(
+		id
+	)
+	modified.emit()
+
+
+func _on_argument_remove_confirmed(argument, confirm):
+	get_tree().root.remove_child(confirm)
+	argument.remove_requested.disconnect(_argument_remove_requested)
+	argument.remove_immediately.disconnect(_argument_remove_immediately)
+	_arguments_list_container.remove_child(argument)
+	_recalculate_ordinals()
+	_correct_size()
+	modified.emit()
+
+
+func _on_argument_remove_cancelled(confirm):
+	get_tree().root.remove_child(confirm)
+
+
+func _on_gui_input(ev):
+	super._on_gui_input(ev)
+
+
+func _on_return_option_item_selected(index):
+	var id = _return_option.get_item_id(index)
+	_configure_for_return_type(id)
+	modified.emit()
+
+
+func _on_argument_dropped(arg, at_position):
+	if arg.get_parent() == _arguments_list_container:
+		_move_to_position(at_position, arg)
+	else:
+		arg.remove_from_parent()
+		_add_at_position(at_position, arg)
+	_recalculate_ordinals()
+	_correct_size()
+	modified.emit()
 
 
 func _on_method_name_edit_text_changed(new_text):

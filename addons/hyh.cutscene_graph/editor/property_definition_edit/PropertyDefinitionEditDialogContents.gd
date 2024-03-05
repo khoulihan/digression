@@ -1,30 +1,9 @@
 @tool
 extends MarginContainer
+## Contents of property definition dialog.
 
 
-const Logging = preload("../../utility/Logging.gd")
-var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
-
-
-const WARNING_ICON = preload("../../icons/icon_node_warning.svg")
-const NEW_PROPERTY_NAME = "new_property"
-
-
-const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
-
-
-@onready var PropertyDefinitionsTree := $VB/HS/PropertyDefinitionsPane/VB/PropertyDefinitionsTree
-@onready var DetailPaneContainer := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer
-@onready var NameEdit := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/NameEdit
-@onready var TypeOption := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/TypeOption
-@onready var DescriptionTextEdit := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/DescriptionTextEdit
-@onready var ScenesCheckBox := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/ScenesCheckBox
-@onready var CharactersCheckBox := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/CharactersCheckBox
-@onready var VariantsCheckBox := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/VariantsCheckBox
-@onready var ChoicesCheckBox := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/ChoicesCheckBox
-@onready var DialogueCheckBox := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/DialogueCheckBox
-@onready var RemoveButton := $VB/HS/PropertyDefinitionsPane/VB/HeaderButtonsContainer/RemoveButton
-
+signal closing()
 
 enum PropertyDefinitionTreeColumns {
 	NAME,
@@ -32,20 +11,33 @@ enum PropertyDefinitionTreeColumns {
 	DESCRIPTION,
 }
 
-
 enum PropertyDefinitionEditPopupMenuItem {
 	REMOVE,
 }
 
-
-signal closing()
-
+const Logging = preload("../../utility/Logging.gd")
+const WARNING_ICON = preload("../../icons/icon_node_warning.svg")
+const NEW_PROPERTY_NAME = "new_property"
+const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
 
 var _definitions
 var _edited_item
 var _edited_definition
 var _populating := false
 var _default_name_regex: RegEx
+var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
+
+@onready var _property_definitions_tree := $VB/HS/PropertyDefinitionsPane/VB/PropertyDefinitionsTree
+@onready var _detail_pane_container := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer
+@onready var _name_edit := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/NameEdit
+@onready var _type_option := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/TypeOption
+@onready var _description_text_edit := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/DescriptionTextEdit
+@onready var _scenes_check_box := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/ScenesCheckBox
+@onready var _characters_check_box := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/CharactersCheckBox
+@onready var _variants_check_box := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/VariantsCheckBox
+@onready var _choices_check_box := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/ChoicesCheckBox
+@onready var _dialogue_check_box := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/DialogueCheckBox
+@onready var _remove_button := $VB/HS/PropertyDefinitionsPane/VB/HeaderButtonsContainer/RemoveButton
 
 
 func _ready() -> void:
@@ -54,34 +46,34 @@ func _ready() -> void:
 		[]
 	).duplicate(true)
 	
-	var property_definitions_root = PropertyDefinitionsTree.create_item()
-	PropertyDefinitionsTree.set_column_title(
+	var property_definitions_root = _property_definitions_tree.create_item()
+	_property_definitions_tree.set_column_title(
 		PropertyDefinitionTreeColumns.NAME,
 		"Name",
 	)
-	PropertyDefinitionsTree.set_column_expand(
+	_property_definitions_tree.set_column_expand(
 		PropertyDefinitionTreeColumns.NAME,
 		true,
 	)
-	PropertyDefinitionsTree.set_column_title(
+	_property_definitions_tree.set_column_title(
 		PropertyDefinitionTreeColumns.TYPE,
 		"Type",
 	)
-	PropertyDefinitionsTree.set_column_expand(
+	_property_definitions_tree.set_column_expand(
 		PropertyDefinitionTreeColumns.TYPE,
 		true,
 	)
-	PropertyDefinitionsTree.set_column_title(
+	_property_definitions_tree.set_column_title(
 		PropertyDefinitionTreeColumns.DESCRIPTION,
 		"Description",
 	)
-	PropertyDefinitionsTree.set_column_expand(
+	_property_definitions_tree.set_column_expand(
 		PropertyDefinitionTreeColumns.DESCRIPTION,
 		true
 	)
 
 	for d in _definitions:
-		var item: TreeItem = PropertyDefinitionsTree.create_item(property_definitions_root)
+		var item: TreeItem = _property_definitions_tree.create_item(property_definitions_root)
 		_populate_item_for_definition(item, d)
 	
 	_hide_detail_pane()
@@ -159,54 +151,19 @@ func configure() -> void:
 
 
 func _set_button_states(item_selected: bool) -> void:
-	RemoveButton.disabled = not item_selected
+	_remove_button.disabled = not item_selected
 
 
 func _show_detail_pane() -> void:
-	DetailPaneContainer.visible = true
+	_detail_pane_container.visible = true
 
 
 func _hide_detail_pane() -> void:
-	DetailPaneContainer.visible = false
-
-
-func _on_cancel_button_pressed():
-	closing.emit()
-
-
-func _on_save_button_pressed():
-	if not _validate():
-		_perform_save()
-		closing.emit()
-	else:
-		var dialog = AcceptDialog.new()
-		dialog.title = "Validation Failed"
-		dialog.dialog_text = """There are invalid property definitions.\n
-			Please correct the values and try again."""
-		self.add_child(dialog)
-		dialog.popup_on_parent(
-			Rect2i(
-				self.position + Vector2(60, 60),
-				Vector2i(200, 150)
-			)
-		)
-		dialog.confirmed.connect(
-			_validation_failed_dialog_closed.bind(dialog)
-		)
-		dialog.close_requested.connect(
-			_validation_failed_dialog_closed.bind(dialog)
-		)
-
-
-func _validation_failed_dialog_closed(dialog):
-	Logger.debug("Validation failed dialog closed.")
-	dialog.confirmed.disconnect(_validation_failed_dialog_closed)
-	dialog.close_requested.disconnect(_validation_failed_dialog_closed)
-	dialog.queue_free()
+	_detail_pane_container.visible = false
 
 
 func _perform_save():
-	var root = PropertyDefinitionsTree.get_root()
+	var root = _property_definitions_tree.get_root()
 	ProjectSettings.set_setting(
 		"cutscene_graph_editor/property_definitions",
 		_definitions,
@@ -215,7 +172,7 @@ func _perform_save():
 
 
 func _clear_validation_warnings() -> void:
-	var root = PropertyDefinitionsTree.get_root()
+	var root = _property_definitions_tree.get_root()
 	
 	for gt in root.get_children():
 		gt.set_icon(
@@ -243,7 +200,7 @@ func _validate() -> bool:
 	var issues = false
 	var all_names = {}
 	var no_uses = []
-	var root: TreeItem = PropertyDefinitionsTree.get_root()
+	var root: TreeItem = _property_definitions_tree.get_root()
 	
 	_clear_validation_warnings()
 	
@@ -273,19 +230,8 @@ func _validate() -> bool:
 	return issues
 
 
-func _on_popup_menu_id_pressed(id):
-	if id == PropertyDefinitionEditPopupMenuItem.REMOVE:
-		_remove_selected()
-		_validate()
-
-
-func _on_remove_button_pressed():
-	_remove_selected()
-	_validate()
-
-
 func _remove_selected() -> void:
-	var selected = PropertyDefinitionsTree.get_selected()
+	var selected = _property_definitions_tree.get_selected()
 	if selected == null:
 		return
 	var definition = selected.get_meta('definition')
@@ -297,31 +243,6 @@ func _remove_selected() -> void:
 	_edited_item = null
 	_set_button_states(false)
 	_hide_detail_pane()
-
-
-func _on_add_button_pressed():
-	var property_definitions_root: TreeItem = PropertyDefinitionsTree.get_root()
-	var item: TreeItem = PropertyDefinitionsTree.create_item(property_definitions_root)
-	var definition := {
-		'name': _get_default_property_name(),
-		'type': VariableType.TYPE_BOOL,
-		'description': "",
-		'uses': [
-			'scenes',
-			'characters',
-			'variants',
-			'choices',
-			'dialogue',
-		],
-	}
-	_definitions.append(definition)
-	_populate_item_for_definition(item, definition)
-	PropertyDefinitionsTree.set_selected(
-		item,
-		PropertyDefinitionTreeColumns.NAME
-	)
-	PropertyDefinitionsTree.edit_selected()
-	_validate()
 
 
 func _get_default_property_name():
@@ -349,25 +270,6 @@ func _get_default_name_count() -> int:
 	return count
 
 
-func _on_property_definitions_tree_item_mouse_selected(position, mouse_button_index):
-	if mouse_button_index == MOUSE_BUTTON_RIGHT:
-		# Adding a little offset seems to be required to prevent an item
-		# from being immediately chosen.
-		$PopupMenu.position = Vector2(
-			self.get_parent().position
-		) + position + Vector2(20, 10)
-		$PopupMenu.popup()
-
-
-func _on_property_definitions_tree_item_selected():
-	_set_button_states(true)
-	_show_detail_pane()
-	var item: TreeItem = PropertyDefinitionsTree.get_selected()
-	_configure_detail_pane_for_item(
-		item
-	)
-
-
 func _configure_detail_pane_for_item(item: TreeItem) -> void:
 	_edited_item = item
 	var name := item.get_text(PropertyDefinitionTreeColumns.NAME)
@@ -386,27 +288,27 @@ func _get_definition_by_name(name: String) -> Dictionary:
 
 func _populate_detail_pane_for_definition(definition: Dictionary) -> void:
 	_populating = true
-	NameEdit.text = definition['name']
-	DescriptionTextEdit.text = definition['description']
-	TypeOption.select(TypeOption.get_item_index(definition['type']))
-	ScenesCheckBox.button_pressed = 'scenes' in definition['uses']
-	CharactersCheckBox.button_pressed = 'characters' in definition['uses']
-	VariantsCheckBox.button_pressed = 'variants' in definition['uses']
-	ChoicesCheckBox.button_pressed = 'choices' in definition['uses']
-	DialogueCheckBox.button_pressed = 'dialogue' in definition['uses']
+	_name_edit.text = definition['name']
+	_description_text_edit.text = definition['description']
+	_type_option.select(_type_option.get_item_index(definition['type']))
+	_scenes_check_box.button_pressed = 'scenes' in definition['uses']
+	_characters_check_box.button_pressed = 'characters' in definition['uses']
+	_variants_check_box.button_pressed = 'variants' in definition['uses']
+	_choices_check_box.button_pressed = 'choices' in definition['uses']
+	_dialogue_check_box.button_pressed = 'dialogue' in definition['uses']
 	_populating = false
 
 
 func _update_edited() -> void:
-	_edited_definition['name'] = NameEdit.text
-	_edited_definition['description'] = DescriptionTextEdit.text
-	_edited_definition['type'] = TypeOption.get_selected_id()
+	_edited_definition['name'] = _name_edit.text
+	_edited_definition['description'] = _description_text_edit.text
+	_edited_definition['type'] = _type_option.get_selected_id()
 	var uses: Array = _edited_definition['uses']
-	_update_uses_for_checkbox(uses, ScenesCheckBox, 'scenes')
-	_update_uses_for_checkbox(uses, CharactersCheckBox, 'characters')
-	_update_uses_for_checkbox(uses, VariantsCheckBox, 'variants')
-	_update_uses_for_checkbox(uses, ChoicesCheckBox, 'choices')
-	_update_uses_for_checkbox(uses, DialogueCheckBox, 'dialogue')
+	_update_uses_for_checkbox(uses, _scenes_check_box, 'scenes')
+	_update_uses_for_checkbox(uses, _characters_check_box, 'characters')
+	_update_uses_for_checkbox(uses, _variants_check_box, 'variants')
+	_update_uses_for_checkbox(uses, _choices_check_box, 'choices')
+	_update_uses_for_checkbox(uses, _dialogue_check_box, 'dialogue')
 	_edited_item.set_text(
 		PropertyDefinitionTreeColumns.NAME,
 		_edited_definition['name'],
@@ -437,6 +339,96 @@ func _update_uses_for_checkbox(uses: Array, cb: CheckBox, value: String) -> void
 	else: 
 		if value in uses:
 			uses.remove_at(uses.find(value))
+
+
+func _on_cancel_button_pressed():
+	closing.emit()
+
+
+func _on_save_button_pressed():
+	if not _validate():
+		_perform_save()
+		closing.emit()
+	else:
+		var dialog = AcceptDialog.new()
+		dialog.title = "Validation Failed"
+		dialog.dialog_text = """There are invalid property definitions.\n
+			Please correct the values and try again."""
+		self.add_child(dialog)
+		dialog.popup_on_parent(
+			Rect2i(
+				self.position + Vector2(60, 60),
+				Vector2i(200, 150)
+			)
+		)
+		dialog.confirmed.connect(
+			_on_validation_failed_dialog_closed.bind(dialog)
+		)
+		dialog.close_requested.connect(
+			_on_validation_failed_dialog_closed.bind(dialog)
+		)
+
+
+func _on_validation_failed_dialog_closed(dialog):
+	_logger.debug("Validation failed dialog closed.")
+	dialog.confirmed.disconnect(_on_validation_failed_dialog_closed)
+	dialog.close_requested.disconnect(_on_validation_failed_dialog_closed)
+	dialog.queue_free()
+
+
+func _on_popup_menu_id_pressed(id):
+	if id == PropertyDefinitionEditPopupMenuItem.REMOVE:
+		_remove_selected()
+		_validate()
+
+
+func _on_remove_button_pressed():
+	_remove_selected()
+	_validate()
+
+
+func _on_add_button_pressed():
+	var property_definitions_root: TreeItem = _property_definitions_tree.get_root()
+	var item: TreeItem = _property_definitions_tree.create_item(property_definitions_root)
+	var definition := {
+		'name': _get_default_property_name(),
+		'type': VariableType.TYPE_BOOL,
+		'description': "",
+		'uses': [
+			'scenes',
+			'characters',
+			'variants',
+			'choices',
+			'dialogue',
+		],
+	}
+	_definitions.append(definition)
+	_populate_item_for_definition(item, definition)
+	_property_definitions_tree.set_selected(
+		item,
+		PropertyDefinitionTreeColumns.NAME
+	)
+	_property_definitions_tree.edit_selected()
+	_validate()
+
+
+func _on_property_definitions_tree_item_mouse_selected(position, mouse_button_index):
+	if mouse_button_index == MOUSE_BUTTON_RIGHT:
+		# Adding a little offset seems to be required to prevent an item
+		# from being immediately chosen.
+		$PopupMenu.position = Vector2(
+			self.get_parent().position
+		) + position + Vector2(20, 10)
+		$PopupMenu.popup()
+
+
+func _on_property_definitions_tree_item_selected():
+	_set_button_states(true)
+	_show_detail_pane()
+	var item: TreeItem = _property_definitions_tree.get_selected()
+	_configure_detail_pane_for_item(
+		item
+	)
 
 
 func _on_property_definitions_tree_nothing_selected():

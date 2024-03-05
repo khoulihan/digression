@@ -74,7 +74,7 @@ layout_mode = 2
 layout_mode = 2
 
 [connection signal="pressed" from="MC/DefaultContainer/AddBranchButton" to="." method="_on_add_branch_button_pressed"]
-[connection signal="modified" from="EditorIfBranchValue" to="." method="_value_modified" binds= [0]]
-[connection signal="remove_requested" from="EditorIfBranchValue" to="." method="_value_remove_requested" binds= [0]]
-[connection signal="modified" from="EditorIfBranchValue2" to="." method="_value_modified" binds= [1]]
-[connection signal="remove_requested" from="EditorIfBranchValue2" to="." method="_value_remove_requested" binds= [1]]
+[connection signal="modified" from="EditorIfBranchValue" to="." method="_on_branch_modified" binds= [0]]
+[connection signal="remove_requested" from="EditorIfBranchValue" to="." method="_on_branch_remove_requested" binds= [0]]
+[connection signal="modified" from="EditorIfBranchValue2" to="." method="_on_branch_modified" binds= [1]]
+[connection signal="remove_requested" from="EditorIfBranchValue2" to="." method="_on_branch_remove_requested" binds= [1]]

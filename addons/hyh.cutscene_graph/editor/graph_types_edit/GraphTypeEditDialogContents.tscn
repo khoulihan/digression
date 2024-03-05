@@ -15,31 +15,31 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 script = ExtResource("1_6qufx")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VB" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="HeaderButtonsContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HeaderButtonsContainer" type="HBoxContainer" parent="VB"]
 layout_mode = 2
 
-[node name="AddButton" type="Button" parent="VBoxContainer/HeaderButtonsContainer"]
+[node name="AddButton" type="Button" parent="VB/HeaderButtonsContainer"]
 layout_mode = 2
 tooltip_text = "Add a type"
 icon = ExtResource("1_eb1ti")
 flat = true
 
-[node name="RemoveButton" type="Button" parent="VBoxContainer/HeaderButtonsContainer"]
+[node name="RemoveButton" type="Button" parent="VB/HeaderButtonsContainer"]
 layout_mode = 2
 tooltip_text = "Remove the selected type"
 icon = ExtResource("2_eioqs")
 flat = true
 
-[node name="SetDefaultButton" type="Button" parent="VBoxContainer/HeaderButtonsContainer"]
+[node name="SetDefaultButton" type="Button" parent="VB/HeaderButtonsContainer"]
 layout_mode = 2
 tooltip_text = "Set the selected type as the default"
 icon = ExtResource("3_srktr")
 flat = true
 
-[node name="Help" type="TextureRect" parent="VBoxContainer/HeaderButtonsContainer"]
+[node name="Help" type="TextureRect" parent="VB/HeaderButtonsContainer"]
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
@@ -50,7 +50,7 @@ and still others for NPC flavourtext."
 texture = ExtResource("3_st1kx")
 stretch_mode = 2
 
-[node name="Tree" type="Tree" parent="VBoxContainer"]
+[node name="Tree" type="Tree" parent="VB"]
 custom_minimum_size = Vector2(200, 300)
 layout_mode = 2
 columns = 3
@@ -61,17 +61,17 @@ hide_folding = true
 hide_root = true
 drop_mode_flags = 2
 
-[node name="FooterButtonsContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="FooterButtonsContainer" type="HBoxContainer" parent="VB"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 theme_override_constants/separation = 30
 
-[node name="CancelButton" type="Button" parent="VBoxContainer/FooterButtonsContainer"]
+[node name="CancelButton" type="Button" parent="VB/FooterButtonsContainer"]
 layout_mode = 2
 text = "Cancel"
 
-[node name="SaveButton" type="Button" parent="VBoxContainer/FooterButtonsContainer"]
+[node name="SaveButton" type="Button" parent="VB/FooterButtonsContainer"]
 layout_mode = 2
 text = "Save"
 
@@ -87,16 +87,16 @@ item_2/text = "Remove"
 item_2/icon = ExtResource("2_eioqs")
 item_2/id = 2
 
-[connection signal="pressed" from="VBoxContainer/HeaderButtonsContainer/AddButton" to="." method="_on_add_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/HeaderButtonsContainer/RemoveButton" to="." method="_on_remove_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/HeaderButtonsContainer/SetDefaultButton" to="." method="_on_set_default_button_pressed"]
-[connection signal="gui_input" from="VBoxContainer/HeaderButtonsContainer/Help" to="." method="_on_help_gui_input"]
-[connection signal="item_activated" from="VBoxContainer/Tree" to="." method="_on_tree_item_activated"]
-[connection signal="item_edited" from="VBoxContainer/Tree" to="." method="_on_tree_item_edited"]
-[connection signal="item_icon_double_clicked" from="VBoxContainer/Tree" to="." method="_on_tree_item_icon_double_clicked"]
-[connection signal="item_mouse_selected" from="VBoxContainer/Tree" to="." method="_on_tree_item_mouse_selected"]
-[connection signal="item_selected" from="VBoxContainer/Tree" to="." method="_on_tree_item_selected"]
-[connection signal="nothing_selected" from="VBoxContainer/Tree" to="." method="_on_tree_nothing_selected"]
-[connection signal="pressed" from="VBoxContainer/FooterButtonsContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/FooterButtonsContainer/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="VB/HeaderButtonsContainer/AddButton" to="." method="_on_add_button_pressed"]
+[connection signal="pressed" from="VB/HeaderButtonsContainer/RemoveButton" to="." method="_on_remove_button_pressed"]
+[connection signal="pressed" from="VB/HeaderButtonsContainer/SetDefaultButton" to="." method="_on_set_default_button_pressed"]
+[connection signal="gui_input" from="VB/HeaderButtonsContainer/Help" to="." method="_on_help_gui_input"]
+[connection signal="item_activated" from="VB/Tree" to="." method="_on_tree_item_activated"]
+[connection signal="item_edited" from="VB/Tree" to="." method="_on_tree_item_edited"]
+[connection signal="item_icon_double_clicked" from="VB/Tree" to="." method="_on_tree_item_icon_double_clicked"]
+[connection signal="item_mouse_selected" from="VB/Tree" to="." method="_on_tree_item_mouse_selected"]
+[connection signal="item_selected" from="VB/Tree" to="." method="_on_tree_item_selected"]
+[connection signal="nothing_selected" from="VB/Tree" to="." method="_on_tree_nothing_selected"]
+[connection signal="pressed" from="VB/FooterButtonsContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="VB/FooterButtonsContainer/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="id_pressed" from="PopupMenu" to="." method="_on_popup_menu_id_pressed"]
