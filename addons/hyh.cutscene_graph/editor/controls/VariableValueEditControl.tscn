@@ -14,32 +14,32 @@ offset_bottom = -0.416
 size_flags_horizontal = 3
 script = ExtResource("1")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HB" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="VariableCheckButton" type="Button" parent="HBoxContainer"]
+[node name="VariableCheckButton" type="Button" parent="HB"]
 layout_mode = 2
 tooltip_text = "Use the value of a variable."
 toggle_mode = true
 icon = ExtResource("2_rieia")
 flat = true
 
-[node name="SelectionContainer" type="MarginContainer" parent="HBoxContainer"]
+[node name="SelectionContainer" type="MarginContainer" parent="HB"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="EditContainer" type="MarginContainer" parent="HBoxContainer/SelectionContainer"]
+[node name="EditContainer" type="MarginContainer" parent="HB/SelectionContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="LineEdit" type="LineEdit" parent="HBoxContainer/SelectionContainer/EditContainer"]
+[node name="LineEdit" type="LineEdit" parent="HB/SelectionContainer/EditContainer"]
 visible = false
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="SpinBox" type="SpinBox" parent="HBoxContainer/SelectionContainer/EditContainer"]
+[node name="SpinBox" type="SpinBox" parent="HB/SelectionContainer/EditContainer"]
 visible = false
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
@@ -47,21 +47,22 @@ allow_greater = true
 allow_lesser = true
 update_on_text_changed = true
 
-[node name="CheckBox" type="CheckBox" parent="HBoxContainer/SelectionContainer/EditContainer"]
+[node name="CheckBox" type="CheckBox" parent="HB/SelectionContainer/EditContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
+text = "On"
 
-[node name="VariableSelectionControl" parent="HBoxContainer/SelectionContainer" instance=ExtResource("2_iu1w0")]
+[node name="VariableSelectionControl" parent="HB/SelectionContainer" instance=ExtResource("2_iu1w0")]
 visible = false
 layout_mode = 2
 
-[node name="ValidationWarning" parent="HBoxContainer" instance=ExtResource("2_j0s0b")]
+[node name="ValidationWarning" parent="HB" instance=ExtResource("2_j0s0b")]
 visible = false
 layout_mode = 2
 
-[connection signal="toggled" from="HBoxContainer/VariableCheckButton" to="." method="_on_variable_check_button_toggled"]
-[connection signal="text_changed" from="HBoxContainer/SelectionContainer/EditContainer/LineEdit" to="." method="_on_LineEdit_text_changed"]
-[connection signal="changed" from="HBoxContainer/SelectionContainer/EditContainer/SpinBox" to="." method="_on_SpinBox_changed"]
-[connection signal="value_changed" from="HBoxContainer/SelectionContainer/EditContainer/SpinBox" to="." method="_on_SpinBox_value_changed"]
-[connection signal="pressed" from="HBoxContainer/SelectionContainer/EditContainer/CheckBox" to="." method="_on_CheckBox_pressed"]
-[connection signal="variable_selected" from="HBoxContainer/SelectionContainer/VariableSelectionControl" to="." method="_on_variable_selection_control_variable_selected"]
+[connection signal="toggled" from="HB/VariableCheckButton" to="." method="_on_variable_check_button_toggled"]
+[connection signal="text_changed" from="HB/SelectionContainer/EditContainer/LineEdit" to="." method="_on_line_edit_text_changed"]
+[connection signal="changed" from="HB/SelectionContainer/EditContainer/SpinBox" to="." method="_on_spin_box_changed"]
+[connection signal="value_changed" from="HB/SelectionContainer/EditContainer/SpinBox" to="." method="_on_spin_box_value_changed"]
+[connection signal="pressed" from="HB/SelectionContainer/EditContainer/CheckBox" to="." method="_on_check_box_pressed"]
+[connection signal="variable_selected" from="HB/SelectionContainer/VariableSelectionControl" to="." method="_on_variable_selection_control_variable_selected"]

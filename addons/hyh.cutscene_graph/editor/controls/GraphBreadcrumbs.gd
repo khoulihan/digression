@@ -1,13 +1,13 @@
 @tool
 extends HBoxContainer
+## Control for showing a breadcrumb path of edited graphs in the graph editor.
 
 
 signal graph_open_requested(index)
 
-
 const _arrow_icon = preload("res://addons/hyh.cutscene_graph/icons/icon_tree_arrow_right.svg")
 
-
+## The navigability of breadcrumbs.
 @export var navigable: bool = true:
 	get:
 		return navigable
@@ -18,6 +18,7 @@ const _arrow_icon = preload("res://addons/hyh.cutscene_graph/icons/icon_tree_arr
 				child.disabled = not value
 
 
+## Populate the control from a stacj of graphs.
 func populate(graph_stack):
 	_remove_existing()
 	for graph_index in range(len(graph_stack)):
@@ -51,6 +52,7 @@ func populate(graph_stack):
 			
 
 
+## Clear all breadcrumbs.
 func clear():
 	_remove_existing()
 

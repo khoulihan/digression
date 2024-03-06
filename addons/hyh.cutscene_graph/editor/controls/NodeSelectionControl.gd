@@ -1,62 +1,62 @@
 @tool
 extends HBoxContainer
-
-
-const NodeSelectDialog = preload("res://addons/hyh.cutscene_graph/editor/node_select_dialog/NodeSelectDialog.tscn")
-
-
-@onready var SelectionName = $SelectionName
-@onready var ValidationWarning = $ValidationWarning
-
-@export var required = true
+## Control for allowing a NodePath to be selected from the currently edited scene.
 
 
 signal node_selected(path)
 signal node_cleared()
 
+const NodeSelectDialog = preload("res://addons/hyh.cutscene_graph/editor/node_select_dialog/NodeSelectDialog.tscn")
+
+@export var required = true
 
 var _path: NodePath
 
+@onready var _selection_name = $SelectionName
+@onready var _validation_warning = $ValidationWarning
 
+
+## Populate the control with the specified path.
 func populate(path):
 	_path = path
 	if _path != null and not _path.is_empty():
-		SelectionName.text = path.get_concatenated_names()
-		ValidationWarning.clear_warning()
+		_selection_name.text = path.get_concatenated_names()
+		_validation_warning.clear_warning()
 	else:
-		SelectionName.text = ""
+		_selection_name.text = ""
 		if required:
-			ValidationWarning.set_warning("A node is required.")
+			_validation_warning.set_warning("A node is required.")
 
 
+## Get the selected path.
 func get_selected_path():
 	return _path
 
 
 func _on_search_button_pressed():
 	var dialog = NodeSelectDialog.instantiate()
-	dialog.cancelled.connect(_node_selection_cancelled.bind(dialog))
-	dialog.selected.connect(_node_selected.bind(dialog))
+	dialog.cancelled.connect(_on_node_selection_cancelled.bind(dialog))
+	dialog.selected.connect(_on_node_selected.bind(dialog))
 	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
 	get_tree().root.add_child(dialog)
 	dialog.popup()
 
 
-func _node_selected(path, dialog):
+func _on_node_selected(path, dialog):
 	get_tree().root.remove_child(dialog)
 	dialog.queue_free()
 	populate(path)
 	node_selected.emit(_path)
 
 
-func _node_selection_cancelled(dialog):
+func _on_node_selection_cancelled(dialog):
 	get_tree().root.remove_child(dialog)
 	dialog.queue_free()
 
 
 func _on_clear_button_pressed():
-	SelectionName.text = ""
+	_selection_name.text = ""
 	_path = NodePath()
 	if required:
-		ValidationWarning.set_warning("A node is required.")
+		_validation_warning.set_warning("A node is required.")
 	node_cleared.emit()

@@ -1,17 +1,22 @@
 @tool
 extends PanelContainer
+## Control for an individual tag.
+
 
 signal remove_requested()
 
-@onready var TagLabel = get_node("MarginContainer/HBoxContainer/Label")
-
-
+## The name of the tag
 var tag: String:
 	get:
 		return tag
 	set(value):
 		tag = value
-		get_node("MarginContainer/HBoxContainer/Label").text = tag
+		_tag_label.text = tag
+
+@onready var _tag_label = $MC/HB/Label
+
+
+
 
 
 func _on_button_pressed():

@@ -1,22 +1,15 @@
 @tool
 extends MarginContainer
-
-const Logging = preload("../../utility/Logging.gd")
-const Highlighting = preload("../../utility/Highlighting.gd")
-
-
-const ExpressionResource = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd")
-
-
-@onready var ConditionExpression = get_node("Condition/PC/MarginContainer/ConditionExpression")
+## A control for managing a condition (an expression).
 
 
 signal size_changed(size_change)
 
+const Logging = preload("../../utility/Logging.gd")
+const Highlighting = preload("../../utility/Highlighting.gd")
+const ExpressionResource = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd")
 
-var Logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
-
-
+## The condition to manage.
 var condition_resource:
 	get:
 		return condition_resource
@@ -24,15 +17,21 @@ var condition_resource:
 		condition_resource = val
 		_configure_for_condition(condition_resource)
 
+var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
+
+@onready var _condition_expression := $Condition/PC/MC/ConditionExpression
+@onready var _set_condition_button := $SetConditionButton
+@onready var _condition := $Condition
+
 
 func _configure_for_condition(condition):
-	$SetConditionButton.visible = condition == null
-	$Condition.visible = condition != null
+	_set_condition_button.visible = condition == null
+	_condition.visible = condition != null
 	if condition == null:
 		return
 	
-	ConditionExpression.deserialise(condition.expression)
-	ConditionExpression.configure()
+	_condition_expression.deserialise(condition.expression)
+	_condition_expression.configure()
 
 
 func _emit_size_changed(size_before, second_deferral=false):
@@ -45,12 +44,12 @@ func _emit_size_changed(size_before, second_deferral=false):
 
 
 func _on_set_condition_button_pressed():
-	Logger.debug("Set condition button pressed")
+	_logger.debug("Set condition button pressed")
 	var size_before = self.size.y
-	$SetConditionButton.visible = false
-	$Condition.visible = true
-	ConditionExpression.clear()
-	ConditionExpression.configure()
+	_set_condition_button.visible = false
+	_condition.visible = true
+	_condition_expression.clear()
+	_condition_expression.configure()
 	call_deferred("_emit_size_changed", size_before)
 
 
@@ -69,8 +68,8 @@ func _on_clear_confirmed(confirm):
 	get_tree().root.remove_child(confirm)
 	self.condition_resource = null
 	var size_before = self.size.y
-	$Condition.visible = false
-	$SetConditionButton.visible = true
+	_condition.visible = false
+	_set_condition_button.visible = true
 	call_deferred("_emit_size_changed", size_before)
 
 
@@ -80,12 +79,12 @@ func _on_clear_cancelled(confirm):
 
 func _on_condition_expression_modified():
 	# TODO: Maybe display the overall validation status
-	ConditionExpression.validate()
+	_condition_expression.validate()
 	if condition_resource == null:
 		condition_resource = ExpressionResource.new()
 	# TODO: Serialising the expression every time it is modified like this
 	# seems wasteful.
-	condition_resource.expression = ConditionExpression.serialise()
+	condition_resource.expression = _condition_expression.serialise()
 
 
 func _on_condition_expression_size_changed(amount):

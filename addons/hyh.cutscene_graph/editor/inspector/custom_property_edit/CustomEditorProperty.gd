@@ -1,16 +1,17 @@
 @tool
 extends EditorProperty
-
-
-const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
+## Custom editor property for custom properties that can be attached to
+## several types of resources that are edited in the inspector.
+## The difference from the built-in editor is that this one adds a
+## remove button.
 
 
 signal remove_requested()
 
+const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
 
-var ControlContainer := HBoxContainer.new()
-var RemoveButton := Button.new()
-
+var _control_container := HBoxContainer.new()
+var _remove_button := Button.new()
 var _updating := false
 
 
@@ -20,10 +21,10 @@ func _init(type: VariableType) -> void:
 		VariableType.TYPE_BOOL:
 			control = CheckBox.new()
 			control.text = "On"
-			control.toggled.connect(_control_toggled)
+			control.toggled.connect(_on_control_toggled)
 		VariableType.TYPE_STRING:
 			control = LineEdit.new()
-			control.text_changed.connect(_control_text_changed)
+			control.text_changed.connect(_on_control_text_changed)
 		VariableType.TYPE_INT:
 			control = EditorSpinSlider.new()
 			control.step = 1.0
@@ -31,7 +32,7 @@ func _init(type: VariableType) -> void:
 			control.allow_lesser = true
 			control.min_value = -1000
 			control.max_value = 1000
-			control.value_changed.connect(_control_int_value_changed)
+			control.value_changed.connect(_on_control_int_value_changed)
 		VariableType.TYPE_FLOAT:
 			control = EditorSpinSlider.new()
 			control.step = 0.0001
@@ -39,38 +40,14 @@ func _init(type: VariableType) -> void:
 			control.allow_lesser = true
 			control.min_value = -1000
 			control.max_value = 1000
-			control.value_changed.connect(_control_float_value_changed)
+			control.value_changed.connect(_on_control_float_value_changed)
 	control.size_flags_horizontal = SIZE_EXPAND_FILL
-	ControlContainer.add_child(control)
-	RemoveButton.text = ""
-	RemoveButton.icon = preload("res://addons/hyh.cutscene_graph/icons/icon_close.svg")
-	RemoveButton.pressed.connect(_remove_button_pressed)
-	ControlContainer.add_child(RemoveButton)
-	add_child(ControlContainer)
-
-
-func _control_toggled(toggled_on: bool) -> void:
-	if _updating:
-		return
-	emit_changed(get_edited_property(), toggled_on, "", true)
-
-
-func _control_text_changed(new_text: String) -> void:
-	if _updating:
-		return
-	emit_changed(get_edited_property(), new_text, "", true)
-
-
-func _control_int_value_changed(new_value: float) -> void:
-	if _updating:
-		return
-	emit_changed(get_edited_property(), int(new_value), "", true)
-
-
-func _control_float_value_changed(new_value: float) -> void:
-	if _updating:
-		return
-	emit_changed(get_edited_property(), new_value, "", true)
+	_control_container.add_child(control)
+	_remove_button.text = ""
+	_remove_button.icon = preload("res://addons/hyh.cutscene_graph/icons/icon_close.svg")
+	_remove_button.pressed.connect(_on_remove_button_pressed)
+	_control_container.add_child(_remove_button)
+	add_child(_control_container)
 
 
 func _update_property() -> void:
@@ -78,7 +55,7 @@ func _update_property() -> void:
 	var current_value = obj.get(get_edited_property())
 	
 	_updating = true
-	var control = ControlContainer.get_child(0)
+	var control = _control_container.get_child(0)
 	match typeof(current_value):
 		TYPE_BOOL:
 			control.button_pressed = current_value
@@ -89,5 +66,29 @@ func _update_property() -> void:
 	_updating = false
 
 
-func _remove_button_pressed() -> void:
+func _on_control_toggled(toggled_on: bool) -> void:
+	if _updating:
+		return
+	emit_changed(get_edited_property(), toggled_on, "", true)
+
+
+func _on_control_text_changed(new_text: String) -> void:
+	if _updating:
+		return
+	emit_changed(get_edited_property(), new_text, "", true)
+
+
+func _on_control_int_value_changed(new_value: float) -> void:
+	if _updating:
+		return
+	emit_changed(get_edited_property(), int(new_value), "", true)
+
+
+func _on_control_float_value_changed(new_value: float) -> void:
+	if _updating:
+		return
+	emit_changed(get_edited_property(), new_value, "", true)
+
+
+func _on_remove_button_pressed() -> void:
 	remove_requested.emit()

@@ -1,18 +1,25 @@
 @tool
 extends HBoxContainer
+## A control for selecting a pre-defined variable.
 
-const WarningIcon = preload("../../icons/icon_node_warning.svg")
-const AddIcon = preload("../../icons/icon_add.svg")
 
-const BoolIcon = preload("../../icons/icon_type_bool.svg")
-const IntIcon = preload("../../icons/icon_type_int.svg")
-const FloatIcon = preload("../../icons/icon_type_float.svg")
-const StringIcon = preload("../../icons/icon_type_string.svg")
+signal variable_selected(variable)
 
-const TransientIcon = preload("../../icons/icon_scope_transient.svg")
-const CutsceneScopeIcon = preload("../../icons/icon_scope_cutscene.svg")
-const LocalIcon = preload("../../icons/icon_scope_local.svg")
-const GlobalIcon = preload("../../icons/icon_scope_global.svg")
+enum PopupMenuItems {
+	SELECT,
+	NEW_VARIABLE,
+}
+
+const WARNING_ICON = preload("../../icons/icon_node_warning.svg")
+const ADD_ICON = preload("../../icons/icon_add.svg")
+const BOOL_ICON = preload("../../icons/icon_type_bool.svg")
+const INT_ICON = preload("../../icons/icon_type_int.svg")
+const FLOAT_ICON = preload("../../icons/icon_type_float.svg")
+const STRING_ICON = preload("../../icons/icon_type_string.svg")
+const TRANSIENT_ICON = preload("../../icons/icon_scope_transient.svg")
+const CUTSCENE_SCOPE_ICON = preload("../../icons/icon_scope_cutscene.svg")
+const LOCAL_ICON = preload("../../icons/icon_scope_local.svg")
+const GLOBAL_ICON = preload("../../icons/icon_scope_global.svg")
 
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
@@ -20,68 +27,54 @@ const VariableType = preload("../../resources/graph/VariableSetNode.gd").Variabl
 const VariableSelectDialog = preload("../variable_select_dialog/VariableSelectDialog.tscn")
 const VariableCreateDialog = preload("../variable_create_dialog/VariableCreateDialog.tscn")
 
-enum PopupMenuItems {
-	SELECT,
-	NEW_VARIABLE,
-}
-
-signal variable_selected(variable)
-
-
-@onready var ScopeMarginContainer: MarginContainer = get_node("ScopeMarginContainer")
-@onready var ScopeIcon: TextureRect = get_node("ScopeMarginContainer/ScopeIcon")
-@onready var TypeMarginContainer: MarginContainer = get_node("TypeMarginContainer")
-@onready var TypeIcon: TextureRect = get_node("TypeMarginContainer/TypeIcon")
-@onready var SelectionName: LineEdit = get_node("SelectionName")
-@onready var VariableMenuButton: MenuButton = get_node("MenuButton")
-
 var _popup: PopupMenu
-
 var _type_restriction = null
-
 var _variable: Dictionary
 
-func _create_example_variable(
-	name,
-	scope,
-	variable_type,
-):
-	return {
-		"name": name,
-		"scope": scope,
-		"type": variable_type,
-	}
+@onready var _scope_margin_container: MarginContainer = $ScopeMarginContainer
+@onready var _scope_icon: TextureRect = $ScopeMarginContainer/ScopeIcon
+@onready var _type_margin_container: MarginContainer = $TypeMarginContainer
+@onready var _type_icon: TextureRect = $TypeMarginContainer/TypeIcon
+@onready var _selection_name: LineEdit = $SelectionName
+@onready var _variable_menu_button: MenuButton = $MenuButton
+
+
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	ScopeIcon.texture = null
-	TypeIcon.texture = null
-	ScopeMarginContainer.hide()
-	TypeMarginContainer.hide()
-	_popup = VariableMenuButton.get_popup()
-	_popup.index_pressed.connect(_popup_index_pressed)
+	_scope_icon.texture = null
+	_type_icon.texture = null
+	_scope_margin_container.hide()
+	_type_margin_container.hide()
+	_popup = _variable_menu_button.get_popup()
+	_popup.index_pressed.connect(_on_popup_index_pressed)
 
 
+## Set the type restriction.
 func set_type_restriction(t):
 	_type_restriction = t
 
 
+## Clear the type restriction.
 func clear_type_restriction():
 	_type_restriction = null
 
 
+## Configure the control for the specified variable.
 func configure_for_variable(
 	name,
 	scope,
 	variable_type,
 ):
-	ScopeIcon.texture = _icon_for_scope(scope)
-	ScopeMarginContainer.show()
-	TypeIcon.texture = _icon_for_type(variable_type)
-	TypeMarginContainer.show()
-	SelectionName.text = name
+	_scope_icon.texture = _icon_for_scope(scope)
+	_scope_margin_container.show()
+	_type_icon.texture = _icon_for_type(variable_type)
+	_type_margin_container.show()
+	_selection_name.text = name
 
 
+## Set the selected variable.
 func set_variable(variable):
 	_variable = variable
 	if _variable == null or len(_variable) == 0:
@@ -92,52 +85,63 @@ func set_variable(variable):
 			_variable['scope'],
 			_variable['type'],
 		)
-	
 
 
+## Get the selected variable.
 func get_variable():
 	return _variable
 
 
+## Clear the selected variable.
 func clear():
 	_variable = {}
-	ScopeMarginContainer.hide()
-	TypeMarginContainer.hide()
-	SelectionName.text = ""
+	_scope_margin_container.hide()
+	_type_margin_container.hide()
+	_selection_name.text = ""
 
 
 func _icon_for_type(t):
 	match t:
 		VariableType.TYPE_BOOL:
-			return BoolIcon
+			return BOOL_ICON
 		VariableType.TYPE_INT:
-			return IntIcon
+			return INT_ICON
 		VariableType.TYPE_FLOAT:
-			return FloatIcon
+			return FLOAT_ICON
 		VariableType.TYPE_STRING:
-			return StringIcon
-	return WarningIcon
+			return STRING_ICON
+	return WARNING_ICON
 
 
 func _icon_for_scope(s):
 	match s:
 		VariableScope.SCOPE_TRANSIENT:
-			return TransientIcon
+			return TRANSIENT_ICON
 		VariableScope.SCOPE_CUTSCENE:
-			return CutsceneScopeIcon
+			return CUTSCENE_SCOPE_ICON
 		VariableScope.SCOPE_LOCAL:
-			return LocalIcon
+			return LOCAL_ICON
 		VariableScope.SCOPE_GLOBAL:
-			return GlobalIcon
-	return WarningIcon
+			return GLOBAL_ICON
+	return WARNING_ICON
 
 
 func _convert_position(pos):
 	return get_screen_transform() * pos
 
 
+func _show_selection_dialog():
+	var dialog = VariableSelectDialog.instantiate()
+	dialog.type_restriction = _type_restriction
+	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
+	dialog.selected.connect(_on_select_dialog_variable_selected.bind(dialog))
+	dialog.cancelled.connect(_on_select_dialog_cancelled.bind(dialog))
+	get_tree().root.add_child(dialog)
+	dialog.popup()
+
+
 func _on_selection_name_gui_input(event):
-	_on_control_gui_input(SelectionName, event)
+	_on_control_gui_input(_selection_name, event)
 
 
 func _on_control_gui_input(control, event):
@@ -150,24 +154,14 @@ func _on_control_gui_input(control, event):
 
 
 func _on_scope_margin_container_gui_input(event):
-	_on_control_gui_input(ScopeMarginContainer, event)
+	_on_control_gui_input(_scope_margin_container, event)
 
 
 func _on_type_margin_container_gui_input(event):
-	_on_control_gui_input(TypeMarginContainer, event)
+	_on_control_gui_input(_type_margin_container, event)
 
 
-func _show_selection_dialog():
-	var dialog = VariableSelectDialog.instantiate()
-	dialog.type_restriction = _type_restriction
-	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-	dialog.selected.connect(_variable_selected.bind(dialog))
-	dialog.cancelled.connect(_select_dialog_cancelled.bind(dialog))
-	get_tree().root.add_child(dialog)
-	dialog.popup()
-
-
-func _variable_selected(variable, dialog):
+func _on_select_dialog_variable_selected(variable, dialog):
 	get_tree().root.remove_child(dialog)
 	dialog.queue_free()
 	_variable = variable
@@ -179,7 +173,7 @@ func _variable_selected(variable, dialog):
 	variable_selected.emit(variable)
 
 
-func _select_dialog_cancelled(dialog):
+func _on_select_dialog_cancelled(dialog):
 	get_tree().root.remove_child(dialog)
 	dialog.queue_free()
 
@@ -188,13 +182,13 @@ func _show_create_dialog():
 	var dialog = VariableCreateDialog.instantiate()
 	dialog.type_restriction = _type_restriction
 	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-	dialog.created.connect(_variable_created.bind(dialog))
-	dialog.cancelled.connect(_create_dialog_cancelled.bind(dialog))
+	dialog.created.connect(_on_variable_created.bind(dialog))
+	dialog.cancelled.connect(_on_create_dialog_cancelled.bind(dialog))
 	get_tree().root.add_child(dialog)
 	dialog.popup()
 
 
-func _variable_created(variable, dialog):
+func _on_variable_created(variable, dialog):
 	get_tree().root.remove_child(dialog)
 	dialog.queue_free()
 	_variable = variable
@@ -206,12 +200,12 @@ func _variable_created(variable, dialog):
 	variable_selected.emit(variable)
 
 
-func _create_dialog_cancelled(dialog):
+func _on_create_dialog_cancelled(dialog):
 	get_tree().root.remove_child(dialog)
 	dialog.queue_free()
 
 
-func _popup_index_pressed(index):
+func _on_popup_index_pressed(index):
 	match index:
 		PopupMenuItems.SELECT:
 			_show_selection_dialog()
