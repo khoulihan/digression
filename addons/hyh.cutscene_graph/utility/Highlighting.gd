@@ -1,5 +1,6 @@
 @tool
 extends RefCounted
+## Helper class for code highlighting.
 
 const VariableType = preload("../resources/graph/VariableSetNode.gd").VariableType
 

@@ -1,5 +1,6 @@
 @tool
 extends EditorPlugin
+## Digression Dialogue Graph Editor plugin.
 
 
 enum ToolMenuItems {

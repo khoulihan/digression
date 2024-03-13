@@ -1,27 +1,27 @@
 @tool
 extends "res://addons/hyh.cutscene_graph/editor/controls/expressions/MoveableExpression.gd"
+## Expression that executes a built-in function.
 
 
 # TODO: Maybe these are a problem?
 const GroupExpression = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/GroupExpression.tscn")
 const OperatorExpression = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/OperatorExpression.tscn")
-
 const ExpressionType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionType
 const FunctionType = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").FunctionType
 const FUNCTIONS = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").EXPRESSION_FUNCTIONS
+const GROUP_PANEL_STYLE = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/group_panel_style.tres")
 
-const _group_panel_style = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/group_panel_style.tres")
-
-@onready var _arguments_container : VBoxContainer = get_node("PanelContainer/MC/ExpressionContainer/MC/ArgumentsContainer")
-
-
+## The type of the function.
 @export var function_type : FunctionType
+
+@onready var _arguments_container : VBoxContainer = $PanelContainer/MC/ExpressionContainer/MC/ArgumentsContainer
 
 
 func _ready():
-	_panel.add_theme_stylebox_override("panel", _group_panel_style)
+	_panel.add_theme_stylebox_override("panel", GROUP_PANEL_STYLE)
 
 
+## Configure the expression.
 func configure():
 	if _arguments_container.get_child_count() > 0:
 		# Already configured
@@ -43,6 +43,50 @@ func configure():
 	else:
 		# Set of arguments of specified type
 		_add_set_arguments(arguments)
+
+
+## Validate the expression.
+func validate():
+	var validation_result = _validate()
+	if validation_result == null:
+		_validation_warning.visible = false
+		return null
+	
+	_validation_warning.visible = true
+	if typeof(validation_result) == TYPE_STRING:
+		_validation_warning.tooltip_text = validation_result
+	else:
+		if len(validation_result) > 1:
+			_validation_warning.tooltip_text = "Invalid arguments."
+		else:
+			_validation_warning.tooltip_text = "Invalid argument."
+	
+	return validation_result
+
+
+## Serialise the expression to a dictionary.
+func serialise():
+	var exp = super()
+	exp["expression_type"] = ExpressionType.FUNCTION
+	exp["function_type"] = function_type
+	exp["arguments"] = _serialise_arguments()
+	return exp
+
+
+## Deserialise an expression dictionary.
+func deserialise(serialised):
+	super(serialised)
+	function_type = serialised["function_type"]
+	# This will create the argument expressions for us to populate
+	configure()
+	var arguments = serialised["arguments"]
+	_deserialise_arguments(arguments)
+
+
+# TODO: Might only need this for testing?
+## Clear the expression of all children.
+func clear():
+	pass
 
 
 func _add_named_arguments(args):
@@ -75,24 +119,6 @@ func _argument_expression_size_changed(amount):
 	size_changed.emit(amount)
 
 
-func validate():
-	var validation_result = _validate()
-	if validation_result == null:
-		_validation_warning.visible = false
-		return null
-	
-	_validation_warning.visible = true
-	if typeof(validation_result) == TYPE_STRING:
-		_validation_warning.tooltip_text = validation_result
-	else:
-		if len(validation_result) > 1:
-			_validation_warning.tooltip_text = "Invalid arguments."
-		else:
-			_validation_warning.tooltip_text = "Invalid argument."
-	
-	return validation_result
-
-
 func _validate():
 	var spec = FUNCTIONS[type][function_type]
 	var spec_args = spec["arguments"]
@@ -118,14 +144,6 @@ func _validate():
 		# Dodgy assumption that this is what a string response means...
 		return "Argument list is empty."
 	return group_validation
-	
-
-func serialise():
-	var exp = super()
-	exp["expression_type"] = ExpressionType.FUNCTION
-	exp["function_type"] = function_type
-	exp["arguments"] = _serialise_arguments()
-	return exp
 
 
 func _serialise_arguments():
@@ -143,15 +161,6 @@ func _serialise_arguments():
 		return args
 	# Collection of arguments - but it is just one GroupExpression
 	return _arguments_container.get_child(0).serialise()
-	
-	
-func deserialise(serialised):
-	super(serialised)
-	function_type = serialised["function_type"]
-	# This will create the argument expressions for us to populate
-	configure()
-	var arguments = serialised["arguments"]
-	_deserialise_arguments(arguments)
 
 
 func _deserialise_arguments(serialised):
@@ -170,8 +179,3 @@ func _deserialise_arguments(serialised):
 	# Collection of arguments - but it is just one GroupExpression
 	var group = _arguments_container.get_child(0)
 	group.deserialise(serialised)
-	
-
-# TODO: Might only need this for testing?
-func clear():
-	pass

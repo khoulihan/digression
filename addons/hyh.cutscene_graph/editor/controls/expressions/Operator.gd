@@ -12,16 +12,18 @@ const SubtractIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_subtrac
 const MultiplyIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_close.svg")
 const DivideIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_divide.svg")
 
-@onready var _options : OptionButton = get_node("OperatorOptionButton")
-
-
+## The type of variable operated on.
 @export
 var variable_type : VariableType
 
+## The type of the operator (comparison vs operation).
 @export
 var operator_type : OperatorType
 
+@onready var _options : OptionButton = $OperatorOptionButton
 
+
+## Configure the expression.
 func configure():
 	_options.clear()
 	if operator_type == OperatorType.COMPARISON:
@@ -35,6 +37,23 @@ func configure():
 			_populate_numeric_operators()
 		VariableType.TYPE_STRING:
 			_populate_string_operators()
+
+
+## Serialise the expression to a dictionary.
+func serialise():
+	return {
+		"component_type": ExpressionComponentType.OPERATOR,
+		"variable_type": variable_type,
+		"operator_type": operator_type,
+		"operator": _options.get_selected_id()
+	}
+
+
+## Deserialise an expression dictionary.
+func deserialise(serialised):
+	variable_type = serialised["variable_type"]
+	operator_type = serialised["operator_type"]
+	_options.select(_options.get_item_index(serialised["operator"]))
 
 
 func _populate_boolean_operators():
@@ -86,18 +105,3 @@ func _populate_comparison_operators():
 	_options.add_item(">=", ExpressionOperators.COMPARISON_GREATER_THAN_OR_EQUALS)
 	_options.add_item("<", ExpressionOperators.COMPARISON_LESS_THAN)
 	_options.add_item("<=", ExpressionOperators.COMPARISON_LESS_THAN_OR_EQUALS)
-
-
-func serialise():
-	return {
-		"component_type": ExpressionComponentType.OPERATOR,
-		"variable_type": variable_type,
-		"operator_type": operator_type,
-		"operator": _options.get_selected_id()
-	}
-
-
-func deserialise(serialised):
-	variable_type = serialised["variable_type"]
-	operator_type = serialised["operator_type"]
-	_options.select(_options.get_item_index(serialised["operator"]))

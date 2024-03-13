@@ -1,11 +1,9 @@
 @tool
 extends RefCounted
+## Class for evaluating expressions at runtime.
 
 
 const Logging = preload("../../utility/Logging.gd")
-var Logger = Logging.new("Expression Evaluator", Logging.CGE_NODES_LOG_LEVEL)
-
-
 const ExpressionComponentType = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").ExpressionComponentType
 const ExpressionType = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").ExpressionType
 const FunctionType = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").FunctionType
@@ -15,17 +13,19 @@ const EXPRESSION_FUNCTIONS = preload("res://addons/hyh.cutscene_graph/resources/
 const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
 const VariableScope = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableScope
 
-
 var transient_store : Dictionary
 var cutscene_state_store : Dictionary
 var global_store : Node
 var local_store : Node
 
+var _logger = Logging.new("Expression Evaluator", Logging.CGE_NODES_LOG_LEVEL)
 
+
+## Evaluate the provided expression.
 func evaluate(expression):
 	var component_type = expression["component_type"]
 	if component_type != ExpressionComponentType.EXPRESSION:
-		Logger.error("Cannot evaluate this type of expression in isolation.")
+		_logger.error("Cannot evaluate this type of expression in isolation.")
 		return null
 	var variable_type = expression["variable_type"]
 	var expression_type = expression["expression_type"]
@@ -54,7 +54,7 @@ func _evaluate_value(variable_type, expression):
 		)
 	else:
 		return expression["value"]
-	Logger.error("Not a valid value expression.")
+	_logger.error("Not a valid value expression.")
 
 
 func _evaluate_comparison(variable_type, expression):
@@ -85,7 +85,7 @@ func _evaluate_comparison(variable_type, expression):
 		ExpressionOperators.COMPARISON_NOT_EQUALS:
 			return left != right
 	# Ruh-roh
-	Logger.error("Unsupported operator in comparison expression.")
+	_logger.error("Unsupported operator in comparison expression.")
 	return null
 
 
@@ -96,7 +96,7 @@ func _evaluate_function(variable_type, expression):
 	var function_type = expression["function_type"]
 	var function_spec = EXPRESSION_FUNCTIONS[variable_type][function_type]
 	if function_spec == null:
-		Logger.error("Unrecognised function in serialised expression.")
+		_logger.error("Unrecognised function in serialised expression.")
 		return null
 	var arguments_spec = function_spec["arguments"]
 	var exp_arguments = expression["arguments"]
@@ -160,7 +160,7 @@ func _match_bool_function(
 			return not arguments["x"]
 		FunctionType.CONTAINS:
 			return arguments["in"].contains(arguments["query"])
-	Logger.error("Unrecognised boolean function type.")
+	_logger.error("Unrecognised boolean function type.")
 	return null
 
 
@@ -176,7 +176,7 @@ func _match_numeric_function(
 			return arguments.min()
 		FunctionType.MAX:
 			return arguments.max()
-	Logger.error("Unrecognised numeric function type.")
+	_logger.error("Unrecognised numeric function type.")
 	return null
 
 
@@ -189,7 +189,7 @@ func _match_string_function(
 	match function_type:
 		FunctionType.TO_LOWER:
 			return arguments["what"].to_lower()
-	Logger.error("Unrecognised string function type.")
+	_logger.error("Unrecognised string function type.")
 	return null
 
 
@@ -246,7 +246,7 @@ func _evaluate_operator_group(variable_type, expression):
 		],
 	)
 	if len(result) > 1:
-		Logger.error("Expression was not fully evaluated.")
+		_logger.error("Expression was not fully evaluated.")
 	return result[0]
 
 
@@ -276,7 +276,7 @@ func _evaluate_operator_types(expression_group, operators):
 		if not _any_in_operator_list(result, operators):
 			completed = true
 		if loops > 10000:
-			Logger.error("Operator type evaluation failed - too many iterations")
+			_logger.error("Operator type evaluation failed - too many iterations")
 			return null
 	return result
 
@@ -311,7 +311,7 @@ func _apply_operator(operator, left, right):
 			return left + right
 		ExpressionOperators.STRING_CONCATENATE_WITH_SPACE:
 			return left + " " + right
-	Logger.error("Invalid operator.")
+	_logger.error("Invalid operator.")
 	return null
 
 
@@ -324,14 +324,14 @@ func _get_variable(variable_name, scope):
 			return cutscene_state_store.get(variable_name)
 		VariableScope.SCOPE_LOCAL:
 			if local_store == null:
-				Logger.error(
+				_logger.error(
 					"Scene variable \"%s\" requested but no scene store is available" % variable_name
 				)
 				return null
 			return local_store.get_variable(variable_name)
 		VariableScope.SCOPE_GLOBAL:
 			if global_store == null:
-				Logger.error(
+				_logger.error(
 					"Global variable \"%s\" requested but no global store is available" % variable_name
 				)
 				return null

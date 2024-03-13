@@ -89,7 +89,7 @@ keycode = 4194337
 resource_name = "Restart Cutscene"
 events = [SubResource("InputEventKey_3y117")]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xa061"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5mf8e"]
 content_margin_left = 4.0
 content_margin_top = 4.0
 content_margin_right = 4.0
@@ -156,15 +156,15 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HSplitContainer/VariableStoresContainer"]
+[node name="HB" type="HBoxContainer" parent="HSplitContainer/VariableStoresContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HSplitContainer/VariableStoresContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="HSplitContainer/VariableStoresContainer/HB"]
 layout_mode = 2
 text = "Variable Stores
 "
 
-[node name="StoresMenuButton" type="MenuButton" parent="HSplitContainer/VariableStoresContainer/HBoxContainer"]
+[node name="StoresMenuButton" type="MenuButton" parent="HSplitContainer/VariableStoresContainer/HB"]
 layout_mode = 2
 size_flags_horizontal = 10
 icon = ExtResource("10_0arbr")
@@ -270,19 +270,19 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_xa061")
+theme_override_styles/panel = SubResource("StyleBoxFlat_5mf8e")
 
-[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/HSplitContainer/VB/PanelContainer"]
+[node name="MC" type="MarginContainer" parent="HSplitContainer/HSplitContainer/VB/PanelContainer"]
 layout_mode = 2
 
-[node name="DialogueScrollContainer" type="ScrollContainer" parent="HSplitContainer/HSplitContainer/VB/PanelContainer/MarginContainer"]
+[node name="DialogueScrollContainer" type="ScrollContainer" parent="HSplitContainer/HSplitContainer/VB/PanelContainer/MC"]
 visible = false
 custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
 
-[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/HSplitContainer/VB/PanelContainer/MarginContainer/DialogueScrollContainer"]
+[node name="MC" type="MarginContainer" parent="HSplitContainer/HSplitContainer/VB/PanelContainer/MC/DialogueScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -291,29 +291,29 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="DialogueContainer" type="VBoxContainer" parent="HSplitContainer/HSplitContainer/VB/PanelContainer/MarginContainer/DialogueScrollContainer/MarginContainer"]
+[node name="DialogueContainer" type="VBoxContainer" parent="HSplitContainer/HSplitContainer/VB/PanelContainer/MC/DialogueScrollContainer/MC"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 10
 theme_override_constants/separation = 16
 
-[node name="BeginContainer" type="CenterContainer" parent="HSplitContainer/HSplitContainer/VB/PanelContainer/MarginContainer"]
+[node name="BeginContainer" type="CenterContainer" parent="HSplitContainer/HSplitContainer/VB/PanelContainer/MC"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer/HSplitContainer/VB/PanelContainer/MarginContainer/BeginContainer"]
+[node name="VB" type="VBoxContainer" parent="HSplitContainer/HSplitContainer/VB/PanelContainer/MC/BeginContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HSplitContainer/HSplitContainer/VB/PanelContainer/MarginContainer/BeginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="HSplitContainer/HSplitContainer/VB/PanelContainer/MC/BeginContainer/VB"]
 layout_mode = 2
 text = "Prepare your test environment if necessary and then click run to begin"
 
-[node name="ShowProcessingCheckBox" type="CheckBox" parent="HSplitContainer/HSplitContainer/VB/PanelContainer/MarginContainer/BeginContainer/VBoxContainer"]
+[node name="ShowProcessingCheckBox" type="CheckBox" parent="HSplitContainer/HSplitContainer/VB/PanelContainer/MC/BeginContainer/VB"]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Show processing details"
 
-[node name="RunButton" type="Button" parent="HSplitContainer/HSplitContainer/VB/PanelContainer/MarginContainer/BeginContainer/VBoxContainer"]
+[node name="RunButton" type="Button" parent="HSplitContainer/HSplitContainer/VB/PanelContainer/MC/BeginContainer/VB"]
 layout_mode = 2
 size_flags_horizontal = 4
 shortcut = SubResource("Shortcut_0r03i")
@@ -371,5 +371,5 @@ pitch_scale = 0.77
 [connection signal="pressed" from="HSplitContainer/HSplitContainer/VB/HB/StartButton" to="." method="_on_start_button_pressed"]
 [connection signal="pressed" from="HSplitContainer/HSplitContainer/VB/HB/StopButton" to="." method="_on_stop_button_pressed"]
 [connection signal="pressed" from="HSplitContainer/HSplitContainer/VB/HB/RestartButton" to="." method="_on_restart_button_pressed"]
-[connection signal="toggled" from="HSplitContainer/HSplitContainer/VB/PanelContainer/MarginContainer/BeginContainer/VBoxContainer/ShowProcessingCheckBox" to="." method="_on_show_processing_check_box_toggled"]
-[connection signal="pressed" from="HSplitContainer/HSplitContainer/VB/PanelContainer/MarginContainer/BeginContainer/VBoxContainer/RunButton" to="." method="_on_run_button_pressed"]
+[connection signal="toggled" from="HSplitContainer/HSplitContainer/VB/PanelContainer/MC/BeginContainer/VB/ShowProcessingCheckBox" to="." method="_on_show_processing_check_box_toggled"]
+[connection signal="pressed" from="HSplitContainer/HSplitContainer/VB/PanelContainer/MC/BeginContainer/VB/RunButton" to="." method="_on_run_button_pressed"]

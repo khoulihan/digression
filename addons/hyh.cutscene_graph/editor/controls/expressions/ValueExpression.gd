@@ -1,28 +1,20 @@
 @tool
 extends "res://addons/hyh.cutscene_graph/editor/controls/expressions/MoveableExpression.gd"
+## An expression that represents a single value.
 
 
 const ExpressionType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionType
 
-
-@onready var _value_edit = get_node("PanelContainer/MC/ExpressionContainer/Header/VariableValueEdit")
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
+@onready var _value_edit = $PanelContainer/MC/ExpressionContainer/Header/VariableValueEdit
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
-
-
+## Configure the expression.
 func configure():
 	super()
 	_value_edit.variable_type = type
 
 
+## Validate the expression.
 func validate():
 	if _value_edit.is_selecting_variable():
 		if _value_edit.get_selected_variable() == null:
@@ -32,10 +24,7 @@ func validate():
 	_validation_warning.visible = false
 
 
-func _on_variable_value_edit_value_changed():
-	modified.emit()
-
-
+## Serialise the expression to a dictionary.
 func serialise():
 	var exp = super()
 	exp["expression_type"] = ExpressionType.VALUE
@@ -46,6 +35,7 @@ func serialise():
 	return exp
 
 
+## Deserialise an expression dictionary.
 func deserialise(serialised):
 	super(serialised)
 	_value_edit.set_variable_type(type)
@@ -53,3 +43,7 @@ func deserialise(serialised):
 		_value_edit.set_variable(serialised["variable"], true)
 	else:
 		_value_edit.set_value(serialised["value"])
+
+
+func _on_variable_value_edit_value_changed():
+	modified.emit()

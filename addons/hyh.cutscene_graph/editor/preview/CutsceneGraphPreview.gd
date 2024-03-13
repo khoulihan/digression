@@ -1,70 +1,10 @@
 @tool
 extends VBoxContainer
-
-
-const Logging = preload("../../utility/Logging.gd")
-var Logger = Logging.new("Cutscene Graph Preview", Logging.CGE_NODES_LOG_LEVEL)
+## In-editor graph previewer.
 
 
 signal starting_preview()
 signal stopping_preview()
-
-
-@onready var _show_processing_checkbox = $HSplitContainer/HSplitContainer/VB/PanelContainer/MarginContainer/BeginContainer/VBoxContainer/ShowProcessingCheckBox
-@onready var _graph_mini_map = $HSplitContainer/HSplitContainer/VSplitContainer/GraphMiniMap
-@onready var _dialogue_scroll_container = $HSplitContainer/HSplitContainer/VB/PanelContainer/MarginContainer/DialogueScrollContainer
-@onready var _dialogue_container = $HSplitContainer/HSplitContainer/VB/PanelContainer/MarginContainer/DialogueScrollContainer/MarginContainer/DialogueContainer
-@onready var _dialogue_container_panel = $HSplitContainer/HSplitContainer/VB/PanelContainer
-@onready var _begin_container = $HSplitContainer/HSplitContainer/VB/PanelContainer/MarginContainer/BeginContainer
-@onready var _breadcrumbs = $TitleBar/GraphBreadcrumbs
-@onready var _characters_tree = $HSplitContainer/HSplitContainer/VSplitContainer/VB/CharactersTree
-@onready var _variable_stores_tree = $HSplitContainer/VariableStoresContainer/VariableStoresTree
-@onready var _start_button = $HSplitContainer/HSplitContainer/VB/HB/StartButton
-@onready var _stop_button = $HSplitContainer/HSplitContainer/VB/HB/StopButton
-@onready var _restart_button = $HSplitContainer/HSplitContainer/VB/HB/RestartButton
-@onready var _play_audio_button = $HSplitContainer/HSplitContainer/VB/HB/PlayAudioButton
-@onready var _show_processing_button = $HSplitContainer/HSplitContainer/VB/HB/ShowProcessingButton
-@onready var _fast_forward_button = $HSplitContainer/HSplitContainer/VB/HB/FastForwardButton
-@onready var _characterwise_display_button = $HSplitContainer/HSplitContainer/VB/HB/CharacterwiseButton
-@onready var _stores_menu_button = $HSplitContainer/VariableStoresContainer/HBoxContainer/StoresMenuButton
-@onready var _controller = $CutsceneController
-@onready var _cutscene = $Cutscene
-@onready var _dialogue_displayed_player = $DialogueDisplayedPlayer
-@onready var _character_displayed_player = $CharacterDisplayedPlayer
-var _dialogue_scrollbar
-var _continue_button
-var _transient_store_root: TreeItem
-var _cutscene_store_root: TreeItem
-var _local_store_root: TreeItem
-var _global_store_root: TreeItem
-
-
-const VisibleIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_visible.svg")
-const InvisibleIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_invisible.svg")
-const NotificationIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_notification.svg")
-const NotificationDisabledIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_notification_disabled.svg")
-
-
-const DialogueTextEvent = preload("res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/DialogueTextEvent.tscn")
-const PlayerDialogueTextEvent = preload("res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/PlayerDialogueTextEvent.tscn")
-const StaticInformationalEvent = preload("res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/StaticInformationalEvent.tscn")
-const ChoiceEvent = preload("res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/ChoiceEvent.tscn")
-const VariableSelectDialog = preload("../variable_select_dialog/VariableSelectDialog.tscn")
-
-
-const VariableScope = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableScope
-const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
-const Controller = preload("res://addons/hyh.cutscene_graph/editor/CutsceneController.gd")
-const ProceedSignal = Controller.ProceedSignal
-const CharacterDetails = Controller.CharacterDetails
-
-
-const DialoguePanelStyleBoxLeftResource = preload("res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/styles/dialogue_box_panel_green_left.tres")
-const DialoguePanelStyleBoxRightResource = preload("res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/styles/dialogue_box_panel_green_right.tres")
-const DialogueIndicatorStyleBoxLeftResource = preload("res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/styles/dialogue_box_indicator_green_left.tres")
-const DialogueIndicatorStyleBoxRightResource = preload("res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/styles/dialogue_box_indicator_green_right.tres")
-const ColourIndicatorIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_colour_indicator.svg")
-
 
 enum StoresMenuItemId {
 	ADD_VARIABLE,
@@ -75,7 +15,6 @@ enum StoresMenuItemId {
 	SEP2,
 	CLEAR_ALL,
 }
-
 
 enum DialogueColour {
 	DEFAULT,
@@ -96,6 +35,31 @@ enum DialogueColourResourceIndex {
 	RIGHT_PANEL,
 	RIGHT_INDICATOR
 }
+
+const Logging = preload("../../utility/Logging.gd")
+
+const VISIBLE_ICON = preload("res://addons/hyh.cutscene_graph/icons/icon_visible.svg")
+const INVISIBLE_ICON = preload("res://addons/hyh.cutscene_graph/icons/icon_invisible.svg")
+const NOTIFICATION_ICON = preload("res://addons/hyh.cutscene_graph/icons/icon_notification.svg")
+const NOTIFICATION_DISABLED_ICON = preload("res://addons/hyh.cutscene_graph/icons/icon_notification_disabled.svg")
+
+const DialogueTextEvent = preload("res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/DialogueTextEvent.tscn")
+const PlayerDialogueTextEvent = preload("res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/PlayerDialogueTextEvent.tscn")
+const StaticInformationalEvent = preload("res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/StaticInformationalEvent.tscn")
+const ChoiceEvent = preload("res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/ChoiceEvent.tscn")
+const VariableSelectDialog = preload("../variable_select_dialog/VariableSelectDialog.tscn")
+
+const VariableScope = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableScope
+const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
+const Controller = preload("res://addons/hyh.cutscene_graph/editor/CutsceneController.gd")
+const ProceedSignal = Controller.ProceedSignal
+const CharacterDetails = Controller.CharacterDetails
+
+const DIALOGUE_PANEL_STYLE_BOX_LEFT = preload("res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/styles/dialogue_box_panel_green_left.tres")
+const DIALOGUE_PANEL_STYLE_BOX_RIGHT = preload("res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/styles/dialogue_box_panel_green_right.tres")
+const DIALOGUE_INDICATOR_STYLE_BOX_LEFT = preload("res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/styles/dialogue_box_indicator_green_left.tres")
+const DIALOGUE_INDICATOR_STYLE_BOX_RIGHT = preload("res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/styles/dialogue_box_indicator_green_right.tres")
+const COLOUR_INDICATOR_ICON = preload("res://addons/hyh.cutscene_graph/icons/icon_colour_indicator.svg")
 
 var _dialogue_colours = [
 	Color("#54D8BD"),
@@ -133,15 +97,44 @@ var _characterwise_display = false
 var _character_colours = {}
 var _transient_state
 
+var _dialogue_scrollbar
+var _continue_button
+var _transient_store_root: TreeItem
+var _cutscene_store_root: TreeItem
+var _local_store_root: TreeItem
+var _global_store_root: TreeItem
+var _logger = Logging.new("Cutscene Graph Preview", Logging.CGE_NODES_LOG_LEVEL)
 
-# Called when the node enters the scene tree for the first time.
+@onready var _show_processing_checkbox = $HSplitContainer/HSplitContainer/VB/PanelContainer/MC/BeginContainer/VB/ShowProcessingCheckBox
+@onready var _graph_mini_map = $HSplitContainer/HSplitContainer/VSplitContainer/GraphMiniMap
+@onready var _dialogue_scroll_container = $HSplitContainer/HSplitContainer/VB/PanelContainer/MC/DialogueScrollContainer
+@onready var _dialogue_container = $HSplitContainer/HSplitContainer/VB/PanelContainer/MC/DialogueScrollContainer/MC/DialogueContainer
+@onready var _dialogue_container_panel = $HSplitContainer/HSplitContainer/VB/PanelContainer
+@onready var _begin_container = $HSplitContainer/HSplitContainer/VB/PanelContainer/MC/BeginContainer
+@onready var _breadcrumbs = $TitleBar/GraphBreadcrumbs
+@onready var _characters_tree = $HSplitContainer/HSplitContainer/VSplitContainer/VB/CharactersTree
+@onready var _variable_stores_tree = $HSplitContainer/VariableStoresContainer/VariableStoresTree
+@onready var _start_button = $HSplitContainer/HSplitContainer/VB/HB/StartButton
+@onready var _stop_button = $HSplitContainer/HSplitContainer/VB/HB/StopButton
+@onready var _restart_button = $HSplitContainer/HSplitContainer/VB/HB/RestartButton
+@onready var _play_audio_button = $HSplitContainer/HSplitContainer/VB/HB/PlayAudioButton
+@onready var _show_processing_button = $HSplitContainer/HSplitContainer/VB/HB/ShowProcessingButton
+@onready var _fast_forward_button = $HSplitContainer/HSplitContainer/VB/HB/FastForwardButton
+@onready var _characterwise_display_button = $HSplitContainer/HSplitContainer/VB/HB/CharacterwiseButton
+@onready var _stores_menu_button = $HSplitContainer/VariableStoresContainer/HB/StoresMenuButton
+@onready var _controller = $CutsceneController
+@onready var _cutscene = $Cutscene
+@onready var _dialogue_displayed_player = $DialogueDisplayedPlayer
+@onready var _character_displayed_player = $CharacterDisplayedPlayer
+
+
 func _ready():
 	_dialogue_container_panel.add_theme_stylebox_override("panel", get_theme_stylebox("TextureRegionPreviewBG", "EditorStyles"))
 	_clear_dialogue()
 	_cutscene.set_controller(_controller)
 	_connect_internal_signals()
 	_dialogue_scrollbar = _dialogue_scroll_container.get_v_scroll_bar()
-	_dialogue_scrollbar.changed.connect(_scroll_changed)
+	_dialogue_scrollbar.changed.connect(_on_scroll_changed)
 	_create_dialogue_colour_resources()
 	_stores_menu_button.get_popup().id_pressed.connect(
 		_on_stores_menu_id_pressed
@@ -156,10 +149,10 @@ func _create_dialogue_colour_resources():
 
 
 func _create_dialogue_colour_set(colour):
-	var left_panel = DialoguePanelStyleBoxLeftResource.duplicate()
-	var right_panel = DialoguePanelStyleBoxRightResource.duplicate()
-	var left_indicator = DialogueIndicatorStyleBoxLeftResource.duplicate()
-	var right_indicator = DialogueIndicatorStyleBoxRightResource.duplicate()
+	var left_panel = DIALOGUE_PANEL_STYLE_BOX_LEFT.duplicate()
+	var right_panel = DIALOGUE_PANEL_STYLE_BOX_RIGHT.duplicate()
+	var left_indicator = DIALOGUE_INDICATOR_STYLE_BOX_LEFT.duplicate()
+	var right_indicator = DIALOGUE_INDICATOR_STYLE_BOX_RIGHT.duplicate()
 	left_panel.bg_color = colour
 	left_panel.border_color = colour
 	right_panel.bg_color = colour
@@ -309,7 +302,6 @@ func _assign_colours_to_characters(characters):
 		var selected = _colour_pool.pick_random()
 		_colour_pool.remove_at(_colour_pool.find(selected))
 		_character_colours[character] = selected
-		
 
 
 func _focus_current_node_in_minimap():
@@ -327,7 +319,7 @@ func _populate_characters(characters):
 	var root = _characters_tree.create_item()
 	for character in characters:
 		var c = _characters_tree.create_item(root)
-		c.set_icon(0, ColourIndicatorIcon)
+		c.set_icon(0, COLOUR_INDICATOR_ICON)
 		c.set_icon_modulate(0, _dialogue_colours[_character_colours[character]])
 		c.set_text(1, character.get_full_name())
 		c.set_cell_mode(2, TreeItem.TreeCellMode.CELL_MODE_CHECK)
@@ -427,7 +419,7 @@ func _clear_dialogue():
 	_continue_button.text = "Continue"
 	_continue_button.icon = preload("res://addons/hyh.cutscene_graph/icons/icon_play.svg")
 	_dialogue_container.add_child(_continue_button)
-	_continue_button.pressed.connect(_continue_requested)
+	_continue_button.pressed.connect(_on_continue_requested)
 	_continue_button.shortcut = Shortcut.new()
 	_continue_button.shortcut.resource_name = "Continue"
 	var enter_key_event = InputEventKey.new()
@@ -446,7 +438,7 @@ func _clear_dialogue():
 
 
 func _start_processing():
-	Logger.debug("Triggering Graph")
+	_logger.debug("Triggering Graph")
 	#_show_processing = _show_processing_checkbox.button_pressed
 	# TODO: `_show_processing` will require setting something on the controller
 	# as well, and probably connecting events.
@@ -460,7 +452,7 @@ func _start_processing():
 
 
 func _stop_processing():
-	Logger.debug("Stopping")
+	_logger.debug("Stopping")
 	_set_control_states(false)
 	_controller.cancel()
 	_controller._transient_store = _transient_state.duplicate()
@@ -471,14 +463,6 @@ func _stop_processing():
 		if last_event != null and "cancel" in last_event:
 			last_event.cancel()
 	stopping_preview.emit()
-
-
-func _on_stop_button_pressed():
-	_stop_processing()
-	var n = StaticInformationalEvent.instantiate()
-	_insert_event(n)
-	n.populate("Stopped.")
-	_reset_to_root_graph()
 
 
 func _prepare_to_wait(process):
@@ -495,56 +479,8 @@ func _insert_event(ev):
 	_dialogue_container.move_child(_continue_button, -1)
 
 
-func _on_cutscene_controller_cutscene_started(cutscene_name, graph_type):
-	Logger.debug("Cutscene Started")
-	# Restore the backup of the transient store from before the
-	# cutscene was triggered, as the controller will have cleared it.
-	_controller._transient_store = _transient_state.duplicate()
-	_controller._expression_evaluator.transient_store = _controller._transient_store
-	var n = StaticInformationalEvent.instantiate()
-	_insert_event(n)
-	n.populate("Cutscene started...")
-	_hide_continue()
-	_update_variable_stores_tree()
-
-
-func _on_cutscene_controller_cutscene_completed():
-	Logger.debug("Cutscene Completed")
-	_controller._transient_store = _transient_state.duplicate()
-	_controller._expression_evaluator.transient_store = _controller._transient_store
-	var n = StaticInformationalEvent.instantiate()
-	_insert_event(n)
-	n.populate("Cutscene complete.")
-	_hide_continue()
-	_update_variable_stores_tree()
-	_set_control_states(false)
-	stopping_preview.emit()
-
-
-func _on_cutscene_controller_action_requested(action, arguments, process):
-	Logger.debug("Action Requested")
-	var n = StaticInformationalEvent.instantiate()
-	_insert_event(n)
-	var event_text = "Action \"%s\" requested" % action
-	
-	var arguments_text = _prepare_arguments_text(arguments)
-	
-	if not arguments_text.is_empty():
-		event_text = "%s with arguments: %s" % [
-			event_text,
-			arguments_text
-		]
-	n.populate(event_text, "The effects of actions cannot be modelled by the previewer.")
-	_update_variable_stores_tree()
-	_focus_current_node_in_minimap()
-	if _fast_forward:
-		process.proceed()
-	else:
-		_prepare_to_wait(process)
-
-
 func _action_method(method_name, immediate_return, arguments):
-	Logger.debug("Action Method Called")
+	_logger.debug("Action Method Called")
 	var user_arguments = arguments
 	if not immediate_return:
 		user_arguments = arguments.slice(0, -1)
@@ -599,7 +535,166 @@ func _prepare_arguments_text(arguments):
 			_:
 				argument_descriptions.append(str(argument))
 	return ", ".join(argument_descriptions)
-		
+
+
+func _scroll_to_bottom():
+	_dialogue_scroll_container.set_deferred(
+		"scroll_vertical",
+		_dialogue_scroll_container.get_v_scroll_bar().max_value
+	)
+
+
+func _set_show_processing_button_state(show):
+	_show_processing_button.set_pressed_no_signal(show)
+	if show:
+		_show_processing_button.icon = VISIBLE_ICON
+	else:
+		_show_processing_button.icon = INVISIBLE_ICON
+
+
+func _set_show_processing_checkbox_state(show):
+	_show_processing_checkbox.set_pressed_no_signal(show)
+
+
+func _save_stores():
+	var dialog = EditorFileDialog.new()
+	get_tree().root.add_child(dialog)
+	dialog.file_mode = EditorFileDialog.FILE_MODE_SAVE_FILE
+	dialog.add_filter("*.json", "JSON Files")
+	dialog.canceled.connect(_on_dialog_cancelled.bind(dialog))
+	dialog.file_selected.connect(_on_store_save_file_selected.bind(dialog))
+	dialog.popup_centered(Vector2i(800, 600))
+
+
+func _load_stores(replace):
+	var dialog = EditorFileDialog.new()
+	get_tree().root.add_child(dialog)
+	dialog.file_mode = EditorFileDialog.FILE_MODE_OPEN_FILE
+	dialog.add_filter("*.json", "JSON Files")
+	dialog.canceled.connect(_on_dialog_cancelled.bind(dialog))
+	dialog.file_selected.connect(_on_store_load_file_selected.bind(replace, dialog))
+	dialog.popup_centered(Vector2i(800, 600))
+
+
+func clear_variable_stores():
+	_controller._transient_store.clear()
+	_controller._cutscene_state_store.clear()
+	_controller._local_store.store_data.clear()
+	_controller._global_store.store_data.clear()
+
+
+func _show_add_variable_dialog():
+	var dialog = VariableSelectDialog.instantiate()
+	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_ABSOLUTE
+	dialog.position = get_tree().root.position + Vector2i(200, 200)
+	dialog.selected.connect(_on_variable_selected.bind(dialog))
+	dialog.cancelled.connect(_on_dialog_cancelled.bind(dialog))
+	get_tree().root.add_child(dialog)
+	dialog.popup()
+
+
+func _confirm_clear_all_stores():
+	_logger.debug("Confirming variable store clear")
+	var d = ConfirmationDialog.new()
+	get_tree().root.add_child(d)
+	d.title = "Confirm"
+	d.dialog_text = "Are you sure you want to clear all variable stores? This action cannot be undone."
+	d.confirmed.connect(_on_clear_all_stores.bind(d))
+	d.canceled.connect(_on_dialog_cancelled.bind(d))
+	d.popup_centered()
+
+
+func _get_default_value_for_type(t):
+	match t:
+		VariableType.TYPE_BOOL:
+			return false
+		VariableType.TYPE_FLOAT:
+			return 0.0
+		VariableType.TYPE_INT:
+			return 0
+		VariableType.TYPE_STRING:
+			return ""
+	return null
+
+
+func _get_variable_store_for_branch(branch):
+	if branch == _transient_store_root:
+		return _controller._transient_store
+	if branch == _cutscene_store_root:
+		return _controller._cutscene_state_store
+	if branch == _local_store_root:
+		return _controller._local_store.store_data
+	if branch == _global_store_root:
+		return _controller._global_store.store_data
+	return null
+
+
+func _set_play_audio_button_state(show):
+	_play_audio_button.set_pressed_no_signal(show)
+	if show:
+		_play_audio_button.icon = NOTIFICATION_ICON
+	else:
+		_play_audio_button.icon = NOTIFICATION_DISABLED_ICON
+
+
+func _use_characterwise():
+	return _characterwise_display and not _fast_forward
+
+
+func _on_stop_button_pressed():
+	_stop_processing()
+	var n = StaticInformationalEvent.instantiate()
+	_insert_event(n)
+	n.populate("Stopped.")
+	_reset_to_root_graph()
+
+
+func _on_cutscene_controller_cutscene_started(cutscene_name, graph_type):
+	_logger.debug("Cutscene Started")
+	# Restore the backup of the transient store from before the
+	# cutscene was triggered, as the controller will have cleared it.
+	_controller._transient_store = _transient_state.duplicate()
+	_controller._expression_evaluator.transient_store = _controller._transient_store
+	var n = StaticInformationalEvent.instantiate()
+	_insert_event(n)
+	n.populate("Cutscene started...")
+	_hide_continue()
+	_update_variable_stores_tree()
+
+
+func _on_cutscene_controller_cutscene_completed():
+	_logger.debug("Cutscene Completed")
+	_controller._transient_store = _transient_state.duplicate()
+	_controller._expression_evaluator.transient_store = _controller._transient_store
+	var n = StaticInformationalEvent.instantiate()
+	_insert_event(n)
+	n.populate("Cutscene complete.")
+	_hide_continue()
+	_update_variable_stores_tree()
+	_set_control_states(false)
+	stopping_preview.emit()
+
+
+func _on_cutscene_controller_action_requested(action, arguments, process):
+	_logger.debug("Action Requested")
+	var n = StaticInformationalEvent.instantiate()
+	_insert_event(n)
+	var event_text = "Action \"%s\" requested" % action
+	
+	var arguments_text = _prepare_arguments_text(arguments)
+	
+	if not arguments_text.is_empty():
+		event_text = "%s with arguments: %s" % [
+			event_text,
+			arguments_text
+		]
+	n.populate(event_text, "The effects of actions cannot be modelled by the previewer.")
+	_update_variable_stores_tree()
+	_focus_current_node_in_minimap()
+	if _fast_forward:
+		process.proceed()
+	else:
+		_prepare_to_wait(process)
 
 
 func _on_cutscene_controller_choice_dialogue_display_requested(choice_type, dialogue_type, text, character, character_variant, properties, process):
@@ -609,12 +704,12 @@ func _on_cutscene_controller_choice_dialogue_display_requested(choice_type, dial
 
 func _on_cutscene_controller_choice_display_requested(choice_type, choices, process):
 	# TODO: Need to display the choice type here, there is nowhere for it currently
-	Logger.debug("Choice Display Requested")
+	_logger.debug("Choice Display Requested")
 	var n = ChoiceEvent.instantiate()
 	_insert_event(n)
 	n.populate(choices)
 	n.choice_selected.connect(
-		_choice_selected.bind(process)
+		_on_choice_selected.bind(process)
 	)
 	_hide_continue()
 	_update_variable_stores_tree()
@@ -624,7 +719,7 @@ func _on_cutscene_controller_choice_display_requested(choice_type, choices, proc
 
 
 func _on_cutscene_controller_dialogue_display_requested(dialogue_type, text, character, character_variant, properties, process):
-	Logger.debug("Dialogue Display Requested")
+	_logger.debug("Dialogue Display Requested")
 	var n
 	var panel
 	var indicator
@@ -654,10 +749,10 @@ func _on_cutscene_controller_dialogue_display_requested(dialogue_type, text, cha
 		properties,
 	)
 	n.character_displayed.connect(
-		_dialogue_node_character_displayed
+		_on_dialogue_node_character_displayed
 	)
 	n.ready_to_continue.connect(
-		_dialogue_node_ready_to_continue.bind(process)
+		_on_dialogue_node_ready_to_continue.bind(process)
 	)
 	_update_variable_stores_tree()
 	_focus_current_node_in_minimap()
@@ -672,39 +767,33 @@ func _on_cutscene_controller_dialogue_display_requested(dialogue_type, text, cha
 			_continue_button.visible = false
 
 
-func _scroll_changed():
+func _on_scroll_changed():
 	_dialogue_scroll_container.set_deferred(
 		"scroll_vertical",
 		_dialogue_scrollbar.max_value
 	)
 
-func _scroll_to_bottom():
-	_dialogue_scroll_container.set_deferred(
-		"scroll_vertical",
-		_dialogue_scroll_container.get_v_scroll_bar().max_value
-	)
 
-
-func _dialogue_node_ready_to_continue(process):
+func _on_dialogue_node_ready_to_continue(process):
 	_prepare_to_wait(process)
 
 
-func _dialogue_node_character_displayed():
+func _on_dialogue_node_character_displayed():
 	if _play_audio:
 		_character_displayed_player.play()
 
 
-func _choice_selected(choice, process):
+func _on_choice_selected(choice, process):
 	process.proceed(choice)
 
 
-func _continue_requested():
+func _on_continue_requested():
 	_current_process.proceed()
 	_current_process = null
 
 
 func _on_cutscene_controller_sub_graph_entered(cutscene_name, graph_type):
-	Logger.debug("Sub-graph \"%s\" entered" % cutscene_name)
+	_logger.debug("Sub-graph \"%s\" entered" % cutscene_name)
 	_graph_stack.append(_controller._current_graph)
 	_assign_colours_to_characters(_controller._current_graph.characters)
 	_populate_characters(_controller._current_graph.characters)
@@ -719,7 +808,7 @@ func _on_cutscene_controller_sub_graph_entered(cutscene_name, graph_type):
 
 
 func _on_cutscene_controller_cutscene_resumed(cutscene_name, graph_type):
-	Logger.debug("Graph \"%s\" resumed" % cutscene_name)
+	_logger.debug("Graph \"%s\" resumed" % cutscene_name)
 	_graph_stack.pop_back()
 	_assign_colours_to_characters(_controller._current_graph.characters)
 	_populate_characters(_controller._current_graph.characters)
@@ -745,18 +834,6 @@ func _on_restart_button_pressed():
 	_stop_processing()
 	_reset_to_root_graph()
 	_start_processing()
-
-
-func _set_show_processing_button_state(show):
-	_show_processing_button.set_pressed_no_signal(show)
-	if show:
-		_show_processing_button.icon = VisibleIcon
-	else:
-		_show_processing_button.icon = InvisibleIcon
-
-
-func _set_show_processing_checkbox_state(show):
-	_show_processing_checkbox.set_pressed_no_signal(show)
 
 
 func _on_show_processing_button_toggled(button_pressed):
@@ -789,17 +866,7 @@ func _on_stores_menu_id_pressed(id):
 			_confirm_clear_all_stores()
 
 
-func _save_stores():
-	var dialog = EditorFileDialog.new()
-	get_tree().root.add_child(dialog)
-	dialog.file_mode = EditorFileDialog.FILE_MODE_SAVE_FILE
-	dialog.add_filter("*.json", "JSON Files")
-	dialog.canceled.connect(_dialog_cancelled.bind(dialog))
-	dialog.file_selected.connect(_store_save_file_selected.bind(dialog))
-	dialog.popup_centered(Vector2i(800, 600))
-
-
-func _store_save_file_selected(path, dialog):
+func _on_store_save_file_selected(path, dialog):
 	get_tree().root.remove_child(dialog)
 	dialog.queue_free()
 	
@@ -814,42 +881,32 @@ func _store_save_file_selected(path, dialog):
 	var file = FileAccess.open(path, FileAccess.WRITE)
 	if file == null:
 		var err = FileAccess.get_open_error()
-		Logger.error("Error opening file for saving preview variable stores: %s" % err)
+		_logger.error("Error opening file for saving preview variable stores: %s" % err)
 		var error_dialog = AcceptDialog.new()
 		error_dialog.dialog_text = "File open failed: %s" % err
 		error_dialog.title = "Error"
-		error_dialog.confirmed.connect(_dialog_cancelled.bind(error_dialog))
-		error_dialog.canceled.connect(_dialog_cancelled.bind(error_dialog))
+		error_dialog.confirmed.connect(_on_dialog_cancelled.bind(error_dialog))
+		error_dialog.canceled.connect(_on_dialog_cancelled.bind(error_dialog))
 		get_tree().root.add_child(error_dialog)
 		error_dialog.popup_centered()
 		return
 	file.store_string(JSON.stringify(data, "  ", false))
 	file.close()
-	
-
-func _load_stores(replace):
-	var dialog = EditorFileDialog.new()
-	get_tree().root.add_child(dialog)
-	dialog.file_mode = EditorFileDialog.FILE_MODE_OPEN_FILE
-	dialog.add_filter("*.json", "JSON Files")
-	dialog.canceled.connect(_dialog_cancelled.bind(dialog))
-	dialog.file_selected.connect(_store_load_file_selected.bind(replace, dialog))
-	dialog.popup_centered(Vector2i(800, 600))
 
 
-func _store_load_file_selected(path, replace, dialog):
+func _on_store_load_file_selected(path, replace, dialog):
 	get_tree().root.remove_child(dialog)
 	dialog.queue_free()
 	
 	var file = FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		var err = FileAccess.get_open_error()
-		Logger.error("Error opening file for saving preview variable stores: %s" % err)
+		_logger.error("Error opening file for saving preview variable stores: %s" % err)
 		var error_dialog = AcceptDialog.new()
 		error_dialog.dialog_text = "File open failed: %s" % err
 		error_dialog.title = "Error"
-		error_dialog.confirmed.connect(_dialog_cancelled.bind(error_dialog))
-		error_dialog.canceled.connect(_dialog_cancelled.bind(error_dialog))
+		error_dialog.confirmed.connect(_on_dialog_cancelled.bind(error_dialog))
+		error_dialog.canceled.connect(_on_dialog_cancelled.bind(error_dialog))
 		get_tree().root.add_child(error_dialog)
 		error_dialog.popup_centered()
 		return
@@ -870,43 +927,15 @@ func _store_load_file_selected(path, replace, dialog):
 	_update_variable_stores_tree()
 
 
-func clear_variable_stores():
-	_controller._transient_store.clear()
-	_controller._cutscene_state_store.clear()
-	_controller._local_store.store_data.clear()
-	_controller._global_store.store_data.clear()
-
-
-func _clear_all_stores(dialog):
-	Logger.debug("Clearing all stores")
+func _on_clear_all_stores(dialog):
+	_logger.debug("Clearing all stores")
 	get_tree().root.remove_child(dialog)
 	dialog.queue_free()
 	clear_variable_stores()
 	_update_variable_stores_tree()
 
 
-func _confirm_clear_all_stores():
-	Logger.debug("Confirming variable store clear")
-	var d = ConfirmationDialog.new()
-	get_tree().root.add_child(d)
-	d.title = "Confirm"
-	d.dialog_text = "Are you sure you want to clear all variable stores? This action cannot be undone."
-	d.confirmed.connect(_clear_all_stores.bind(d))
-	d.canceled.connect(_dialog_cancelled.bind(d))
-	d.popup_centered()
-
-
-func _show_add_variable_dialog():
-	var dialog = VariableSelectDialog.instantiate()
-	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_ABSOLUTE
-	dialog.position = get_tree().root.position + Vector2i(200, 200)
-	dialog.selected.connect(_variable_selected.bind(dialog))
-	dialog.cancelled.connect(_dialog_cancelled.bind(dialog))
-	get_tree().root.add_child(dialog)
-	dialog.popup()
-
-
-func _variable_selected(variable, dialog):
+func _on_variable_selected(variable, dialog):
 	get_tree().root.remove_child(dialog)
 	dialog.queue_free()
 	
@@ -928,20 +957,7 @@ func _variable_selected(variable, dialog):
 	_update_variable_stores_tree()
 
 
-func _get_default_value_for_type(t):
-	match t:
-		VariableType.TYPE_BOOL:
-			return false
-		VariableType.TYPE_FLOAT:
-			return 0.0
-		VariableType.TYPE_INT:
-			return 0
-		VariableType.TYPE_STRING:
-			return ""
-	return null
-
-
-func _dialog_cancelled(dialog):
+func _on_dialog_cancelled(dialog):
 	get_tree().root.remove_child(dialog)
 	dialog.queue_free()
 
@@ -952,7 +968,7 @@ func _on_variable_stores_tree_item_edited():
 	var variable_name = edited.get_text(0)
 	# Need to determine the store, and the type
 	var parent = edited.get_parent()
-	var store = _get_variable_store_for_branch(parent)
+	var store: Variant = _get_variable_store_for_branch(parent)
 	if store == null:
 		return
 	var current_value = store[variable_name]
@@ -972,26 +988,6 @@ func _on_variable_stores_tree_item_edited():
 	_update_variable_stores_tree()
 
 
-func _get_variable_store_for_branch(branch):
-	if branch == _transient_store_root:
-		return _controller._transient_store
-	if branch == _cutscene_store_root:
-		return _controller._cutscene_state_store
-	if branch == _local_store_root:
-		return _controller._local_store.store_data
-	if branch == _global_store_root:
-		return _controller._global_store.store_data
-	return null
-
-
-func _set_play_audio_button_state(show):
-	_play_audio_button.set_pressed_no_signal(show)
-	if show:
-		_play_audio_button.icon = NotificationIcon
-	else:
-		_play_audio_button.icon = NotificationDisabledIcon
-
-
 func _on_play_audio_button_toggled(button_pressed):
 	_play_audio = button_pressed
 	_set_play_audio_button_state(button_pressed)
@@ -999,7 +995,3 @@ func _on_play_audio_button_toggled(button_pressed):
 
 func _on_characterwise_button_toggled(button_pressed):
 	_characterwise_display = button_pressed
-
-
-func _use_characterwise():
-	return _characterwise_display and not _fast_forward

@@ -1,32 +1,33 @@
 @tool
 extends VBoxContainer
+## Button for an individual choice.
 
 signal choice_selected()
 
+@onready var _visited_label: Label = $VB/Label
+@onready var _choice_button: Button = $VB/Button
+@onready var _properties_container: VBoxContainer = $MC/PropertiesContainer
 
-@onready var VisitedLabel: Label = $VB/Label
-@onready var ChoiceButton: Button = $VB/Button
-@onready var PropertiesContainer: VBoxContainer = $MC/PropertiesContainer
 
-
+## Populate the details of the choice.
 func populate(text, visit_count, index, properties):
-	ChoiceButton.text = text
+	_choice_button.text = text
 	if visit_count == 0:
-		VisitedLabel.text = "Never visited"
+		_visited_label.text = "Never visited"
 	elif visit_count == 1:
-		VisitedLabel.text = "Visited once"
+		_visited_label.text = "Visited once"
 	else:
-		VisitedLabel.text = "Visited %s times" % visit_count
+		_visited_label.text = "Visited %s times" % visit_count
 	
 	var shortcut_index = index + 1
 	if shortcut_index > 20:
 		return
 	
-	ChoiceButton.shortcut = Shortcut.new()
-	ChoiceButton.shortcut.resource_name = "Select choice"
+	_choice_button.shortcut = Shortcut.new()
+	_choice_button.shortcut.resource_name = "Select choice"
 	var key = InputEventKey.new()
 	key.pressed = true
-	ChoiceButton.shortcut.events.append(key)
+	_choice_button.shortcut.events.append(key)
 	if shortcut_index < 10:
 		key.keycode = KEY_0 + shortcut_index
 	elif shortcut_index == 10:
@@ -50,7 +51,7 @@ func populate(text, visit_count, index, properties):
 			Color.from_string("#f0f0f0dc", Color.WHITE)
 		)
 		property_label.add_theme_font_size_override("font_size", 10)
-		PropertiesContainer.add_child(property_label)
+		_properties_container.add_child(property_label)
 
 
 func _on_button_pressed():

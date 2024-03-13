@@ -1,10 +1,6 @@
 @tool
 extends MenuButton
-
-
-const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
-const FunctionType = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").FunctionType
-const ExpressionType = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").ExpressionType
+## Button for adding an element to an expression.
 
 
 signal add_requested(
@@ -13,7 +9,6 @@ signal add_requested(
 	function_type: Variant,
 	comparison_type: Variant
 )
-
 
 enum ExpressionMenuId {
 	VALUE,
@@ -33,10 +28,14 @@ enum ExpressionMenuId {
 	STRING_TO_LOWER,
 }
 
+const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
+const FunctionType = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").FunctionType
+const ExpressionType = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").ExpressionType
 
 var _type : VariableType
 
 
+## Configure the button.
 func configure(t: VariableType):
 	_type = t
 	var menu = get_popup()
@@ -49,22 +48,22 @@ func configure(t: VariableType):
 	if (t == VariableType.TYPE_BOOL):
 		_add_comparisons_sub_menu(menu)
 	_add_functions_sub_menu(menu, t)
-	if not menu.id_pressed.is_connected(_menu_item_selected):
-		menu.id_pressed.connect(_menu_item_selected)
+	if not menu.id_pressed.is_connected(_on_menu_item_selected):
+		menu.id_pressed.connect(_on_menu_item_selected)
 
 
-func _menu_item_selected(id: int):
+func _on_menu_item_selected(id: int):
 	var expression_type = _expression_type_for_id(id)
 	add_requested.emit(_type, expression_type, null, null)
 
 
-func _function_menu_item_selected(id: int):
+func _on_function_menu_item_selected(id: int):
 	var expression_type = _expression_type_for_id(id)
 	var func_type = _function_type_for_id(id)
 	add_requested.emit(_type, expression_type, func_type, null)
 
 
-func _comparison_menu_item_selected(id: int):
+func _on_comparison_menu_item_selected(id: int):
 	var expression_type = _expression_type_for_id(id)
 	var comparison_type = _comparison_type_for_id(id)
 	add_requested.emit(_type, expression_type, null, comparison_type)
@@ -110,10 +109,24 @@ func _comparison_type_for_id(id: ExpressionMenuId) -> Variant:
 	return null
 
 
+func _add_comparisons_sub_menu(menu):
+	var submenu = PopupMenu.new()
+	submenu.set_name("comparison")
+	submenu.id_pressed.connect(_on_comparison_menu_item_selected)
+	
+	submenu.add_item("Integer", ExpressionMenuId.COMPARISON_INT)
+	submenu.add_item("Float", ExpressionMenuId.COMPARISON_FLOAT)
+	submenu.add_item("String", ExpressionMenuId.COMPARISON_STRING)
+	submenu.add_item("Boolean", ExpressionMenuId.COMPARISON_BOOL)
+	
+	menu.add_child(submenu)
+	menu.add_submenu_item("Comparison", "comparison", ExpressionMenuId.COMPARISON)
+
+
 func _add_functions_sub_menu(menu: PopupMenu, t: VariableType):
 	var submenu = PopupMenu.new()
 	submenu.set_name("function")
-	submenu.id_pressed.connect(_function_menu_item_selected)
+	submenu.id_pressed.connect(_on_function_menu_item_selected)
 	
 	match t:
 		VariableType.TYPE_BOOL:
@@ -159,15 +172,4 @@ func _add_string_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.STRING_TO_LOWER, "to_lower")
 
 
-func _add_comparisons_sub_menu(menu):
-	var submenu = PopupMenu.new()
-	submenu.set_name("comparison")
-	submenu.id_pressed.connect(_comparison_menu_item_selected)
-	
-	submenu.add_item("Integer", ExpressionMenuId.COMPARISON_INT)
-	submenu.add_item("Float", ExpressionMenuId.COMPARISON_FLOAT)
-	submenu.add_item("String", ExpressionMenuId.COMPARISON_STRING)
-	submenu.add_item("Boolean", ExpressionMenuId.COMPARISON_BOOL)
-	
-	menu.add_child(submenu)
-	menu.add_submenu_item("Comparison", "comparison", ExpressionMenuId.COMPARISON)
+

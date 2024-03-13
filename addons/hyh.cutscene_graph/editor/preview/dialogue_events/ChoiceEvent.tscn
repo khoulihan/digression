@@ -32,22 +32,22 @@ layout_mode = 2
 visible = false
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="VB/SelectedChoice"]
+[node name="PC" type="PanelContainer" parent="VB/SelectedChoice"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_420c7")
 theme_override_styles/panel = SubResource("StyleBoxFlat_bvnm2")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VB/SelectedChoice/PanelContainer"]
+[node name="HB" type="HBoxContainer" parent="VB/SelectedChoice/PC"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="VB/SelectedChoice/PanelContainer/HBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="VB/SelectedChoice/PC/HB"]
 layout_mode = 2
 size_flags_vertical = 4
 texture = ExtResource("2_2hvgq")
 stretch_mode = 2
 
-[node name="SelectedChoiceLabel" type="Label" parent="VB/SelectedChoice/PanelContainer/HBoxContainer"]
+[node name="SelectedChoiceLabel" type="Label" parent="VB/SelectedChoice/PC/HB"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Selected choice goes here"

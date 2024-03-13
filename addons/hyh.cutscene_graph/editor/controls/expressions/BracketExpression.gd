@@ -1,31 +1,27 @@
 @tool
 extends "res://addons/hyh.cutscene_graph/editor/controls/expressions/MoveableExpression.gd"
+## Expression for grouping other expressions to be evaluated first.
 
 
 const ExpressionType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionType
+const GROUP_PANEL_STYLE = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/group_panel_style.tres")
 
-const _group_panel_style = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/group_panel_style.tres")
-
-@onready var _child_expression = get_node("PanelContainer/MC/ExpressionContainer/MC/ChildExpression")
+@onready var _child_expression = $PanelContainer/MC/ExpressionContainer/MC/ChildExpression
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
-	_panel.add_theme_stylebox_override("panel", _group_panel_style)
+	_panel.add_theme_stylebox_override("panel", GROUP_PANEL_STYLE)
 	_title.tooltip_text = "Groups expressions to be evaluated with priority."
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
-
-
+## Configure the expression.
 func configure():
 	super()
 	_child_expression.type = type
 	_child_expression.configure()
 
 
+## Validate the expression.
 func validate():
 	var warning = _child_expression.validate()
 	if warning == null:
@@ -40,10 +36,7 @@ func validate():
 	return warning
 
 
-func _on_child_expression_modified():
-	modified.emit()
-
-
+## Serialise the expression to a dictionary.
 func serialise():
 	var exp = super()
 	exp["expression_type"] = ExpressionType.BRACKETS
@@ -51,14 +44,20 @@ func serialise():
 	return exp
 
 
+## Deserialise an expression dictionary.
 func deserialise(serialised):
 	super(serialised)
 	_child_expression.deserialise(serialised["contents"])
 
 
 # TODO: Might only need this for testing?
+## Clear the expression of all children.
 func clear():
 	_child_expression.clear()
+
+
+func _on_child_expression_modified():
+	modified.emit()
 
 
 func _on_child_expression_size_changed(amount):

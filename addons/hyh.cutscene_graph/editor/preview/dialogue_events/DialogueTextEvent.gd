@@ -1,10 +1,10 @@
 @tool
 extends MarginContainer
+## Displays the details of dialogue in the graph previewer.
 
 
 signal character_displayed()
 signal ready_to_continue()
-
 
 @onready var _character_name_label = $VB/VB/CharacterContainer/CharacterNameLabel
 @onready var _type_label = $VB/VB/HB/HB/TypeLabel
@@ -15,6 +15,7 @@ signal ready_to_continue()
 @onready var _properties_container = $VB/VB/MC/PropertiesContainer
 
 
+## Populate the control with the dialogue details.
 func populate(
 	type,
 	character,

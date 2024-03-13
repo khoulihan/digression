@@ -25,7 +25,7 @@ func _init(log_name: String, log_level: CGELogLevel):
 	_log_level = log_level
 
 
-## ## Create a log at the default level (INFO).
+## Create a log at the default level (INFO).
 func log(text: String) -> void:
 	_log(text, CGELogLevel.INFO)
 

@@ -1,11 +1,13 @@
 @tool
 extends "res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/DialogueTextEvent.gd"
+## Displays player dialogue in the graph previewer.
 
 
 @onready var _type_label_player = $VB/VB/HB/HB/TypeLabelLeft
 @onready var _dialogue_indicator_right = $VB/VB/HB/DialogueIndicatorRight
 
 
+## Populate the control with the dialogue details.
 func populate(
 	type,
 	character,

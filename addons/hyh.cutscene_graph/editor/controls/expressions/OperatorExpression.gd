@@ -1,14 +1,43 @@
 @tool
 extends "res://addons/hyh.cutscene_graph/editor/controls/expressions/GroupExpression.gd"
+## A GroupExpression that includes operators between its members.
 
 
 const Operator = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/Operator.tscn")
 const OperatorClass = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/Operator.gd")
 
 
+## Refresh the control, making sure that all elements have operators between
+## them, and no operators are left hanging.
 func refresh():
 	super()
 	_rectify_operators()
+
+
+## Validate the expression.
+func validate():
+	var children = get_children().slice(0, -1)
+	if len(children) == 0:
+		return "Group expression has no children."
+	var child_warnings = []
+	for child in children:
+		if child is OperatorClass:
+			continue
+		var warning = child.validate()
+		if warning == null:
+			continue
+		child_warnings.append(warning)
+	if len(child_warnings) == 0:
+		return null
+	else:
+		return child_warnings
+
+
+## Serialise the expression to a dictionary.
+func serialise():
+	var exp = super()
+	exp["expression_type"] = ExpressionType.OPERATOR_GROUP
+	return exp
 
 
 func _add_to_bottom(child, deserialising=false):
@@ -24,6 +53,30 @@ func _remove_child_requested(child):
 func _add_at_position(at_position, target):
 	super(at_position, target)
 	_rectify_operators()
+
+
+func _deserialise_child(serialised):
+	var child
+	var component_type = serialised["component_type"]
+	if component_type == ExpressionComponentType.EXPRESSION:
+		var expression_type = serialised["expression_type"]
+		match expression_type:
+			ExpressionType.VALUE:
+				child = _add_value(type, true)
+			ExpressionType.BRACKETS:
+				child = _add_brackets(type, true)
+			ExpressionType.COMPARISON:
+				child = _add_comparison(type, serialised["comparison_type"], true)
+			ExpressionType.FUNCTION:
+				child = _add_function(type, serialised["function_type"], true)
+	else:
+		child = Operator.instantiate()
+		child.operator_type = OperatorClass.OperatorType.OPERATION
+		child.variable_type = type
+		add_child(child)
+		move_child(child, -2)
+		child.configure()
+	child.deserialise(serialised)
 
 
 func _rectify_operators():
@@ -75,51 +128,3 @@ func _operator_to_keep(previous, current, to_remove):
 		return previous
 	to_remove.append(previous)
 	return current
-
-
-func validate():
-	var children = get_children().slice(0, -1)
-	if len(children) == 0:
-		return "Group expression has no children."
-	var child_warnings = []
-	for child in children:
-		if child is OperatorClass:
-			continue
-		var warning = child.validate()
-		if warning == null:
-			continue
-		child_warnings.append(warning)
-	if len(child_warnings) == 0:
-		return null
-	else:
-		return child_warnings
-
-
-func serialise():
-	var exp = super()
-	exp["expression_type"] = ExpressionType.OPERATOR_GROUP
-	return exp
-
-
-func _deserialise_child(serialised):
-	var child
-	var component_type = serialised["component_type"]
-	if component_type == ExpressionComponentType.EXPRESSION:
-		var expression_type = serialised["expression_type"]
-		match expression_type:
-			ExpressionType.VALUE:
-				child = _add_value(type, true)
-			ExpressionType.BRACKETS:
-				child = _add_brackets(type, true)
-			ExpressionType.COMPARISON:
-				child = _add_comparison(type, serialised["comparison_type"], true)
-			ExpressionType.FUNCTION:
-				child = _add_function(type, serialised["function_type"], true)
-	else:
-		child = Operator.instantiate()
-		child.operator_type = OperatorClass.OperatorType.OPERATION
-		child.variable_type = type
-		add_child(child)
-		move_child(child, -2)
-		child.configure()
-	child.deserialise(serialised)

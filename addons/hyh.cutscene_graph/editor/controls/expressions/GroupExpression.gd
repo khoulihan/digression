@@ -1,19 +1,15 @@
 @tool
 extends "res://addons/hyh.cutscene_graph/editor/controls/expressions/Expression.gd"
+## Expression that groups other expressions.
 
 
 const FunctionType = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").FunctionType
 const ExpressionType = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").ExpressionType
 
-#const ValueExpression = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/ValueExpression.tscn")
-#const BracketExpression = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/BracketExpression.tscn")
-#const ComparisonExpression = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/ComparisonExpression.tscn")
-#const FunctionExpression = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/FunctionExpression.tscn")
+@onready var _add_element_button = $AddElementButton
 
 
-@onready var _add_element_button = get_node("AddElementButton")
-
-
+## Configure the expression.
 func configure():
 	super()
 	_configure_button()
@@ -21,6 +17,57 @@ func configure():
 
 func refresh():
 	pass
+
+
+## Remove one of the expression's children.
+func remove_child_expression(child):
+	var size_before = self.size.y
+	remove_child(child)
+	child.remove_requested.disconnect(_remove_child_requested)
+	child.modified.disconnect(_child_modified)
+	child.size_changed.disconnect(_child_size_changed)
+	call_deferred("_emit_modified")
+	call_deferred("_emit_size_changed", size_before, 10)
+
+
+## Validate the expression.
+func validate():
+	var children = get_children().slice(0, -1)
+	if len(children) == 0:
+		return "Group expression has no children."
+	var child_warnings = []
+	for child in children:
+		var warning = child.validate()
+		if warning == null:
+			continue
+		child_warnings.append(warning)
+	if len(child_warnings) == 0:
+		return null
+	else:
+		return child_warnings
+
+
+## Serialise the expression to a dictionary.
+func serialise():
+	var exp = super()
+	exp["expression_type"] = ExpressionType.GROUP
+	exp["children"] = _serialise_children()
+	return exp
+
+
+## Deserialise an expression dictionary.
+func deserialise(serialised):
+	super(serialised)
+	for sc in serialised["children"]:
+		_deserialise_child(sc)
+
+
+# TODO: Might only need this for testing?
+## Clear the expression of all children.
+func clear():
+	var children = get_children().slice(0, -1)
+	for child in children:
+		remove_child(child)
 
 
 func _configure_button():
@@ -113,16 +160,6 @@ func _child_size_changed(amount):
 	size_changed.emit(amount)
 
 
-func remove_child_expression(child):
-	var size_before = self.size.y
-	remove_child(child)
-	child.remove_requested.disconnect(_remove_child_requested)
-	child.modified.disconnect(_child_modified)
-	child.size_changed.disconnect(_child_size_changed)
-	call_deferred("_emit_modified")
-	call_deferred("_emit_size_changed", size_before, 10)
-
-
 func _can_drop_data(at_position, data):
 	if not typeof(data) == TYPE_DICTIONARY:
 		return false
@@ -204,41 +241,12 @@ func _get_child_expression_at_position(at_position):
 	pass
 
 
-func validate():
-	var children = get_children().slice(0, -1)
-	if len(children) == 0:
-		return "Group expression has no children."
-	var child_warnings = []
-	for child in children:
-		var warning = child.validate()
-		if warning == null:
-			continue
-		child_warnings.append(warning)
-	if len(child_warnings) == 0:
-		return null
-	else:
-		return child_warnings
-
-
-func serialise():
-	var exp = super()
-	exp["expression_type"] = ExpressionType.GROUP
-	exp["children"] = _serialise_children()
-	return exp
-
-
 func _serialise_children():
 	var child_exps = []
 	var children = get_children().slice(0, -1)
 	for child in children:
 		child_exps.append(child.serialise())
 	return child_exps
-
-
-func deserialise(serialised):
-	super(serialised)
-	for sc in serialised["children"]:
-		_deserialise_child(sc)
 
 
 func _deserialise_child(serialised):
@@ -254,10 +262,3 @@ func _deserialise_child(serialised):
 		ExpressionType.FUNCTION:
 			child = _add_function(type, serialised["function_type"], true)
 	child.deserialise(serialised)
-
-
-# TODO: Might only need this for testing?
-func clear():
-	var children = get_children().slice(0, -1)
-	for child in children:
-		remove_child(child)

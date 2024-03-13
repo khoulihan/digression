@@ -1,10 +1,9 @@
 @tool
 extends GraphEdit
+## Mini-map for graph previewer.
 
 
 const Logging = preload("../../../utility/Logging.gd")
-var Logger = Logging.new("Cutscene Graph Preview", Logging.CGE_NODES_LOG_LEVEL)
-
 
 # Resource graph nodes.
 const DialogueTextNode = preload("../../../resources/graph/DialogueTextNode.gd")
@@ -20,7 +19,6 @@ const JumpNode = preload("../../../resources/graph/JumpNode.gd")
 const AnchorNode = preload("../../../resources/graph/AnchorNode.gd")
 const RoutingNode = preload("../../../resources/graph/RoutingNode.gd")
 const RepeatNode = preload("../../../resources/graph/RepeatNode.gd")
-
 
 # Mini-map nodes
 const MiniMapNodeBase = preload("res://addons/hyh.cutscene_graph/editor/preview/minimap/MiniMapNodeBase.tscn")
@@ -40,7 +38,7 @@ const MiniMapSubGraphNode = preload("res://addons/hyh.cutscene_graph/editor/prev
 const MiniMapCommentNode = preload("res://addons/hyh.cutscene_graph/editor/preview/minimap/MiniMapCommentNode.tscn")
 const SCALE = 0.26
 
-
+var _logger = Logging.new("Cutscene Graph Preview", Logging.CGE_NODES_LOG_LEVEL)
 var _graph
 
 
@@ -55,15 +53,17 @@ func _ready():
 	show_minimap_button = false
 
 
+## Clear the mini-map.
 func clear():
-	Logger.debug("Clearing graph mini-map")
+	_logger.debug("Clearing graph mini-map")
 	for child in self.get_children():
 		self.remove_child(child)
 		child.free()
 
 
+## Populate the mini-map for the provided graph.
 func display_graph(graph):
-	Logger.debug("Displaying graph mini-map")
+	_logger.debug("Displaying graph mini-map")
 	_graph = graph
 	var root_node
 	for i in graph.nodes:
@@ -91,6 +91,14 @@ func display_graph(graph):
 	for node in graph.nodes.values():
 		_create_connections_for_node(node)
 	focus_on_node(root_node)
+
+
+## Focus on the specified node.
+func focus_on_node(node):
+	var n = _get_minimap_node_for_graph_node(node)
+	# Setting this property apparently has to be deferred, at least
+	# when the graph has just been populated...
+	call_deferred("_focus_on_node", n)
 
 
 func _instantiate_mini_map_node(node):
@@ -245,24 +253,19 @@ func _get_minimap_node_for_graph_node(n):
 	return null
 
 
-
-func focus_on_node(node):
-	var n = _get_minimap_node_for_graph_node(node)
-	# Setting this property apparently has to be deferred, at least
-	# when the graph has just been populated...
-	call_deferred("_focus_on_node", n)
-
-
 func _focus_on_node(node):
 	# Note that this calculation only works at 1x zoom.
 	# Currently we are fixed at that zoom level.
 	self.scroll_offset = node.position_offset - (self.size / 2.0)
+	# TODO: Need an alternative method of highlighting the current node.
 	_unset_current_overlay(node)
 	#if node.overlay != GraphNode.OVERLAY_POSITION:
 		#node.overlay = GraphNode.OVERLAY_BREAKPOINT
 
 
 func _unset_current_overlay(except_node):
+	# TODO: Need an alternative method of highlighting the current node.
+	return
 	for node in self.get_children():
 		if node == except_node:
 			continue

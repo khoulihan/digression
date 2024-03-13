@@ -1,35 +1,32 @@
 @tool
 extends VBoxContainer
-
-const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
-const ExpressionComponentType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionComponentType
+## Base expression.
 
 
 signal modified()
 signal size_changed(amount)
 
+const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
+const ExpressionComponentType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionComponentType
 
 @export
 var type : VariableType
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	#_configure()
-	pass
-
-
 # I believe it is necessary to avoid confguring these controls in the _ready
 # because it is likely to require loading cyclical dependencies. Therefore,
 # this method must be called after the node is ready.
+## Configure the expression.
 func configure():
 	pass
 
 
+## Validate the expression.
 func validate():
 	return null
 
 
+## Serialise the expression to a dictionary.
 func serialise():
 	return {
 		"component_type": ExpressionComponentType.EXPRESSION,
@@ -37,6 +34,7 @@ func serialise():
 	}
 
 
+## Deserialise an expression dictionary.
 func deserialise(serialised):
 	type = serialised["variable_type"]
 
@@ -44,6 +42,7 @@ func deserialise(serialised):
 # TODO: Might only need this for testing?
 # Have ended up using it in the Set node, but maybe should incorporate
 # it into deserialise?
+## Clear the expression of all children.
 func clear():
 	pass
 
