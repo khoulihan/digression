@@ -798,12 +798,7 @@ func _configure_editor_node_state(
 ):
 	if _graph_edit.get_child_count() == 1:
 		new_editor_node.is_root = true
-	if new_editor_node.has_method("populate_characters"):
-		new_editor_node.populate_characters(_edited.graph.characters)
-	if new_editor_node.has_method("set_dialogue_types"):
-		new_editor_node.set_dialogue_types(_dialogue_types)
-	if new_editor_node.has_method("set_choice_types"):
-		new_editor_node.set_choice_types(_choice_types)
+	_populate_dependencies(new_editor_node)
 	new_editor_node.configure_for_node(_edited.graph, new_graph_node)
 
 
@@ -927,6 +922,7 @@ func _draw_edited_graph(retain_selection=false):
 		var editor_node = _instantiate_editor_node_for_graph_node(node)
 		
 		_graph_edit.add_child(editor_node)
+		_populate_dependencies(editor_node)
 		editor_node.configure_for_node(_edited.graph, node)
 		if node == _edited.graph.root_node:
 			editor_node.is_root = true
@@ -960,8 +956,6 @@ func _instantiate_editor_node_for_graph_node(node):
 	
 	if node is DialogueTextNode:
 		editor_node = EditorTextNode.instantiate()
-		editor_node.populate_characters(_edited.graph.characters)
-		editor_node.set_dialogue_types(_dialogue_types)
 	elif node is MatchBranchNode:
 		editor_node = EditorMatchBranchNode.instantiate()
 	elif node is IfBranchNode:
@@ -970,23 +964,16 @@ func _instantiate_editor_node_for_graph_node(node):
 		editor_node = EditorSetNode.instantiate()
 	elif node is DialogueChoiceNode:
 		editor_node = EditorChoiceNode.instantiate()
-		editor_node.populate_characters(_edited.graph.characters)
-		editor_node.set_dialogue_types(_dialogue_types)
-		editor_node.set_choice_types(_choice_types)
 	elif node is ActionNode:
 		editor_node = EditorActionNode.instantiate()
-		editor_node.populate_characters(_edited.graph.characters)
 	elif node is SubGraph:
 		editor_node = EditorSubGraphNode.instantiate()
-		editor_node.set_resource_clipboard(_resource_clipboard)
 	elif node is RandomNode:
 		editor_node = EditorRandomNode.instantiate()
 	elif node is CommentNode:
 		editor_node = EditorCommentNode.instantiate()
 	elif node is JumpNode:
 		editor_node = EditorJumpNode.instantiate()
-		editor_node.populate_destinations(_anchor_names_by_id)
-		#editor_node.set_destination(node.next)
 	elif node is AnchorNode:
 		editor_node = EditorAnchorNode.instantiate()
 	elif node is RoutingNode:
@@ -995,6 +982,19 @@ func _instantiate_editor_node_for_graph_node(node):
 		editor_node = EditorRepeatNode.instantiate()
 	
 	return editor_node
+
+
+func _populate_dependencies(editor_node):
+	if editor_node.has_method('populate_characters'):
+		editor_node.populate_characters(_edited.graph.characters)
+	if editor_node.has_method('set_dialogue_types'):
+		editor_node.set_dialogue_types(_dialogue_types)
+	if editor_node.has_method('set_choice_types'):
+		editor_node.set_choice_types(_choice_types)
+	if editor_node.has_method('populate_destinations'):
+		editor_node.populate_destinations(_anchor_names_by_id)
+	if editor_node.has_method('set_resource_clipboard'):
+		editor_node.set_resource_clipboard(_resource_clipboard)
 
 
 func _create_connections_for_node(node):
