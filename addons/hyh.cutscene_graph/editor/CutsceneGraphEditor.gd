@@ -1119,9 +1119,6 @@ func _refresh_anchor_maps():
 	_anchor_names_by_id = anchor_maps[1]
 
 
-
-
-
 func _generate_anchor_name():
 	return "%s%s" % [
 		CutsceneGraph.NEW_ANCHOR_PREFIX,
