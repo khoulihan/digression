@@ -66,17 +66,6 @@ func set_root(value: bool):
 	_root_indicator.visible = is_root
 
 
-## Get the port number for input connections.
-func get_input_port_number() -> int:
-	return 0
-
-
-## Get an array of the port numbers for output connections.
-func get_output_port_numbers() -> Array[int]:
-	# Most node types have at least one outgoing port on 0
-	return [0]
-
-
 func _on_gui_input(ev):
 	if ev is InputEventMouseButton:
 		if ev.button_index == MOUSE_BUTTON_RIGHT and ev.pressed:

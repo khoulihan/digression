@@ -64,14 +64,6 @@ func remove_branch(index):
 	size = _original_size
 
 
-## Get an array of the port numbers for output connections.
-func get_output_port_numbers() -> Array[int]:
-	var ports: Array[int] = [0]
-	for i in range(1, get_child_count()):
-		ports.append(i)
-	return ports
-
-
 func _add_branch(branch, is_first: bool) -> void:
 	var line = _create_branch()
 	line.set_branch(

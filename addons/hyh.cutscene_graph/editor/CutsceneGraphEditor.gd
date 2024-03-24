@@ -1001,13 +1001,6 @@ func _create_connections_for_node(node):
 	if connections.all(_not_connected):
 		return
 	var editor_node = _get_editor_node_for_graph_node(node)
-	var ports: Array[int] = editor_node.get_output_port_numbers()
-	if len(connections) != len(ports):
-		_logger.error(
-			"Outgoing connections do not match ports: %s connections, %s ports" % [
-				len(connections), len(ports)
-			]
-		)
 	for index in range(0, len(connections)):
 		if _not_connected(connections[index]):
 			continue
@@ -1018,9 +1011,9 @@ func _create_connections_for_node(node):
 		)
 		_graph_edit.connect_node(
 			editor_node.name,
-			ports[index],
+			index,
 			to.name,
-			to.get_input_port_number()
+			0
 		)
 
 

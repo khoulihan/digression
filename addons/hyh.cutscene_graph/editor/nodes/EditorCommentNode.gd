@@ -31,11 +31,6 @@ func set_comment(comment):
 	_comment_edit.text = comment
 
 
-## Get an array of the port numbers for output connections.
-func get_output_port_numbers() -> Array[int]:
-	return []
-
-
 func _on_comment_edit_text_changed():
 	emit_signal("modified")
 
