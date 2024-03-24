@@ -311,24 +311,23 @@ func _on_graph_edit_connection_request(from, from_slot, to, to_slot):
 		]
 	)
 	var connections = _graph_edit.get_connection_list()
-	var allow = true
 	for connection in connections:
 		if connection["from_node"] == from and connection["from_port"] == from_slot:
-			allow = false
-			break
-	if allow:
-		_graph_edit.connect_node(from, from_slot, to, to_slot)
-		# If the connection is from a jump node then we have to select the
-		# correct anchor in its dropdown.
-		var from_node = _graph_edit.get_node(NodePath(from))
-		if from_node is EditorJumpNodeClass:
-			var to_node = _graph_edit.get_node(NodePath(to))
-			from_node.set_destination(to_node.node_resource.id)
-		# I think setting the dirty flag is supposed to allow the save to be
-		# actioned later, when switching away from the graph for example. But
-		# that wasn't happening...
-		_set_dirty(true)
-		perform_save()
+			# We only allow one outgoing connection from any port.
+			return
+
+	_graph_edit.connect_node(from, from_slot, to, to_slot)
+	# If the connection is from a jump node then we have to select the
+	# correct anchor in its dropdown.
+	var from_node = _graph_edit.get_node(NodePath(from))
+	if from_node is EditorJumpNodeClass:
+		var to_node = _graph_edit.get_node(NodePath(to))
+		from_node.set_destination(to_node.node_resource.id)
+	# I think setting the dirty flag is supposed to allow the save to be
+	# actioned later, when switching away from the graph for example. But
+	# that wasn't happening...
+	_set_dirty(true)
+	perform_save()
 
 
 func _on_graph_edit_disconnection_request(from, from_slot, to, to_slot):
