@@ -1069,31 +1069,9 @@ func _update_resource_graph_for_connection(connection):
 	var from = _graph_edit.get_node(NodePath(connection["from_node"]))
 	var from_slot = connection["from_port"]
 	var to = _graph_edit.get_node(NodePath(connection["to_node"]))
-	var to_slot = connection["to_port"]
 	var from_dialogue_node = from.node_resource
 	var to_dialogue_node = to.node_resource
-	if from_dialogue_node is MatchBranchNode:
-		if from_slot == 0:
-			from_dialogue_node.next = to_dialogue_node.id
-		else:
-			from_dialogue_node.branches[from_slot - 1] = to_dialogue_node.id
-	elif from_dialogue_node is IfBranchNode:
-		if from_slot == 0:
-			from_dialogue_node.next = to_dialogue_node.id
-		else:
-			from_dialogue_node.branches[from_slot - 1].next = to_dialogue_node.id
-	elif from_dialogue_node is RandomNode:
-		if from_slot == 0:
-			from_dialogue_node.next = to_dialogue_node.id
-		else:
-			from_dialogue_node.branches[from_slot - 1].next = to_dialogue_node.id
-	elif from_dialogue_node is DialogueChoiceNode:
-		if from_slot == 0:
-			from_dialogue_node.next = to_dialogue_node.id
-		else:
-			from_dialogue_node.choices[from_slot - 1].next = to_dialogue_node.id
-	else:
-		from_dialogue_node.next = to_dialogue_node.id
+	from_dialogue_node.connect_to_node(from_slot, to_dialogue_node.id)
 
 
 func _update_node_characters():

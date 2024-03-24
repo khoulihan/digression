@@ -70,3 +70,11 @@ func get_connections() -> Array[int]:
 		else:
 			connections.append(b)
 	return connections
+
+
+## Connect to the specified node
+func connect_to_node(connection_index: int, node_id: int) -> void:
+	if connection_index == 0:
+		next = node_id
+		return
+	branches[connection_index - 1] = node_id

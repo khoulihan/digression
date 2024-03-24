@@ -27,3 +27,11 @@ func get_connections() -> Array[int]:
 	for b in choices:
 		connections.append(b.next)
 	return connections
+
+
+## Connect to the specified node
+func connect_to_node(connection_index: int, node_id: int) -> void:
+	if connection_index == 0:
+		next = node_id
+		return
+	choices[connection_index - 1].next = node_id
