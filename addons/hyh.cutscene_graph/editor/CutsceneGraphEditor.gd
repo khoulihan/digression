@@ -998,11 +998,11 @@ func _populate_dependencies(editor_node):
 
 func _create_connections_for_node(node):
 	var connections: Array[int] = node.get_connections()
-	if connections.all(_not_connected):
+	if not connections.any(_connected):
 		return
 	var editor_node = _get_editor_node_for_graph_node(node)
 	for index in range(0, len(connections)):
-		if _not_connected(connections[index]):
+		if not _connected(connections[index]):
 			continue
 		var to = _get_editor_node_for_graph_node(
 			_edited.graph.nodes[
@@ -1017,8 +1017,8 @@ func _create_connections_for_node(node):
 		)
 
 
-func _not_connected(node_id: int) -> bool:
-	return node_id == -1
+func _connected(node_id: int) -> bool:
+	return node_id != -1
 
 
 func _set_dirty(val):
