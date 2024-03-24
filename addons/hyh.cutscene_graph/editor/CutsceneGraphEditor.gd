@@ -1042,11 +1042,9 @@ func _update_edited_graph():
 	_logger.trace("_update_edited_graph(): %s" % _edited.graph.name)
 	
 	for node in _graph_edit.get_children():
-		# Watch out! Not all graph edit children are actually our nodes!
-		if node.has_method("persist_changes_to_node"):
-			node.persist_changes_to_node()
-			# Clobber all relationships - they will be recreated if they still exist
-			node.clear_node_relationships()
+		node.persist_changes_to_node()
+		# Clobber all relationships - they will be recreated if they still exist
+		node.clear_node_relationships()
 	var connections = _graph_edit.get_connection_list()
 	for connection in connections:
 		_update_resource_graph_for_connection(connection)
