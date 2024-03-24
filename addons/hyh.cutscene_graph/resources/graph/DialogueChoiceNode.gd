@@ -19,3 +19,11 @@ const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/Va
 
 func _init():
 	self.dialogue = DialogueTextNode.new()
+
+
+## Return an array of all outgoing connections.
+func get_connections() -> Array[int]:
+	var connections: Array[int] = [next]
+	for b in choices:
+		connections.append(b.next)
+	return connections

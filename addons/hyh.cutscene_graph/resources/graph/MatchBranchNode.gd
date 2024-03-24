@@ -59,3 +59,14 @@ func set_values(vals):
 	values.resize(branch_count)
 	for i in range(branch_count):
 		values[i] = vals[i]
+
+
+## Return an array of all outgoing connections.
+func get_connections() -> Array[int]:
+	var connections: Array[int] = [next]
+	for b in branches:
+		if b == null:
+			connections.append(-1)
+		else:
+			connections.append(b)
+	return connections

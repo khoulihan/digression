@@ -998,44 +998,35 @@ func _populate_dependencies(editor_node):
 
 
 func _create_connections_for_node(node):
-	if node.next != -1:
-		var from = _get_editor_node_for_graph_node(node)
-		var to = _get_editor_node_for_graph_node(
-			_edited.graph.nodes[node.next]
+	var connections: Array[int] = node.get_connections()
+	if connections.all(_not_connected):
+		return
+	var editor_node = _get_editor_node_for_graph_node(node)
+	var ports: Array[int] = editor_node.get_output_port_numbers()
+	if len(connections) != len(ports):
+		_logger.error(
+			"Outgoing connections do not match ports: %s connections, %s ports" % [
+				len(connections), len(ports)
+			]
 		)
-		_graph_edit.connect_node(from.name, 0, to.name, 0)
-	if node is MatchBranchNode:
-		var from = _get_editor_node_for_graph_node(node)
-		for index in range(0, node.branches.size()):
-			if node.branches[index]:
-				var to = _get_editor_node_for_graph_node(
-					_edited.graph.nodes[node.branches[index]]
-				)
-				_graph_edit.connect_node(from.name, index + 1, to.name, 0)
-	elif node is IfBranchNode:
-		var from = _get_editor_node_for_graph_node(node)
-		for index in range(0, node.branches.size()):
-			if node.branches[index].next != -1:
-				var to = _get_editor_node_for_graph_node(
-					_edited.graph.nodes[node.branches[index].next]
-				)
-				_graph_edit.connect_node(from.name, index + 1, to.name, 0)
-	elif node is RandomNode:
-		var from = _get_editor_node_for_graph_node(node)
-		for index in range(0, node.branches.size()):
-			if node.branches[index].next != -1:
-				var to = _get_editor_node_for_graph_node(
-					_edited.graph.nodes[node.branches[index].next]
-				)
-				_graph_edit.connect_node(from.name, index + 1, to.name, 0)
-	elif node is DialogueChoiceNode:
-		var from = _get_editor_node_for_graph_node(node)
-		for index in range(0, node.choices.size()):
-			if node.choices[index].next != -1:
-				var to = _get_editor_node_for_graph_node(
-					_edited.graph.nodes[node.choices[index].next]
-				)
-				_graph_edit.connect_node(from.name, index + 1, to.name, 0)
+	for index in range(0, len(connections)):
+		if _not_connected(connections[index]):
+			continue
+		var to = _get_editor_node_for_graph_node(
+			_edited.graph.nodes[
+				connections[index]
+			]
+		)
+		_graph_edit.connect_node(
+			editor_node.name,
+			ports[index],
+			to.name,
+			to.get_input_port_number()
+		)
+
+
+func _not_connected(node_id: int) -> bool:
+	return node_id == -1
 
 
 func _set_dirty(val):

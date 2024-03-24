@@ -317,6 +317,18 @@ func clear_node_relationships():
 		choice.next = -1
 
 
+## Get an array of the port numbers for output connections.
+func get_output_port_numbers() -> Array[int]:
+	# TODO: I think the first port should be 1 for this node type, but
+	# currently 0 is active in the UI so that is reflected here.
+	var ports: Array[int] = [0]
+	# The port numbers are active ports - slot 1 is inactive, so slot 2 has the
+	# index 1 instead - and the last port index is child count - 1
+	for i in range(1, get_child_count() - 1):
+		ports.append(i)
+	return ports
+
+
 func _reconnect_removal_signals():
 	if get_child_count() > 2:
 		for index in range(2, get_child_count()):

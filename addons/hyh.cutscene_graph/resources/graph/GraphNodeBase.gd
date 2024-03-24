@@ -10,3 +10,8 @@ extends Resource
 
 ## The position of the node in the graph editor. Not relevant at runtime.
 @export var offset: Vector2
+
+
+## Return an array of all outgoing connections.
+func get_connections() -> Array[int]:
+	return [next]
