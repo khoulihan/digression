@@ -472,7 +472,7 @@ func _set_graph_popup_option_states():
 func _set_graph_popup_option_states_for_connected_creation():
 	_logger.debug("Pending connection from: %s" % _pending_connection_from)
 	var from_node = _graph_edit.get_node(NodePath(_pending_connection_from))
-	if from_node.get_connection_output_type(
+	if from_node.get_output_port_type(
 		_pending_connection_from_port
 	) == ConnectionTypes.NORMAL:
 		_set_all_graph_popup_disabled(false)
