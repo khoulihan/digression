@@ -59,3 +59,7 @@ func _on_option_button_item_selected(index):
 
 func _on_gui_input(ev):
 	super._on_gui_input(ev)
+
+
+func _on_connected_to_node(node_id):
+	set_destination(node_id)

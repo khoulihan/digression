@@ -317,12 +317,9 @@ func _on_graph_edit_connection_request(from, from_slot, to, to_slot):
 			return
 
 	_graph_edit.connect_node(from, from_slot, to, to_slot)
-	# If the connection is from a jump node then we have to select the
-	# correct anchor in its dropdown.
 	var from_node = _graph_edit.get_node(NodePath(from))
-	if from_node is EditorJumpNodeClass:
-		var to_node = _graph_edit.get_node(NodePath(to))
-		from_node.set_destination(to_node.node_resource.id)
+	var to_node = _graph_edit.get_node(NodePath(to))
+	from_node.connected_to_node.emit(to_node.node_resource.id)
 	# I think setting the dirty flag is supposed to allow the save to be
 	# actioned later, when switching away from the graph for example. But
 	# that wasn't happening...
@@ -337,11 +334,8 @@ func _on_graph_edit_disconnection_request(from, from_slot, to, to_slot):
 		]
 	)
 	_graph_edit.disconnect_node(from, from_slot, to, to_slot)
-	# If the connection was from a jump node then we have to remove the
-	# selection in its dropdown.
 	var from_node = _graph_edit.get_node(NodePath(from))
-	if from_node is EditorJumpNodeClass:
-		from_node.set_destination(-1)
+	from_node.connected_to_node.emit(-1)
 	_set_dirty(true)
 	perform_save()
 
