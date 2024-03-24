@@ -6,7 +6,8 @@ extends GraphNode
 signal removing_slot(slot)
 signal popup_request(p_position)
 signal modified()
-signal connected_to_node(node_id)
+signal connected_to_node(port_index, node_id)
+signal disconnected(port_index)
 
 const Logging = preload("../../utility/Logging.gd")
 const CLOSE_ICON = preload("res://addons/hyh.cutscene_graph/icons/icon_close.svg")

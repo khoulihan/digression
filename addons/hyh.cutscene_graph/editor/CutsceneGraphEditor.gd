@@ -319,7 +319,10 @@ func _on_graph_edit_connection_request(from, from_slot, to, to_slot):
 	_graph_edit.connect_node(from, from_slot, to, to_slot)
 	var from_node = _graph_edit.get_node(NodePath(from))
 	var to_node = _graph_edit.get_node(NodePath(to))
-	from_node.connected_to_node.emit(to_node.node_resource.id)
+	from_node.connected_to_node.emit(
+		from_slot,
+		to_node.node_resource.id,
+	)
 	# I think setting the dirty flag is supposed to allow the save to be
 	# actioned later, when switching away from the graph for example. But
 	# that wasn't happening...
@@ -335,7 +338,7 @@ func _on_graph_edit_disconnection_request(from, from_slot, to, to_slot):
 	)
 	_graph_edit.disconnect_node(from, from_slot, to, to_slot)
 	var from_node = _graph_edit.get_node(NodePath(from))
-	from_node.connected_to_node.emit(-1)
+	from_node.disconnected.emit(from_slot)
 	_set_dirty(true)
 	perform_save()
 
@@ -426,16 +429,6 @@ func _on_graph_popup_index_pressed(index):
 	)
 	_set_dirty(true)
 	perform_save()
-	_refresh_anchor_maps()
-	_populate_anchor_destinations()
-	var connected_creation = _node_creation_mode == NodeCreationMode.CONNECTED
-	if editor_node is EditorAnchorNodeClass and connected_creation:
-		var from_node = _graph_edit.get_node(
-			NodePath(_pending_connection_from)
-		)
-		from_node.set_destination(
-			editor_node.node_resource.id
-		)
 
 
 func _on_graph_popup_hide():
@@ -509,8 +502,6 @@ func _action_confirmed():
 	match _confirmation_action:
 		ConfirmationActions.REMOVE_NODE:
 			_remove_nodes()
-		#ConfirmationActions.CLOSE_GRAPH:
-			#_close_graph()
 
 #endregion
 
@@ -704,6 +695,9 @@ func _create_node(
 		_edited.graph.root_node = new_graph_node
 	_connect_node_signals(new_editor_node)
 	
+	_refresh_anchor_maps()
+	_populate_anchor_destinations()
+	
 	_connect_new_editor_node_if_necessary(
 		new_editor_node,
 		node_creation_mode,
@@ -865,31 +859,30 @@ func _remove_nodes():
 func _remove_node(n, connections):
 	# This line is throwing an error now - cannot convert from StringName to NodePath
 	var node = _graph_edit.get_node(NodePath(n))
-	var is_anchor = node is EditorAnchorNodeClass
 	for connection in connections:
 		if connection["from_node"] == n or connection["to_node"] == n:
 			# This one just gets removed
 			_remove_connection_for_node(
 				connection,
-				is_anchor,
 			)
 	
 	_edited.graph.nodes.erase(node.node_resource.id)
 	_graph_edit.remove_child(node)
 
 
-func _remove_connection_for_node(connection, is_anchor):
+func _remove_connection_for_node(connection):
+	var from_node_name = connection["from_node"]
+	var from_port = connection["from_port"]
 	_graph_edit.disconnect_node(
-		connection["from_node"],
-		connection["from_port"],
+		from_node_name,
+		from_port,
 		connection["to_node"],
 		connection["to_port"]
 	)
-	if is_anchor:
-		var from_node = _graph_edit.get_node(
-			NodePath(connection["from_node"])
-		)
-		from_node.set_destination(-1)
+	var from_node = _graph_edit.get_node(
+		NodePath(from_node_name)
+	)
+	from_node.disconnected.emit(from_port)
 
 
 ## Update the UI to reflect changes in the underlying graph resource

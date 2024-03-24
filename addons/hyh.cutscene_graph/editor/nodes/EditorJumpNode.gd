@@ -61,5 +61,9 @@ func _on_gui_input(ev):
 	super._on_gui_input(ev)
 
 
-func _on_connected_to_node(node_id):
+func _on_connected_to_node(port_index, node_id):
 	set_destination(node_id)
+
+
+func _on_disconnected(port_index):
+	set_destination(-1)

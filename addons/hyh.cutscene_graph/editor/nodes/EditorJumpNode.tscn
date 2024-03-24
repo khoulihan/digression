@@ -40,5 +40,6 @@ flat = true
 fit_to_longest_item = false
 
 [connection signal="connected_to_node" from="." to="." method="_on_connected_to_node"]
+[connection signal="disconnected" from="." to="." method="_on_disconnected"]
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="item_selected" from="MC/DestinationOption" to="." method="_on_option_button_item_selected"]
