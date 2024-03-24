@@ -1068,9 +1068,9 @@ func _update_node_characters():
 
 func _populate_anchor_destinations():
 	_logger.debug("Populating anchor destinations")
-	for node in _edited.graph.nodes.values():
-		if node is JumpNode:
-			_get_editor_node_for_graph_node(node).populate_destinations(
+	for node in _graph_edit.get_children():
+		if node.has_method("populate_destinations"):
+			node.populate_destinations(
 				_anchor_names_by_id
 			)
 
