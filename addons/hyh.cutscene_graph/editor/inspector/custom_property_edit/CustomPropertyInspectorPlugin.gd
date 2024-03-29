@@ -4,8 +4,8 @@ extends EditorInspectorPlugin
 ## Characters, and CharacterVariants.
 
 
-const PropertyUse = preload("../../property_select_dialog/PropertySelectDialog.gd").PropertyUse
-const PropertySelectDialog = preload("../../property_select_dialog/PropertySelectDialog.tscn")
+const PropertyUse = preload("../../dialogs/property_select_dialog/PropertySelectDialog.gd").PropertyUse
+const PropertySelectDialog = preload("../../dialogs/property_select_dialog/PropertySelectDialog.tscn")
 const CustomEditorProperty = preload("CustomEditorProperty.gd")
 
 var _add_property_button: Button

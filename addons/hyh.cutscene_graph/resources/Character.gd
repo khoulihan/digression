@@ -4,7 +4,7 @@ class_name Character extends Resource
 ## A character or entity to which dialogue can be assigned in a dialogue graph.
 
 
-const PropertyUse = preload("../editor/property_select_dialog/PropertySelectDialog.gd").PropertyUse
+const PropertyUse = preload("../editor/dialogs/property_select_dialog/PropertySelectDialog.gd").PropertyUse
 const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
 
 ## An identifier for the character when referenced in code.

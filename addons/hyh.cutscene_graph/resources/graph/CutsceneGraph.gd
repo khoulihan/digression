@@ -4,7 +4,7 @@ class_name CutsceneGraph extends Resource
 ## Dialogue graph resource.
 
 
-const PropertyUse = preload("../../editor/property_select_dialog/PropertySelectDialog.gd").PropertyUse
+const PropertyUse = preload("../../editor/dialogs/property_select_dialog/PropertySelectDialog.gd").PropertyUse
 const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
 
 # Utility classes.

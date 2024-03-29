@@ -8,8 +8,8 @@ signal modified()
 signal add_property_requested(property)
 signal remove_property_requested(property_name)
 
-const PropertySelectDialog = preload("../../property_select_dialog/PropertySelectDialog.tscn")
-const PropertySelectDialogClass = preload("../../property_select_dialog/PropertySelectDialog.gd")
+const PropertySelectDialog = preload("../../dialogs/property_select_dialog/PropertySelectDialog.tscn")
+const PropertySelectDialogClass = preload("../../dialogs/property_select_dialog/PropertySelectDialog.gd")
 const PropertyUse = PropertySelectDialogClass.PropertyUse
 const CustomPropertyControl = preload("CustomPropertyControl.tscn")
 

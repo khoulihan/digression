@@ -47,7 +47,7 @@ const DialogueTextEvent = preload("res://addons/hyh.cutscene_graph/editor/previe
 const PlayerDialogueTextEvent = preload("res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/PlayerDialogueTextEvent.tscn")
 const StaticInformationalEvent = preload("res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/StaticInformationalEvent.tscn")
 const ChoiceEvent = preload("res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/ChoiceEvent.tscn")
-const VariableSelectDialog = preload("../variable_select_dialog/VariableSelectDialog.tscn")
+const VariableSelectDialog = preload("../dialogs/variable_select_dialog/VariableSelectDialog.tscn")
 
 const VariableScope = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableScope
 const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType

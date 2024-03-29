@@ -24,8 +24,8 @@ const GLOBAL_ICON = preload("../../icons/icon_scope_global.svg")
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
 
-const VariableSelectDialog = preload("../variable_select_dialog/VariableSelectDialog.tscn")
-const VariableCreateDialog = preload("../variable_create_dialog/VariableCreateDialog.tscn")
+const VariableSelectDialog = preload("../dialogs/variable_select_dialog/VariableSelectDialog.tscn")
+const VariableCreateDialog = preload("../dialogs/variable_create_dialog/VariableCreateDialog.tscn")
 
 var _popup: PopupMenu
 var _type_restriction = null

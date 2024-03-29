@@ -6,7 +6,7 @@ extends HBoxContainer
 signal node_selected(path)
 signal node_cleared()
 
-const NodeSelectDialog = preload("res://addons/hyh.cutscene_graph/editor/node_select_dialog/NodeSelectDialog.tscn")
+const NodeSelectDialog = preload("res://addons/hyh.cutscene_graph/editor/dialogs/node_select_dialog/NodeSelectDialog.tscn")
 
 @export var required = true
 

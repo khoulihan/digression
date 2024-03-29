@@ -1,0 +1,144 @@
+[gd_scene load_steps=5 format=3 uid="uid://hwgq3su6tx5d"]
+
+[ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/dialogs/dialogue_types_edit/DialogueTypesEditDialogContents.gd" id="1_d0g2e"]
+[ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.cutscene_graph/icons/icon_add.svg" id="2_r4h0m"]
+[ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.cutscene_graph/icons/icon_remove.svg" id="3_ox0qx"]
+[ext_resource type="Texture2D" uid="uid://cmpxsjfcm0kpq" path="res://addons/hyh.cutscene_graph/icons/icon_node_info.svg" id="5_wivtf"]
+
+[node name="DialogueTypesEditDialogContents" type="MarginContainer"]
+offset_right = 1000.0
+offset_bottom = 420.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_d0g2e")
+
+[node name="VB" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HSplitContainer" type="HSplitContainer" parent="VB"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="DialogueTypesPane" type="MarginContainer" parent="VB/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.5
+
+[node name="VB" type="VBoxContainer" parent="VB/HSplitContainer/DialogueTypesPane"]
+layout_mode = 2
+
+[node name="HeaderButtonsContainer" type="HBoxContainer" parent="VB/HSplitContainer/DialogueTypesPane/VB"]
+layout_mode = 2
+
+[node name="AddButton" type="Button" parent="VB/HSplitContainer/DialogueTypesPane/VB/HeaderButtonsContainer"]
+layout_mode = 2
+tooltip_text = "Add a type"
+icon = ExtResource("2_r4h0m")
+flat = true
+
+[node name="RemoveButton" type="Button" parent="VB/HSplitContainer/DialogueTypesPane/VB/HeaderButtonsContainer"]
+layout_mode = 2
+tooltip_text = "Remove the selected type"
+icon = ExtResource("3_ox0qx")
+flat = true
+
+[node name="Help" type="TextureRect" parent="VB/HSplitContainer/DialogueTypesPane/VB/HeaderButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+tooltip_text = "Here you can define \"types\" for your dialogue nodes.
+
+Dialogue types determine whether a character is associated
+with the dialogue, and the \"split dialogue\" setting for the
+graph type can be overridden if necessary."
+texture = ExtResource("5_wivtf")
+stretch_mode = 2
+
+[node name="DialogueTypesTree" type="Tree" parent="VB/HSplitContainer/DialogueTypesPane/VB"]
+custom_minimum_size = Vector2(200, 300)
+layout_mode = 2
+size_flags_vertical = 3
+columns = 3
+column_titles_visible = true
+allow_reselect = true
+allow_rmb_select = true
+hide_folding = true
+hide_root = true
+drop_mode_flags = 2
+
+[node name="GraphTypesPane" type="MarginContainer" parent="VB/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VB" type="VBoxContainer" parent="VB/HSplitContainer/GraphTypesPane"]
+layout_mode = 2
+
+[node name="GraphTypesPaneHeader" type="HBoxContainer" parent="VB/HSplitContainer/GraphTypesPane/VB"]
+visible = false
+layout_mode = 2
+
+[node name="GraphTypesPaneHeaderLabel" type="Label" parent="VB/HSplitContainer/GraphTypesPane/VB/GraphTypesPaneHeader"]
+layout_mode = 2
+text = "Graph Types:"
+
+[node name="Help2" type="TextureRect" parent="VB/HSplitContainer/GraphTypesPane/VB/GraphTypesPaneHeader"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+tooltip_text = "Here you can set which graph types the selected dialogue type
+is available for. You can also set it as the default for one or more
+graph types."
+texture = ExtResource("5_wivtf")
+stretch_mode = 2
+
+[node name="GraphTypesTree" type="Tree" parent="VB/HSplitContainer/GraphTypesPane/VB"]
+visible = false
+custom_minimum_size = Vector2(200, 300)
+layout_mode = 2
+size_flags_vertical = 3
+columns = 3
+column_titles_visible = true
+allow_reselect = true
+allow_rmb_select = true
+hide_folding = true
+hide_root = true
+drop_mode_flags = 2
+
+[node name="FooterButtonsContainer" type="HBoxContainer" parent="VB"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_constants/separation = 30
+
+[node name="CancelButton" type="Button" parent="VB/FooterButtonsContainer"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="SaveButton" type="Button" parent="VB/FooterButtonsContainer"]
+layout_mode = 2
+text = "Save"
+
+[node name="PopupMenu" type="PopupMenu" parent="."]
+size = Vector2i(151, 35)
+item_count = 1
+item_0/text = "Remove"
+item_0/icon = ExtResource("3_ox0qx")
+item_0/id = 0
+
+[connection signal="pressed" from="VB/HSplitContainer/DialogueTypesPane/VB/HeaderButtonsContainer/AddButton" to="." method="_on_add_button_pressed"]
+[connection signal="pressed" from="VB/HSplitContainer/DialogueTypesPane/VB/HeaderButtonsContainer/RemoveButton" to="." method="_on_remove_button_pressed"]
+[connection signal="gui_input" from="VB/HSplitContainer/DialogueTypesPane/VB/HeaderButtonsContainer/Help" to="." method="_on_help_gui_input"]
+[connection signal="item_edited" from="VB/HSplitContainer/DialogueTypesPane/VB/DialogueTypesTree" to="." method="_on_dialogue_tree_item_edited"]
+[connection signal="item_mouse_selected" from="VB/HSplitContainer/DialogueTypesPane/VB/DialogueTypesTree" to="." method="_on_dialogue_tree_item_mouse_selected"]
+[connection signal="item_selected" from="VB/HSplitContainer/DialogueTypesPane/VB/DialogueTypesTree" to="." method="_on_dialogue_tree_item_selected"]
+[connection signal="nothing_selected" from="VB/HSplitContainer/DialogueTypesPane/VB/DialogueTypesTree" to="." method="_on_dialogue_tree_nothing_selected"]
+[connection signal="gui_input" from="VB/HSplitContainer/GraphTypesPane/VB/GraphTypesPaneHeader/Help2" to="." method="_on_help_gui_input"]
+[connection signal="item_edited" from="VB/HSplitContainer/GraphTypesPane/VB/GraphTypesTree" to="." method="_on_graph_types_tree_item_edited"]
+[connection signal="item_mouse_selected" from="VB/HSplitContainer/GraphTypesPane/VB/GraphTypesTree" to="." method="_on_tree_item_mouse_selected"]
+[connection signal="item_selected" from="VB/HSplitContainer/GraphTypesPane/VB/GraphTypesTree" to="." method="_on_tree_item_selected"]
+[connection signal="nothing_selected" from="VB/HSplitContainer/GraphTypesPane/VB/GraphTypesTree" to="." method="_on_tree_nothing_selected"]
+[connection signal="pressed" from="VB/FooterButtonsContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="VB/FooterButtonsContainer/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="id_pressed" from="PopupMenu" to="." method="_on_popup_menu_id_pressed"]
