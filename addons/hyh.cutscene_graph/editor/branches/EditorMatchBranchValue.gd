@@ -8,9 +8,11 @@ signal modified()
 
 const Logging = preload("../../utility/Logging.gd")
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
+const MatchBranch = preload("res://addons/hyh.cutscene_graph/resources/graph/branches/MatchBranch.gd")
 
 var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
 var _type: VariableType
+var _branch_resource: MatchBranch
 
 @onready var _value_edit = $VB/HorizontalLayout/GridContainer/ValueEdit
 
@@ -41,6 +43,18 @@ func get_value() -> Variant:
 	if _value_edit.is_selecting_variable():
 		return _value_edit.get_selected_variable()
 	return _value_edit.get_value()
+
+
+## Get the branch resource updated with the current values.
+func get_branch() -> MatchBranch:
+	_branch_resource.value = get_value()
+	return _branch_resource
+
+
+## Assign a branch resource to the UI.
+func set_branch(branch: MatchBranch) -> void:
+	_branch_resource = branch
+	set_value(_branch_resource.value)
 
 
 func _on_remove_button_pressed() -> void:

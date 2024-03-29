@@ -3,6 +3,7 @@ extends "EditorGraphNodeBase.gd"
 ## Editor node for Branch nodes with "match" semantics.
 
 
+const MatchBranch = preload("../../resources/graph/branches/MatchBranch.gd")
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
 
@@ -35,7 +36,7 @@ func configure_for_node(g, n):
 	else:
 		_add_branch_button.disabled = true
 		
-	set_values(n.get_values())
+	set_branches(n.branches)
 
 
 ## Persist changes from the editor node's controls into the graph node's properties
@@ -44,18 +45,14 @@ func persist_changes_to_node():
 	node_resource.variable = get_variable()
 	node_resource.scope = get_scope()
 	node_resource.variable_type = get_type()
-	var values = get_values()
-	node_resource.branch_count = len(values)
-	node_resource.set_values(values)
+	node_resource.branches = get_branches()
 
 
 ## Clear the relationships of the underlying graph node.
 func clear_node_relationships():
 	super.clear_node_relationships()
-	node_resource.branches = []
-	var values = node_resource.get_values()
-	for index in range(0, values.size()):
-		node_resource.branches.append(null)
+	for branch in node_resource.branches:
+		branch.next = -1
 
 
 func get_variable():
@@ -66,17 +63,17 @@ func set_variable(val):
 	_variable_name = val
 
 
-func get_values():
-	var values = []
+func get_branches():
+	var t: Array[MatchBranch] = []
 	for index in range(1, get_child_count()):
-		values.append(get_child(index).get_value())
-	return values
+		t.append(get_child(index).get_branch())
+	return t
 
 
-func set_values(values):
+func set_branches(branches):
 	clear_branches()
-	for index in range(0, values.size()):
-		_add_branch(values[index])
+	for branch in branches:
+		_add_branch(branch)
 
 
 func get_scope():
@@ -118,9 +115,9 @@ func remove_branch(index):
 	size = _original_size
 
 
-func _add_branch(value):
+func _add_branch(branch):
 	var line = _create_branch()
-	line.set_value(value)
+	line.set_branch(branch)
 
 
 func _create_branch():
@@ -168,6 +165,9 @@ func _reconnect_signals():
 
 func _on_add_branch_button_pressed():
 	var new_value_line = _create_branch()
+	new_value_line.set_branch(
+		MatchBranch.new()
+	)
 	modified.emit()
 
 
