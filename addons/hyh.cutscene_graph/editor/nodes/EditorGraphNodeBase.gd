@@ -65,7 +65,11 @@ func clear_node_relationships():
 ## Set the node to be the "root" or entry point of the graph.
 func set_root(value: bool):
 	is_root = value
-	_root_indicator.visible = is_root
+	# I think this is called with a default value when the object is created
+	# Since that is before _on_ready is called, the root indicator hasn't been
+	# created yet.
+	if _root_indicator != null:
+		_root_indicator.visible = is_root
 
 
 func _on_gui_input(ev):
