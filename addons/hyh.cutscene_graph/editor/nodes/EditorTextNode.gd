@@ -3,7 +3,7 @@ extends "EditorGraphNodeBase.gd"
 ## Editor node for Dialogue resource node.
 
 
-const TITLE_FONT = preload("res://addons/hyh.cutscene_graph/editor/nodes/styles/TitleOptionFont.tres")
+const TITLE_FONT = preload("styles/TitleOptionFont.tres")
 
 var _characters
 var _dialogue_types

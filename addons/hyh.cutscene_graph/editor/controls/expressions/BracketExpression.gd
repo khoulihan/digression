@@ -1,10 +1,10 @@
 @tool
-extends "res://addons/hyh.cutscene_graph/editor/controls/expressions/MoveableExpression.gd"
+extends "MoveableExpression.gd"
 ## Expression for grouping other expressions to be evaluated first.
 
 
 const ExpressionType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionType
-const GROUP_PANEL_STYLE = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/group_panel_style.tres")
+const GROUP_PANEL_STYLE = preload("group_panel_style.tres")
 
 @onready var _child_expression = $PanelContainer/MC/ExpressionContainer/MC/ChildExpression
 

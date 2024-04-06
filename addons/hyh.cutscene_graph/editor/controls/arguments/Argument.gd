@@ -2,7 +2,7 @@
 extends MarginContainer
 
 # TODO: Maybe a better icon for this?
-const ArgumentIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_triple_bar.svg")
+const ARGUMENT_ICON = preload("../../../icons/icon_triple_bar.svg")
 
 @onready var OrdinalLabel: Label = get_node("ExpressionContainer/OrdinalLabel")
 @onready var DragHandle: TextureRect = get_node("ExpressionContainer/DragHandle")
@@ -31,7 +31,7 @@ func _on_remove_button_pressed():
 func get_drag_preview():
 	var preview = HBoxContainer.new()
 	var icon = TextureRect.new()
-	icon.texture = ArgumentIcon
+	icon.texture = ARGUMENT_ICON
 	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	icon.stretch_mode = TextureRect.STRETCH_KEEP
 	var ptext = Label.new()

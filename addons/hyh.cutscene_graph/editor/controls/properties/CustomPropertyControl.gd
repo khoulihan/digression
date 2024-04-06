@@ -8,9 +8,12 @@ signal modified()
 signal size_changed(size_change)
 
 const Logging = preload("../../../utility/Logging.gd")
-const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
+const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
 
-var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
+var _logger = Logging.new(
+	Logging.DGE_EDITOR_LOG_NAME,
+	Logging.DGE_EDITOR_LOG_LEVEL
+)
 var _type: VariableType
 var _property_name: String
 

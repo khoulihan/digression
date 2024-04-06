@@ -16,8 +16,5 @@ var tag: String:
 @onready var _tag_label = $MC/HB/Label
 
 
-
-
-
 func _on_button_pressed():
 	remove_requested.emit()

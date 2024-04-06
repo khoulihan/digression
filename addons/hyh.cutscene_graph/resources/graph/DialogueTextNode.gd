@@ -3,7 +3,7 @@ extends "GraphNodeBase.gd"
 ## A node for dialogue text.
 
 
-const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
+const VariableType = preload("VariableSetNode.gd").VariableType
 
 ## The user-defined type of the dialogue.
 @export var dialogue_type: String

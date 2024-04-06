@@ -22,7 +22,7 @@ enum SubGraphMenuItems {
 }
 
 const ResourceHelper = preload("../../utility/ResourceHelper.gd")
-const CUTSCENE_GRAPH_ICON = preload("res://addons/hyh.cutscene_graph/icons/icon_chat.svg")
+const DIALOGUE_GRAPH_ICON = preload("../../icons/icon_chat.svg")
 
 var _popup: PopupMenu
 var _resource_clipboard
@@ -39,7 +39,7 @@ func _ready():
 	# Otherwise it would have been very handy.
 	#var res_picker = EditorResourcePicker.new()
 	#get_node("MarginContainer/VBoxContainer").add_child(res_picker)
-	#res_picker.base_type = "CutsceneGraph"
+	#res_picker.base_type = "DigressionDialogueGraph"
 	#res_picker.theme = self.theme
 	
 	super()
@@ -160,7 +160,7 @@ func _make_unique():
 
 func _save_to_disk():
 	var dialog = _create_file_dialog(
-		"Save Cutscene Graph",
+		"Save Dialogue Graph",
 		EditorFileDialog.FILE_MODE_SAVE_FILE
 	)
 	dialog.file_selected.connect(
@@ -175,7 +175,7 @@ func _save_to_disk():
 
 func _display_load_dialog():
 	var dialog = _create_file_dialog(
-		"Load Cutscene Graph",
+		"Load Dialogue Graph",
 		EditorFileDialog.FILE_MODE_OPEN_FILE
 	)
 	dialog.file_selected.connect(
@@ -190,13 +190,13 @@ func _display_load_dialog():
 
 func _display_sub_graph_on_button():
 	if node_resource != null and node_resource.sub_graph != null:
-		_resource_button.icon = CUTSCENE_GRAPH_ICON
+		_resource_button.icon = DIALOGUE_GRAPH_ICON
 		if node_resource.sub_graph.display_name != null and node_resource.sub_graph.display_name != "":
 			_resource_button.text = node_resource.sub_graph.display_name
 		elif node_resource.sub_graph.name != null and node_resource.sub_graph.name != "":
 			_resource_button.text = node_resource.sub_graph.name
 		else:
-			_resource_button.text = "CutsceneGraph"
+			_resource_button.text = "DigressionDialogueGraph"
 	else:
 		_resource_button.icon = null
 		_resource_button.text = "<empty>"
@@ -216,7 +216,7 @@ func _clipboard_contents_pasteable():
 		return false
 	if _resource_clipboard.contents == null:
 		return false
-	return _resource_clipboard.contents is CutsceneGraph
+	return _resource_clipboard.contents is DigressionDialogueGraph
 
 
 func _on_gui_input(ev):
@@ -239,7 +239,7 @@ func _on_resource_button_pressed():
 func _on_popup_index_pressed(index):
 	match index:
 		SubGraphMenuItems.CREATE_NEW:
-			_sub_graph_selected(CutsceneGraph.new())
+			_sub_graph_selected(DigressionDialogueGraph.new())
 		SubGraphMenuItems.LOAD:
 			_display_load_dialog()
 		SubGraphMenuItems.EDIT:
@@ -265,8 +265,8 @@ func _on_resource_menu_button_about_to_popup():
 func _on_sub_graph_file_selected_for_opening(path, dialog):
 	get_tree().root.remove_child(dialog)
 	var res = load(path)
-	if not res is CutsceneGraph:
-		_display_error_dialog("The selected resource is not a CutsceneGraph.")
+	if not res is DigressionDialogueGraph:
+		_display_error_dialog("The selected resource is not a DigressionDialogueGraph.")
 		return
 	_sub_graph_selected(res)
 

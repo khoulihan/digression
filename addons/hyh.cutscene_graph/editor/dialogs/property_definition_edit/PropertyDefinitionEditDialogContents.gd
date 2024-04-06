@@ -15,24 +15,25 @@ enum PropertyDefinitionEditPopupMenuItem {
 	REMOVE,
 }
 
+const SettingsHelper = preload("../../SettingsHelper.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const WARNING_ICON = preload("../../../icons/icon_node_warning.svg")
 const NEW_PROPERTY_NAME = "new_property"
-const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
+const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
 
-var _definitions
+var _definitions: Array
 var _edited_item
 var _edited_definition
 var _populating := false
 var _default_name_regex: RegEx
-var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
+var _logger = Logging.new(Logging.DGE_EDITOR_LOG_NAME, Logging.DGE_EDITOR_LOG_LEVEL)
 
 @onready var _property_definitions_tree := $VB/HS/PropertyDefinitionsPane/VB/PropertyDefinitionsTree
 @onready var _detail_pane_container := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer
 @onready var _name_edit := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/NameEdit
 @onready var _type_option := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/TypeOption
 @onready var _description_text_edit := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/DescriptionTextEdit
-@onready var _scenes_check_box := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/ScenesCheckBox
+@onready var _dialogue_graphs_check_box := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/DialogueGraphsCheckBox
 @onready var _characters_check_box := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/CharactersCheckBox
 @onready var _variants_check_box := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/VariantsCheckBox
 @onready var _choices_check_box := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/ChoicesCheckBox
@@ -41,10 +42,7 @@ var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
 
 
 func _ready() -> void:
-	_definitions = ProjectSettings.get_setting(
-		"cutscene_graph_editor/property_definitions",
-		[]
-	).duplicate(true)
+	_definitions = SettingsHelper.get_property_definitions().duplicate(true)
 	
 	var property_definitions_root = _property_definitions_tree.create_item()
 	_property_definitions_tree.set_column_title(
@@ -134,16 +132,16 @@ func _get_type_name(type: VariableType) -> String:
 func _get_type_icon(type: VariableType) -> Texture:
 	match type:
 		VariableType.TYPE_BOOL:
-			return preload("res://addons/hyh.cutscene_graph/icons/icon_type_bool.svg")
+			return preload("../../../icons/icon_type_bool.svg")
 		VariableType.TYPE_FLOAT:
-			return preload("res://addons/hyh.cutscene_graph/icons/icon_type_float.svg")
+			return preload("../../../icons/icon_type_float.svg")
 		VariableType.TYPE_INT:
-			return preload("res://addons/hyh.cutscene_graph/icons/icon_type_int.svg")
+			return preload("../../../icons/icon_type_int.svg")
 		VariableType.TYPE_STRING:
-			return preload("res://addons/hyh.cutscene_graph/icons/icon_type_string.svg")
+			return preload("../../../icons/icon_type_string.svg")
 	# TODO: Shouldn't ever be needed, but a more appropriate icon should
 	# be used here.
-	return preload("res://addons/hyh.cutscene_graph/icons/icon_file.svg")
+	return preload("../../../icons/icon_file.svg")
 
 
 func configure() -> void:
@@ -164,11 +162,7 @@ func _hide_detail_pane() -> void:
 
 func _perform_save():
 	var root = _property_definitions_tree.get_root()
-	ProjectSettings.set_setting(
-		"cutscene_graph_editor/property_definitions",
-		_definitions,
-	)
-	ProjectSettings.save()
+	SettingsHelper.save_property_definitions(_definitions)
 
 
 func _clear_validation_warnings() -> void:
@@ -291,7 +285,7 @@ func _populate_detail_pane_for_definition(definition: Dictionary) -> void:
 	_name_edit.text = definition['name']
 	_description_text_edit.text = definition['description']
 	_type_option.select(_type_option.get_item_index(definition['type']))
-	_scenes_check_box.button_pressed = 'scenes' in definition['uses']
+	_dialogue_graphs_check_box.button_pressed = 'dialogue_graphs' in definition['uses']
 	_characters_check_box.button_pressed = 'characters' in definition['uses']
 	_variants_check_box.button_pressed = 'variants' in definition['uses']
 	_choices_check_box.button_pressed = 'choices' in definition['uses']
@@ -304,7 +298,7 @@ func _update_edited() -> void:
 	_edited_definition['description'] = _description_text_edit.text
 	_edited_definition['type'] = _type_option.get_selected_id()
 	var uses: Array = _edited_definition['uses']
-	_update_uses_for_checkbox(uses, _scenes_check_box, 'scenes')
+	_update_uses_for_checkbox(uses, _dialogue_graphs_check_box, 'dialogue_graphs')
 	_update_uses_for_checkbox(uses, _characters_check_box, 'characters')
 	_update_uses_for_checkbox(uses, _variants_check_box, 'variants')
 	_update_uses_for_checkbox(uses, _choices_check_box, 'choices')
@@ -395,7 +389,7 @@ func _on_add_button_pressed():
 		'type': VariableType.TYPE_BOOL,
 		'description': "",
 		'uses': [
-			'scenes',
+			'dialogue_graphs',
 			'characters',
 			'variants',
 			'choices',

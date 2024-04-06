@@ -21,12 +21,13 @@ enum ChoiceTypesPopupMenuItem {
 	REMOVE,
 }
 
+const SettingsHelper = preload("../../SettingsHelper.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const DEFAULT_ICON = preload("../../../icons/icon_favourites.svg")
 const WARNING_ICON = preload("../../../icons/icon_node_warning.svg")
 const NEW_TYPE_NAME = "new_choice_type"
 
-var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
+var _logger = Logging.new(Logging.DGE_EDITOR_LOG_NAME, Logging.DGE_EDITOR_LOG_LEVEL)
 var _graph_types
 var _graph_types_per_choice_type = {}
 
@@ -38,10 +39,7 @@ var _graph_types_per_choice_type = {}
 
 
 func _ready() -> void:
-	_graph_types = ProjectSettings.get_setting(
-		"cutscene_graph_editor/graph_types",
-		[]
-	)
+	_graph_types = SettingsHelper.get_graph_types()
 	
 	var graph_types_root = _graph_types_tree.create_item()
 	_graph_types_tree.set_column_title(
@@ -97,10 +95,7 @@ func _ready() -> void:
 		ChoiceTypesTreeColumns.SKIP_FOR_REPEAT,
 		false
 	)
-	var types = ProjectSettings.get_setting(
-		"cutscene_graph_editor/choice_types",
-		[]
-	)
+	var types = SettingsHelper.get_choice_types()
 	for t in types:
 		var item: TreeItem = _choice_types_tree.create_item(choice_types_root)
 		_populate_item_for_type(item, t)
@@ -200,9 +195,9 @@ func _populate_item_for_graph_type(item, type):
 
 func _perform_save():
 	var root = _choice_types_tree.get_root()
-	var choice_types = []
+	var choice_types := []
 	for dt in root.get_children():
-		var t = {}
+		var t := {}
 		t["name"] = dt.get_text(ChoiceTypesTreeColumns.NAME)
 		t["skip_for_repeat"] = dt.is_checked(
 			ChoiceTypesTreeColumns.SKIP_FOR_REPEAT
@@ -221,11 +216,7 @@ func _perform_save():
 					t["default_in_graph_types"].append(gt)
 		
 		choice_types.append(t)
-	ProjectSettings.set_setting(
-		"cutscene_graph_editor/choice_types",
-		choice_types,
-	)
-	ProjectSettings.save()
+	SettingsHelper.save_choice_types(choice_types)
 
 
 func _remove_selected():

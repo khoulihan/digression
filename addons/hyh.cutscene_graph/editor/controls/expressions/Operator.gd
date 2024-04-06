@@ -7,10 +7,10 @@ const OperatorType = preload("../../../resources/graph/expressions/ExpressionRes
 const ExpressionOperators = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionOperators
 const ExpressionComponentType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionComponentType
 
-const AddIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_add.svg")
-const SubtractIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_subtract.svg")
-const MultiplyIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_close.svg")
-const DivideIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_divide.svg")
+const ADD_ICON = preload("../../../icons/icon_add.svg")
+const SUBTRACT_ICON = preload("../../../icons/icon_subtract.svg")
+const MULTIPLY_ICON = preload("../../../icons/icon_close.svg")
+const DIVIDE_ICON = preload("../../../icons/icon_divide.svg")
 
 ## The type of variable operated on.
 @export
@@ -63,22 +63,22 @@ func _populate_boolean_operators():
 
 func _populate_numeric_operators():
 	_options.add_icon_item(
-		AddIcon,
+		ADD_ICON,
 		"",
 		ExpressionOperators.NUMERIC_ADD
 	)
 	_options.add_icon_item(
-		SubtractIcon,
+		SUBTRACT_ICON,
 		"",
 		ExpressionOperators.NUMERIC_SUBTRACT
 	)
 	_options.add_icon_item(
-		MultiplyIcon,
+		MULTIPLY_ICON,
 		"",
 		ExpressionOperators.NUMERIC_MULTIPLY
 	)
 	_options.add_icon_item(
-		DivideIcon,
+		DIVIDE_ICON,
 		"",
 		ExpressionOperators.NUMERIC_DIVIDE
 	)
@@ -86,12 +86,12 @@ func _populate_numeric_operators():
 
 func _populate_string_operators():
 	_options.add_icon_item(
-		AddIcon,
+		ADD_ICON,
 		"",
 		ExpressionOperators.STRING_CONCATENATE
 	)
 	_options.add_icon_item(
-		AddIcon,
+		ADD_ICON,
 		"(with space)",
 		ExpressionOperators.STRING_CONCATENATE_WITH_SPACE
 	)

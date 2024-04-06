@@ -12,7 +12,10 @@ const ChoiceBranch = preload("../../resources/graph/branches/ChoiceBranch.gd")
 
 var choice_resource: ChoiceBranch
 
-var _logger := Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
+var _logger := Logging.new(
+	Logging.DGE_EDITOR_LOG_NAME,
+	Logging.DGE_EDITOR_LOG_LEVEL
+)
 
 @onready var _display_edit = $HB/VariableContainer/DisplayContainer/DisplayEdit
 @onready var _translation_key_edit = $HB/VariableContainer/DisplayContainer/TranslationKeyEdit

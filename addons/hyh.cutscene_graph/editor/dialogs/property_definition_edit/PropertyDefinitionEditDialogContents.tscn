@@ -151,9 +151,9 @@ text = "Uses:"
 [node name="UsesContainer" type="VBoxContainer" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC"]
 layout_mode = 2
 
-[node name="ScenesCheckBox" type="CheckBox" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer"]
+[node name="DialogueGraphsCheckBox" type="CheckBox" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer"]
 layout_mode = 2
-text = "Scenes
+text = "Dialogue Graphs
 "
 
 [node name="CharactersCheckBox" type="CheckBox" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer"]
@@ -204,7 +204,7 @@ item_0/id = 0
 [connection signal="text_changed" from="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/NameEdit" to="." method="_on_name_edit_text_changed"]
 [connection signal="item_selected" from="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/TypeOption" to="." method="_on_type_option_item_selected"]
 [connection signal="text_changed" from="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/DescriptionTextEdit" to="." method="_on_description_text_edit_text_changed"]
-[connection signal="toggled" from="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/ScenesCheckBox" to="." method="_on_uses_check_box_toggled"]
+[connection signal="toggled" from="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/DialogueGraphsCheckBox" to="." method="_on_uses_check_box_toggled"]
 [connection signal="toggled" from="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/CharactersCheckBox" to="." method="_on_uses_check_box_toggled"]
 [connection signal="toggled" from="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/VariantsCheckBox" to="." method="_on_uses_check_box_toggled"]
 [connection signal="toggled" from="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC/UsesContainer/ChoicesCheckBox" to="." method="_on_uses_check_box_toggled"]

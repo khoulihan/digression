@@ -7,12 +7,13 @@ signal tag_added()
 signal cancelled()
 signal created(variable)
 
+const SettingsHelper = preload("../../SettingsHelper.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
-const TagControlScene = preload("res://addons/hyh.cutscene_graph/editor/controls/TagControl.tscn")
-const WARNING_ICON = preload("res://addons/hyh.cutscene_graph/icons/icon_node_warning.svg")
+const TagControlScene = preload("../../controls/TagControl.tscn")
+const WARNING_ICON = preload("../../../icons/icon_node_warning.svg")
 
-var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
+var _logger = Logging.new(Logging.DGE_EDITOR_LOG_NAME, Logging.DGE_EDITOR_LOG_LEVEL)
 var _type_restriction : Variant
 var _variables: Array[Dictionary]
 var _all_tags: Array[String]
@@ -41,10 +42,7 @@ func _ready():
 	_clear_tag_container()
 	_validate()
 	var default: Array[Dictionary] = []
-	_variables = ProjectSettings.get_setting(
-		"cutscene_graph_editor/variables",
-		default
-	)
+	_variables = SettingsHelper.get_variables()
 	_all_tags = _get_all_tags(_variables)
 	_all_names = _get_all_names(_variables)
 
@@ -142,12 +140,7 @@ func _perform_save():
 		"tags": _get_tags()
 	}
 	_variables.append(new_variable)
-	
-	ProjectSettings.set_setting(
-		"cutscene_graph_editor/variables",
-		_variables
-	)
-	ProjectSettings.save()
+	SettingsHelper.save_variables(_variables)
 	
 	return new_variable
 
@@ -218,8 +211,8 @@ func _on_tag_edit_text_submitted(new_text):
 	t.remove_requested.connect(
 		_on_tag_remove_requested.bind(t)
 	)
-	t.tag = real_text
 	_tag_container.add_child(t)
+	t.tag = real_text
 	_tag_container.move_child(t, _tag_container.get_child_count() - 3)
 	_tag_edit.clear()
 	tag_added.emit()

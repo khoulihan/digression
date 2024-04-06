@@ -3,7 +3,7 @@ extends "EditorGraphNodeBase.gd"
 ## Editor node for managing Choice resources.
 
 
-const TITLE_FONT = preload("res://addons/hyh.cutscene_graph/editor/nodes/styles/TitleOptionFont.tres")
+const TITLE_FONT = preload("styles/TitleOptionFont.tres")
 const TranslationKey = preload("../../utility/TranslationKey.gd")
 const ChoiceBranch = preload("../../resources/graph/branches/ChoiceBranch.gd")
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope

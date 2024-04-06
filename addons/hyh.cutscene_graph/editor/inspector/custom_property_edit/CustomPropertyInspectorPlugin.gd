@@ -1,6 +1,6 @@
 @tool
 extends EditorInspectorPlugin
-## Inspector plugin for adding custom properties to CutsceneGraphs,
+## Inspector plugin for adding custom properties to DigressionDialogueGraphs,
 ## Characters, and CharacterVariants.
 
 
@@ -14,7 +14,7 @@ var _add_property_button: Button
 func _can_handle(object: Variant) -> bool:
 	return object is Character \
 		or object is CharacterVariant \
-		or object is CutsceneGraph
+		or object is DigressionDialogueGraph
 
 
 func _parse_property(object, type, name, hint_type, hint_string, usage_flags, wide):
@@ -24,7 +24,7 @@ func _parse_property(object, type, name, hint_type, hint_string, usage_flags, wi
 		_add_property_button = Button.new()
 		_add_property_button.text = "Add Custom Property"
 		_add_property_button.icon = preload(
-			"res://addons/hyh.cutscene_graph/icons/icon_add.svg"
+			"../../../icons/icon_add.svg"
 		)
 		_add_property_button.pressed.connect(
 			_on_add_property_button_pressed.bind(object)
@@ -50,7 +50,7 @@ func _is_variant(object) -> bool:
 
 
 func _is_graph(object) -> bool:
-	return object is CutsceneGraph
+	return object is DigressionDialogueGraph
 
 
 func _on_add_property_button_pressed(object) -> void:
@@ -58,7 +58,7 @@ func _on_add_property_button_pressed(object) -> void:
 	if _is_variant(object):
 		dialog.use_restriction = PropertyUse.VARIANTS
 	if _is_graph(object):
-		dialog.use_restriction = PropertyUse.SCENES
+		dialog.use_restriction = PropertyUse.DIALOGUE_GRAPHS
 	else:
 		dialog.use_restriction = PropertyUse.CHARACTERS
 	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN

@@ -68,6 +68,7 @@ enum ConnectionTypes {
 #region Constants
 
 # Utility classes.
+const SettingsHelper = preload("SettingsHelper.gd")
 const Logging = preload("../utility/Logging.gd")
 const TranslationKey = preload("../utility/TranslationKey.gd")
 
@@ -163,8 +164,8 @@ var _copied_nodes
 var _scroll_on_copy
 
 var _logger = Logging.new(
-	"Cutscene Graph Editor",
-	Logging.CGE_EDITOR_LOG_LEVEL
+	Logging.DGE_EDITOR_LOG_NAME,
+	Logging.DGE_EDITOR_LOG_LEVEL
 )
 
 # Nodes
@@ -611,9 +612,7 @@ func _on_jump_node_destination_chosen(destination_id, node):
 #region Dialogue and choice types
 
 func _get_dialogue_types_for_graph_type(graph_type):
-	var all_types = ProjectSettings.get_setting(
-		'cutscene_graph_editor/dialogue_types'
-	)
+	var all_types = SettingsHelper.get_dialogue_types()
 	var allowed_types = []
 	for dt in all_types:
 		if graph_type in dt['allowed_in_graph_types']:
@@ -622,9 +621,7 @@ func _get_dialogue_types_for_graph_type(graph_type):
 
 
 func _get_choice_types_for_graph_type(graph_type):
-	var all_types = ProjectSettings.get_setting(
-		'cutscene_graph_editor/choice_types'
-	)
+	var all_types = SettingsHelper.get_choice_types()
 	var allowed_types = []
 	for ct in all_types:
 		if graph_type in ct['allowed_in_graph_types']:
@@ -1084,7 +1081,7 @@ func _refresh_anchor_maps():
 
 func _generate_anchor_name():
 	return "%s%s" % [
-		CutsceneGraph.NEW_ANCHOR_PREFIX,
+		DigressionDialogueGraph.NEW_ANCHOR_PREFIX,
 		_edited.graph.get_next_anchor_number(),
 	]
 

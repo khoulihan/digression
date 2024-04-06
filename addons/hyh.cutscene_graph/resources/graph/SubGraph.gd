@@ -4,4 +4,4 @@ extends "GraphNodeBase.gd"
 
 
 ## The graph resource.
-@export var sub_graph: CutsceneGraph
+@export var sub_graph: DigressionDialogueGraph

@@ -1,13 +1,12 @@
 @tool
-extends "res://addons/hyh.cutscene_graph/editor/controls/arguments/Argument.gd"
+extends "Argument.gd"
 
 
 const VariableScope = preload("../../../resources/graph/VariableSetNode.gd").VariableScope
-const TransientIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_scope_transient.svg")
-const LocalIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_scope_local.svg")
-const CutsceneIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_scope_cutscene.svg")
-const GlobalIcon = preload("res://addons/hyh.cutscene_graph/icons/icon_scope_global.svg")
-
+const TransientIcon = preload("../../../icons/icon_scope_transient.svg")
+const LOCAL_ICON = preload("../../../icons/icon_scope_local.svg")
+const DIALOGUE_GRAPH_ICON = preload("../../../icons/icon_scope_dialogue_graph.svg")
+const GLOBAL_ICON = preload("../../../icons/icon_scope_global.svg")
 
 @onready var DataStoreLabel : Label = get_node("ExpressionContainer/PC/ArgumentValueContainer/HB/DataStoreLabel")
 @onready var ScopeIcon : TextureRect = get_node("ExpressionContainer/PC/ArgumentValueContainer/HB/ScopeIcon")
@@ -27,11 +26,11 @@ func _configure_for_scope():
 		VariableScope.SCOPE_TRANSIENT:
 			_set_controls(TransientIcon, "Transient")
 		VariableScope.SCOPE_LOCAL:
-			_set_controls(LocalIcon, "Local")
-		VariableScope.SCOPE_CUTSCENE:
-			_set_controls(CutsceneIcon, "Cutscene")
+			_set_controls(LOCAL_ICON, "Local")
+		VariableScope.SCOPE_DIALOGUE_GRAPH:
+			_set_controls(DIALOGUE_GRAPH_ICON, "Dialogue Graph")
 		VariableScope.SCOPE_GLOBAL:
-			_set_controls(GlobalIcon, "Global")
+			_set_controls(GLOBAL_ICON, "Global")
 
 
 func _set_controls(icon, label):

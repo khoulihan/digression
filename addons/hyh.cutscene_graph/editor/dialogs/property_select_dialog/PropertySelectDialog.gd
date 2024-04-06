@@ -8,7 +8,7 @@ signal cancelled()
 
 ## The use cases for custom properties.
 enum PropertyUse {
-	SCENES,
+	DIALOGUE_GRAPHS,
 	CHARACTERS,
 	VARIANTS,
 	CHOICES,

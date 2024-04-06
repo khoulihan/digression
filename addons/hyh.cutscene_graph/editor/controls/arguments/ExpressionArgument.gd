@@ -1,5 +1,5 @@
 @tool
-extends "res://addons/hyh.cutscene_graph/editor/controls/arguments/Argument.gd"
+extends "Argument.gd"
 
 const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
 

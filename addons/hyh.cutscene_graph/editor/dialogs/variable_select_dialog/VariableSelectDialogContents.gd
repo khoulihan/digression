@@ -13,19 +13,20 @@ enum MatchesTreeColumns {
 	TAGS,
 }
 
+const SettingsHelper = preload("../../SettingsHelper.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const BOOL_ICON = preload("../../../icons/icon_type_bool.svg")
 const INT_ICON = preload("../../../icons/icon_type_int.svg")
 const FLOAT_ICON = preload("../../../icons/icon_type_float.svg")
 const STRING_ICON = preload("../../../icons/icon_type_string.svg")
 const TRANSIENT_ICON = preload("../../../icons/icon_scope_transient_light.svg")
-const CUTSCENE_SCOPE_ICON = preload("../../../icons/icon_scope_cutscene_light.svg")
+const DIALOGUE_GRAPH_SCOPE_ICON = preload("../../../icons/icon_scope_dialogue_graph_light.svg")
 const LOCAL_ICON = preload("../../../icons/icon_scope_local_light.svg")
 const GLOBAL_ICON = preload("../../../icons/icon_scope_global_light.svg")
 const VariableScope = preload("../../../resources/graph/VariableSetNode.gd").VariableScope
 const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
 
-var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
+var _logger = Logging.new(Logging.DGE_EDITOR_LOG_NAME, Logging.DGE_EDITOR_LOG_LEVEL)
 var _type_restriction : Variant
 var _all_variables = []
 var _variables_for_scope = []
@@ -43,10 +44,7 @@ var _variables_for_search = []
 func _ready():
 	_type_restriction = get_parent().type_restriction
 	_all_variables = _filter_by_type_restriction(
-		ProjectSettings.get_setting(
-			"cutscene_graph_editor/variables",
-			[]
-		)
+		SettingsHelper.get_variables()
 	)
 	_perform_search()
 	_matches_tree.set_column_expand(MatchesTreeColumns.SCOPE, false)
@@ -210,8 +208,8 @@ func _tooltip_for_scope(scope):
 	match scope:
 		VariableScope.SCOPE_TRANSIENT:
 			return "Transient"
-		VariableScope.SCOPE_CUTSCENE:
-			return "Cutscene"
+		VariableScope.SCOPE_DIALOGUE_GRAPH:
+			return "Dialogue Graph"
 		VariableScope.SCOPE_LOCAL:
 			return "Local"
 		VariableScope.SCOPE_GLOBAL:
@@ -223,8 +221,8 @@ func _icon_for_scope(scope):
 	match scope:
 		VariableScope.SCOPE_TRANSIENT:
 			return TRANSIENT_ICON
-		VariableScope.SCOPE_CUTSCENE:
-			return CUTSCENE_SCOPE_ICON
+		VariableScope.SCOPE_DIALOGUE_GRAPH:
+			return DIALOGUE_GRAPH_SCOPE_ICON
 		VariableScope.SCOPE_LOCAL:
 			return LOCAL_ICON
 		VariableScope.SCOPE_GLOBAL:

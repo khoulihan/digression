@@ -17,12 +17,13 @@ enum GraphTypePopupMenuItem {
 	REMOVE,
 }
 
+const SettingsHelper = preload("../../SettingsHelper.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const DEFAULT_ICON = preload("../../../icons/icon_favourites.svg")
 const WARNING_ICON = preload("../../../icons/icon_node_warning.svg")
 const NEW_TYPE_NAME = "new_graph_type"
 
-var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
+var _logger = Logging.new(Logging.DGE_EDITOR_LOG_NAME, Logging.DGE_EDITOR_LOG_LEVEL)
 
 @onready var _type_tree: Tree = $VB/Tree
 @onready var _remove_button: Button = $VB/HeaderButtonsContainer/RemoveButton
@@ -30,10 +31,7 @@ var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
 
 
 func _ready() -> void:
-	var types = ProjectSettings.get_setting(
-		"cutscene_graph_editor/graph_types",
-		[]
-	)
+	var types = SettingsHelper.get_graph_types()
 	var root = _type_tree.create_item()
 	_type_tree.set_column_title(
 		GraphTypeTreeColumns.IS_DEFAULT,
@@ -98,7 +96,7 @@ func _populate_item_for_type(item, type):
 
 func _perform_save():
 	var root = _type_tree.get_root()
-	var graph_types = []
+	var graph_types := []
 	for gt in root.get_children():
 		var t = {}
 		t["name"] = gt.get_text(GraphTypeTreeColumns.NAME)
@@ -107,11 +105,7 @@ func _perform_save():
 		t["split_dialogue"] = gt.is_checked(GraphTypeTreeColumns.SPLIT_DIALOGUE)
 		t["default"] = gt.get_icon(GraphTypeTreeColumns.IS_DEFAULT) != null
 		graph_types.append(t)
-	ProjectSettings.set_setting(
-		"cutscene_graph_editor/graph_types",
-		graph_types
-	)
-	ProjectSettings.save()
+	SettingsHelper.save_graph_types(graph_types)
 
 
 func _set_selected_as_default():

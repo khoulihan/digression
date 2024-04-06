@@ -4,7 +4,7 @@ extends Resource
 
 
 const ExpressionResource = preload("../expressions/ExpressionResource.gd")
-const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
+const VariableType = preload("../VariableSetNode.gd").VariableType
 
 ## Text to display for the choice.
 @export var display: String

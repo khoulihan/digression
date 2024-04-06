@@ -1,14 +1,14 @@
 @tool
-extends "res://addons/hyh.cutscene_graph/editor/controls/expressions/Expression.gd"
+extends "Expression.gd"
 ## An expression that can be dragged.
 
 
 signal remove_requested()
 
-const BOOL_ICON = preload("res://addons/hyh.cutscene_graph/icons/icon_type_bool.svg")
-const INT_ICON = preload("res://addons/hyh.cutscene_graph/icons/icon_type_int.svg")
-const FLOAT_ICON = preload("res://addons/hyh.cutscene_graph/icons/icon_type_float.svg")
-const STRING_ICON = preload("res://addons/hyh.cutscene_graph/icons/icon_type_string.svg")
+const BOOL_ICON = preload("../../../icons/icon_type_bool.svg")
+const INT_ICON = preload("../../../icons/icon_type_int.svg")
+const FLOAT_ICON = preload("../../../icons/icon_type_float.svg")
+const STRING_ICON = preload("../../../icons/icon_type_string.svg")
 
 @onready var _panel : PanelContainer = $PanelContainer
 @onready var _expression_container : VBoxContainer = $PanelContainer/MC/ExpressionContainer

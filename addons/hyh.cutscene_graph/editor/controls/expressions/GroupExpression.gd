@@ -1,10 +1,10 @@
 @tool
-extends "res://addons/hyh.cutscene_graph/editor/controls/expressions/Expression.gd"
+extends "Expression.gd"
 ## Expression that groups other expressions.
 
 
-const FunctionType = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").FunctionType
-const ExpressionType = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").ExpressionType
+const FunctionType = preload("../../../resources/graph/expressions/ExpressionResource.gd").FunctionType
+const ExpressionType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionType
 
 @onready var _add_element_button = $AddElementButton
 
@@ -163,9 +163,9 @@ func _child_size_changed(amount):
 func _can_drop_data(at_position, data):
 	if not typeof(data) == TYPE_DICTIONARY:
 		return false
-	if not "cge_drag_class" in data:
+	if not "dge_drag_class" in data:
 		return false
-	if data["cge_drag_class"] != "expression":
+	if data["dge_drag_class"] != "expression":
 		return false
 	if type != data["type"]:
 		return false

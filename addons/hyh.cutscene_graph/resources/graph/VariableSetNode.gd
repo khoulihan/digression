@@ -6,7 +6,7 @@ extends "GraphNodeBase.gd"
 ## The possible scopes for variables.
 enum VariableScope {
 	SCOPE_TRANSIENT,
-	SCOPE_CUTSCENE,
+	SCOPE_DIALOGUE_GRAPH,
 	SCOPE_LOCAL,
 	SCOPE_GLOBAL
 }

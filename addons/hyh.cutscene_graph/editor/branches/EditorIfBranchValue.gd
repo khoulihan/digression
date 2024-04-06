@@ -7,7 +7,7 @@ signal remove_requested()
 signal modified()
 signal size_changed(size_change)
 
-const IfBranch = preload("res://addons/hyh.cutscene_graph/resources/graph/branches/IfBranch.gd")
+const IfBranch = preload("../../resources/graph/branches/IfBranch.gd")
 
 var _branch_resource: IfBranch
 

@@ -44,7 +44,7 @@ func _init(type: VariableType) -> void:
 	control.size_flags_horizontal = SIZE_EXPAND_FILL
 	_control_container.add_child(control)
 	_remove_button.text = ""
-	_remove_button.icon = preload("res://addons/hyh.cutscene_graph/icons/icon_close.svg")
+	_remove_button.icon = preload("../../../icons/icon_close.svg")
 	_remove_button.pressed.connect(_on_remove_button_pressed)
 	_control_container.add_child(_remove_button)
 	add_child(_control_container)

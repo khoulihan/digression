@@ -1,5 +1,5 @@
 @tool
-extends "res://addons/hyh.cutscene_graph/editor/controls/expressions/MoveableExpression.gd"
+extends "MoveableExpression.gd"
 ## An expression that represents a single value.
 
 

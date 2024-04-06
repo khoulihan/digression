@@ -5,7 +5,7 @@ extends MarginContainer
 
 signal choice_selected(index)
 
-const ChoiceEventChoice = preload("res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/ChoiceEventChoice.tscn")
+const ChoiceEventChoice = preload("ChoiceEventChoice.tscn")
 
 var _choices
 

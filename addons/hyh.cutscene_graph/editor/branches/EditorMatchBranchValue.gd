@@ -8,9 +8,12 @@ signal modified()
 
 const Logging = preload("../../utility/Logging.gd")
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
-const MatchBranch = preload("res://addons/hyh.cutscene_graph/resources/graph/branches/MatchBranch.gd")
+const MatchBranch = preload("../../resources/graph/branches/MatchBranch.gd")
 
-var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
+var _logger := Logging.new(
+	Logging.DGE_EDITOR_LOG_NAME,
+	Logging.DGE_EDITOR_LOG_LEVEL
+)
 var _type: VariableType
 var _branch_resource: MatchBranch
 

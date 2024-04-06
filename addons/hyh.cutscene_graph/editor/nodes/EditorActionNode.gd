@@ -12,19 +12,19 @@ enum ActionAddArgumentMenuId {
 	EXPRESSION_BOOL,
 	DATA_STORE,
 	DATA_STORE_TRANSIENT,
-	DATA_STORE_CUTSCENE,
+	DATA_STORE_DIALOGUE_GRAPH,
 	DATA_STORE_LOCAL,
 	DATA_STORE_GLOBAL,
 }
 
-const TITLE_FONT = preload("res://addons/hyh.cutscene_graph/editor/nodes/styles/TitleOptionFont.tres")
+const TITLE_FONT = preload("styles/TitleOptionFont.tres")
 
-const ExpressionArgument = preload("res://addons/hyh.cutscene_graph/editor/controls/arguments/ExpressionArgument.tscn")
-const CharacterArgument = preload("res://addons/hyh.cutscene_graph/editor/controls/arguments/CharacterArgument.tscn")
-const DataStoreArgument = preload("res://addons/hyh.cutscene_graph/editor/controls/arguments/DataStoreArgument.tscn")
-const ExpressionArgumentClass = preload("res://addons/hyh.cutscene_graph/editor/controls/arguments/ExpressionArgument.gd")
-const CharacterArgumentClass = preload("res://addons/hyh.cutscene_graph/editor/controls/arguments/CharacterArgument.gd")
-const DataStoreArgumentClass = preload("res://addons/hyh.cutscene_graph/editor/controls/arguments/DataStoreArgument.gd")
+const ExpressionArgument = preload("../controls/arguments/ExpressionArgument.tscn")
+const CharacterArgument = preload("../controls/arguments/CharacterArgument.tscn")
+const DataStoreArgument = preload("../controls/arguments/DataStoreArgument.tscn")
+const ExpressionArgumentClass = preload("../controls/arguments/ExpressionArgument.gd")
+const CharacterArgumentClass = preload("../controls/arguments/CharacterArgument.gd")
+const DataStoreArgumentClass = preload("../controls/arguments/DataStoreArgument.gd")
 
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
@@ -152,7 +152,7 @@ func _add_data_stores_sub_menu(menu):
 	submenu.id_pressed.connect(_add_data_store_argument_menu_item_selected)
 	
 	submenu.add_item("Transient", ActionAddArgumentMenuId.DATA_STORE_TRANSIENT)
-	submenu.add_item("Cutscene", ActionAddArgumentMenuId.DATA_STORE_CUTSCENE)
+	submenu.add_item("Cutscene", ActionAddArgumentMenuId.DATA_STORE_DIALOGUE_GRAPH)
 	submenu.add_item("Local", ActionAddArgumentMenuId.DATA_STORE_LOCAL)
 	submenu.add_item("Global", ActionAddArgumentMenuId.DATA_STORE_GLOBAL)
 	
@@ -206,8 +206,8 @@ func _add_data_store_argument_menu_item_selected(id):
 	match id:
 		ActionAddArgumentMenuId.DATA_STORE_TRANSIENT:
 			_add_data_store_argument(VariableScope.SCOPE_TRANSIENT)
-		ActionAddArgumentMenuId.DATA_STORE_CUTSCENE:
-			_add_data_store_argument(VariableScope.SCOPE_CUTSCENE)
+		ActionAddArgumentMenuId.DATA_STORE_DIALOGUE_GRAPH:
+			_add_data_store_argument(VariableScope.SCOPE_DIALOGUE_GRAPH)
 		ActionAddArgumentMenuId.DATA_STORE_LOCAL:
 			_add_data_store_argument(VariableScope.SCOPE_LOCAL)
 		ActionAddArgumentMenuId.DATA_STORE_GLOBAL:

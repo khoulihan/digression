@@ -8,7 +8,10 @@ signal cleared()
 
 const Logging = preload("../../utility/Logging.gd")
 
-var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
+var _logger = Logging.new(
+	Logging.DGE_EDITOR_LOG_NAME,
+	Logging.DGE_EDITOR_LOG_LEVEL
+)
 
 @onready var _set_weight_button: LinkButton = $SetWeightButton
 @onready var _weight: HBoxContainer = $Weight

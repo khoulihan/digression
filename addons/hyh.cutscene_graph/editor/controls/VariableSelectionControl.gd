@@ -17,7 +17,7 @@ const INT_ICON = preload("../../icons/icon_type_int.svg")
 const FLOAT_ICON = preload("../../icons/icon_type_float.svg")
 const STRING_ICON = preload("../../icons/icon_type_string.svg")
 const TRANSIENT_ICON = preload("../../icons/icon_scope_transient.svg")
-const CUTSCENE_SCOPE_ICON = preload("../../icons/icon_scope_cutscene.svg")
+const DIALOGUE_GRAPH_SCOPE_ICON = preload("../../icons/icon_scope_dialogue_graph.svg")
 const LOCAL_ICON = preload("../../icons/icon_scope_local.svg")
 const GLOBAL_ICON = preload("../../icons/icon_scope_global.svg")
 
@@ -117,8 +117,8 @@ func _icon_for_scope(s):
 	match s:
 		VariableScope.SCOPE_TRANSIENT:
 			return TRANSIENT_ICON
-		VariableScope.SCOPE_CUTSCENE:
-			return CUTSCENE_SCOPE_ICON
+		VariableScope.SCOPE_DIALOGUE_GRAPH:
+			return DIALOGUE_GRAPH_SCOPE_ICON
 		VariableScope.SCOPE_LOCAL:
 			return LOCAL_ICON
 		VariableScope.SCOPE_GLOBAL:

@@ -12,6 +12,7 @@ enum MatchesTreeColumns {
 	DESCRIPTION,
 }
 
+const SettingsHelper = preload("../../SettingsHelper.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const BOOL_ICON = preload("../../../icons/icon_type_bool.svg")
 const INT_ICON = preload("../../../icons/icon_type_int.svg")
@@ -20,7 +21,7 @@ const STRING_ICON = preload("../../../icons/icon_type_string.svg")
 const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
 const PropertyUse = preload("./PropertySelectDialog.gd").PropertyUse
 
-var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
+var _logger = Logging.new(Logging.DGE_EDITOR_LOG_NAME, Logging.DGE_EDITOR_LOG_LEVEL)
 var _use_restriction: PropertyUse
 var _all_properties := []
 var _properties_for_search := []
@@ -35,10 +36,7 @@ var _properties_for_search := []
 func _ready() -> void:
 	_use_restriction = get_parent().use_restriction
 	_all_properties = _filter_by_use_restriction(
-		ProjectSettings.get_setting(
-			"cutscene_graph_editor/property_definitions",
-			[]
-		)
+		SettingsHelper.get_property_definitions()
 	)
 	_perform_search()
 	_matches_tree.set_column_expand(MatchesTreeColumns.TYPE, false)
@@ -68,8 +66,8 @@ func _get_use_restriction_string() -> String:
 	match _use_restriction:
 		PropertyUse.CHARACTERS:
 			return 'characters'
-		PropertyUse.SCENES:
-			return 'scenes'
+		PropertyUse.DIALOGUE_GRAPHS:
+			return 'dialogue_graphs'
 		PropertyUse.CHOICES:
 			return 'choices'
 		PropertyUse.DIALOGUE:

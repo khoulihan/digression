@@ -1,20 +1,20 @@
 @tool
 extends Node
-## Walks a CutsceneGraph resource and raises signals with the details of each
-## node.
+## Walks a DigressionDialogueGraph resource and raises signals with the details
+## of each node.
 
 
 #region Signals
 
-## Emitted when processing of a cutscene graph begins.
-signal cutscene_started(cutscene_name, graph_type)
+## Emitted when processing of a dialogue graph begins.
+signal dialogue_graph_started(graph_name, graph_type)
 ## Emitted when a sub-graph has been entered.
-signal sub_graph_entered(cutscene_name, graph_type)
-## Emitted when processing of a cutscene graph resumes after a sub-graph completes.
-signal cutscene_resumed(cutscene_name, graph_type)
-## Emitted when processing of a cutscene graph is completed.
-signal cutscene_completed()
-## Emitted when processing of a cutscene graph is cancelled prematurely.
+signal sub_graph_entered(graph_name, graph_type)
+## Emitted when processing of a dialogue graph resumes after a sub-graph completes.
+signal dialogue_graph_resumed(graph_name, graph_type)
+## Emitted when processing of a dialogue graph is completed.
+signal dialogue_graph_completed()
+## Emitted when processing of a dialogue graph is cancelled prematurely.
 signal cancelled()
 ## A request to display dialogue.
 signal dialogue_display_requested(
@@ -84,10 +84,10 @@ const VariableType = VariableSetNode.VariableType
 @export var global_store: NodePath
 # TODO: Rename this to local_store
 ## A node that can store variables for the scope of the current level/scene
-@export var scene_store: NodePath
+@export var local_store: NodePath
 
 var _transient_store : Dictionary
-var _cutscene_state_store : Dictionary
+var _dialogue_graph_state_store : Dictionary
 var _global_store : Node
 var _local_store : Node
 
@@ -107,8 +107,8 @@ var _expression_evaluator: ExpressionEvaluator
 var _variable_regex: RegEx
 
 var _logger = Logging.new(
-	"Cutscene Graph Controller",
-	Logging.CGE_NODES_LOG_LEVEL
+	"Digression Dialogue Graph Controller",
+	Logging.DGE_NODES_LOG_LEVEL
 )
 
 #endregion
@@ -122,16 +122,16 @@ func _ready():
 	else:
 		_logger.warn("Global store not set.")
 	
-	if scene_store != null and scene_store != NodePath(""):
-		register_local_store(get_node(scene_store))
+	if local_store != null and local_store != NodePath(""):
+		register_local_store(get_node(local_store))
 	else:
 		_logger.warn("Scene store not set.")
 	
 	_dialogue_types = ProjectSettings.get_setting(
-		"cutscene_graph_editor/dialogue_types"
+		"digression_dialogue_graph_editor/dialogue_types"
 	)
 	_choice_types = ProjectSettings.get_setting(
-		"cutscene_graph_editor/choice_types"
+		"digression_dialogue_graph_editor/choice_types"
 	)
 	
 	_transient_store = {}
@@ -167,19 +167,19 @@ func register_local_store(store):
 	_local_store = store
 
 
-## Process the specified cutscene graph.
-func process_cutscene(cutscene, state_store):
+## Process the specified dialogue graph.
+func process_dialogue_graph(dialogue_graph, state_store):
 	_graph_stack = []
 	_transient_store = {}
-	_cutscene_state_store = state_store
-	_expression_evaluator.cutscene_state_store = _cutscene_state_store
-	_current_graph = cutscene
+	_dialogue_graph_state_store = state_store
+	_expression_evaluator.dialogue_graph_state_store = _dialogue_graph_state_store
+	_current_graph = dialogue_graph
 	_current_node = _current_graph.root_node
-	_logger.info("Processing cutscene \"%s\"" % _current_graph.name)
+	_logger.info("Processing dialogue graph \"%s\"" % _current_graph.name)
 	_split_dialogue = _get_split_dialogue_from_graph_type(
 		_current_graph.graph_type
 	)
-	cutscene_started.emit(
+	dialogue_graph_started.emit(
 		_current_graph.name,
 		_current_graph.graph_type
 	)
@@ -218,7 +218,7 @@ func process_cutscene(cutscene, state_store):
 		
 		if _current_graph == null:
 			# Graph processing has been cancelled.
-			_logger.info("Cutscene processing cancelled.")
+			_logger.info("Dialogue graph processing cancelled.")
 			cancelled.emit()
 			return
 		
@@ -228,14 +228,14 @@ func process_cutscene(cutscene, state_store):
 				_current_graph = graph_state.graph
 				_last_choice_node_id = graph_state.last_choice_node_id
 				_current_node = _get_node_by_id(graph_state.current_node.next)
-				_logger.info("Resuming cutscene \"%s\"." % _current_graph.name)
-				cutscene_resumed.emit(
+				_logger.info("Resuming dialogue graph \"%s\"." % _current_graph.name)
+				dialogue_graph_resumed.emit(
 					_current_graph.name,
 					_current_graph.graph_type
 				)
 	
-	_logger.info("Cutscene \"%s\" completed." % _current_graph.name)
-	emit_signal("cutscene_completed")
+	_logger.info("Dialogue graph \"%s\" completed." % _current_graph.name)
+	dialogue_graph_completed.emit()
 
 
 ## Stop processing
@@ -357,14 +357,14 @@ func _process_match_branch_node():
 		_current_node.variable,
 		_current_node.scope
 	)
-	for i in range(_current_node.branch_count):
+	for i in range(len(_current_node.branches)):
 		var branch_value = _realise_value(
 			_current_node.get_value(i)
 		)
 		
 		if val == branch_value:
 			_current_node = _get_node_by_id(
-				_current_node.branches[i]
+				_current_node.branches[i].next
 			)
 			return
 	# Default case, no match or no branches
@@ -663,8 +663,8 @@ func _get_data_store(scope):
 	match scope:
 		VariableScope.SCOPE_TRANSIENT:
 			return _transient_store
-		VariableScope.SCOPE_CUTSCENE:
-			return _cutscene_state_store
+		VariableScope.SCOPE_DIALOGUE_GRAPH:
+			return _dialogue_graph_state_store
 		VariableScope.SCOPE_LOCAL:
 			return _local_store
 		VariableScope.SCOPE_GLOBAL:
@@ -706,6 +706,7 @@ func _await_response():
 
 
 func _get_node_by_id(id):
+	print (id)
 	if id != null and id != -1:
 		return _current_graph.nodes.get(id)
 	return null
@@ -720,7 +721,7 @@ func _get_split_dialogue_from_graph_type(graph_type):
 		return true
 
 	var graph_types = ProjectSettings.get_setting(
-		"cutscene_graph_editor/graph_types",
+		"digression_dialogue_graph_editor/graph_types",
 		[]
 	)
 	for gt in graph_types:
@@ -762,14 +763,14 @@ func _get_choice_type_by_name(name) -> Dictionary:
 func _get_variable(variable_name, scope):
 	match scope:
 		VariableSetNode.VariableScope.SCOPE_TRANSIENT:
-			# We can deal with these internally for the duration of a cutscene
+			# We can deal with these internally for the duration of a graph
 			return _transient_store.get(variable_name)
-		VariableSetNode.VariableScope.SCOPE_CUTSCENE:
-			return _cutscene_state_store.get(variable_name)
+		VariableSetNode.VariableScope.SCOPE_DIALOGUE_GRAPH:
+			return _dialogue_graph_state_store.get(variable_name)
 		VariableSetNode.VariableScope.SCOPE_LOCAL:
 			if _local_store == null:
 				_logger.error(
-					"Scene variable \"%s\" requested but no scene store is available" % variable_name
+					"Scene variable \"%s\" requested but no local store is available" % variable_name
 				)
 				return null
 			return _local_store.get_variable(variable_name)
@@ -786,8 +787,8 @@ func _get_variable(variable_name, scope):
 func _get_variable_any_store(variable_name):
 	if variable_name in _transient_store:
 		return _transient_store[variable_name]
-	if variable_name in _cutscene_state_store:
-		return _cutscene_state_store[variable_name]
+	if variable_name in _dialogue_graph_state_store:
+		return _dialogue_graph_state_store[variable_name]
 	if _local_store.has_variable(variable_name):
 		return _local_store.get_variable(variable_name)
 	if _global_store.has_variable(variable_name):
@@ -798,10 +799,10 @@ func _get_variable_any_store(variable_name):
 func _set_variable(variable_name, scope, value):
 	match scope:
 		VariableSetNode.VariableScope.SCOPE_TRANSIENT:
-			# We can deal with these internally for the duration of a cutscene
+			# We can deal with these internally for the duration of a graph
 			_transient_store[variable_name] = value
-		VariableSetNode.VariableScope.SCOPE_CUTSCENE:
-			_cutscene_state_store[variable_name] = value
+		VariableSetNode.VariableScope.SCOPE_DIALOGUE_GRAPH:
+			_dialogue_graph_state_store[variable_name] = value
 		VariableSetNode.VariableScope.SCOPE_LOCAL:
 			if _local_store == null:
 				_logger.error(
@@ -865,11 +866,11 @@ func _get_visit_count_variable(res):
 
 func _get_visit_count(res):
 	var v = _get_visit_count_variable(res)
-	return _cutscene_state_store.get(v, 0)
+	return _dialogue_graph_state_store.get(v, 0)
 
 
 func _increment_visit_count(res):
-	_cutscene_state_store[
+	_dialogue_graph_state_store[
 		_get_visit_count_variable(res)
 	] = _get_visit_count(res) + 1
 

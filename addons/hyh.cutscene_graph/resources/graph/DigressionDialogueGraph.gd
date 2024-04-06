@@ -1,13 +1,14 @@
 @tool
-@icon("res://addons/hyh.cutscene_graph/icons/icon_chat.svg")
-class_name CutsceneGraph extends Resource
+@icon("../../icons/icon_chat.svg")
+class_name DigressionDialogueGraph extends Resource
 ## Dialogue graph resource.
 
 
 const PropertyUse = preload("../../editor/dialogs/property_select_dialog/PropertySelectDialog.gd").PropertyUse
-const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
+const VariableType = preload("VariableSetNode.gd").VariableType
 
 # Utility classes.
+const SettingsHelper = preload("../../editor/SettingsHelper.gd")
 const ResourceHelper = preload("../../utility/ResourceHelper.gd")
 
 const AnchorNode = preload("AnchorNode.gd")
@@ -19,19 +20,19 @@ const RandomNode = preload("RandomNode.gd")
 const NEW_ANCHOR_PREFIX = "destination_"
 
 
-## An identifier for this cutscene to represent it in code.
+## An identifier for this graph to represent it in code.
 @export var name: String
 
-## An optional display name to represent the cutscene to the player.
+## An optional display name to represent the graph to the player.
 @export var display_name: String
 
-## The characters that are involved in this cutscene.
+## The characters that are involved in this dialogue.
 @export var characters: Array[Character]
 
 ## Optional notes.
 @export_multiline var notes = ""
 
-## An arbitrary identifier for the type of cutscene.
+## An arbitrary identifier for the type of graph.
 var graph_type: String
 var nodes: Dictionary
 var root_node: Resource
@@ -41,10 +42,7 @@ var custom_properties: Dictionary = {}
 func _init():
 	self.nodes = {}
 	self.characters = []
-	var graph_types = ProjectSettings.get_setting(
-		"cutscene_graph_editor/graph_types",
-		""
-	)
+	var graph_types = SettingsHelper.get_graph_types()
 	var default_graph_type = ""
 	for gt in graph_types:
 		if gt["default"]:
@@ -69,10 +67,7 @@ func _get_property_list():
 		"usage": PROPERTY_USAGE_STORAGE,
 	})
 	
-	var graph_types = ProjectSettings.get_setting(
-		"cutscene_graph_editor/graph_types",
-		[]
-	)
+	var graph_types = SettingsHelper.get_graph_types()
 	var graph_type_names = []
 	for gt in graph_types:
 		graph_type_names.append(gt["name"])
@@ -214,7 +209,7 @@ func get_anchor_maps():
 func duplicate_with_nodes():
 	# Need this to replace built-in `duplicate` method, which is not
 	# copying the nodes collection.
-	var duplicate = CutsceneGraph.new()
+	var duplicate = DigressionDialogueGraph.new()
 	duplicate.name = self.name
 	duplicate.display_name = self.display_name
 	duplicate.graph_type = self.graph_type

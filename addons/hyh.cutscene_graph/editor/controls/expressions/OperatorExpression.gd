@@ -1,10 +1,10 @@
 @tool
-extends "res://addons/hyh.cutscene_graph/editor/controls/expressions/GroupExpression.gd"
+extends "GroupExpression.gd"
 ## A GroupExpression that includes operators between its members.
 
 
-const Operator = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/Operator.tscn")
-const OperatorClass = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/Operator.gd")
+const Operator = preload("Operator.tscn")
+const OperatorClass = preload("Operator.gd")
 
 
 ## Refresh the control, making sure that all elements have operators between

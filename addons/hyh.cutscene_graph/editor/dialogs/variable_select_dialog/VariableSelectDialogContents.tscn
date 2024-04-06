@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/hyh.cutscene_graph/editor/dialogs/variable_select_dialog/VariableSelectDialogContents.gd" id="1_e8ad3"]
 [ext_resource type="Texture2D" uid="uid://yw0o1piqpci0" path="res://addons/hyh.cutscene_graph/icons/icon_scope_transient_light.svg" id="2_gtkwb"]
-[ext_resource type="Texture2D" uid="uid://daoewvcifx34k" path="res://addons/hyh.cutscene_graph/icons/icon_scope_cutscene_light.svg" id="3_d5c5r"]
+[ext_resource type="Texture2D" uid="uid://daoewvcifx34k" path="res://addons/hyh.cutscene_graph/icons/icon_scope_dialogue_graph_light.svg" id="3_d5c5r"]
 [ext_resource type="Texture2D" uid="uid://obagryd77fku" path="res://addons/hyh.cutscene_graph/icons/icon_scope_local_light.svg" id="3_hbh0c"]
 [ext_resource type="Texture2D" uid="uid://dqtx77gjre00a" path="res://addons/hyh.cutscene_graph/icons/icon_scope_global_light.svg" id="4_7vxqt"]
 [ext_resource type="Texture2D" uid="uid://d1xqn6pvoeekw" path="res://addons/hyh.cutscene_graph/icons/icon_favourites.svg" id="4_qdda1"]
@@ -83,7 +83,7 @@ item_count = 4
 popup/item_0/text = "Transient"
 popup/item_0/icon = ExtResource("2_gtkwb")
 popup/item_0/id = 0
-popup/item_1/text = "Cutscene"
+popup/item_1/text = "Dialogue Graph"
 popup/item_1/icon = ExtResource("3_d5c5r")
 popup/item_1/id = 1
 popup/item_2/text = "Local"

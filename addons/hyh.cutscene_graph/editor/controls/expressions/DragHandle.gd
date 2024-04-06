@@ -16,7 +16,7 @@ func _get_drag_data(at_position):
 		return
 	set_drag_preview(target.get_drag_preview())
 	return {
-		"cge_drag_class": "expression",
+		"dge_drag_class": "expression",
 		"control": target,
 		"type": type,
 	}

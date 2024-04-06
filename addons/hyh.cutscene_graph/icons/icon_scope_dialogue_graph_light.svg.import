@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dqdochgtwbnok"
-path="res://.godot/imported/icon_cutscene_controller.svg-13e0e6a1f64e22240a6669430ec6c55f.ctex"
+uid="uid://daoewvcifx34k"
+path="res://.godot/imported/icon_scope_dialogue_graph_light.svg-693c6f7bc484a5b12c7988c35f038d0c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/hyh.cutscene_graph/icons/icon_cutscene_controller.svg"
-dest_files=["res://.godot/imported/icon_cutscene_controller.svg-13e0e6a1f64e22240a6669430ec6c55f.ctex"]
+source_file="res://addons/hyh.cutscene_graph/icons/icon_scope_dialogue_graph_light.svg"
+dest_files=["res://.godot/imported/icon_scope_dialogue_graph_light.svg-693c6f7bc484a5b12c7988c35f038d0c.ctex"]
 
 [params]
 

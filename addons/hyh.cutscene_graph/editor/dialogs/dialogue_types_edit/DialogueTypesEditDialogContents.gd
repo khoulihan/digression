@@ -21,14 +21,15 @@ enum DialogueTypesPopupMenuItem {
 	REMOVE,
 }
 
+const SettingsHelper = preload("../../SettingsHelper.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const DEFAULT_ICON = preload("../../../icons/icon_favourites.svg")
 const WARNING_ICON = preload("../../../icons/icon_node_warning.svg")
 const NEW_TYPE_NAME = "new_dialogue_type"
 
-var _graph_types
+var _graph_types: Array
 var _graph_types_per_dialogue_type = {}
-var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
+var _logger = Logging.new(Logging.DGE_EDITOR_LOG_NAME, Logging.DGE_EDITOR_LOG_LEVEL)
 
 @onready var _dialogue_types_tree: Tree = $VB/HSplitContainer/DialogueTypesPane/VB/DialogueTypesTree
 @onready var _graph_types_tree: Tree = $VB/HSplitContainer/GraphTypesPane/VB/GraphTypesTree
@@ -38,10 +39,7 @@ var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
 
 
 func _ready() -> void:
-	_graph_types = ProjectSettings.get_setting(
-		"cutscene_graph_editor/graph_types",
-		[]
-	)
+	_graph_types = SettingsHelper.get_graph_types()
 	
 	var graph_types_root = _graph_types_tree.create_item()
 	_graph_types_tree.set_column_title(
@@ -97,10 +95,7 @@ func _ready() -> void:
 		DialogueTypesTreeColumns.SPLIT_DIALOGUE,
 		false
 	)
-	var types = ProjectSettings.get_setting(
-		"cutscene_graph_editor/dialogue_types",
-		[]
-	)
+	var types := SettingsHelper.get_dialogue_types()
 	for t in types:
 		var item: TreeItem = _dialogue_types_tree.create_item(dialogue_types_root)
 		_populate_item_for_type(item, t)
@@ -207,7 +202,7 @@ func _populate_item_for_graph_type(item, type):
 
 func _perform_save():
 	var root = _dialogue_types_tree.get_root()
-	var dialogue_types = []
+	var dialogue_types := []
 	for dt in root.get_children():
 		var t = {}
 		t["name"] = dt.get_text(DialogueTypesTreeColumns.NAME)
@@ -231,11 +226,7 @@ func _perform_save():
 					t["default_in_graph_types"].append(gt)
 		
 		dialogue_types.append(t)
-	ProjectSettings.set_setting(
-		"cutscene_graph_editor/dialogue_types",
-		dialogue_types,
-	)
-	ProjectSettings.save()
+	SettingsHelper.save_dialogue_types(dialogue_types)
 
 
 func _remove_selected():

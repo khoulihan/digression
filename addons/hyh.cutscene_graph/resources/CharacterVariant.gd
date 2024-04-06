@@ -1,10 +1,10 @@
 @tool
-@icon("res://addons/hyh.cutscene_graph/icons/icon_portrait.svg")
+@icon("../icons/icon_portrait.svg")
 class_name CharacterVariant extends Resource
 
 
 const PropertyUse = preload("../editor/dialogs/property_select_dialog/PropertySelectDialog.gd").PropertyUse
-const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
+const VariableType = preload("graph/VariableSetNode.gd").VariableType
 
 ## An identifier for the variant to reference it in code.
 @export

@@ -1,9 +1,9 @@
 @tool
-extends "res://addons/hyh.cutscene_graph/editor/controls/arguments/Argument.gd"
+extends "Argument.gd"
+
 
 @onready var CharacterOption = get_node("ExpressionContainer/PC/ArgumentValueContainer/GC/CharacterOption")
 @onready var VariantOption = get_node("ExpressionContainer/PC/ArgumentValueContainer/GC/VariantOption")
-
 
 var _characters
 

@@ -7,7 +7,7 @@ signal size_changed(size_change)
 
 const Logging = preload("../../utility/Logging.gd")
 const Highlighting = preload("../../utility/Highlighting.gd")
-const ExpressionResource = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd")
+const ExpressionResource = preload("../../resources/graph/expressions/ExpressionResource.gd")
 
 ## The condition to manage.
 var condition_resource:
@@ -17,7 +17,10 @@ var condition_resource:
 		condition_resource = val
 		_configure_for_condition(condition_resource)
 
-var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
+var _logger = Logging.new(
+	Logging.DGE_EDITOR_LOG_NAME,
+	Logging.DGE_EDITOR_LOG_LEVEL
+)
 
 @onready var _condition_expression := $Condition/PC/MC/ConditionExpression
 @onready var _set_condition_button := $SetConditionButton

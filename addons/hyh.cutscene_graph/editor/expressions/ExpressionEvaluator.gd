@@ -4,21 +4,22 @@ extends RefCounted
 
 
 const Logging = preload("../../utility/Logging.gd")
-const ExpressionComponentType = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").ExpressionComponentType
-const ExpressionType = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").ExpressionType
-const FunctionType = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").FunctionType
-const ExpressionOperators = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").ExpressionOperators
-const OperatorType = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").OperatorType
-const EXPRESSION_FUNCTIONS = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").EXPRESSION_FUNCTIONS
-const VariableType = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableType
-const VariableScope = preload("res://addons/hyh.cutscene_graph/resources/graph/VariableSetNode.gd").VariableScope
+const ExpressionResource = preload("../../resources/graph/expressions/ExpressionResource.gd")
+const ExpressionComponentType = ExpressionResource.ExpressionComponentType
+const ExpressionType = ExpressionResource.ExpressionType
+const FunctionType = ExpressionResource.FunctionType
+const ExpressionOperators = ExpressionResource.ExpressionOperators
+const OperatorType = ExpressionResource.OperatorType
+const EXPRESSION_FUNCTIONS = ExpressionResource.EXPRESSION_FUNCTIONS
+const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
+const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
 
 var transient_store : Dictionary
-var cutscene_state_store : Dictionary
+var dialogue_graph_state_store : Dictionary
 var global_store : Node
 var local_store : Node
 
-var _logger = Logging.new("Expression Evaluator", Logging.CGE_NODES_LOG_LEVEL)
+var _logger = Logging.new("Digression Expression Evaluator", Logging.DGE_NODES_LOG_LEVEL)
 
 
 ## Evaluate the provided expression.
@@ -318,14 +319,14 @@ func _apply_operator(operator, left, right):
 func _get_variable(variable_name, scope):
 	match scope:
 		VariableScope.SCOPE_TRANSIENT:
-			# We can deal with these internally for the duration of a cutscene
+			# We can deal with these internally for the duration of a dialogue graph
 			return transient_store.get(variable_name)
-		VariableScope.SCOPE_CUTSCENE:
-			return cutscene_state_store.get(variable_name)
+		VariableScope.SCOPE_DIALOGUE_GRAPH:
+			return dialogue_graph_state_store.get(variable_name)
 		VariableScope.SCOPE_LOCAL:
 			if local_store == null:
 				_logger.error(
-					"Scene variable \"%s\" requested but no scene store is available" % variable_name
+					"Local variable \"%s\" requested but no local store is available" % variable_name
 				)
 				return null
 			return local_store.get_variable(variable_name)

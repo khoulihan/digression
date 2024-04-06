@@ -10,9 +10,10 @@ enum ToolMenuItems {
 	EDIT_PROPERTY_DEFINITIONS,
 }
 
+const SettingsHelper = preload("editor/SettingsHelper.gd")
 const Logging = preload("utility/Logging.gd")
 const CutsceneGraphEditor = preload("editor/CutsceneGraphEditor.tscn")
-const Cutscene = preload("editor/Cutscene.gd")
+const DigressionDialogue = preload("editor/DigressionDialogue.gd")
 const GraphTypeEditDialog = preload("editor/dialogs/graph_types_edit/GraphTypeEditDialog.tscn")
 const GraphTypeEditDialogClass = preload("editor/dialogs/graph_types_edit/GraphTypeEditDialog.gd")
 const DialogueTypesEditDialog = preload("editor/dialogs/dialogue_types_edit/DialogueTypesEditDialog.tscn")
@@ -32,29 +33,29 @@ var menu
 var _custom_inspector : CustomPropertyInspectorPlugin
 var _current_graph_is_in_scene
 var _logger = Logging.new(
-	"Cutscene Graph Editor",
-	Logging.CGE_EDITOR_LOG_LEVEL
+	Logging.DGE_EDITOR_LOG_NAME,
+	Logging.DGE_EDITOR_LOG_LEVEL
 )
 
 
 func _enter_tree():
 	# TODO: Need a new icon for these - should be white at the very least, like other Node-derived types
 	add_custom_type(
-		"CutsceneController",
+		"DigressionDialogueController",
 		"Node",
-		preload("editor/CutsceneController.gd"),
-		preload("icons/icon_cutscene_controller.svg")
+		preload("editor/DigressionDialogueController.gd"),
+		preload("icons/icon_dialogue_controller.svg")
 	)
 	add_custom_type(
-		"Cutscene",
+		"DigressionDialogue",
 		"Node",
-		preload("editor/Cutscene.gd"),
+		preload("editor/DigressionDialogue.gd"),
 		preload("icons/icon_chat.svg")
 	)
 	add_custom_type(
-		"CutsceneVariableStore",
+		"DigressionDialogueVariableStore",
 		"Node",
-		preload("editor/CutsceneVariableStore.gd"),
+		preload("editor/DigressionDialogueVariableStore.gd"),
 		preload("icons/icon_datastore.svg")
 	)
 	
@@ -70,9 +71,9 @@ func _enter_tree():
 
 
 func _exit_tree():
-	remove_custom_type("CutsceneController")
-	remove_custom_type("Cutscene")
-	remove_custom_type("CutsceneVariableStore")
+	remove_custom_type("DigressionDialogueController")
+	remove_custom_type("DigressionDialogue")
+	remove_custom_type("DigressionDialogueVariableStore")
 	remove_inspector_plugin(_custom_inspector)
 	if editor != null:
 		editor_host.expand_button_toggled.disconnect(
@@ -90,20 +91,20 @@ func _exit_tree():
 		)
 	remove_control_from_bottom_panel(editor_host)
 	menu.id_pressed.disconnect(_on_tool_menu_item_selected)
-	remove_tool_menu_item("Cutscene Graph Editor")
+	remove_tool_menu_item("Digression Dialogue Graph Editor")
 	if editor_host != null:
 		editor_host.free()
 		editor = null
 
 
 func _handles(object: Object) -> bool:
-	return (object is CutsceneGraph or object is Cutscene)
+	return (object is DigressionDialogueGraph or object is DigressionDialogue)
 
 
 func _edit(object):
 	var graph
-	if object is Cutscene:
-		graph = object.cutscene
+	if object is DigressionDialogue:
+		graph = object.dialogue_graph
 		_current_graph_is_in_scene = true
 	else:
 		graph = object
@@ -121,7 +122,7 @@ func _apply_changes():
 
 
 func _get_plugin_name():
-	return "Cutscene Graph"
+	return "Dialogue Graph Editor"
 
 
 func _get_plugin_icon():
@@ -139,81 +140,7 @@ func clear():
 
 
 func _create_default_project_settings():
-	if not ProjectSettings.has_setting("cutscene_graph_editor/graph_types"):
-		ProjectSettings.set_setting(
-			"cutscene_graph_editor/graph_types",
-			[
-				{
-					"name": "dialogue",
-					"split_dialogue": true,
-					"default": true
-				},
-				{
-					"name": "cutscene",
-					"split_dialogue": true,
-					"default": false
-				}
-			]
-		)
-	if not ProjectSettings.has_setting("cutscene_graph_editor/dialogue_types"):
-		ProjectSettings.set_setting(
-			"cutscene_graph_editor/dialogue_types",
-			[
-				{
-					"name": "dialogue",
-					"split_dialogue": null,
-					"involves_character": true,
-					"allowed_in_graph_types": [
-						"dialogue",
-						"cutscene",
-					],
-					"default_in_graph_types": [
-						"dialogue",
-						"cutscene",
-					],
-				},
-				{
-					"name": "narration",
-					"split_dialogue": null,
-					"involves_character": false,
-					"allowed_in_graph_types": [
-						"dialogue",
-						"cutscene",
-					],
-					"default_in_graph_types": [],
-				},
-			]
-		)
-	if not ProjectSettings.has_setting("cutscene_graph_editor/choice_types"):
-		ProjectSettings.set_setting(
-			"cutscene_graph_editor/choice_types",
-			[
-				{
-					"name": "choice",
-					"include_dialogue": false,
-					"skip_for_repeat": false,
-					"allowed_in_graph_types": [
-						"dialogue",
-						"cutscene",
-					],
-					"default_in_graph_types": [],
-				},
-				{
-					"name": "choice_with_dialogue",
-					"include_dialogue": true,
-					"skip_for_repeat": false,
-					"allowed_in_graph_types": [
-						"dialogue",
-						"cutscene",
-					],
-					"default_in_graph_types": [
-						"dialogue",
-						"cutscene",
-					],
-				},
-			]
-		)
-	ProjectSettings.save()
+	SettingsHelper.create_default_project_settings()
 
 
 func _create_editor_host():
@@ -279,7 +206,7 @@ func _create_menu():
 	menu.add_item("Edit Property Definitions...", ToolMenuItems.EDIT_PROPERTY_DEFINITIONS)
 	menu.id_pressed.connect(_on_tool_menu_item_selected)
 	
-	add_tool_submenu_item("Cutscene Graph Editor", menu)
+	add_tool_submenu_item("Digression Dialogue Graph Editor", menu)
 
 
 func _on_tool_menu_item_selected(id):

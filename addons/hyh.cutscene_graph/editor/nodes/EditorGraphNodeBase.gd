@@ -10,7 +10,7 @@ signal connected_to_node(port_index, node_id)
 signal disconnected(port_index)
 
 const Logging = preload("../../utility/Logging.gd")
-const CLOSE_ICON = preload("res://addons/hyh.cutscene_graph/icons/icon_close.svg")
+const CLOSE_ICON = preload("../../icons/icon_close.svg")
 const GraphNodeBase = preload("../../resources/graph/GraphNodeBase.gd")
 const CONNECTOR_COLOUR = Color("#f2f2f2e1")
 
@@ -20,7 +20,7 @@ const CONNECTOR_COLOUR = Color("#f2f2f2e1")
 var graph
 
 var _root_indicator: TextureRect
-var _logger = Logging.new("Cutscene Graph Editor", Logging.CGE_EDITOR_LOG_LEVEL)
+var _logger = Logging.new(Logging.DGE_EDITOR_LOG_NAME, Logging.DGE_EDITOR_LOG_LEVEL)
 
 
 func _ready() -> void:

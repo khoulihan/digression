@@ -1,5 +1,5 @@
 @tool
-extends "res://addons/hyh.cutscene_graph/editor/preview/dialogue_events/DialogueTextEvent.gd"
+extends "DialogueTextEvent.gd"
 ## Displays player dialogue in the graph previewer.
 
 

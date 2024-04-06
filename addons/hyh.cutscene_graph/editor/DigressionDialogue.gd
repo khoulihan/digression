@@ -1,20 +1,20 @@
 @tool
 extends Node
-## Stores a CutsceneGraph resource and allows it to be triggered.
+## Stores a DigressionDialogueGraph resource and allows it to be triggered.
 
 
-signal cutscene_triggered(cutscene)
+signal dialogue_graph_triggered(graph)
 
 const Logging = preload("../utility/Logging.gd")
-const CutsceneController = preload("CutsceneController.gd")
+const DigressionDialogueController = preload("DigressionDialogueController.gd")
 
-@export var cutscene: CutsceneGraph
+@export var dialogue_graph: DigressionDialogueGraph
 
-## Indicates whether this Cutscene has ever been triggered.
-## There is no need to update this property manually when a Cutscene is
-## triggered normally, but it can be used to reset the triggered state,
-## or mark the Cutscene as triggered without actually triggering it, if
-## that is a state implied by other events in the game. This will also reset
+## Indicates whether this DigressionDialogue has ever been triggered.
+## There is no need to update this property manually when a DigressionDialogue
+## is triggered normally, but it can be used to reset the triggered state,
+## or mark the DigressionDialogue as triggered without actually triggering it,
+## if that is a state implied by other events in the game. This will also reset
 ## the `triggered_count`.
 var triggered: bool:
 	get:
@@ -25,8 +25,8 @@ var triggered: bool:
 		else:
 			_state['triggered_count'] += 1
 
-## The number of times this Cutscene has been triggered.
-## There is no need to update this property manually when a Cutscene is
+## The number of times this DigressionDialogue has been triggered.
+## There is no need to update this property manually when a DigressionDialogue is
 ## triggered normally, but it can be used to manipulate the count if necessary.
 var triggered_count: int:
 	get:
@@ -34,26 +34,26 @@ var triggered_count: int:
 	set(value):
 		_state['triggered_count'] = value
 
-var _cutscene_controller
+var _dialogue_controller
 var _state: Dictionary
-var _logger = Logging.new("Cutscene Graph", Logging.CGE_NODES_LOG_LEVEL)
+var _logger = Logging.new("Digression Dialogue", Logging.DGE_NODES_LOG_LEVEL)
 
 
 func _ready():
-	# Need to find the CutsceneController - there should only be one
+	# Need to find the DigressionDialogueController - there should only be one
 	# Do this by walking the tree from the root. This should find it whether
 	# it is an autoload or part of the scene.
 	# TODO: Plugins can create their own set_choice autoloads now, so maybe we should do that?
 	var root = get_tree().root
 	if not Engine.is_editor_hint():
-		_cutscene_controller = _find_controller(root)
+		_dialogue_controller = _find_controller(root)
 	_state = {
 		'triggered_count': 0,
 	}
 
 
 func set_controller(controller):
-	_cutscene_controller = controller
+	_dialogue_controller = controller
 
 
 ## Returns the state Dictionary.
@@ -71,38 +71,38 @@ func update_state(changes: Dictionary):
 	_state.merge(changes, true)
 
 
-## Trigger the node's CutsceneGraph
+## Trigger the node's DigressionDialogueGraph
 func trigger():
-	if cutscene == null:
-		_logger.error("Cutscene node \"%s\" triggered, but no graph is set." % self)
+	if dialogue_graph == null:
+		_logger.error("Dialogue graph node \"%s\" triggered, but no graph is set." % self)
 		return
 	
-	_logger.log("Cutscene \"%s\" triggered" % cutscene.name)
+	_logger.log("Dialogue graph \"%s\" triggered" % dialogue_graph.name)
 	
-	if _cutscene_controller == null:
+	if _dialogue_controller == null:
 		_logger.error(
-			"Cutscene node \"%s\" triggered, but no CutsceneController is available." % self
+			"Dialogue graph node \"%s\" triggered, but no DigressionDialogueController is available." % self
 		)
 		return
 	if _state.has("triggered_count"):
 		_state['triggered_count'] += 1
 	else:
 		_state['triggered_count'] = 1
-	emit_signal("cutscene_triggered", self.cutscene)
-	_cutscene_controller.process_cutscene(cutscene, _state)
+	dialogue_graph_triggered.emit(self.dialogue_graph)
+	_dialogue_controller.process_dialogue_graph(dialogue_graph, _state)
 
 
 func _find_controller(root):
-	if root is CutsceneController:
+	if root is DigressionDialogueController:
 		return root
 	# Breadth-first search on the assumption that the controller
 	# will be close to the root rather than deeply nested.
 	for child in root.get_children():
-		if child is CutsceneController:
+		if child is DigressionDialogueController:
 			return child
 	for child in root.get_children():
 		var result = _find_controller(child)
 		if result != null:
 			return result
-	_logger.warn("Cutscene controller not found in scene.")
+	_logger.warn("Dialogue controller not found in scene.")
 	return null

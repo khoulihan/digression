@@ -1,15 +1,15 @@
 @tool
-extends "res://addons/hyh.cutscene_graph/editor/controls/expressions/MoveableExpression.gd"
+extends "MoveableExpression.gd"
 ## Expression that executes a built-in function.
 
 
 # TODO: Maybe these are a problem?
-const GroupExpression = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/GroupExpression.tscn")
-const OperatorExpression = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/OperatorExpression.tscn")
+const GroupExpression = preload("GroupExpression.tscn")
+const OperatorExpression = preload("OperatorExpression.tscn")
 const ExpressionType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionType
-const FunctionType = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").FunctionType
-const FUNCTIONS = preload("res://addons/hyh.cutscene_graph/resources/graph/expressions/ExpressionResource.gd").EXPRESSION_FUNCTIONS
-const GROUP_PANEL_STYLE = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/group_panel_style.tres")
+const FunctionType = preload("../../../resources/graph/expressions/ExpressionResource.gd").FunctionType
+const FUNCTIONS = preload("../../../resources/graph/expressions/ExpressionResource.gd").EXPRESSION_FUNCTIONS
+const GROUP_PANEL_STYLE = preload("group_panel_style.tres")
 
 ## The type of the function.
 @export var function_type : FunctionType

@@ -5,7 +5,8 @@ extends HBoxContainer
 
 signal graph_open_requested(index)
 
-const _arrow_icon = preload("res://addons/hyh.cutscene_graph/icons/icon_tree_arrow_right.svg")
+const ARROW_ICON = preload("../../icons/icon_tree_arrow_right.svg")
+const UNNAMED_GRAPH = "Unnamed Graph"
 
 ## The navigability of breadcrumbs.
 @export var navigable: bool = true:
@@ -40,7 +41,7 @@ func populate(graph_stack):
 				button.mouse_default_cursor_shape = Control.CURSOR_ARROW
 			self.add_child(button)
 			var arrow = TextureRect.new()
-			arrow.texture = _arrow_icon
+			arrow.texture = ARROW_ICON
 			arrow.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 			self.add_child(arrow)
 		else:
@@ -77,7 +78,7 @@ func _get_button_text(graph, is_current):
 		return display_name
 	if name != null:
 		return name
-	return "Unnamed Cutscene"
+	return UNNAMED_GRAPH
 
 
 func _get_name(graph):
@@ -86,5 +87,5 @@ func _get_name(graph):
 	if name == null or name == "":
 		name = "unnamed"
 	if display_name == null or display_name == "":
-		display_name = "Unnamed Cutscene"
+		display_name = UNNAMED_GRAPH
 	return "%s (%s)" % [display_name, name]

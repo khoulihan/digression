@@ -1,13 +1,13 @@
 @tool
-extends "res://addons/hyh.cutscene_graph/editor/controls/expressions/MoveableExpression.gd"
+extends "MoveableExpression.gd"
 ## An expression for comparing two values.
 
 
-const OperatorClass = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/Operator.gd")
+const OperatorClass = preload("Operator.gd")
 const OperatorType = preload("../../../resources/graph/expressions/ExpressionResource.gd").OperatorType
 const ExpressionType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionType
 
-const GROUP_PANEL_STYLE = preload("res://addons/hyh.cutscene_graph/editor/controls/expressions/group_panel_style.tres")
+const GROUP_PANEL_STYLE = preload("group_panel_style.tres")
 
 @export var comparison_type : VariableType
 
