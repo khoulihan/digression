@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://bm304sfqbb25"]
+
+[ext_resource type="PackedScene" uid="uid://b08wjtbos7nqd" path="res://addons/hyh.digression/editor/controls/expressions/Expression.tscn" id="1_v1qdn"]
+[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/expressions/GroupExpression.gd" id="2_wcyjl"]
+[ext_resource type="PackedScene" uid="uid://i0xv3qj0hcsu" path="res://addons/hyh.digression/editor/controls/expressions/AddElementButton.tscn" id="3_h2t8h"]
+
+[node name="GroupExpression" instance=ExtResource("1_v1qdn")]
+script = ExtResource("2_wcyjl")
+
+[node name="AddElementButton" parent="." index="0" instance=ExtResource("3_h2t8h")]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[connection signal="add_requested" from="AddElementButton" to="." method="_on_add_element_button_add_requested"]

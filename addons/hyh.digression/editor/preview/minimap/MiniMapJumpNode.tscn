@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://byrst1f7fgswh"]
+
+[ext_resource type="PackedScene" uid="uid://qghkuf1wo64c" path="res://addons/hyh.digression/editor/preview/minimap/MiniMapNodeBase.tscn" id="1_6cdr0"]
+[ext_resource type="Theme" uid="uid://gnjaygqvbbxn" path="res://addons/hyh.digression/editor/preview/minimap/styles/set_node.tres" id="2_7x0ee"]
+
+[node name="MiniMapNodeBase" instance=ExtResource("1_6cdr0")]
+theme = ExtResource("2_7x0ee")
+slot/0/right_type = 1
+slot/0/right_color = Color(1, 1, 1, 0.498039)
+
+[node name="Label" parent="Control" index="0"]
+text = "Jump"

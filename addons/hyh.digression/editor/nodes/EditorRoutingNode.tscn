@@ -1,0 +1,88 @@
+[gd_scene load_steps=8 format=3 uid="uid://4ydpkwm8ah68"]
+
+[ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.digression/editor/nodes/styles/node_theme.tres" id="1_4kyqw"]
+[ext_resource type="Script" path="res://addons/hyh.digression/editor/nodes/EditorRoutingNode.gd" id="1_qblwl"]
+[ext_resource type="StyleBox" uid="uid://cy2mtyhieui8q" path="res://addons/hyh.digression/editor/nodes/styles/control_node.tres" id="2_n7rx5"]
+[ext_resource type="StyleBox" uid="uid://dt03i76r27rvt" path="res://addons/hyh.digression/editor/nodes/styles/control_node_selected.tres" id="3_6t1mp"]
+[ext_resource type="StyleBox" uid="uid://bfb7qelnfi6bj" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar.tres" id="4_o2vcq"]
+[ext_resource type="Texture2D" uid="uid://ljoctu7ofbol" path="res://addons/hyh.digression/icons/icon_square.svg" id="5_1bpki"]
+[ext_resource type="StyleBox" uid="uid://cg1qeowcx5883" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar_selected.tres" id="5_25cah"]
+
+[node name="EditorRoutingNode" type="GraphNode"]
+theme = ExtResource("1_4kyqw")
+theme_override_styles/panel = ExtResource("2_n7rx5")
+theme_override_styles/panel_selected = ExtResource("3_6t1mp")
+theme_override_styles/titlebar = ExtResource("4_o2vcq")
+theme_override_styles/titlebar_selected = ExtResource("5_25cah")
+slot/0/left_enabled = true
+slot/0/left_type = 0
+slot/0/left_color = Color(0.94902, 0.94902, 0.94902, 0.882353)
+slot/0/left_icon = null
+slot/0/right_enabled = true
+slot/0/right_type = 0
+slot/0/right_color = Color(0.94902, 0.94902, 0.94902, 0.882353)
+slot/0/right_icon = null
+slot/0/draw_stylebox = true
+script = ExtResource("1_qblwl")
+
+[node name="MC" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="MC"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MC/IndicatorContainer"]
+modulate = Color(0.439216, 0.501961, 0.564706, 1)
+layout_mode = 2
+texture = ExtResource("5_1bpki")
+
+[node name="TextureRect2" type="TextureRect" parent="MC/IndicatorContainer"]
+modulate = Color(0.439216, 0.501961, 0.564706, 1)
+layout_mode = 2
+texture = ExtResource("5_1bpki")
+
+[node name="TextureRect3" type="TextureRect" parent="MC/IndicatorContainer"]
+modulate = Color(0.439216, 0.501961, 0.564706, 1)
+layout_mode = 2
+texture = ExtResource("5_1bpki")
+
+[node name="TextureRect4" type="TextureRect" parent="MC/IndicatorContainer"]
+modulate = Color(0.439216, 0.501961, 0.564706, 1)
+layout_mode = 2
+texture = ExtResource("5_1bpki")
+
+[node name="TextureRect5" type="TextureRect" parent="MC/IndicatorContainer"]
+modulate = Color(0.439216, 0.501961, 0.564706, 1)
+layout_mode = 2
+texture = ExtResource("5_1bpki")
+
+[node name="TextureRect6" type="TextureRect" parent="MC/IndicatorContainer"]
+modulate = Color(0.439216, 0.501961, 0.564706, 1)
+layout_mode = 2
+texture = ExtResource("5_1bpki")
+
+[node name="TextureRect7" type="TextureRect" parent="MC/IndicatorContainer"]
+modulate = Color(0.439216, 0.501961, 0.564706, 1)
+layout_mode = 2
+texture = ExtResource("5_1bpki")
+
+[node name="TextureRect8" type="TextureRect" parent="MC/IndicatorContainer"]
+modulate = Color(0.439216, 0.501961, 0.564706, 1)
+layout_mode = 2
+texture = ExtResource("5_1bpki")
+
+[node name="TextureRect9" type="TextureRect" parent="MC/IndicatorContainer"]
+modulate = Color(0.439216, 0.501961, 0.564706, 1)
+layout_mode = 2
+texture = ExtResource("5_1bpki")
+
+[node name="Timer" type="Timer" parent="MC"]
+wait_time = 0.1
+autostart = true
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="timeout" from="MC/Timer" to="." method="_on_timer_timeout"]

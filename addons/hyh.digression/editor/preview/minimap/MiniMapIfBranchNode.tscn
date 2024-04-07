@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://b7orshqiwmg4j"]
+
+[ext_resource type="PackedScene" uid="uid://qghkuf1wo64c" path="res://addons/hyh.digression/editor/preview/minimap/MiniMapNodeBase.tscn" id="1_xgr0i"]
+[ext_resource type="Theme" uid="uid://gnjaygqvbbxn" path="res://addons/hyh.digression/editor/preview/minimap/styles/set_node.tres" id="2_57ui1"]
+
+[node name="MiniMapNodeBase" instance=ExtResource("1_xgr0i")]
+theme = ExtResource("2_57ui1")
+
+[node name="Label" parent="Control" index="0"]
+text = "Branch"

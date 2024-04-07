@@ -1,0 +1,84 @@
+[gd_scene load_steps=4 format=3 uid="uid://bvml3e7w05dn2"]
+
+[ext_resource type="Theme" uid="uid://ca8rtymjhdhox" path="res://addons/hyh.digression/editor/preview/dialogue_events/styles/dialogue_events_theme.tres" id="1_v3xti"]
+[ext_resource type="Script" path="res://addons/hyh.digression/editor/preview/dialogue_events/DialogueTextEvent.gd" id="1_vi4cx"]
+[ext_resource type="StyleBox" uid="uid://bxmk2fvuxr1pr" path="res://addons/hyh.digression/editor/preview/dialogue_events/styles/dialogue_box_indicator_green_left.tres" id="2_pghiv"]
+
+[node name="DialogueTextEvent" type="MarginContainer"]
+offset_right = 616.0
+offset_bottom = 155.0
+size_flags_horizontal = 3
+theme_override_constants/margin_right = 200
+script = ExtResource("1_vi4cx")
+
+[node name="VB" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="VB" type="VBoxContainer" parent="VB"]
+layout_mode = 2
+
+[node name="CharacterContainer" type="VBoxContainer" parent="VB/VB"]
+layout_mode = 2
+theme_override_constants/separation = -5
+
+[node name="CharacterNameLabel" type="Label" parent="VB/VB/CharacterContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.941176, 0.941176, 0.941176, 0.862745)
+theme_override_font_sizes/font_size = 14
+text = "Character Name"
+
+[node name="VariantLabel" type="Label" parent="VB/VB/CharacterContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.941176, 0.941176, 0.941176, 0.784314)
+theme_override_font_sizes/font_size = 12
+text = "Variant"
+
+[node name="HB" type="HBoxContainer" parent="VB/VB"]
+layout_mode = 2
+theme_override_constants/separation = -1
+
+[node name="DialogueIndicator" type="Panel" parent="VB/VB/HB"]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_styles/panel = ExtResource("2_pghiv")
+
+[node name="HB" type="HBoxContainer" parent="VB/VB/HB"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 14
+
+[node name="DialogueContainer" type="PanelContainer" parent="VB/VB/HB/HB"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_v3xti")
+
+[node name="DialogueLabel" type="Label" parent="VB/VB/HB/HB/DialogueContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_vertical = 1
+text = "This is where the dialogue goes."
+autowrap_mode = 3
+
+[node name="TypeLabel" type="Label" parent="VB/VB/HB/HB"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0.941176, 0.941176, 0.941176, 0.862745)
+theme_override_font_sizes/font_size = 10
+text = "Dialogue Type"
+
+[node name="MC" type="MarginContainer" parent="VB/VB"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="PropertiesContainer" type="VBoxContainer" parent="VB/VB/MC"]
+layout_mode = 2
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.07
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

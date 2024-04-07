@@ -1,0 +1,41 @@
+[gd_scene load_steps=2 format=3 uid="uid://qghkuf1wo64c"]
+
+[ext_resource type="Theme" uid="uid://bio5a7m3ppb0p" path="res://addons/hyh.digression/editor/preview/minimap/styles/default_node.tres" id="1_clgwe"]
+
+[node name="MiniMapNodeBase" type="GraphNode"]
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("1_clgwe")
+draggable = false
+selectable = false
+slot/0/left_enabled = true
+slot/0/left_type = 0
+slot/0/left_color = Color(1, 1, 1, 1)
+slot/0/left_icon = null
+slot/0/right_enabled = true
+slot/0/right_type = 0
+slot/0/right_color = Color(1, 1, 1, 1)
+slot/0/right_icon = null
+slot/0/draw_stylebox = false
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 2
+mouse_filter = 1
+
+[node name="Label" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -38.0
+offset_right = 40.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 1
+theme_override_font_sizes/font_size = 10
+text = "Really long node"
+horizontal_alignment = 1

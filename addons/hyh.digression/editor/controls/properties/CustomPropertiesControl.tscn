@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=3 uid="uid://rg4q2rccwgo5"]
+
+[ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="1_0jdfs"]
+[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/properties/CustomPropertiesControl.gd" id="1_p6s5m"]
+
+[node name="CustomPropertiesControl" type="MarginContainer"]
+offset_right = 194.0
+offset_bottom = 35.0
+size_flags_horizontal = 3
+script = ExtResource("1_p6s5m")
+
+[node name="LinkButton" type="LinkButton" parent="."]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.364706, 0.882353, 1)
+text = "Add custom properties..."
+
+[node name="VB" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="PropertiesContainer" type="VBoxContainer" parent="VB"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="AddButton" type="Button" parent="VB"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Add Custom Property"
+icon = ExtResource("1_0jdfs")
+flat = true
+
+[connection signal="pressed" from="VB/AddButton" to="." method="_on_add_button_pressed"]

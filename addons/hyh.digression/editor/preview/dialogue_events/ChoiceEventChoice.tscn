@@ -1,0 +1,36 @@
+[gd_scene load_steps=3 format=3 uid="uid://d2vbxgl24awpj"]
+
+[ext_resource type="Texture2D" uid="uid://dkeputvqdl5bg" path="res://addons/hyh.digression/icons/icon_tree_arrow_right.svg" id="1_gb1od"]
+[ext_resource type="Script" path="res://addons/hyh.digression/editor/preview/dialogue_events/ChoiceEventChoice.gd" id="1_lgiro"]
+
+[node name="ChoiceEventChoice" type="VBoxContainer"]
+offset_left = 209.0
+offset_right = 209.0
+offset_bottom = 31.0
+script = ExtResource("1_lgiro")
+
+[node name="VB" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Button" type="Button" parent="VB"]
+layout_mode = 2
+text = "Choice Text"
+icon = ExtResource("1_gb1od")
+flat = true
+
+[node name="Label" type="Label" parent="VB"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.941176, 0.941176, 0.941176, 0.862745)
+theme_override_font_sizes/font_size = 10
+text = "Visited 0 times"
+vertical_alignment = 2
+
+[node name="MC" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+
+[node name="PropertiesContainer" type="VBoxContainer" parent="MC"]
+layout_mode = 2
+
+[connection signal="pressed" from="VB/Button" to="." method="_on_button_pressed"]

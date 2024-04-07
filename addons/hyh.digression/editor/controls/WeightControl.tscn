@@ -1,0 +1,36 @@
+[gd_scene load_steps=3 format=3 uid="uid://m2fx01xh1uml"]
+
+[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/WeightControl.gd" id="1_6f7hx"]
+[ext_resource type="Texture2D" uid="uid://bta3jvd470c36" path="res://addons/hyh.digression/icons/icon_close.svg" id="1_dc2hy"]
+
+[node name="WeightControl" type="MarginContainer"]
+script = ExtResource("1_6f7hx")
+
+[node name="SetWeightButton" type="LinkButton" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.364706, 0.882353, 1)
+text = "Set weight..."
+
+[node name="Weight" type="HBoxContainer" parent="."]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Weight"]
+layout_mode = 2
+text = "Weight:"
+
+[node name="WeightSpinBox" type="SpinBox" parent="Weight"]
+layout_mode = 2
+min_value = 1.0
+max_value = 10000.0
+value = 1.0
+
+[node name="ClearButton" type="Button" parent="Weight"]
+layout_mode = 2
+theme_override_colors/icon_normal_color = Color(1, 0, 0, 1)
+icon = ExtResource("1_dc2hy")
+flat = true
+
+[connection signal="pressed" from="SetWeightButton" to="." method="_on_set_weight_button_pressed"]
+[connection signal="value_changed" from="Weight/WeightSpinBox" to="." method="_on_weight_spin_box_value_changed"]
+[connection signal="pressed" from="Weight/ClearButton" to="." method="_on_clear_button_pressed"]

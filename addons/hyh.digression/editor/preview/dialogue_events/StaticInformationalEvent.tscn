@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://mgp5y07pgu5h"]
+
+[ext_resource type="Script" path="res://addons/hyh.digression/editor/preview/dialogue_events/StaticInformationalEvent.gd" id="1_kblbi"]
+[ext_resource type="PackedScene" uid="uid://f44ru47mc3pp" path="res://addons/hyh.digression/editor/validation/ValidationWarning.tscn" id="2_bt4kn"]
+
+[node name="StaticInformationalEvent" type="MarginContainer"]
+offset_right = 300.0
+offset_bottom = 23.0
+size_flags_horizontal = 3
+script = ExtResource("1_kblbi")
+
+[node name="HB" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="ValidationWarning" parent="HB" instance=ExtResource("2_bt4kn")]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HB"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.941176, 0.941176, 0.941176, 0.862745)
+theme_override_font_sizes/font_size = 14
+text = "Something happened"
+horizontal_alignment = 1
+autowrap_mode = 3

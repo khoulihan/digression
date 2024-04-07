@@ -1,0 +1,43 @@
+[gd_scene load_steps=5 format=3 uid="uid://vqd5fuj5dpnv"]
+
+[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/properties/CustomPropertyControl.gd" id="1_dhnfl"]
+[ext_resource type="PackedScene" uid="uid://b46vwf6pxf1tl" path="res://addons/hyh.digression/editor/controls/expressions/OperatorExpression.tscn" id="1_voebf"]
+[ext_resource type="StyleBox" uid="uid://bxxrrj712pltv" path="res://addons/hyh.digression/editor/controls/BracketPanel.tres" id="2_janqk"]
+[ext_resource type="Texture2D" uid="uid://bta3jvd470c36" path="res://addons/hyh.digression/icons/icon_close.svg" id="2_m16bb"]
+
+[node name="CustomPropertyControl" type="HBoxContainer"]
+theme_override_constants/separation = 20
+script = ExtResource("1_dhnfl")
+
+[node name="PropertyNameLabel" type="Label" parent="."]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Property Name"
+
+[node name="PC" type="PanelContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = ExtResource("2_janqk")
+
+[node name="MC" type="MarginContainer" parent="PC"]
+layout_mode = 2
+theme_override_constants/margin_left = 9
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 9
+theme_override_constants/margin_bottom = 3
+
+[node name="OperatorExpression" parent="PC/MC" instance=ExtResource("1_voebf")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="RemoveButton" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_colors/icon_normal_color = Color(1, 0, 0, 1)
+icon = ExtResource("2_m16bb")
+flat = true
+
+[connection signal="modified" from="PC/MC/OperatorExpression" to="." method="_on_operator_expression_modified"]
+[connection signal="size_changed" from="PC/MC/OperatorExpression" to="." method="_on_operator_expression_size_changed"]
+[connection signal="pressed" from="RemoveButton" to="." method="_on_remove_button_pressed"]

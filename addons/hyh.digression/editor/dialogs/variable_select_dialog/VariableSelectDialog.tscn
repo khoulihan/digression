@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://bsvmdu0m5l83l"]
+
+[ext_resource type="Script" path="res://addons/hyh.digression/editor/dialogs/variable_select_dialog/VariableSelectDialog.gd" id="1_6k4s4"]
+[ext_resource type="PackedScene" uid="uid://drhcsh36hritm" path="res://addons/hyh.digression/editor/dialogs/variable_select_dialog/VariableSelectDialogContents.tscn" id="1_rm0su"]
+
+[node name="VariableSelectDialog" type="Window"]
+title = "Select Variable"
+size = Vector2i(1200, 600)
+transient = true
+exclusive = true
+script = ExtResource("1_6k4s4")
+
+[node name="BackgroundPanel" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="VariableSelectDialogContents" parent="." instance=ExtResource("1_rm0su")]
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="cancelled" from="VariableSelectDialogContents" to="." method="_on_variable_select_dialog_contents_cancelled"]
+[connection signal="selected" from="VariableSelectDialogContents" to="." method="_on_variable_select_dialog_contents_selected"]

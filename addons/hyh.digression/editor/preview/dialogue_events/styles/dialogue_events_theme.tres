@@ -1,0 +1,10 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://ca8rtymjhdhox"]
+
+[ext_resource type="StyleBox" uid="uid://4r2jc1211j8i" path="res://addons/hyh.digression/editor/preview/dialogue_events/styles/dialogue_box_panel_green_left.tres" id="1_87om1"]
+
+[resource]
+Label/colors/font_color = Color(0.141176, 0.141176, 0.141176, 1)
+PanelContainer/styles/panel = ExtResource("1_87om1")
+RichTextLabel/colors/default_color = Color(0.141176, 0.141176, 0.141176, 1)
+RichTextLabel/styles/focus = null
+RichTextLabel/styles/normal = null

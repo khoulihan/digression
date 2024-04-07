@@ -1,0 +1,54 @@
+[gd_scene load_steps=3 format=3 uid="uid://c31q0dbk4i25w"]
+
+[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/VariableSelectionControl.gd" id="1_0c44g"]
+[ext_resource type="Texture2D" uid="uid://c5ll5urk64ggp" path="res://addons/hyh.digression/icons/icon_gui_option_arrow.svg" id="2_t4peq"]
+
+[node name="VariableSelectionControl" type="HBoxContainer"]
+theme_override_constants/separation = 0
+script = ExtResource("1_0c44g")
+
+[node name="ScopeMarginContainer" type="MarginContainer" parent="."]
+visible = false
+layout_mode = 2
+mouse_filter = 0
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_right = 5
+
+[node name="ScopeIcon" type="TextureRect" parent="ScopeMarginContainer"]
+modulate = Color(0.141176, 0.141176, 0.141176, 0.588235)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="TypeMarginContainer" type="MarginContainer" parent="."]
+visible = false
+layout_mode = 2
+mouse_filter = 0
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_right = 10
+
+[node name="TypeIcon" type="TextureRect" parent="TypeMarginContainer"]
+modulate = Color(0.141176, 0.141176, 0.141176, 0.588235)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="SelectionName" type="LineEdit" parent="."]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 0
+placeholder_text = "Select variable..."
+editable = false
+flat = true
+
+[node name="MenuButton" type="MenuButton" parent="."]
+layout_mode = 2
+icon = ExtResource("2_t4peq")
+item_count = 2
+popup/item_0/text = "Select..."
+popup/item_0/id = 0
+popup/item_1/text = "New Variable..."
+popup/item_1/id = 1
+
+[connection signal="gui_input" from="ScopeMarginContainer" to="." method="_on_scope_margin_container_gui_input"]
+[connection signal="gui_input" from="TypeMarginContainer" to="." method="_on_type_margin_container_gui_input"]
+[connection signal="gui_input" from="SelectionName" to="." method="_on_selection_name_gui_input"]

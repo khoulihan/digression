@@ -1,0 +1,39 @@
+[gd_scene load_steps=5 format=3 uid="uid://c7ga38jilebfu"]
+
+[ext_resource type="PackedScene" uid="uid://bvml3e7w05dn2" path="res://addons/hyh.digression/editor/preview/dialogue_events/DialogueTextEvent.tscn" id="1_lyjbb"]
+[ext_resource type="Script" path="res://addons/hyh.digression/editor/preview/dialogue_events/PlayerDialogueTextEvent.gd" id="2_cy2jo"]
+[ext_resource type="StyleBox" uid="uid://cw7r00c5xr4xr" path="res://addons/hyh.digression/editor/preview/dialogue_events/styles/dialogue_box_panel_green_right.tres" id="2_w03nt"]
+[ext_resource type="StyleBox" uid="uid://bq5lkop8a7i7e" path="res://addons/hyh.digression/editor/preview/dialogue_events/styles/dialogue_box_indicator_green_right.tres" id="4_owt07"]
+
+[node name="PlayerDialogueTextEvent" instance=ExtResource("1_lyjbb")]
+theme_override_constants/margin_left = 200
+theme_override_constants/margin_right = 1
+script = ExtResource("2_cy2jo")
+
+[node name="CharacterNameLabel" parent="VB/VB/CharacterContainer" index="0"]
+horizontal_alignment = 2
+
+[node name="VariantLabel" parent="VB/VB/CharacterContainer" index="1"]
+horizontal_alignment = 2
+
+[node name="DialogueIndicator" parent="VB/VB/HB" index="0"]
+visible = false
+
+[node name="TypeLabelLeft" type="Label" parent="VB/VB/HB/HB" index="0"]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0.941176, 0.941176, 0.941176, 0.862745)
+theme_override_font_sizes/font_size = 10
+text = "dialogue"
+
+[node name="DialogueContainer" parent="VB/VB/HB/HB" index="1"]
+theme_override_styles/panel = ExtResource("2_w03nt")
+
+[node name="TypeLabel" parent="VB/VB/HB/HB" index="2"]
+visible = false
+
+[node name="DialogueIndicatorRight" type="Panel" parent="VB/VB/HB" index="2"]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_styles/panel = ExtResource("4_owt07")

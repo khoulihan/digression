@@ -1,0 +1,48 @@
+[gd_scene load_steps=5 format=3 uid="uid://dk0btqqtgur07"]
+
+[ext_resource type="Script" path="res://addons/hyh.digression/editor/branches/EditorRandomValue.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.digression/icons/icon_remove.svg" id="2"]
+[ext_resource type="PackedScene" uid="uid://mvafher5yr07" path="res://addons/hyh.digression/editor/controls/ConditionControl.tscn" id="2_e0v4u"]
+[ext_resource type="PackedScene" uid="uid://m2fx01xh1uml" path="res://addons/hyh.digression/editor/controls/WeightControl.tscn" id="2_kl24e"]
+
+[node name="RandomValue" type="MarginContainer"]
+offset_right = 324.0
+offset_bottom = 72.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1")
+
+[node name="VB" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HSeparator" type="HSeparator" parent="VB"]
+layout_mode = 2
+
+[node name="HB" type="HBoxContainer" parent="VB"]
+layout_mode = 2
+
+[node name="VariableContainer" type="GridContainer" parent="VB/HB"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/v_separation = 10
+
+[node name="WeightControl" parent="VB/HB/VariableContainer" instance=ExtResource("2_kl24e")]
+layout_mode = 2
+
+[node name="ConditionControl" parent="VB/HB/VariableContainer" instance=ExtResource("2_e0v4u")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RemoveButton" type="Button" parent="VB/HB"]
+layout_mode = 2
+size_flags_vertical = 0
+icon = ExtResource("2")
+flat = true
+
+[connection signal="changed" from="VB/HB/VariableContainer/WeightControl" to="." method="_on_weight_control_changed"]
+[connection signal="cleared" from="VB/HB/VariableContainer/WeightControl" to="." method="_on_weight_control_cleared"]
+[connection signal="size_changed" from="VB/HB/VariableContainer/ConditionControl" to="." method="_on_condition_control_size_changed"]
+[connection signal="pressed" from="VB/HB/RemoveButton" to="." method="_on_remove_button_pressed"]
