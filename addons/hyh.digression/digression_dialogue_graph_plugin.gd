@@ -12,7 +12,7 @@ enum ToolMenuItems {
 
 const SettingsHelper = preload("editor/SettingsHelper.gd")
 const Logging = preload("utility/Logging.gd")
-const CutsceneGraphEditor = preload("editor/CutsceneGraphEditor.tscn")
+const DialogueGraphEditor = preload("editor/DialogueGraphEditor.tscn")
 const DigressionDialogue = preload("editor/DigressionDialogue.gd")
 const GraphTypeEditDialog = preload("editor/dialogs/graph_types_edit/GraphTypeEditDialog.tscn")
 const GraphTypeEditDialogClass = preload("editor/dialogs/graph_types_edit/GraphTypeEditDialog.gd")
@@ -145,7 +145,7 @@ func _create_default_project_settings():
 
 func _create_editor_host():
 	_logger.debug("Creating host...")
-	editor_host = preload("editor/CutsceneGraphEditorHost.tscn").instantiate()
+	editor_host = preload("editor/DialogueGraphEditorHost.tscn").instantiate()
 	editor_button = add_control_to_bottom_panel(editor_host, _get_plugin_name())
 	_get_editor()
 	

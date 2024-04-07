@@ -1,7 +1,7 @@
 [gd_scene load_steps=35 format=3 uid="uid://dd6hd0khfm6e3"]
 
 [ext_resource type="Texture2D" uid="uid://cphlblvt01plb" path="res://addons/hyh.digression/icons/icon_chat.svg" id="1_us012"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/preview/CutsceneGraphPreview.gd" id="1_w87rg"]
+[ext_resource type="Script" path="res://addons/hyh.digression/editor/preview/DialogueGraphPreview.gd" id="1_w87rg"]
 [ext_resource type="Script" path="res://addons/hyh.digression/editor/DigressionDialogueController.gd" id="2_n6g8g"]
 [ext_resource type="PackedScene" uid="uid://dhubj3hnf0rxp" path="res://addons/hyh.digression/editor/controls/GraphBreadcrumbs.tscn" id="2_vtmjw"]
 [ext_resource type="Script" path="res://addons/hyh.digression/editor/DigressionDialogueVariableStore.gd" id="3_7mchj"]
@@ -110,7 +110,7 @@ keycode = 4194309
 resource_name = "Start Cutscene"
 events = [SubResource("InputEventKey_0cx2p")]
 
-[node name="CutsceneGraphPreview" type="VBoxContainer"]
+[node name="DialogueGraphPreview" type="VBoxContainer"]
 offset_right = 1612.0
 offset_bottom = 761.0
 script = ExtResource("1_w87rg")
