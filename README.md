@@ -1,4 +1,4 @@
-# Cutscene Graph Editor
+# Digression - Dialogue Graph Editor for Godot 4
 
 This is a plugin for [Godot Engine](https://godotengine.org) to create and edit graphs of cutscenes and dialogue resources.
 
