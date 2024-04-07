@@ -161,7 +161,11 @@ func get_selected_variant():
 ## Select the specified character for the embedded dialogue node.
 func select_character(character):
 	# This will be used when displaying a graph initially.
-	var character_select = _character_select
+	var character_select := _character_select
+	if not character:
+		character_select.select(-1)
+		_populate_variants(null)
+		return
 	for index in range(0, _characters.size()):
 		var c = _characters[index]
 		if c == character:
@@ -171,8 +175,11 @@ func select_character(character):
 
 ## Select the specified variant for the embedded dialogue node.
 func select_variant(mood):
-	var character_select = _character_select
-	var variant_select = _variant_select
+	var character_select := _character_select
+	var variant_select := _variant_select
+	if not mood:
+		variant_select.select(-1)
+		return
 	if character_select.selected != -1:
 		# This will be used when displaying a graph initially.
 		var variants = _characters[character_select.selected].character_variants
@@ -543,3 +550,11 @@ func _on_custom_properties_control_remove_property_requested(property_name):
 
 func _on_custom_properties_control_size_changed(size_change):
 	self.size = Vector2(self.size.x, self.size.y + size_change)
+
+
+func _on_clear_character_button_pressed():
+	select_character(null)
+
+
+func _on_clear_variant_button_pressed():
+	select_variant(null)
