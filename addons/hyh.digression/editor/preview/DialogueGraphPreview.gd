@@ -810,7 +810,7 @@ func _on_dialogue_node_character_displayed():
 
 
 func _on_choice_selected(choice, process):
-	process.proceed(choice)
+	process.proceed_with_choice(choice)
 
 
 func _on_continue_requested():

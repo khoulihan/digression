@@ -51,6 +51,15 @@ signal choice_display_requested(
 
 #endregion
 
+#region Enums
+
+enum ProceedSignalReturnValues {
+	CHOICE,
+	VALUE,
+}
+
+#endregion
+
 #region Constants
 
 const Logging = preload("../utility/Logging.gd")
@@ -75,6 +84,8 @@ const ActionReturnType = ActionNode.ActionReturnType
 const ActionArgumentType = ActionNode.ActionArgumentType
 const VariableScope = VariableSetNode.VariableScope
 const VariableType = VariableSetNode.VariableType
+
+const LAST_RETURN_VALUE_KEY = "_last_return_value"
 
 #endregion
 
@@ -134,7 +145,10 @@ func _ready():
 		"digression_dialogue_graph_editor/choice_types"
 	)
 	
+	# Some built-in variables are appropriate to keep in the
+	# transient store, so those are pre-populated here.
 	_transient_store = {}
+	_transient_store[LAST_RETURN_VALUE_KEY] = null
 	
 	_expression_evaluator = ExpressionEvaluator.new()
 	_expression_evaluator.transient_store = _transient_store
@@ -323,10 +337,13 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 				properties,
 				process
 			)
-			await process.ready_to_proceed
+			var response = await process.ready_to_proceed
 			if process.was_cancelled():
 				_current_graph = null
 				return
+			_transient_store[LAST_RETURN_VALUE_KEY] = response[
+				ProceedSignalReturnValues.VALUE
+			]
 	else:
 		var process = _await_response()
 		_emit_dialogue_signal_variant.call_deferred(
@@ -339,10 +356,13 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 			properties,
 			process
 		)
-		await process.ready_to_proceed
+		var response = await process.ready_to_proceed
 		if process.was_cancelled():
 			_current_graph = null
 			return
+		_transient_store[LAST_RETURN_VALUE_KEY] = response[
+			ProceedSignalReturnValues.VALUE
+		]
 	# If this dialogue is the child of a choice node,
 	# it is the choice node that needs to decide the
 	# next node to process.
@@ -451,11 +471,15 @@ func _process_choice_node():
 			choices,
 			process
 		)
-		var choice = await process.ready_to_proceed
+		var response = await process.ready_to_proceed
 		if process.was_cancelled():
 			_current_graph = null
 			return
-		if !choices.is_empty():
+		var choice = response[ProceedSignalReturnValues.CHOICE]
+		_transient_store[LAST_RETURN_VALUE_KEY] = response[
+			ProceedSignalReturnValues.VALUE
+		]
+		if !choices.is_empty() and choice != null:
 			var c = _current_node.choices[choice]
 			_increment_visit_count(c)
 			_current_node = _get_node_by_id(
@@ -474,6 +498,7 @@ func _process_action_node():
 	
 	var arguments = _get_action_arguments()
 	
+	var response = null
 	var ret_value = null
 	
 	if _current_node.action_mechanism == ActionMechanism.SIGNAL:
@@ -482,10 +507,13 @@ func _process_action_node():
 			arguments,
 			process
 		)
-		ret_value = await process.ready_to_proceed
+		response = await process.ready_to_proceed
 		if process.was_cancelled():
 			_current_graph = null
 			return
+		ret_value = response[
+			ProceedSignalReturnValues.VALUE
+		]
 	else:
 		var action_node = \
 			owner.get_node(_current_node.node) \
@@ -513,10 +541,13 @@ func _process_action_node():
 				_current_node.action_or_method_name,
 				arguments,
 			)
-			ret_value = await process.ready_to_proceed
+			response = await process.ready_to_proceed
 			if process.was_cancelled():
 				_current_graph = null
 				return
+			ret_value = response[
+				ProceedSignalReturnValues.VALUE
+			]
 	
 	_handle_action_return(ret_value)
 	_advance_to_next_node()
@@ -647,6 +678,7 @@ func _get_action_arguments():
 
 
 func _handle_action_return(return_value):
+	_transient_store[LAST_RETURN_VALUE_KEY] = return_value
 	if _current_node.return_type == ActionReturnType.ASSIGN_TO_VARIABLE:
 		var v = _current_node.return_variable
 		if v == null or v.is_empty():
@@ -1033,26 +1065,31 @@ class GraphState:
 
 
 class ProceedSignal:
-	signal ready_to_proceed(return_value)
+	signal ready_to_proceed(choice, return_value)
 	
-	var _cancelled = false
-	var _signalled = false
+	var _cancelled := false
+	var _signalled := false
 	var return_value = null
 	
-	func proceed(return_value=null):
+	func proceed(return_value=null) -> void:
 		_signalled = true
 		self.return_value = return_value
-		ready_to_proceed.emit(return_value)
+		ready_to_proceed.emit(null, return_value)
 	
-	func cancel():
+	func proceed_with_choice(choice: int, return_value=null) -> void:
+		_signalled = true
+		self.return_value = return_value
+		ready_to_proceed.emit(choice, return_value)
+	
+	func cancel() -> void:
 		_signalled = true
 		_cancelled = true
 		ready_to_proceed.emit()
 	
-	func was_cancelled():
+	func was_cancelled() -> bool:
 		return self._cancelled
 	
-	func signalled():
+	func signalled() -> bool:
 		return _signalled
 
 
