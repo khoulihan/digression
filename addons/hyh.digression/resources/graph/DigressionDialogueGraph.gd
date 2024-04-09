@@ -8,7 +8,7 @@ const PropertyUse = preload("../../editor/dialogs/property_select_dialog/Propert
 const VariableType = preload("VariableSetNode.gd").VariableType
 
 # Utility classes.
-const SettingsHelper = preload("../../editor/SettingsHelper.gd")
+const SettingsHelper = preload("../../editor/helpers/SettingsHelper.gd")
 const ResourceHelper = preload("../../utility/ResourceHelper.gd")
 
 const AnchorNode = preload("AnchorNode.gd")

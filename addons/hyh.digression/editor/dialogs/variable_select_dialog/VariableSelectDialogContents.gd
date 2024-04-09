@@ -13,7 +13,7 @@ enum MatchesTreeColumns {
 	TAGS,
 }
 
-const SettingsHelper = preload("../../SettingsHelper.gd")
+const SettingsHelper = preload("../../helpers/SettingsHelper.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const BOOL_ICON = preload("../../../icons/icon_type_bool.svg")
 const INT_ICON = preload("../../../icons/icon_type_int.svg")

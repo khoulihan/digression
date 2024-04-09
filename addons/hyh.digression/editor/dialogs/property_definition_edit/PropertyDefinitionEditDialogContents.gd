@@ -15,7 +15,7 @@ enum PropertyDefinitionEditPopupMenuItem {
 	REMOVE,
 }
 
-const SettingsHelper = preload("../../SettingsHelper.gd")
+const SettingsHelper = preload("../../helpers/SettingsHelper.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const WARNING_ICON = preload("../../../icons/icon_node_warning.svg")
 const NEW_PROPERTY_NAME = "new_property"

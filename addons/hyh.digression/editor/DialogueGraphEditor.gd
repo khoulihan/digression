@@ -68,7 +68,7 @@ enum ConnectionTypes {
 #region Constants
 
 # Utility classes.
-const SettingsHelper = preload("SettingsHelper.gd")
+const SettingsHelper = preload("helpers/SettingsHelper.gd")
 const Logging = preload("../utility/Logging.gd")
 const TranslationKey = preload("../utility/TranslationKey.gd")
 

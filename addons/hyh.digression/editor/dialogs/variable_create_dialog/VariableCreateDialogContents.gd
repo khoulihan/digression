@@ -7,7 +7,7 @@ signal tag_added()
 signal cancelled()
 signal created(variable)
 
-const SettingsHelper = preload("../../SettingsHelper.gd")
+const SettingsHelper = preload("../../helpers/SettingsHelper.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
 const TagControlScene = preload("../../controls/TagControl.tscn")

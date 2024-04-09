@@ -10,7 +10,7 @@ enum ToolMenuItems {
 	EDIT_PROPERTY_DEFINITIONS,
 }
 
-const SettingsHelper = preload("editor/SettingsHelper.gd")
+const SettingsHelper = preload("editor/helpers/SettingsHelper.gd")
 const Logging = preload("utility/Logging.gd")
 const DialogueGraphEditor = preload("editor/DialogueGraphEditor.tscn")
 const DigressionDialogue = preload("editor/DigressionDialogue.gd")

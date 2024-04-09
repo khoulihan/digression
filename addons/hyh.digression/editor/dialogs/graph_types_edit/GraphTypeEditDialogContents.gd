@@ -17,7 +17,7 @@ enum GraphTypePopupMenuItem {
 	REMOVE,
 }
 
-const SettingsHelper = preload("../../SettingsHelper.gd")
+const SettingsHelper = preload("../../helpers/SettingsHelper.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const DEFAULT_ICON = preload("../../../icons/icon_favourites.svg")
 const WARNING_ICON = preload("../../../icons/icon_node_warning.svg")
