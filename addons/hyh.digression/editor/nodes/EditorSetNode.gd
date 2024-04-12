@@ -3,6 +3,8 @@ extends "EditorGraphNodeBase.gd"
 ## Editor node for managing a Set node resource.
 
 
+const VariablesHelper = preload("../helpers/VariablesHelper.gd")
+
 var _variable_name
 var _variable_scope
 var _variable_type
@@ -20,7 +22,7 @@ func configure_for_node(g, n):
 	set_scope(n.scope)
 	if _variable_name != null and not _variable_name.is_empty():
 		_variable_selection_control.configure_for_variable(
-			_variable_name,
+			VariablesHelper.create_display_name(_variable_name),
 			_variable_scope,
 			_variable_type,
 		)
@@ -108,7 +110,7 @@ func _on_variable_selection_control_variable_selected(variable):
 	set_scope(variable['scope'])
 	set_type(variable['type'])
 	_variable_selection_control.configure_for_variable(
-		_variable_name,
+		VariablesHelper.create_display_name(_variable_name),
 		_variable_scope,
 		_variable_type,
 	)

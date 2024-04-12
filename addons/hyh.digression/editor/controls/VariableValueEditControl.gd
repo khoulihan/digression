@@ -14,6 +14,7 @@ enum ValueSelectionMode {
 }
 
 const Logging = preload("../../utility/Logging.gd")
+const VariablesHelper = preload("../helpers/VariablesHelper.gd")
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
 
 # TODO: Setting this in the inspector does not work because the controls are not
@@ -127,7 +128,7 @@ func set_variable(variable, deserialising=false):
 	_selecting_variable = true
 	_selected_variable = variable
 	_variable_selection_control.configure_for_variable(
-		variable["name"],
+		VariablesHelper.create_display_name(variable["name"]),
 		variable["scope"],
 		variable["type"],
 	)

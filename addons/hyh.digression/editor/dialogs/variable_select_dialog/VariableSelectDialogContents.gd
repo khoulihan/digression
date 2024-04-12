@@ -14,6 +14,7 @@ enum MatchesTreeColumns {
 }
 
 const SettingsHelper = preload("../../helpers/SettingsHelper.gd")
+const VariablesHelper = preload("../../helpers/VariablesHelper.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const BOOL_ICON = preload("../../../icons/icon_type_bool.svg")
 const INT_ICON = preload("../../../icons/icon_type_int.svg")
@@ -44,7 +45,7 @@ var _variables_for_search = []
 func _ready():
 	_type_restriction = get_parent().type_restriction
 	_all_variables = _filter_by_type_restriction(
-		SettingsHelper.get_variables()
+		_get_all_variables()
 	)
 	_perform_search()
 	_matches_tree.set_column_expand(MatchesTreeColumns.SCOPE, false)
@@ -59,8 +60,16 @@ func _ready():
 	_recent_tree.set_column_expand(MatchesTreeColumns.SCOPE, false)
 	_recent_tree.set_column_expand(MatchesTreeColumns.TYPE, false)
 	_recent_tree.set_column_expand(MatchesTreeColumns.NAME, true)
+	
 	_populate_matches()
 	_load_favourites_and_recent()
+
+
+func _get_all_variables() -> Array[Dictionary]:
+	var variables := SettingsHelper.get_variables().duplicate()
+	for bi in VariablesHelper.BUILT_IN_VARIABLES:
+		variables.append(bi.duplicate(true))
+	return variables
 
 
 func _filter_by_type_restriction(vars):
@@ -125,19 +134,22 @@ func _populate_matches():
 	var root = _matches_tree.create_item()
 	for v in _variables_for_search:
 		var item = root.create_child()
+		item.set_meta('scope', v['scope'])
 		item.set_cell_mode(MatchesTreeColumns.SCOPE, TreeItem.CELL_MODE_ICON)
 		item.set_icon(MatchesTreeColumns.SCOPE, _icon_for_scope(v['scope']))
 		item.set_tooltip_text(
 			MatchesTreeColumns.SCOPE,
 			_tooltip_for_scope(v['scope'])
 		)
+		item.set_meta('type', v['type'])
 		item.set_cell_mode(MatchesTreeColumns.TYPE, TreeItem.CELL_MODE_ICON)
 		item.set_icon(MatchesTreeColumns.TYPE, _icon_for_type(v['type']))
 		item.set_tooltip_text(
 			MatchesTreeColumns.TYPE,
 			_tooltip_for_type(v['type'])
 		)
-		item.set_text(MatchesTreeColumns.NAME, v['name'])
+		item.set_meta('name', v['name'])
+		item.set_text(MatchesTreeColumns.NAME, VariablesHelper.create_display_name(v['name']))
 		item.set_tooltip_text(
 			MatchesTreeColumns.NAME,
 			"Variable Name"
@@ -171,7 +183,7 @@ func _load_favourites_and_recent():
 
 func _populate_sidebar(sidebar, items):
 	for item in items:
-		var v = _get_match_by_name(item)
+		var v = _get_match_by_name_and_type(item['name'], item['type'])
 		if v == null:
 			continue
 		_add_to_sidebar(sidebar, v)
@@ -181,18 +193,24 @@ func _add_to_sidebar(sidebar, v, index=-1):
 	var root = sidebar.get_root()
 	var item = root.create_child(index)
 	item.set_cell_mode(MatchesTreeColumns.SCOPE, TreeItem.CELL_MODE_ICON)
+	item.set_meta('scope', v['scope'])
 	item.set_icon(MatchesTreeColumns.SCOPE, _icon_for_scope(v['scope']))
 	item.set_tooltip_text(
 		MatchesTreeColumns.SCOPE,
 		_tooltip_for_scope(v['scope'])
 	)
 	item.set_cell_mode(MatchesTreeColumns.TYPE, TreeItem.CELL_MODE_ICON)
+	item.set_meta('type', v['type'])
 	item.set_icon(MatchesTreeColumns.TYPE, _icon_for_type(v['type']))
 	item.set_tooltip_text(
 		MatchesTreeColumns.TYPE,
 		_tooltip_for_type(v['type'])
 	)
-	item.set_text(MatchesTreeColumns.NAME, v['name'])
+	item.set_text(
+		MatchesTreeColumns.NAME,
+		VariablesHelper.create_display_name(v['name'])
+	)
+	item.set_meta('name', v['name'])
 	item.set_tooltip_text(
 		MatchesTreeColumns.NAME,
 		"Variable Name"
@@ -256,11 +274,11 @@ func _icon_for_type(t):
 	return null
 
 
-func _get_match_by_name(name):
+func _get_match_by_name_and_type(name, type):
 	# Is this appropriate? Are we not going to allow the same name
 	# for different scopes, for example?
 	for v in _variables_for_search:
-		if v['name'] == name:
+		if v['name'] == name and v['type'] == type:
 			return v
 	return null
 
@@ -270,8 +288,9 @@ func _set_description_for_selection():
 	if selected == null:
 		_description_label.text = ""
 		return
-	var selected_variable = _get_match_by_name(
-		selected.get_text(MatchesTreeColumns.NAME)
+	var selected_variable = _get_match_by_name_and_type(
+		selected.get_meta('name'),
+		selected.get_meta('type')
 	)
 	if selected_variable == null:
 		_description_label.text = ""
@@ -283,26 +302,48 @@ func _highlight_sidebar_selection(sidebar: Tree):
 	var selection = sidebar.get_selected()
 	if selection == null:
 		return
-	var selected_name = selection.get_text(MatchesTreeColumns.NAME)
-	_search_edit.text = selected_name
+	var selected_name = selection.get_meta('name')
+	var selected_type = selection.get_meta('type')
+	_search_edit.text = VariablesHelper.create_display_name(selected_name)
 	_scope_options_button.select(-1)
 	_perform_search_and_refresh()
 	var matches_root = _matches_tree.get_root()
 	for row in matches_root.get_children():
-		if row.get_text(MatchesTreeColumns.NAME) == selected_name:
+		if row.get_meta('name') == selected_name and \
+			row.get_meta('type') == selected_type:
 			_matches_tree.set_selected(row, MatchesTreeColumns.NAME)
 			break
 
 
-func _save_to_recent(variable_name):
+func _contains_variable(a, name, type):
+	for v in a:
+		if v['name'] == name and v['type'] == type:
+			return true
+	return false
+
+
+func _index_of(a, name, type):
+	for i in range(0, len(a)):
+		if a[i]['name'] == name and a[i]['type'] == type:
+			return i
+	return -1
+
+
+func _save_to_recent(variable_name, variable_type):
 	var existing_state = _load_state()
 	if existing_state == null:
 		existing_state = VariableSelectDialogState.new()
-	if variable_name in existing_state.recent:
+	if _contains_variable(existing_state.recent, variable_name, variable_type):
 		existing_state.recent.remove_at(
-			existing_state.recent.find(variable_name)
+			_index_of(existing_state.recent, variable_name, variable_type)
 		)
-	existing_state.recent.insert(0, variable_name)
+	existing_state.recent.insert(
+		0,
+		{
+			'name': variable_name,
+			'type': variable_type
+		}
+	)
 	_save_state(
 		existing_state.favourites,
 		existing_state.recent
@@ -323,7 +364,7 @@ func _load_state() -> VariableSelectDialogState:
 	return state
 
 
-func _save_state(favourites: Array[String], recent: Array[String]):
+func _save_state(favourites: Array[Dictionary], recent: Array[Dictionary]):
 	var config = ConfigFile.new()
 	config.set_value('state', 'favourites', favourites)
 	config.set_value('state', 'recent', recent)
@@ -380,11 +421,13 @@ func _on_select_button_pressed():
 		alert.queue_free()
 		return
 	
-	var variable_name = selection.get_text(MatchesTreeColumns.NAME)
-	var variable = _get_match_by_name(
-		variable_name
+	var variable_name = selection.get_meta('name')
+	var variable_type = selection.get_meta('type')
+	var variable = _get_match_by_name_and_type(
+		variable_name,
+		variable_type
 	)
-	_save_to_recent(variable_name)
+	_save_to_recent(variable_name, variable_type)
 	selected.emit(variable)
 
 
@@ -392,19 +435,26 @@ func _on_favourite_button_pressed():
 	var selection = _matches_tree.get_selected()
 	if selection == null:
 		return
-	var selection_name = selection.get_text(MatchesTreeColumns.NAME)
+	var selection_name = selection.get_meta('name')
+	var selection_type = selection.get_meta('type')
 	var existing_state = _load_state()
 	if existing_state == null:
 		existing_state = VariableSelectDialogState.new()
-	if selection_name in existing_state.favourites:
+	if _contains_variable(existing_state.favourites, selection_name, selection_type):
 		return
-	existing_state.favourites.insert(0, selection_name)
+	existing_state.favourites.insert(
+		0,
+		{
+			'name': selection_name,
+			'type': selection_type
+		}
+	)
 	_save_state(
 		existing_state.favourites,
 		existing_state.recent
 	)
 	# Add to favourites sidebar
-	var v = _get_match_by_name(selection_name)
+	var v = _get_match_by_name_and_type(selection_name, selection_type)
 	_add_to_sidebar(_favourites_tree, v, 0)
 
 
@@ -417,5 +467,5 @@ func _on_recent_tree_item_selected():
 
 
 class VariableSelectDialogState:
-	var favourites: Array[String]
-	var recent: Array[String]
+	var favourites: Array[Dictionary]
+	var recent: Array[Dictionary]

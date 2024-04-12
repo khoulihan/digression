@@ -186,6 +186,9 @@ func process_dialogue_graph(dialogue_graph, state_store):
 	_graph_stack = []
 	_transient_store = {}
 	_dialogue_graph_state_store = state_store
+	var triggered_count = 0 if not '_graph_triggered_count' in _dialogue_graph_state_store else _dialogue_graph_state_store['_graph_triggered_count']
+	_dialogue_graph_state_store['_graph_triggered_count'] = triggered_count + 1
+	_expression_evaluator.transient_store = _transient_store
 	_expression_evaluator.dialogue_graph_state_store = _dialogue_graph_state_store
 	_current_graph = dialogue_graph
 	_current_node = _current_graph.root_node
@@ -341,9 +344,11 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 			if process.was_cancelled():
 				_current_graph = null
 				return
-			_transient_store[LAST_RETURN_VALUE_KEY] = response[
+			var return_value = response[
 				ProceedSignalReturnValues.VALUE
 			]
+			if return_value != null:
+				_transient_store[LAST_RETURN_VALUE_KEY] = return_value
 	else:
 		var process = _await_response()
 		_emit_dialogue_signal_variant.call_deferred(
@@ -360,9 +365,11 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 		if process.was_cancelled():
 			_current_graph = null
 			return
-		_transient_store[LAST_RETURN_VALUE_KEY] = response[
+		var return_value = response[
 			ProceedSignalReturnValues.VALUE
 		]
+		if return_value != null:
+			_transient_store[LAST_RETURN_VALUE_KEY] = return_value
 	# If this dialogue is the child of a choice node,
 	# it is the choice node that needs to decide the
 	# next node to process.
@@ -476,9 +483,11 @@ func _process_choice_node():
 			_current_graph = null
 			return
 		var choice = response[ProceedSignalReturnValues.CHOICE]
-		_transient_store[LAST_RETURN_VALUE_KEY] = response[
+		var return_value = response[
 			ProceedSignalReturnValues.VALUE
 		]
+		if return_value != null:
+			_transient_store[LAST_RETURN_VALUE_KEY] = return_value
 		if !choices.is_empty() and choice != null:
 			var c = _current_node.choices[choice]
 			_increment_visit_count(c)
@@ -678,7 +687,8 @@ func _get_action_arguments():
 
 
 func _handle_action_return(return_value):
-	_transient_store[LAST_RETURN_VALUE_KEY] = return_value
+	if return_value != null:
+		_transient_store[LAST_RETURN_VALUE_KEY] = return_value
 	if _current_node.return_type == ActionReturnType.ASSIGN_TO_VARIABLE:
 		var v = _current_node.return_variable
 		if v == null or v.is_empty():
@@ -861,6 +871,8 @@ func _substitute_variables(text: String) -> String:
 	for m in _variable_regex.search_all(text):
 		var variable_name := m.get_string(1)
 		var variable_value = _get_variable_any_store(variable_name)
+		if variable_value == null:
+			variable_value = _get_variable_any_store("_%s" % variable_name)
 		if variable_value == null:
 			_logger.error("Variable \"%s\" not found in any store: substitution failed." % variable_name)
 			variable_value = ""

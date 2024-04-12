@@ -23,7 +23,7 @@ const GLOBAL_ICON = preload("../../icons/icon_scope_global.svg")
 
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
-
+const VariablesHelper = preload("../helpers/VariablesHelper.gd")
 const VariableSelectDialog = preload("../dialogs/variable_select_dialog/VariableSelectDialog.tscn")
 const VariableCreateDialog = preload("../dialogs/variable_create_dialog/VariableCreateDialog.tscn")
 
@@ -37,8 +37,6 @@ var _variable: Dictionary
 @onready var _type_icon: TextureRect = $TypeMarginContainer/TypeIcon
 @onready var _selection_name: LineEdit = $SelectionName
 @onready var _variable_menu_button: MenuButton = $MenuButton
-
-
 
 
 # Called when the node enters the scene tree for the first time.
@@ -81,7 +79,7 @@ func set_variable(variable):
 		clear()
 	else:
 		configure_for_variable(
-			_variable['name'],
+			VariablesHelper.create_display_name(_variable['name']),
 			_variable['scope'],
 			_variable['type'],
 		)
@@ -166,7 +164,7 @@ func _on_select_dialog_variable_selected(variable, dialog):
 	dialog.queue_free()
 	_variable = variable
 	configure_for_variable(
-		variable['name'],
+		VariablesHelper.create_display_name(variable['name']),
 		variable['scope'],
 		variable['type'],
 	)
@@ -193,7 +191,7 @@ func _on_variable_created(variable, dialog):
 	dialog.queue_free()
 	_variable = variable
 	configure_for_variable(
-		variable['name'],
+		VariablesHelper.create_display_name(variable['name']),
 		variable['scope'],
 		variable['type'],
 	)
