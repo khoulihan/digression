@@ -13,17 +13,15 @@ const OperatorType = ExpressionResource.OperatorType
 const EXPRESSION_FUNCTIONS = ExpressionResource.EXPRESSION_FUNCTIONS
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
+const DialogueProcessingContext = preload("../DialogueProcessingContext.gd")
 
-var transient_store : Dictionary
-var dialogue_graph_state_store : Dictionary
-var global_store : Node
-var local_store : Node
+var context : DialogueProcessingContext
 
 var _logger = Logging.new("Digression Expression Evaluator", Logging.DGE_NODES_LOG_LEVEL)
 
 
 ## Evaluate the provided expression.
-func evaluate(expression):
+func evaluate(expression, local_context=null):
 	var component_type = expression["component_type"]
 	if component_type != ExpressionComponentType.EXPRESSION:
 		_logger.error("Cannot evaluate this type of expression in isolation.")
@@ -32,44 +30,71 @@ func evaluate(expression):
 	var expression_type = expression["expression_type"]
 	match expression_type:
 		ExpressionType.VALUE:
-			return _evaluate_value(variable_type, expression)
+			return _evaluate_value(
+				variable_type,
+				expression,
+				local_context
+			)
 		ExpressionType.COMPARISON:
-			return _evaluate_comparison(variable_type, expression)
+			return _evaluate_comparison(
+				variable_type,
+				expression,
+				local_context
+			)
 		ExpressionType.FUNCTION:
-			return _evaluate_function(variable_type, expression)
+			return _evaluate_function(
+				variable_type,
+				expression,
+				local_context
+			)
 		ExpressionType.BRACKETS:
-			return _evaluate_brackets(variable_type, expression)
+			return _evaluate_brackets(
+				variable_type,
+				expression,
+				local_context
+			)
 		ExpressionType.GROUP:
 			# Not sure what this would mean actually...
-			return _evaluate_group(variable_type, expression)
+			return _evaluate_group(
+				variable_type,
+				expression,
+				local_context
+			)
 		ExpressionType.OPERATOR_GROUP:
-			return _evaluate_operator_group(variable_type, expression)
+			return _evaluate_operator_group(
+				variable_type,
+				expression,
+				local_context
+			)
 
 
-func _evaluate_value(variable_type, expression):
+func _evaluate_value(variable_type, expression, local_context=null):
 	if "variable" in expression:
 		var variable = expression["variable"]
 		return _get_variable(
 			variable['name'],
 			variable['scope'],
+			local_context
 		)
 	else:
 		return expression["value"]
 	_logger.error("Not a valid value expression.")
 
 
-func _evaluate_comparison(variable_type, expression):
+func _evaluate_comparison(variable_type, expression, local_context=null):
 	# The type is redundant here - the result can only be boolean!
 	# The sides will be operator groups, but of the `comparison_type`
 	# instead of the `variable_type` of the parent.
 	var comparison_type = expression["comparison_type"]
 	var left = _evaluate_operator_group(
 		comparison_type,
-		expression["left_expression"]
+		expression["left_expression"],
+		local_context
 	)
 	var right = _evaluate_operator_group(
 		comparison_type,
-		expression["right_expression"]
+		expression["right_expression"],
+		local_context
 	)
 	var operator = expression["comparison_operator"]["operator"]
 	match operator:
@@ -90,7 +115,7 @@ func _evaluate_comparison(variable_type, expression):
 	return null
 
 
-func _evaluate_function(variable_type, expression):
+func _evaluate_function(variable_type, expression, local_context=null):
 	# This function will basically just need to branch to various more specific
 	# functions for each function (or maybe function type), and could probably
 	# pull out the arguments based on the function spec as well?
@@ -105,9 +130,13 @@ func _evaluate_function(variable_type, expression):
 	if typeof(arguments_spec) == TYPE_DICTIONARY:
 		arguments = {}
 		for key in arguments_spec.keys():
-			arguments[key] = evaluate(exp_arguments[key])
+			arguments[key] = evaluate(exp_arguments[key], local_context)
 	else:
-		arguments = _evaluate_group(arguments_spec, expression["arguments"])
+		arguments = _evaluate_group(
+			arguments_spec,
+			expression["arguments"],
+			local_context
+		)
 	
 	return _match_function(
 		variable_type,
@@ -194,24 +223,28 @@ func _match_string_function(
 	return null
 
 
-func _evaluate_brackets(variable_type, expression):
+func _evaluate_brackets(variable_type, expression, local_context=null):
 	# The child expression needs to do the work here.
 	# And, the child can only be an operator group.
-	return _evaluate_operator_group(variable_type, expression["contents"])
+	return _evaluate_operator_group(
+		variable_type,
+		expression["contents"],
+		local_context
+	)
 
 
-func _evaluate_group(variable_type, expression):
+func _evaluate_group(variable_type, expression, local_context=null):
 	# Group expressions only make sense in a context that gives them meaning
 	# e.g. as a list of arguments to a function.
 	# Evaluating one returns a list with all child expressions evaluated.
 	var children = expression["children"]
 	var result = []
 	for child in children:
-		result.append(evaluate(child))
+		result.append(evaluate(child, local_context))
 	return result
 
 
-func _evaluate_operator_group(variable_type, expression):
+func _evaluate_operator_group(variable_type, expression, local_context=null):
 	# This function needs to first evaluate all child expressions, then apply
 	# the operators in order of precedence.
 	var serialised_children = expression["children"]
@@ -220,7 +253,7 @@ func _evaluate_operator_group(variable_type, expression):
 		if child["component_type"] == ExpressionComponentType.OPERATOR:
 			evaluated.append(child)
 			continue
-		evaluated.append(evaluate(child))
+		evaluated.append(evaluate(child, local_context))
 	
 	# Now we have child expressions evaluated, connected by operators.
 	# Operator precedence is multiplication and division before addition and
@@ -316,25 +349,5 @@ func _apply_operator(operator, left, right):
 	return null
 
 
-func _get_variable(variable_name, scope):
-	match scope:
-		VariableScope.SCOPE_TRANSIENT:
-			# We can deal with these internally for the duration of a dialogue graph
-			return transient_store.get(variable_name)
-		VariableScope.SCOPE_DIALOGUE_GRAPH:
-			return dialogue_graph_state_store.get(variable_name)
-		VariableScope.SCOPE_LOCAL:
-			if local_store == null:
-				_logger.error(
-					"Local variable \"%s\" requested but no local store is available" % variable_name
-				)
-				return null
-			return local_store.get_variable(variable_name)
-		VariableScope.SCOPE_GLOBAL:
-			if global_store == null:
-				_logger.error(
-					"Global variable \"%s\" requested but no global store is available" % variable_name
-				)
-				return null
-			return global_store.get_variable(variable_name)
-	return null
+func _get_variable(variable_name, scope, local_context=null):
+	return context.get_variable(variable_name, scope, local_context)

@@ -78,6 +78,7 @@ const RoutingNode = preload("../resources/graph/RoutingNode.gd")
 const RepeatNode = preload("../resources/graph/RepeatNode.gd")
 
 const ExpressionEvaluator = preload("./expressions/ExpressionEvaluator.gd")
+const DialogueProcessingContext = preload("./DialogueProcessingContext.gd")
 
 const ActionMechanism = ActionNode.ActionMechanism
 const ActionReturnType = ActionNode.ActionReturnType
@@ -93,29 +94,21 @@ const LAST_RETURN_VALUE_KEY = "_last_return_value"
 
 ## A node that can store variables for the scope of the entire game
 @export var global_store: NodePath
-# TODO: Rename this to local_store
+
 ## A node that can store variables for the scope of the current level/scene
 @export var local_store: NodePath
 
-var _transient_store : Dictionary
-var _dialogue_graph_state_store : Dictionary
-var _global_store : Node
-var _local_store : Node
+
+var _context : DialogueProcessingContext
 
 var _dialogue_types
 var _choice_types
-
-var _graph_stack
-var _current_graph
-var _current_node
 var _split_dialogue
-var _last_choice_node_id
 
 var _internal: ControllerInternal
 var _currently_awaiting: ProceedSignal
 
 var _expression_evaluator: ExpressionEvaluator
-var _variable_regex: RegEx
 
 var _logger = Logging.new(
 	"Digression Dialogue Graph Controller",
@@ -145,20 +138,10 @@ func _ready():
 		"digression_dialogue_graph_editor/choice_types"
 	)
 	
-	# Some built-in variables are appropriate to keep in the
-	# transient store, so those are pre-populated here.
-	_transient_store = {}
-	_transient_store[LAST_RETURN_VALUE_KEY] = null
+	_context = DialogueProcessingContext.new()
 	
 	_expression_evaluator = ExpressionEvaluator.new()
-	_expression_evaluator.transient_store = _transient_store
-	_expression_evaluator.local_store = _local_store
-	_expression_evaluator.global_store = _global_store
-	
-	_variable_regex = RegEx.new()
-	_variable_regex.compile(
-		r'(?<!\\){([\w\s:]+?)}',
-	)
+	_expression_evaluator.context = _context
 	
 	# Only expose the internals if we are running in the editor.
 	if Engine.is_editor_hint():
@@ -172,97 +155,86 @@ func _ready():
 ## Register a global variable store
 func register_global_store(store):
 	_logger.info("Registering global store")
-	_global_store = store
+	_context.global_store = store
 
 
 ## Register a "local" variable store
 func register_local_store(store):
 	_logger.debug("Registering local store")
-	_local_store = store
+	_context.local_store = store
 
 
 ## Process the specified dialogue graph.
 func process_dialogue_graph(dialogue_graph, state_store):
-	_graph_stack = []
-	_transient_store = {}
-	_dialogue_graph_state_store = state_store
-	var triggered_count = 0 if not '_graph_triggered_count' in _dialogue_graph_state_store else _dialogue_graph_state_store['_graph_triggered_count']
-	_dialogue_graph_state_store['_graph_triggered_count'] = triggered_count + 1
-	_expression_evaluator.transient_store = _transient_store
-	_expression_evaluator.dialogue_graph_state_store = _dialogue_graph_state_store
-	_current_graph = dialogue_graph
-	_current_node = _current_graph.root_node
-	_logger.info("Processing dialogue graph \"%s\"" % _current_graph.name)
+	_context.prepare_for_processing(dialogue_graph, state_store)
+	_logger.info("Processing dialogue graph \"%s\"" % _context.graph.name)
 	_split_dialogue = _get_split_dialogue_from_graph_type(
-		_current_graph.graph_type
+		_context.graph.graph_type
 	)
 	dialogue_graph_started.emit(
-		_current_graph.name,
-		_current_graph.graph_type
+		_context.graph.name,
+		_context.graph.graph_type
 	)
 	
-	while _current_node != null:
+	while _context.current_node != null:
+		_context.increment_current_node_visit_count()
 		
-		if _current_node is DialogueTextNode:
+		if _context.current_node is DialogueTextNode:
 			await _process_dialogue_node()
-		elif _current_node is MatchBranchNode:
+		elif _context.current_node is MatchBranchNode:
 			_process_match_branch_node()
-		elif _current_node is IfBranchNode:
+		elif _context.current_node is IfBranchNode:
 			_process_if_branch_node()
-		elif _current_node is DialogueChoiceNode:
+		elif _context.current_node is DialogueChoiceNode:
 			await _process_choice_node()
-		elif _current_node is VariableSetNode:
+		elif _context.current_node is VariableSetNode:
 			_internal_notify_set_node()
 			_process_set_node()
-		elif _current_node is ActionNode:
+		elif _context.current_node is ActionNode:
 			await _process_action_node()
-		elif _current_node is SubGraph:
+		elif _context.current_node is SubGraph:
 			_process_subgraph_node()
-		elif _current_node is RandomNode:
+		elif _context.current_node is RandomNode:
 			_process_random_node()
-		elif _current_node is JumpNode:
+		elif _context.current_node is JumpNode:
 			_internal_notify_jump_node()
 			_process_passthrough_node()
-		elif _current_node is AnchorNode:
+		elif _context.current_node is AnchorNode:
 			_internal_notify_anchor_node()
 			_process_passthrough_node()
-		elif _current_node is RoutingNode:
+		elif _context.current_node is RoutingNode:
 			_internal_notify_routing_node()
 			_process_passthrough_node()
-		elif _current_node is RepeatNode:
+		elif _context.current_node is RepeatNode:
 			_internal_notify_repeat_node()
 			_process_repeat_node()
 		
-		if _current_graph == null:
+		if _context.graph == null:
 			# Graph processing has been cancelled.
 			_logger.info("Dialogue graph processing cancelled.")
 			cancelled.emit()
 			return
 		
-		if _current_node == null:
-			if len(_graph_stack) > 0:
-				var graph_state = _graph_stack.pop_back()
-				_current_graph = graph_state.graph
-				_last_choice_node_id = graph_state.last_choice_node_id
-				_current_node = _get_node_by_id(graph_state.current_node.next)
-				_logger.info("Resuming dialogue graph \"%s\"." % _current_graph.name)
+		if _context.current_node == null:
+			if not _context.is_graph_stack_empty():
+				_context.pop_graph_stack()
+				_logger.info("Resuming dialogue graph \"%s\"." % _context.graph.name)
 				dialogue_graph_resumed.emit(
-					_current_graph.name,
-					_current_graph.graph_type
+					_context.graph.name,
+					_context.graph.graph_type
 				)
 	
-	_logger.info("Dialogue graph \"%s\" completed." % _current_graph.name)
+	_logger.info("Dialogue graph \"%s\" completed." % _context.graph.name)
 	dialogue_graph_completed.emit()
 
 
 ## Stop processing
 func cancel():
-	_current_graph = null
-	_current_node = null
+	# TODO: The graph and current node were being cleared twice here and I don't know why!
+	# Determine if not doing so is a problem - might be that cancelling the await restores them somehow.
 	if _currently_awaiting != null and not _currently_awaiting.signalled():
 		_currently_awaiting.cancel()
-	_current_graph = null
-	_current_node = null
+	_context.cancel_processing()
 
 #endregion
 
@@ -271,18 +243,21 @@ func cancel():
 
 ## Process any type of node that just involves moving directly to the next node.
 func _process_passthrough_node():
-	_advance_to_next_node()
+	_context.advance_to_next_node()
 
 
 func _process_repeat_node():
-	if _last_choice_node_id == null:
-		_current_node = null
+	if _context.last_choice_node_id == null:
+		_context.clear_current_node()
 		return
-	_current_node = _get_node_by_id(_last_choice_node_id)
+	# TODO: Could have a "get_last_choice_node" or "return_to_last_choice" method here.
+	_context.set_current_node(
+		_context.get_node_by_id(_context.last_choice_node_id)
+	)
 
 
 func _process_dialogue_node():
-	await _process_dialogue_node_internal(_current_node)
+	await _process_dialogue_node_internal(_context.current_node)
 
 
 func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
@@ -334,7 +309,7 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 				final_line,
 				choice_type,
 				dialogue_type_name,
-				_substitute_variables(lines[index]),
+				_context.substitute_variables(lines[index]),
 				character,
 				variant,
 				properties,
@@ -342,20 +317,20 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 			)
 			var response = await process.ready_to_proceed
 			if process.was_cancelled():
-				_current_graph = null
+				_cancel_processing()
 				return
 			var return_value = response[
 				ProceedSignalReturnValues.VALUE
 			]
 			if return_value != null:
-				_transient_store[LAST_RETURN_VALUE_KEY] = return_value
+				_context.set_last_return_value(return_value)
 	else:
 		var process = _await_response()
 		_emit_dialogue_signal_variant.call_deferred(
 			for_choice,
 			choice_type,
 			dialogue_type_name,
-			_substitute_variables(text),
+			_context.substitute_variables(text),
 			character,
 			variant,
 			properties,
@@ -363,79 +338,89 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 		)
 		var response = await process.ready_to_proceed
 		if process.was_cancelled():
-			_current_graph = null
+			_cancel_processing()
 			return
 		var return_value = response[
 			ProceedSignalReturnValues.VALUE
 		]
 		if return_value != null:
-			_transient_store[LAST_RETURN_VALUE_KEY] = return_value
+			_context.set_last_return_value(return_value)
 	# If this dialogue is the child of a choice node,
 	# it is the choice node that needs to decide the
 	# next node to process.
 	if not for_choice:
-		_current_node = _get_node_by_id(node.next)
+		_context.set_current_node(
+			_context.get_node_by_id(node.next)
+		)
 
 
 func _process_match_branch_node():
-	_logger.debug("Processing match branch node \"%s\"." % _current_node)
+	_logger.debug("Processing match branch node \"%s\"." % _context.current_node)
 	
-	var val = _get_variable(
-		_current_node.variable,
-		_current_node.scope
+	var val = _context.get_variable(
+		_context.current_node.variable,
+		_context.current_node.scope
 	)
-	for i in range(len(_current_node.branches)):
-		var branch_value = _realise_value(
-			_current_node.get_value(i)
+	for i in range(len(_context.current_node.branches)):
+		var branch_value = _context.realise_value(
+			_context.current_node.get_value(i)
 		)
 		
 		if val == branch_value:
-			_current_node = _get_node_by_id(
-				_current_node.branches[i].next
+			_context.set_current_node(
+				_context.get_node_by_id(
+					_context.current_node.branches[i].next
+				)
 			)
 			return
 	# Default case, no match or no branches
-	_advance_to_next_node()
+	_context.advance_to_next_node()
 
 
 func _process_if_branch_node():
-	_logger.debug("Processing if branch node \"%s\"." % _current_node)
+	_logger.debug("Processing if branch node \"%s\"." % _context.current_node)
 	
-	for i in range(len(_current_node.branches)):
+	for i in range(len(_context.current_node.branches)):
 		var branch_true = _expression_evaluator.evaluate(
-			_current_node.branches[i].condition
+			_context.current_node.branches[i].condition
 		)
 		
 		if branch_true:
-			_current_node = _get_node_by_id(
-				_current_node.branches[i].next
+			# TODO: Could the context contain a method for this?
+			_context.set_current_node(
+				_context.get_node_by_id(
+					_context.current_node.branches[i].next
+				)
 			)
 			return
 	# Default case, no match or no branches
-	_advance_to_next_node()
+	_context.advance_to_next_node()
 
 
 func _process_choice_node():
-	_logger.debug("Processing choice node \"%s\"." % _current_node)
+	_logger.debug("Processing choice node \"%s\"." % _context.current_node)
 	
 	var choice_type: Dictionary = _get_choice_type_by_name(
-		_current_node.choice_type
+		_context.current_node.choice_type
 	)
 	var choice_type_name = choice_type.get('name', "")
 	# TODO: What is the correct default here if the choice type is null?
 	var include_dialogue = choice_type.get('include_dialogue', false)
-	var show_dialogue_for_default = _current_node.show_dialogue_for_default
+	var show_dialogue_for_default = _context.current_node.show_dialogue_for_default
 	
 	if not choice_type.get("skip_for_repeat", false):
-		_last_choice_node_id = _current_node.id
+		_context.last_choice_node_id = _context.current_node.id
 	
 	var choices = {}
-	for i in range(len(_current_node.choices)):
-		var choice = _current_node.choices[i]
+	for i in range(len(_context.current_node.choices)):
+		var choice = _context.current_node.choices[i]
 		var valid = true
 		
 		if choice.condition != null:
-			valid = _evaluate_boolean_expression_resource(choice.condition)
+			valid = _evaluate_boolean_expression_resource(
+				choice.condition,
+				choice
+			)
 		
 		if valid:
 			var choice_obj = Choice.new()
@@ -449,17 +434,18 @@ func _process_choice_node():
 			# Still no text, so use the default
 			if text == null:
 				text = choice.display
-			text = _substitute_variables(text)
+			text = _context.substitute_variables(text, choice)
 			
 			# Process the custom properties
 			var properties := {}
 			for property_name in choice.custom_properties:
 				properties[property_name] = _expression_evaluator.evaluate(
-					choice.custom_properties[property_name]['expression']
+					choice.custom_properties[property_name]['expression'],
+					choice
 				)
 			
 			choice_obj.text = text
-			choice_obj.visit_count = _get_visit_count(choice)
+			choice_obj.visit_count = _context.get_visit_count(choice)
 			choice_obj.properties = properties
 			choices[i] = choice_obj
 	
@@ -467,7 +453,7 @@ func _process_choice_node():
 		
 		if include_dialogue:
 			await _process_dialogue_node_internal(
-				_current_node.dialogue,
+				_context.current_node.dialogue,
 				true,
 				choice_type_name
 			)
@@ -480,28 +466,31 @@ func _process_choice_node():
 		)
 		var response = await process.ready_to_proceed
 		if process.was_cancelled():
-			_current_graph = null
+			_cancel_processing()
 			return
 		var choice = response[ProceedSignalReturnValues.CHOICE]
 		var return_value = response[
 			ProceedSignalReturnValues.VALUE
 		]
 		if return_value != null:
-			_transient_store[LAST_RETURN_VALUE_KEY] = return_value
+			_context.set_last_return_value(return_value)
 		if !choices.is_empty() and choice != null:
-			var c = _current_node.choices[choice]
-			_increment_visit_count(c)
-			_current_node = _get_node_by_id(
-				c.next
+			var c = _context.current_node.choices[choice]
+			_context.increment_visit_count(c)
+			_context.last_choice = c
+			_context.set_current_node(
+				_context.get_node_by_id(
+					c.next
+				)
 			)
 		else:
-			_advance_to_next_node()
+			_context.advance_to_next_node()
 	else:
-		_advance_to_next_node()
+		_context.advance_to_next_node()
 
 
 func _process_action_node():
-	_logger.debug("Processing action node \"%s\"." % _current_node)
+	_logger.debug("Processing action node \"%s\"." % _context.current_node)
 	
 	var process = _await_response()
 	
@@ -510,94 +499,93 @@ func _process_action_node():
 	var response = null
 	var ret_value = null
 	
-	if _current_node.action_mechanism == ActionMechanism.SIGNAL:
+	if _context.current_node.action_mechanism == ActionMechanism.SIGNAL:
 		_emit_action_signal.call_deferred(
-			_current_node.action_or_method_name,
+			_context.current_node.action_or_method_name,
 			arguments,
 			process
 		)
 		response = await process.ready_to_proceed
 		if process.was_cancelled():
-			_current_graph = null
+			_cancel_processing()
 			return
 		ret_value = response[
 			ProceedSignalReturnValues.VALUE
 		]
 	else:
 		var action_node = \
-			owner.get_node(_current_node.node) \
+			owner.get_node(_context.current_node.node) \
 			if not _is_previewing() else owner
 		print("Node for method call action is %s" % action_node.name)
-		if not _is_previewing() and not action_node.has_method(_current_node.action_or_method_name):
+		if not _is_previewing() and not action_node.has_method(_context.current_node.action_or_method_name):
 			_logger.error(
 				"Node specified for action does not have method %s" % [
-					_current_node.action_or_method_name
+					_context.current_node.action_or_method_name
 				]
 			)
-			_advance_to_next_node()
+			_context.advance_to_next_node()
 			return
 		
-		if _current_node.returns_immediately:
+		if _context.current_node.returns_immediately:
 			ret_value = _call_action_method(
 				action_node,
-				_current_node.action_or_method_name,
+				_context.current_node.action_or_method_name,
 				arguments,
 			)
 		else:
 			arguments.append(process)
 			_call_action_method(
 				action_node,
-				_current_node.action_or_method_name,
+				_context.current_node.action_or_method_name,
 				arguments,
 			)
 			response = await process.ready_to_proceed
 			if process.was_cancelled():
-				_current_graph = null
+				_cancel_processing()
 				return
 			ret_value = response[
 				ProceedSignalReturnValues.VALUE
 			]
 	
 	_handle_action_return(ret_value)
-	_advance_to_next_node()
+	_context.advance_to_next_node()
 
 
 func _process_set_node():
-	_logger.debug("Processing set node \"%s\"." % _current_node)
+	_logger.debug("Processing set node \"%s\"." % _context.current_node)
 	
-	_set_variable(
-		_current_node.variable,
-		_current_node.scope,
+	_context.set_variable(
+		_context.current_node.variable,
+		_context.current_node.scope,
 		_expression_evaluator.evaluate(
-			_current_node.get_value_expression()
+			_context.current_node.get_value_expression()
 		)
 	)
-	_advance_to_next_node()
+	_context.advance_to_next_node()
 
 
 func _process_subgraph_node():
-	_logger.debug("Processing subgraph node \"%s\"." % _current_node)
+	_logger.debug("Processing subgraph node \"%s\"." % _context.current_node)
 	
-	var graph_state = GraphState.new()
-	graph_state.graph = _current_graph
-	graph_state.current_node = _current_node
-	graph_state.last_choice_node_id = _last_choice_node_id
-	_graph_stack.push_back(graph_state)
-	_current_graph = _current_node.sub_graph
-	_current_node = _current_graph.root_node
+	# TODO: sub_graph could be null?
+	# TODO: Probably will always be pushing the sub_graph of the current node,
+	# so could have a method for that.
+	_context.push_graph_to_stack(
+		_context.current_node.sub_graph
+	)
 	sub_graph_entered.emit(
-		_current_graph.name,
-		_current_graph.graph_type
+		_context.graph.name,
+		_context.graph.graph_type
 	)
 
 
 func _process_random_node():
-	_logger.debug("Processing random node \"%s\"." % _current_node)
+	_logger.debug("Processing random node \"%s\"." % _context.current_node)
 	
 	var viable = []
 	var accumulated_weight := 0
-	for i in range(len(_current_node.branches)):
-		var branch = _current_node.branches[i]
+	for i in range(len(_context.current_node.branches)):
+		var branch = _context.current_node.branches[i]
 		# No weight set actually means a weight of 1
 		var branch_weight: int = 1 if branch.weight < 1 else branch.weight
 		
@@ -610,11 +598,13 @@ func _process_random_node():
 			})
 
 	if len(viable) == 0:
-		_advance_to_next_node()
+		_context.advance_to_next_node()
 	else:
 		var roll := (randi() % accumulated_weight) + 1
-		_current_node = _get_node_by_id(
-			_get_weighted_branch(viable, roll)
+		_context.set_current_node(
+			_context.get_node_by_id(
+				_get_weighted_branch(viable, roll)
+			)
 		)
 
 #endregion
@@ -628,7 +618,7 @@ func _call_action_method(action_node, method, arguments):
 			method,
 			arguments,
 		)
-	if _current_node.returns_immediately:
+	if _context.current_node.returns_immediately:
 		return action_node.callv(
 			method,
 			arguments
@@ -644,34 +634,28 @@ func _call_action_method(action_node, method, arguments):
 
 
 func _call_preview_action_method(method, arguments):
-	if _current_node.returns_immediately:
+	if _context.current_node.returns_immediately:
 		return owner.call(
 			'_action_method',
 			method,
-			_current_node.returns_immediately,
+			_context.current_node.returns_immediately,
 			arguments,
 		)
 	owner.call_deferred(
 		'_action_method',
 		method,
-		_current_node.returns_immediately,
+		_context.current_node.returns_immediately,
 		arguments,
-	)
-
-
-func _advance_to_next_node():
-	_current_node = _get_node_by_id(
-		_current_node.next
 	)
 
 
 func _get_action_arguments():
 	var arguments = []
-	for argument in _current_node.arguments:
+	for argument in _context.current_node.arguments:
 		match argument['argument_type']:
 			ActionArgumentType.DATA_STORE:
 				arguments.append(
-					_get_data_store(argument['data_store_type'])
+					_context.get_data_store(argument['data_store_type'])
 				)
 			ActionArgumentType.CHARACTER:
 				arguments.append(
@@ -687,30 +671,17 @@ func _get_action_arguments():
 
 
 func _handle_action_return(return_value):
-	if return_value != null:
-		_transient_store[LAST_RETURN_VALUE_KEY] = return_value
-	if _current_node.return_type == ActionReturnType.ASSIGN_TO_VARIABLE:
-		var v = _current_node.return_variable
+	_context.set_last_return_value(return_value)
+	if _context.current_node.return_type == ActionReturnType.ASSIGN_TO_VARIABLE:
+		var v = _context.current_node.return_variable
 		if v == null or v.is_empty():
 			_logger.error("Variable not set for action node return value.")
 		else:
-			_set_variable(v['name'], v['scope'], return_value)
+			_context.set_variable(v['name'], v['scope'], return_value)
 
 
 func _node_callv(node, method, arguments):
 	node.callv(method, arguments)
-
-
-func _get_data_store(scope):
-	match scope:
-		VariableScope.SCOPE_TRANSIENT:
-			return _transient_store
-		VariableScope.SCOPE_DIALOGUE_GRAPH:
-			return _dialogue_graph_state_store
-		VariableScope.SCOPE_LOCAL:
-			return _local_store
-		VariableScope.SCOPE_GLOBAL:
-			return _global_store
 
 
 func _get_character_from_argument(argument):
@@ -731,11 +702,12 @@ func _get_weighted_branch(branches, roll) -> int:
 	return -1
 
 
-func _evaluate_boolean_expression_resource(res):
+func _evaluate_boolean_expression_resource(res, current_choice=null):
 	if res == null:
 		return true
 	var result = _expression_evaluator.evaluate(
-		res.expression
+		res.expression,
+		current_choice
 	)
 	if result == null:
 		return false
@@ -747,11 +719,11 @@ func _await_response():
 	return _currently_awaiting
 
 
-func _get_node_by_id(id):
-	print (id)
-	if id != null and id != -1:
-		return _current_graph.nodes.get(id)
-	return null
+func _cancel_processing():
+	#_current_graph = null
+	_context.clear_current_node()
+	# TODO: Would this not be a better substitute for the above line?
+	#_context.cancel_processing()
 
 #endregion
 
@@ -767,7 +739,7 @@ func _get_split_dialogue_from_graph_type(graph_type):
 		[]
 	)
 	for gt in graph_types:
-		if gt['name'] == _current_graph.graph_type:
+		if gt['name'] == _context.graph.graph_type:
 			return gt['split_dialogue']
 	
 	return true
@@ -795,128 +767,6 @@ func _get_choice_type_by_name(name) -> Dictionary:
 		if t['name'] == name:
 			return t
 	return {}
-
-#endregion
-
-
-#region Variable management
-
-
-func _get_variable(variable_name, scope):
-	match scope:
-		VariableSetNode.VariableScope.SCOPE_TRANSIENT:
-			# We can deal with these internally for the duration of a graph
-			return _transient_store.get(variable_name)
-		VariableSetNode.VariableScope.SCOPE_DIALOGUE_GRAPH:
-			return _dialogue_graph_state_store.get(variable_name)
-		VariableSetNode.VariableScope.SCOPE_LOCAL:
-			if _local_store == null:
-				_logger.error(
-					"Scene variable \"%s\" requested but no local store is available" % variable_name
-				)
-				return null
-			return _local_store.get_variable(variable_name)
-		VariableSetNode.VariableScope.SCOPE_GLOBAL:
-			if _global_store == null:
-				_logger.error(
-					"Global variable \"%s\" requested but no global store is available" % variable_name
-				)
-				return null
-			return _global_store.get_variable(variable_name)
-	return null
-
-
-func _get_variable_any_store(variable_name):
-	if variable_name in _transient_store:
-		return _transient_store[variable_name]
-	if variable_name in _dialogue_graph_state_store:
-		return _dialogue_graph_state_store[variable_name]
-	if _local_store.has_variable(variable_name):
-		return _local_store.get_variable(variable_name)
-	if _global_store.has_variable(variable_name):
-		return _global_store.get_variable(variable_name)
-	return null
-
-
-func _set_variable(variable_name, scope, value):
-	match scope:
-		VariableSetNode.VariableScope.SCOPE_TRANSIENT:
-			# We can deal with these internally for the duration of a graph
-			_transient_store[variable_name] = value
-		VariableSetNode.VariableScope.SCOPE_DIALOGUE_GRAPH:
-			_dialogue_graph_state_store[variable_name] = value
-		VariableSetNode.VariableScope.SCOPE_LOCAL:
-			if _local_store == null:
-				_logger.error(
-					"Scene variable \"%s\" set with value \"%s\" but no scene store is available" % [
-						variable_name, value
-					]
-				)
-				return
-			_local_store.set_variable(variable_name, value)
-		VariableSetNode.VariableScope.SCOPE_GLOBAL:
-			if _global_store == null:
-				_logger.error(
-					"Global variable \"%s\" set with value \"%s\" but no global store is available" % [
-						variable_name, value
-					]
-				)
-				return
-			_global_store.set_variable(variable_name, value)
-
-
-func _substitute_variables(text: String) -> String:
-	var substituted := text
-	var substitutions := {}
-	for m in _variable_regex.search_all(text):
-		var variable_name := m.get_string(1)
-		var variable_value = _get_variable_any_store(variable_name)
-		if variable_value == null:
-			variable_value = _get_variable_any_store("_%s" % variable_name)
-		if variable_value == null:
-			_logger.error("Variable \"%s\" not found in any store: substitution failed." % variable_name)
-			variable_value = ""
-		substitutions[variable_name] = variable_value
-	if len(substitutions) > 0:
-		substituted = substituted.format(substitutions)
-	# Actualise any escape sequences
-	substituted = substituted.c_unescape()
-	# Clean up the string by removing any escaped braces
-	substituted = substituted.replace(r'\{', "{")
-	substituted = substituted.replace(r'\}', "}")
-	return substituted
-
-
-func _realise_value(value_or_var: Variant) -> Variant:
-	if typeof(value_or_var) == TYPE_DICTIONARY:
-		return _get_variable(
-			value_or_var['name'],
-			value_or_var['scope'],
-		)
-	return value_or_var
-
-
-func _get_meta_variable_root(res):
-	return "_%s_%s" % [_current_graph.name, res.resource_path]
-
-
-func _get_meta_variable_name(res, v):
-	return "%s_%s" % [_get_meta_variable_root(res), v]
-
-
-func _get_visit_count_variable(res):
-	return _get_meta_variable_name(res, "visited_count")
-
-
-func _get_visit_count(res):
-	var v = _get_visit_count_variable(res)
-	return _dialogue_graph_state_store.get(v, 0)
-
-
-func _increment_visit_count(res):
-	_dialogue_graph_state_store[
-		_get_visit_count_variable(res)
-	] = _get_visit_count(res) + 1
 
 #endregion
 
@@ -1033,7 +883,7 @@ func _internal_notify_repeat_node():
 func _internal_notify_jump_node():
 	if not _is_previewing():
 		return
-	var target = _get_node_by_id(_current_node.next)
+	var target = _context.get_node_by_id(_context.current_node.next)
 	var destination_name = null
 	if target != null:
 		destination_name = target.name
@@ -1043,7 +893,7 @@ func _internal_notify_jump_node():
 func _internal_notify_anchor_node():
 	if not _is_previewing():
 		return
-	_internal.processed_anchor_node.emit(_current_node.name)
+	_internal.processed_anchor_node.emit(_context.current_node.name)
 
 
 func _internal_notify_routing_node():
@@ -1058,10 +908,10 @@ func _internal_notify_set_node():
 	# TODO: This involves evaluating the expression a second time
 	# This is both wasteful and might produce incorrect results!
 	_internal.processed_set_node.emit(
-		_current_node.variable,
-		_current_node.scope,
+		_context.current_node.variable,
+		_context.current_node.scope,
 		_expression_evaluator.evaluate(
-			_current_node.get_value_expression()
+			_context.current_node.get_value_expression()
 		)
 	)
 
@@ -1069,12 +919,6 @@ func _internal_notify_set_node():
 
 
 #region Internal classes
-
-class GraphState:
-	var graph
-	var current_node
-	var last_choice_node_id
-
 
 class ProceedSignal:
 	signal ready_to_proceed(choice, return_value)

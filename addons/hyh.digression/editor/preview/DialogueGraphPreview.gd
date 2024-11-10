@@ -305,7 +305,7 @@ func _assign_colours_to_characters(characters):
 
 
 func _focus_current_node_in_minimap():
-	_graph_mini_map.focus_on_node(_controller._current_node)
+	_graph_mini_map.focus_on_node(_get_context().current_node)
 
 
 func _populate_characters(characters):
@@ -346,19 +346,19 @@ func _update_variable_stores_tree():
 	# Note that this method examines "private" properties of the controller
 	_update_variable_stores_branch(
 		_transient_store_root,
-		_controller._transient_store
+		_get_context().transient_store
 	)
 	_update_variable_stores_branch(
 		_dialogue_graph_store_root,
-		_controller._dialogue_graph_state_store
+		_get_context().dialogue_graph_state_store
 	)
 	_update_variable_stores_branch(
 		_local_store_root,
-		_controller._local_store.store_data
+		_get_context().local_store.store_data
 	)
 	_update_variable_stores_branch(
 		_global_store_root,
-		_controller._global_store.store_data
+		_get_context().global_store.store_data
 	)
 
 
@@ -446,8 +446,7 @@ func _start_processing():
 	_set_control_states(true)
 	starting_preview.emit()
 	_clear_dialogue()
-	_transient_state = _controller._transient_store.duplicate()
-	_controller._expression_evaluator.transient_store = _controller._transient_store
+	_transient_state = _get_context().transient_store.duplicate()
 	_dialogue_graph.trigger()
 
 
@@ -455,8 +454,7 @@ func _stop_processing():
 	_logger.debug("Stopping")
 	_set_control_states(false)
 	_controller.cancel()
-	_controller._transient_store = _transient_state.duplicate()
-	_controller._expression_evaluator.transient_store = _controller._transient_store
+	_get_context().transient_store = _transient_state.duplicate()
 	_hide_continue()
 	if _dialogue_container.get_child_count() >= 2:
 		var last_event = _dialogue_container.get_child(-2)
@@ -576,11 +574,15 @@ func _load_stores(replace):
 	dialog.popup_centered(Vector2i(800, 600))
 
 
+func _get_context():
+	return _controller._context
+
+
 func clear_variable_stores():
-	_controller._transient_store.clear()
-	_controller._dialogue_graph_state_store.clear()
-	_controller._local_store.store_data.clear()
-	_controller._global_store.store_data.clear()
+	_get_context().transient_store.clear()
+	_get_context().dialogue_graph_state_store.clear()
+	_get_context().local_store.store_data.clear()
+	_get_context().global_store.store_data.clear()
 
 
 func _show_add_variable_dialog():
@@ -619,13 +621,13 @@ func _get_default_value_for_type(t):
 
 func _get_variable_store_for_branch(branch):
 	if branch == _transient_store_root:
-		return _controller._transient_store
+		return _get_context().transient_store
 	if branch == _dialogue_graph_store_root:
-		return _controller._dialogue_graph_state_store
+		return _get_context().dialogue_graph_state_store
 	if branch == _local_store_root:
-		return _controller._local_store.store_data
+		return _get_context().local_store.store_data
 	if branch == _global_store_root:
-		return _controller._global_store.store_data
+		return _get_context().global_store.store_data
 	return null
 
 
@@ -653,8 +655,7 @@ func _on_graph_controller_dialogue_graph_started(graph_name, graph_type):
 	_logger.debug("Dialogue Graph Started")
 	# Restore the backup of the transient store from before the
 	# graph was triggered, as the controller will have cleared it.
-	_controller._transient_store = _transient_state.duplicate()
-	_controller._expression_evaluator.transient_store = _controller._transient_store
+	_get_context().transient_store = _transient_state.duplicate()
 	var n = StaticInformationalEvent.instantiate()
 	_insert_event(n)
 	n.populate("Dialogue graph started...")
@@ -664,8 +665,7 @@ func _on_graph_controller_dialogue_graph_started(graph_name, graph_type):
 
 func _on_graph_controller_dialogue_graph_completed():
 	_logger.debug("Dialogue Graph Completed")
-	_controller._transient_store = _transient_state.duplicate()
-	_controller._expression_evaluator.transient_store = _controller._transient_store
+	_get_context().transient_store = _transient_state.duplicate()
 	var n = StaticInformationalEvent.instantiate()
 	_insert_event(n)
 	n.populate("Dialogue graph complete.")
@@ -820,9 +820,10 @@ func _on_continue_requested():
 
 func _on_graph_controller_sub_graph_entered(graph_name, graph_type):
 	_logger.debug("Sub-graph \"%s\" entered" % graph_name)
-	_graph_stack.append(_controller._current_graph)
-	_assign_colours_to_characters(_controller._current_graph.characters)
-	_populate_characters(_controller._current_graph.characters)
+	var graph = _get_context().graph
+	_graph_stack.append(graph)
+	_assign_colours_to_characters(graph.characters)
+	_populate_characters(graph.characters)
 	var n = StaticInformationalEvent.instantiate()
 	_insert_event(n)
 	n.populate("Sub-graph \"%s\" entered..." % graph_name)
@@ -830,14 +831,15 @@ func _on_graph_controller_sub_graph_entered(graph_name, graph_type):
 	_update_variable_stores_tree()
 	_breadcrumbs.populate(_graph_stack)
 	_graph_mini_map.clear()
-	_graph_mini_map.display_graph(_controller._current_graph)
+	_graph_mini_map.display_graph(graph)
 
 
 func _on_graph_controller_dialogue_graph_resumed(graph_name, graph_type):
 	_logger.debug("Graph \"%s\" resumed" % graph_name)
 	_graph_stack.pop_back()
-	_assign_colours_to_characters(_controller._current_graph.characters)
-	_populate_characters(_controller._current_graph.characters)
+	var graph = _get_context().graph
+	_assign_colours_to_characters(graph.characters)
+	_populate_characters(graph.characters)
 	var n = StaticInformationalEvent.instantiate()
 	_insert_event(n)
 	n.populate("Graph \"%s\" resumed..." % graph_name)
@@ -845,7 +847,7 @@ func _on_graph_controller_dialogue_graph_resumed(graph_name, graph_type):
 	_update_variable_stores_tree()
 	_breadcrumbs.populate(_graph_stack)
 	_graph_mini_map.clear()
-	_graph_mini_map.display_graph(_controller._current_graph)
+	_graph_mini_map.display_graph(graph)
 
 
 func _on_run_button_pressed():
@@ -898,10 +900,10 @@ func _on_store_save_file_selected(path, dialog):
 	
 	# Create a dictionary with the contents of the data stores
 	var data = {
-		'transient': _controller._transient_store.duplicate(),
-		'dialogue_graph': _controller._dialogue_graph_state_store.duplicate(),
-		'local': _controller._local_store.store_data.duplicate(),
-		'global': _controller._global_store.store_data.duplicate(),
+		'transient': _get_context().transient_store.duplicate(),
+		'dialogue_graph': _get_context().dialogue_graph_state_store.duplicate(),
+		'local': _get_context().local_store.store_data.duplicate(),
+		'global': _get_context().global_store.store_data.duplicate(),
 	}
 	
 	var file = FileAccess.open(path, FileAccess.WRITE)
@@ -943,13 +945,13 @@ func _on_store_load_file_selected(path, replace, dialog):
 	if replace:
 		clear_variable_stores()
 	if data.has('transient'):
-		_controller._transient_store.merge(data['transient'], true)
+		_get_context().transient_store.merge(data['transient'], true)
 	if data.has('dialogue_graph'):
-		_controller._dialogue_graph_state_store.merge(data['dialogue_graph'], true)
+		_get_context().dialogue_graph_state_store.merge(data['dialogue_graph'], true)
 	if data.has('local'):
-		_controller._local_store.store_data.merge(data['local'], true)
+		_get_context().local_store.store_data.merge(data['local'], true)
 	if data.has('global'):
-		_controller._global_store.store_data.merge(data['global'], true)
+		_get_context().global_store.store_data.merge(data['global'], true)
 	_update_variable_stores_tree()
 
 
@@ -970,13 +972,13 @@ func _on_variable_selected(variable, dialog):
 	var store
 	match variable['scope']:
 		VariableScope.SCOPE_TRANSIENT:
-			store = _controller._transient_store
+			store = _get_context().transient_store
 		VariableScope.SCOPE_DIALOGUE_GRAPH:
-			store = _controller._dialogue_graph_state_store
+			store = _get_context().dialogue_graph_state_store
 		VariableScope.SCOPE_LOCAL:
-			store = _controller._local_store.store_data
+			store = _get_context().local_store.store_data
 		VariableScope.SCOPE_GLOBAL:
-			store = _controller._global_store.store_data
+			store = _get_context().global_store.store_data
 	if store.has(name):
 		return
 	store[name] = val

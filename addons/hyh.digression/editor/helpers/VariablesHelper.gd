@@ -43,6 +43,48 @@ const BUILT_IN_VARIABLES: Array[Dictionary] = [
 		"type": VariableType.TYPE_INT,
 		"description": "The number of times this graph has been triggered.",
 		"tags": ['builtin']
+	},
+	{
+		'name': "_current_node_visit_count",
+		"scope": VariableScope.SCOPE_DIALOGUE_GRAPH,
+		"type": VariableType.TYPE_INT,
+		"description": "The number of times this node has been visited.",
+		"tags": ['builtin']
+	},
+	{
+		'name': "_previous_node_visit_count",
+		"scope": VariableScope.SCOPE_DIALOGUE_GRAPH,
+		"type": VariableType.TYPE_INT,
+		"description": "The number of times the previous node has been visited.",
+		"tags": ['builtin']
+	},
+	{
+		'name': "_choice_visit_count",
+		"scope": VariableScope.SCOPE_DIALOGUE_GRAPH,
+		"type": VariableType.TYPE_INT,
+		"description": "The number of times a choice has been selected.",
+		"tags": ['builtin']
+	},
+	{
+		'name': "_graph_triggered_previously",
+		"scope": VariableScope.SCOPE_DIALOGUE_GRAPH,
+		"type": VariableType.TYPE_BOOL,
+		"description": "Indicates whether or not this graph has been triggered before.",
+		"tags": ['builtin']
+	},
+	{
+		'name': "_current_node_visited_previously",
+		"scope": VariableScope.SCOPE_DIALOGUE_GRAPH,
+		"type": VariableType.TYPE_BOOL,
+		"description": "Indicates whether or not this node has been visited before.",
+		"tags": ['builtin']
+	},
+	{
+		'name': "_choice_visited_previously",
+		"scope": VariableScope.SCOPE_DIALOGUE_GRAPH,
+		"type": VariableType.TYPE_BOOL,
+		"description": "Indicates whether or not a choice has been visited before.",
+		"tags": ['builtin']
 	}
 ]
 
