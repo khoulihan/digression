@@ -74,9 +74,9 @@ func _get_button_text(graph, is_current):
 		return _get_name(graph)
 	var display_name = graph.display_name
 	var name = graph.name
-	if display_name != null:
+	if display_name != null and not display_name.is_empty():
 		return display_name
-	if name != null:
+	if name != null and not name.is_empty():
 		return name
 	return UNNAMED_GRAPH
 
