@@ -7,10 +7,10 @@ const OperatorType = preload("../../../resources/graph/expressions/ExpressionRes
 const ExpressionOperators = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionOperators
 const ExpressionComponentType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionComponentType
 
-const ADD_ICON = preload("../../../icons/icon_add.svg")
-const SUBTRACT_ICON = preload("../../../icons/icon_subtract.svg")
-const MULTIPLY_ICON = preload("../../../icons/icon_close.svg")
-const DIVIDE_ICON = preload("../../../icons/icon_divide.svg")
+const ADD_ICON = preload("../../../icons/icon_add_dark.svg")
+const SUBTRACT_ICON = preload("../../../icons/icon_subtract_dark.svg")
+const MULTIPLY_ICON = preload("../../../icons/icon_close_dark.svg")
+const DIVIDE_ICON = preload("../../../icons/icon_divide_dark.svg")
 
 ## The type of variable operated on.
 @export
