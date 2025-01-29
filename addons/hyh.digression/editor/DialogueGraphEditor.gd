@@ -443,7 +443,7 @@ func _on_node_popup_index_pressed(index):
 
 
 func _set_root(node_name):
-	for child in _graph_edit.get_children():
+	for child in _get_graph_edit_children():
 		if "is_root" in child:
 			child.is_root = (child.name == node_name)
 			if child.is_root:
@@ -1011,7 +1011,7 @@ func _set_dirty(val):
 
 
 func _get_editor_node_for_graph_node(n):
-	for node in _graph_edit.get_children():
+	for node in _get_graph_edit_children():
 		if node is EditorGraphNodeBaseClass:
 			if node.node_resource == n:
 				return node
@@ -1024,7 +1024,7 @@ func _get_graph_node_by_id(id):
 
 func _clear_displayed_graph():
 	_graph_edit.clear_connections()
-	var graph_nodes = _graph_edit.get_children()
+	var graph_nodes = _get_graph_edit_children()
 	for node in graph_nodes:
 		_logger.debug("Removing node %s" % node.name)
 		_graph_edit.remove_child(node)
@@ -1038,7 +1038,7 @@ func _update_edited_graph():
 	
 	_logger.trace("_update_edited_graph(): %s" % _edited.graph.name)
 	
-	for node in _graph_edit.get_children():
+	for node in _get_graph_edit_children():
 		node.persist_changes_to_node()
 		# Clobber all relationships - they will be recreated if they still exist
 		node.clear_node_relationships()
@@ -1058,14 +1058,14 @@ func _update_resource_graph_for_connection(connection):
 
 func _update_node_characters():
 	_logger.debug("Updating node characters")
-	for node in _graph_edit.get_children():
+	for node in _get_graph_edit_children():
 		if node.has_method("populate_characters"):
 			node.populate_characters(_edited.graph.characters)
 
 
 func _populate_anchor_destinations():
 	_logger.debug("Populating anchor destinations")
-	for node in _graph_edit.get_children():
+	for node in _get_graph_edit_children():
 		if node.has_method("populate_destinations"):
 			node.populate_destinations(
 				_anchor_names_by_id
@@ -1103,7 +1103,7 @@ func _update_preview_button_state():
 
 func _get_selected_nodes():
 	var selected_nodes = []
-	for node in _graph_edit.get_children():
+	for node in _get_graph_edit_children():
 		if node.selected:
 			selected_nodes.append(node)
 	return selected_nodes
@@ -1193,7 +1193,7 @@ func _create_connections_for_copied_nodes(new_nodes):
 
 
 func _deselect_all():
-	for node in _graph_edit.get_children():
+	for node in _get_graph_edit_children():
 		node.selected = false
 
 
@@ -1284,6 +1284,14 @@ func _convert_popup_position(release_position):
 	# determined by trial and error.
 	return (release_position / _graph_edit.zoom) + \
 		(_graph_edit.scroll_offset / _graph_edit.zoom)
+
+
+func _get_graph_edit_children():
+	var c = _graph_edit.get_children()
+	# Should not be getting these, but in 4.3 a "_connection_layer" node is
+	# being returned and removing it crashes the editor, while other operations
+	# on it fail because it is not one of our nodes.
+	return c.filter(func(child): return not child.name.begins_with("_"))
 
 #endregion
 
