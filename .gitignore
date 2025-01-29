@@ -9,3 +9,6 @@
 !.gitattributes
 # Godot generated files
 /.import/*
+# Godot 4+ specific ignores
+.godot/
+/android/
