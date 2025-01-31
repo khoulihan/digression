@@ -56,7 +56,7 @@ func _ready():
 ## Clear the mini-map.
 func clear():
 	_logger.debug("Clearing graph mini-map")
-	for child in self.get_children():
+	for child in _get_children():
 		self.remove_child(child)
 		child.free()
 
@@ -246,7 +246,7 @@ func _create_connections_for_node(node):
 
 
 func _get_minimap_node_for_graph_node(n):
-	for node in self.get_children():
+	for node in _get_children():
 		#if node is MiniMapNodeBaseClass:
 		if node.get_meta("resource") == n:
 			return node
@@ -266,7 +266,7 @@ func _focus_on_node(node):
 func _unset_current_overlay(except_node):
 	# TODO: Need an alternative method of highlighting the current node.
 	return
-	for node in self.get_children():
+	for node in _get_children():
 		if node == except_node:
 			continue
 		#if node.overlay == GraphNode.OVERLAY_BREAKPOINT:
@@ -276,3 +276,11 @@ func _unset_current_overlay(except_node):
 func _on_connection_drag_started(from_node, from_port, is_output):
 	# We don't want the mini-map to appear editable at all.
 	self.force_connection_drag_end()
+
+
+func _get_children():
+	var c = self.get_children()
+	# Should not be getting these, but in 4.3 a "_connection_layer" node is
+	# being returned and removing it crashes the editor, while other operations
+	# on it fail because it is not one of our nodes.
+	return c.filter(func(child): return not child.name.begins_with("_"))
