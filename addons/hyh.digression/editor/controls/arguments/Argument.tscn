@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://bwdtji5o7o3kv"]
 
 [ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/arguments/Argument.gd" id="1_c68w6"]
-[ext_resource type="Texture2D" uid="uid://yu1u674q1ejm" path="res://addons/hyh.digression/icons/icon_triple_bar.svg" id="1_l1q7q"]
+[ext_resource type="Texture2D" uid="uid://dexnm3exsn0ns" path="res://addons/hyh.digression/icons/icon_drag_vertical.svg" id="2_4dxj2"]
 [ext_resource type="StyleBox" uid="uid://bxxrrj712pltv" path="res://addons/hyh.digression/editor/controls/BracketPanel.tres" id="2_twngc"]
 [ext_resource type="Texture2D" uid="uid://mksqvoqy2yi4" path="res://addons/hyh.digression/icons/icon_node_warning.svg" id="3_611at"]
 [ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/arguments/ArgumentDragHandle.gd" id="3_u3phv"]
@@ -20,7 +20,7 @@ size_flags_vertical = 4
 tooltip_text = "Drag to rearrange expressions."
 mouse_filter = 0
 mouse_default_cursor_shape = 13
-texture = ExtResource("1_l1q7q")
+texture = ExtResource("2_4dxj2")
 stretch_mode = 2
 script = ExtResource("3_u3phv")
 
