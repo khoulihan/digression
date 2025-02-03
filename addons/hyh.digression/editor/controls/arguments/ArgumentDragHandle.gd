@@ -1,5 +1,6 @@
 @tool
 extends TextureRect
+# TODO: Deprecated. Switch to generic DragHandle class instead.
 
 
 @export var target : Node

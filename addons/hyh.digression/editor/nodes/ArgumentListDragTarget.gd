@@ -1,5 +1,6 @@
 @tool
 extends MarginContainer
+# TODO: Deprecated. Switch to generic DragTarget class instead.
 
 
 signal argument_dropped(arg, at_position)
@@ -12,7 +13,6 @@ func _can_drop_data(at_position, data):
 		return false
 	if data["dge_drag_class"] != "argument":
 		return false
-	# TODO: I assume this would be the place to highlight the drop location?
 	return true
 
 

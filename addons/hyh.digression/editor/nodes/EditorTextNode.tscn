@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://ddh2fuxyvnktp"]
+[gd_scene load_steps=11 format=3 uid="uid://ddh2fuxyvnktp"]
 
 [ext_resource type="Script" path="res://addons/hyh.digression/editor/nodes/EditorTextNode.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://c0pw3rdictm2v" path="res://addons/hyh.digression/editor/nodes/EditorGraphNodeBase.tscn" id="2"]
@@ -7,11 +7,13 @@
 [ext_resource type="StyleBox" uid="uid://b5ma0bjl3xxjm" path="res://addons/hyh.digression/editor/nodes/styles/dialogue_node_titlebar.tres" id="4_2212b"]
 [ext_resource type="StyleBox" uid="uid://nu4578dkhf2b" path="res://addons/hyh.digression/editor/nodes/styles/dialogue_node_titlebar_selected.tres" id="5_cur1i"]
 [ext_resource type="Texture2D" uid="uid://d65jtbo3b07t" path="res://addons/hyh.digression/icons/icon_clear.svg" id="7_13nfv"]
-[ext_resource type="PackedScene" uid="uid://rg4q2rccwgo5" path="res://addons/hyh.digression/editor/controls/properties/CustomPropertiesControl.tscn" id="7_huiim"]
+[ext_resource type="PackedScene" uid="uid://bi6s5ip3smrd5" path="res://addons/hyh.digression/editor/text/DialogueTextSection.tscn" id="8_biiwf"]
+[ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="8_jff3k"]
+[ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="9_rnbxw"]
 
 [node name="EditorTextNode" instance=ExtResource("2")]
 offset_right = 545.0
-offset_bottom = 342.0
+offset_bottom = 415.0
 theme_override_colors/resizer_color = Color(0, 0, 0, 1)
 theme_override_styles/panel = ExtResource("2_slpx5")
 theme_override_styles/panel_selected = ExtResource("3_mjv4r")
@@ -36,15 +38,14 @@ size_flags_vertical = 3
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
 
 [node name="VerticalLayout" type="VBoxContainer" parent="RootContainer" index="0"]
 layout_mode = 2
-size_flags_vertical = 3
 theme_override_constants/separation = 10
 
 [node name="CharacterOptionsContainer" type="GridContainer" parent="RootContainer/VerticalLayout" index="0"]
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_constants/h_separation = 3
 theme_override_constants/v_separation = 10
 columns = 3
@@ -63,56 +64,28 @@ layout_mode = 2
 icon = ExtResource("7_13nfv")
 flat = true
 
-[node name="Label2" type="Label" parent="RootContainer/VerticalLayout/CharacterOptionsContainer" index="3"]
+[node name="DragTargetHSeparator" parent="RootContainer/VerticalLayout" index="1" instance=ExtResource("8_jff3k")]
 layout_mode = 2
-text = "Variant:"
+accepted_classes = Array[int]([1])
 
-[node name="VariantSelect" type="OptionButton" parent="RootContainer/VerticalLayout/CharacterOptionsContainer" index="4"]
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = false
-
-[node name="ClearVariantButton" type="Button" parent="RootContainer/VerticalLayout/CharacterOptionsContainer" index="5"]
-layout_mode = 2
-icon = ExtResource("7_13nfv")
-flat = true
-
-[node name="TextEdit" type="TextEdit" parent="RootContainer/VerticalLayout" index="1"]
-custom_minimum_size = Vector2(0, 31)
+[node name="SectionsContainer" type="VBoxContainer" parent="RootContainer/VerticalLayout" index="2"]
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 2.0
-mouse_default_cursor_shape = 0
-theme_override_constants/line_spacing = 8
-wrap_mode = 1
 
-[node name="TranslationContainer" type="GridContainer" parent="RootContainer/VerticalLayout" index="2"]
+[node name="DialogueTextSection" parent="RootContainer/VerticalLayout/SectionsContainer" index="0" instance=ExtResource("8_biiwf")]
 layout_mode = 2
-theme_override_constants/h_separation = 10
-theme_override_constants/v_separation = 10
-columns = 2
+size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="RootContainer/VerticalLayout/TranslationContainer" index="0"]
+[node name="AddSectionButton" type="Button" parent="RootContainer/VerticalLayout" index="3"]
 layout_mode = 2
-text = "Translation Key:"
-
-[node name="TranslationKeyEdit" type="LineEdit" parent="RootContainer/VerticalLayout/TranslationContainer" index="1"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="CustomPropertiesControl" parent="RootContainer/VerticalLayout" index="3" instance=ExtResource("7_huiim")]
-layout_mode = 2
-use_restriction = 4
+size_flags_horizontal = 4
+text = "Add Section"
+icon = ExtResource("9_rnbxw")
+flat = true
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="resize_request" from="." to="." method="_on_resize_request"]
 [connection signal="item_selected" from="RootContainer/VerticalLayout/CharacterOptionsContainer/CharacterSelect" to="." method="_on_character_select_item_selected"]
 [connection signal="pressed" from="RootContainer/VerticalLayout/CharacterOptionsContainer/ClearCharacterButton" to="." method="_on_clear_character_button_pressed"]
-[connection signal="item_selected" from="RootContainer/VerticalLayout/CharacterOptionsContainer/VariantSelect" to="." method="_on_variant_select_item_selected"]
-[connection signal="pressed" from="RootContainer/VerticalLayout/CharacterOptionsContainer/ClearVariantButton" to="." method="_on_clear_variant_button_pressed"]
-[connection signal="text_changed" from="RootContainer/VerticalLayout/TextEdit" to="." method="_on_text_edit_text_changed"]
-[connection signal="text_changed" from="RootContainer/VerticalLayout/TranslationContainer/TranslationKeyEdit" to="." method="_on_translation_key_edit_text_changed"]
-[connection signal="add_property_requested" from="RootContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_add_property_requested"]
-[connection signal="modified" from="RootContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_modified"]
-[connection signal="remove_property_requested" from="RootContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_remove_property_requested"]
-[connection signal="size_changed" from="RootContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_size_changed"]
+[connection signal="dropped" from="RootContainer/VerticalLayout/DragTargetHSeparator" to="." method="_on_character_options_separator_dropped"]
+[connection signal="pressed" from="RootContainer/VerticalLayout/AddSectionButton" to="." method="_on_add_section_button_pressed"]

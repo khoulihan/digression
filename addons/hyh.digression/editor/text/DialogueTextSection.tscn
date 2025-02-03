@@ -1,0 +1,100 @@
+[gd_scene load_steps=8 format=3 uid="uid://bi6s5ip3smrd5"]
+
+[ext_resource type="Script" path="res://addons/hyh.digression/editor/text/DialogueTextSection.gd" id="1_8kado"]
+[ext_resource type="Texture2D" uid="uid://yu1u674q1ejm" path="res://addons/hyh.digression/icons/icon_triple_bar.svg" id="1_hghs5"]
+[ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.digression/icons/icon_remove.svg" id="2_xjpqh"]
+[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/drag/DragHandle.gd" id="3_2wp64"]
+[ext_resource type="Texture2D" uid="uid://d65jtbo3b07t" path="res://addons/hyh.digression/icons/icon_clear.svg" id="3_vvkil"]
+[ext_resource type="PackedScene" uid="uid://rg4q2rccwgo5" path="res://addons/hyh.digression/editor/controls/properties/CustomPropertiesControl.tscn" id="4_hgski"]
+[ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="7_jmx58"]
+
+[node name="DialogueTextSection" type="MarginContainer"]
+offset_right = 330.0
+offset_bottom = 237.0
+script = ExtResource("1_8kado")
+
+[node name="VB" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Header" type="HBoxContainer" parent="VB"]
+layout_mode = 2
+
+[node name="DragHandle" type="TextureRect" parent="VB/Header" node_paths=PackedStringArray("target")]
+modulate = Color(0.137255, 0.137255, 0.137255, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+tooltip_text = "Drag to rearrange expressions."
+mouse_filter = 0
+mouse_default_cursor_shape = 13
+texture = ExtResource("1_hghs5")
+stretch_mode = 2
+script = ExtResource("3_2wp64")
+target = NodePath("../../..")
+drag_class = 1
+
+[node name="RemoveButton" type="Button" parent="VB/Header"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+icon = ExtResource("2_xjpqh")
+flat = true
+
+[node name="VariantSelectContainer" type="HBoxContainer" parent="VB"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="VB/VariantSelectContainer"]
+layout_mode = 2
+text = "Variant:"
+
+[node name="VariantSelect" type="OptionButton" parent="VB/VariantSelectContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = false
+
+[node name="ClearVariantButton" type="Button" parent="VB/VariantSelectContainer"]
+layout_mode = 2
+icon = ExtResource("3_vvkil")
+flat = true
+
+[node name="TextEdit" type="TextEdit" parent="VB"]
+custom_minimum_size = Vector2(200, 31)
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+mouse_default_cursor_shape = 0
+theme_override_constants/line_spacing = 8
+wrap_mode = 1
+
+[node name="TranslationContainer" type="GridContainer" parent="VB"]
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="Label" type="Label" parent="VB/TranslationContainer"]
+layout_mode = 2
+text = "Translation Key:"
+
+[node name="TranslationKeyEdit" type="LineEdit" parent="VB/TranslationContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CustomPropertiesControl" parent="VB" instance=ExtResource("4_hgski")]
+layout_mode = 2
+use_restriction = 4
+
+[node name="DragTargetHSeparator" parent="VB" instance=ExtResource("7_jmx58")]
+layout_mode = 2
+accepted_classes = Array[int]([1])
+
+[connection signal="pressed" from="VB/Header/RemoveButton" to="." method="_on_remove_button_pressed"]
+[connection signal="item_selected" from="VB/VariantSelectContainer/VariantSelect" to="." method="_on_variant_select_item_selected"]
+[connection signal="pressed" from="VB/VariantSelectContainer/ClearVariantButton" to="." method="_on_clear_variant_button_pressed"]
+[connection signal="text_changed" from="VB/TranslationContainer/TranslationKeyEdit" to="." method="_on_translation_key_edit_text_changed"]
+[connection signal="add_property_requested" from="VB/CustomPropertiesControl" to="." method="_on_custom_properties_control_add_property_requested"]
+[connection signal="modified" from="VB/CustomPropertiesControl" to="." method="_on_custom_properties_control_modified"]
+[connection signal="remove_property_requested" from="VB/CustomPropertiesControl" to="." method="_on_custom_properties_control_remove_property_requested"]
+[connection signal="size_changed" from="VB/CustomPropertiesControl" to="." method="_on_custom_properties_control_size_changed"]
+[connection signal="dropped" from="VB/DragTargetHSeparator" to="." method="_on_drag_target_dropped"]

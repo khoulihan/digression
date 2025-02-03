@@ -711,9 +711,11 @@ func _create_node_objects(node_type):
 			new_editor_node = EditorTextNode.instantiate()
 			new_graph_node = DialogueTextNode.new()
 			_set_default_dialogue_type_for_node(new_graph_node)
-			new_graph_node.text_translation_key = TranslationKey.generate(
-				_edited.graph.name,
-				"dialogue",
+			new_graph_node.set_initial_translation_key(
+				TranslationKey.generate(
+					_edited.graph.name,
+					"dialogue",
+				)
 			)
 		GraphPopupMenuItems.ADD_MATCH_BRANCH_NODE:
 			new_editor_node = EditorMatchBranchNode.instantiate()
@@ -726,9 +728,11 @@ func _create_node_objects(node_type):
 			new_graph_node = DialogueChoiceNode.new()
 			_set_default_dialogue_type_for_node(new_graph_node.dialogue)
 			_set_default_choice_type_for_node(new_graph_node)
-			new_graph_node.dialogue.text_translation_key = TranslationKey.generate(
-				_edited.graph.name,
-				"choicedialogue",
+			new_graph_node.dialogue.set_initial_translation_key(
+				TranslationKey.generate(
+					_edited.graph.name,
+					"choicedialogue",
+				)
 			)
 		GraphPopupMenuItems.ADD_SET_NODE:
 			new_editor_node = EditorSetNode.instantiate()

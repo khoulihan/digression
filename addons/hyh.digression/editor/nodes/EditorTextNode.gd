@@ -4,6 +4,7 @@ extends "EditorGraphNodeBase.gd"
 
 
 const TITLE_FONT = preload("styles/TitleOptionFont.tres")
+const DialogueTextSection = preload("res://addons/hyh.digression/editor/text/DialogueTextSection.tscn")
 
 var _characters
 var _dialogue_types
@@ -13,12 +14,10 @@ var _dialogue_type_option: OptionButton
 # TODO: May not need this.
 var _original_size: Vector2
 
-@onready var _text_edit := $RootContainer/VerticalLayout/TextEdit
 @onready var _character_select := $RootContainer/VerticalLayout/CharacterOptionsContainer/CharacterSelect
-@onready var _variant_select := $RootContainer/VerticalLayout/CharacterOptionsContainer/VariantSelect
-@onready var _translation_key_edit := $RootContainer/VerticalLayout/TranslationContainer/TranslationKeyEdit
 @onready var _character_options_container: GridContainer = $RootContainer/VerticalLayout/CharacterOptionsContainer
-@onready var _custom_properties_control = $RootContainer/VerticalLayout/CustomPropertiesControl
+@onready var _sections_container := $RootContainer/VerticalLayout/SectionsContainer
+@onready var _character_options_separator := $RootContainer/VerticalLayout/DragTargetHSeparator
 
 
 func _init():
@@ -46,12 +45,10 @@ func configure_for_node(g, n):
 	# Hmm, seems like this is not gonna work when the node is manually
 	# resizable...
 	_original_size = Vector2(size.x, 0.0)
-	set_text(n.text)
-	set_translation_key(n.text_translation_key)
+	
 	select_character(n.character)
-	select_variant(n.character_variant)
 	select_dialogue_type(n.dialogue_type, false)
-	_populate_properties(n.custom_properties)
+	_configure_text_sections_for_node(g, n)
 
 
 ## Persist changes from the editor node's controls into the graph node's properties
@@ -59,17 +56,13 @@ func persist_changes_to_node():
 	super.persist_changes_to_node()
 	node_resource.dialogue_type = get_dialogue_type()
 	node_resource.size = self.size
-	node_resource.text = get_text()
-	node_resource.text_translation_key = get_translation_key()
 	var selected_c = get_selected_character()
 	if selected_c != -1:
 		node_resource.character = _characters[selected_c]
-		var selected_v = get_selected_variant()
-		if selected_v != -1:
-			node_resource.character_variant = node_resource.character.character_variants[selected_v]
 	else:
 		node_resource.character = null
-	node_resource.custom_properties = _get_properties()
+	for section in _sections_container.get_children():
+		section.persist_changes_to_resource()
 
 
 ## Get the selected dialogue type.
@@ -120,41 +113,9 @@ func set_dialogue_types(dialogue_types, defer=true):
 	#set_dialogue_type(node_resource.dialogue_type)
 
 
-## Get the dialogue text.
-func get_text():
-	return _text_edit.text
-
-
-## Set the dialogue text.
-func set_text(speech):
-	_text_edit.text = speech
-
-
-# TODO: Is there actually any need for this?
-## Set the dialogue text from an array of individual lines.
-func set_text_from_array(speech: Array[String]):
-	# This requires that speech be a PoolStringArray. If that is not the case, should convert here
-	_text_edit.text = "\n".join(speech)
-
-
 ## Get the selected character.
 func get_selected_character():
 	return _character_select.selected
-
-
-## Get the selected variant.
-func get_selected_variant():
-	return _variant_select.selected
-
-
-## Set the translation key.
-func set_translation_key(k):
-	_translation_key_edit.text = k
-
-
-## Get the translation key.
-func get_translation_key():
-	return _translation_key_edit.text
 
 
 ## Populate the possible characters.
@@ -189,38 +150,65 @@ func select_character(character):
 			_populate_variants(_characters[index].character_variants)
 
 
-## Select the specified variant.
-func select_variant(mood):
-	var character_select := _character_select
-	var variant_select := _variant_select
-	if not mood:
-		variant_select.select(-1)
-		return
-	if character_select.selected != -1:
-		# This will be used when displaying a graph initially.
-		var variants = _characters[character_select.selected].character_variants
-		if variants:
-			for index in range(0, variants.size()):
-				var v = variants[index]
-				if v == mood:
-					variant_select.select(index)
-
-
 func _configure_for_dialogue_type(dialogue_type, adjust_size):
 	if dialogue_type == null:
 		return
-	if dialogue_type["involves_character"]:
+	var involves_character = dialogue_type["involves_character"]
+	if involves_character:
 		if not _character_options_container.visible:
 			_character_options_container.show()
+			_character_options_separator.show()
 			if adjust_size:
 				var character_options_height = _character_options_container.size.y
-				size = Vector2(size.x, size.y + character_options_height)
+				var separator_height = _character_options_separator.size.y
+				var adjustment = character_options_height + separator_height
+				size = Vector2(size.x, size.y + adjustment)
 	else:
 		if _character_options_container.visible:
 			var character_options_height = _character_options_container.size.y
+			var separator_height = _character_options_separator.size.y
 			_character_options_container.hide()
+			_character_options_separator.hide()
 			if adjust_size:
-				size = Vector2(size.x, size.y - character_options_height)
+				var adjustment = character_options_height + separator_height
+				size = Vector2(size.x, size.y - adjustment)
+	for section in _sections_container.get_children():
+		section.configure_for_dialogue_type(involves_character, adjust_size)
+
+
+func _configure_text_sections_for_node(g, n):
+	# Clear out any existing section controls
+	for c in _sections_container.get_children():
+		_sections_container.remove_child(c)
+	# Repopulate
+	for section in n.sections:
+		var control := DialogueTextSection.instantiate()
+		_sections_container.add_child(control)
+		control.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		control.configure_for_section(
+			g,
+			section,
+			_dialogue_type_involves_character(),
+			_get_variants_for_selected_character()
+		)
+		_connect_signals_for_section(control)
+	
+	_configure_text_sections_for_child_count()
+
+
+func _configure_text_sections_for_child_count():
+	for section in _sections_container.get_children():
+		section.configure_for_sibling_count(
+			_sections_container.get_child_count() - 1
+		)
+
+
+func _dialogue_type_involves_character():
+	var t = _get_dialogue_type_by_name(node_resource.dialogue_type)
+	if t:
+		return t['involves_character']
+	# I think this is the appropriate default?
+	return true
 
 
 func _get_dialogue_type_by_name(name):
@@ -234,22 +222,107 @@ func _get_id_for_dialogue_type(type):
 	return _dialogue_types_by_id.find_key(type)
 
 
-func _get_properties() -> Dictionary:
-	return _custom_properties_control.serialise()
-
-
-func _populate_properties(properties: Dictionary) -> void:
-	_custom_properties_control.configure(properties)
+func _get_variants_for_selected_character():
+	if not node_resource.character:
+		return null
+	return node_resource.character.character_variants
 
 
 func _populate_variants(variants):
-	var variant_select = _variant_select
-	var selected = variant_select.selected
-	variant_select.clear()
-	if variants:
-		for v in variants:
-			variant_select.add_item(v.variant_display_name)
-		variant_select.select(selected)
+	for section in _sections_container.get_children():
+		section.populate_variants(variants)
+
+
+func _remove_section(section):
+	node_resource.remove_section(section.section_resource)
+	var size_diff = section.size.y
+	_sections_container.remove_child(section)
+	section.queue_free()
+	self.size = Vector2(self.size.x, self.size.y - size_diff)
+	_configure_text_sections_for_child_count()
+
+
+func _connect_signals_for_section(section):
+	section.modified.connect(_on_section_modified)
+	section.removal_requested.connect(
+		_on_section_removal_requested.bind(section)
+	)
+	section.dropped_after.connect(
+		_on_section_dropped_after.bind(section)
+	)
+	section.preparing_to_change_parent.connect(
+		_on_section_preparing_to_change_parent.bind(section)
+	)
+
+
+func _disconnect_signals_for_section(section):
+	section.modified.disconnect(_on_section_modified)
+	section.removal_requested.disconnect(
+		_on_section_removal_requested
+	)
+	section.dropped_after.disconnect(
+		_on_section_dropped_after
+	)
+	section.preparing_to_change_parent.disconnect(
+		_on_section_preparing_to_change_parent
+	)
+
+
+func _show_section_removal_confirmation_dialog(section):
+	var confirm = ConfirmationDialog.new()
+	confirm.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
+	confirm.title = "Please confirm"
+	confirm.dialog_text = "Are you sure you want to remove this section? This action cannot be undone."
+	confirm.canceled.connect(_action_cancelled.bind(confirm))
+	confirm.confirmed.connect(_action_confirmed.bind(section, confirm))
+	get_tree().root.add_child(confirm)
+	confirm.show()
+
+
+func _move_section_to_position(section, index):
+	var current_index = section.get_index()
+	_sections_container.move_child(section, index)
+	node_resource.sections.insert(
+		index,
+		node_resource.sections.pop_at(current_index)
+	)
+
+
+func _add_section_at_position(section, index):
+	var size_diff = section.size.y
+	_sections_container.add_child(section)
+	_sections_container.move_child(section, index)
+	self.size = Vector2(self.size.x, self.size.y + size_diff)
+	node_resource.sections.insert(
+		index,
+		section.section_resource
+	)
+	section.populate_variants(_get_variants_for_selected_character())
+	_connect_signals_for_section(section)
+
+
+func _move_dropped_section_to_index(dropped_section, index):
+	if dropped_section.get_parent() == _sections_container:
+		if dropped_section.get_index() < index:
+			index = index - 1
+		if dropped_section.get_index() == index:
+			return
+		_move_section_to_position(
+			dropped_section,
+			index
+		)
+	else:
+		# This indicates a drag from a different node.
+		dropped_section.prepare_to_change_parent()
+		_add_section_at_position(
+			dropped_section,
+			index
+		)
+		# TODO: We may also need to re-evaluate the variants of the section here.
+	# TODO: Need to do something about changing the node sizing
+	#_correct_size()
+	_configure_text_sections_for_child_count()
+	modified.emit()
 
 
 func _on_character_select_item_selected(ID):
@@ -262,12 +335,21 @@ func _on_gui_input(ev):
 	super._on_gui_input(ev)
 
 
-func _on_variant_select_item_selected(ID):
+func _on_section_modified():
 	modified.emit()
 
 
-func _on_text_edit_text_changed():
-	modified.emit()
+func _on_section_removal_requested(section_control):
+	# TODO: Maybe this could be actioned immediately if none of the fields have
+	# been modified?
+	_show_section_removal_confirmation_dialog(section_control)
+
+
+func _on_section_dropped_after(dropped_section, target_section):
+	_move_dropped_section_to_index(
+		dropped_section,
+		target_section.get_index() + 1
+	)
 
 
 func _on_resize_request(new_minsize):
@@ -286,35 +368,49 @@ func _on_dialogue_type_option_item_selected(index):
 	)
 
 
-func _on_custom_properties_control_add_property_requested(property_definition):
-	var name = property_definition['name']
-	if name in node_resource.custom_properties:
-		return
-	var property = node_resource.add_custom_property(
-		property_definition['name'],
-		property_definition['type'],
-	)
-	_custom_properties_control.add_property(property)
-
-
-func _on_custom_properties_control_remove_property_requested(property_name):
-	if not property_name in node_resource.custom_properties:
-		return
-	node_resource.remove_custom_property(property_name)
-	_custom_properties_control.remove_property(property_name)
-
-
-func _on_custom_properties_control_size_changed(size_change):
-	self.size = Vector2(self.size.x, self.size.y + size_change)
-
-
-func _on_custom_properties_control_modified():
-	modified.emit()
-
-
 func _on_clear_character_button_pressed():
 	select_character(null)
 
 
-func _on_clear_variant_button_pressed():
-	select_variant(null)
+func _on_add_section_button_pressed() -> void:
+	var editor_section := DialogueTextSection.instantiate()
+	var section = node_resource.add_section()
+	_sections_container.add_child(editor_section)
+	editor_section.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	editor_section.configure_for_section(
+		null,
+		section,
+		_dialogue_type_involves_character(),
+		_get_variants_for_selected_character()
+	)
+	_connect_signals_for_section(editor_section)
+	self.size = Vector2(self.size.x, self.size.y + editor_section.size.y)
+	_configure_text_sections_for_child_count()
+
+
+func _action_confirmed(section, dialog):
+	get_tree().root.remove_child(dialog)
+	_remove_section(section)
+
+
+func _action_cancelled(dialog):
+	get_tree().root.remove_child(dialog)
+
+
+func _on_character_options_separator_dropped(arg: Variant, at_position: Variant) -> void:
+	# This indicates that the dropped section should be moved to the top of the
+	# list.
+	_move_dropped_section_to_index(arg, 0)
+
+
+func _on_section_preparing_to_change_parent(section):
+	_disconnect_signals_for_section(section)
+	var size_diff = section.size.y
+	_sections_container.remove_child(section)
+	node_resource.sections.remove_at(
+		node_resource.sections.find(
+			section.section_resource
+		)
+	)
+	self.size = Vector2(self.size.x, self.size.y - size_diff)
+	_configure_text_sections_for_child_count()

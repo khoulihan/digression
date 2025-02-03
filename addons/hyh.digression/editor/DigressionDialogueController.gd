@@ -262,17 +262,34 @@ func _process_dialogue_node():
 
 func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 	_logger.debug("Processing dialogue node \"%s\"." % node)
+	for text_resource in node.sections:
+		await _process_dialogue_node_text_internal(
+			node,
+			text_resource,
+			for_choice,
+			choice_type
+		)
+	# If this dialogue is the child of a choice node,
+	# it is the choice node that needs to decide the
+	# next node to process.
+	if not for_choice:
+		_context.set_current_node(
+			_context.get_node_by_id(node.next)
+		)
+
+func _process_dialogue_node_text_internal(node, text_resource, for_choice=false, choice_type=null):
+	_logger.debug("Processing dialogue text \"%s\"." % text_resource)
 	
 	var text = null
 	# Try the translation first
-	var tr_key = node.text_translation_key
+	var tr_key = text_resource.text_translation_key
 	if tr_key != null and tr_key != "":
 		text = tr(tr_key)
 		if text == tr_key:
 			text = null
 	# Still no text, so use the default
 	if text == null:
-		text = node.text
+		text = text_resource.text
 	
 	var dialogue_type: Dictionary = _get_dialogue_type_by_name(
 		node.dialogue_type
@@ -285,14 +302,14 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 	if dialogue_type.get('involves_character', true):
 		if node.character != null:
 			character = node.character
-		if node.character_variant != null:
-			variant = node.character_variant
+		if text_resource.character_variant != null:
+			variant = text_resource.character_variant
 	
 	# Process the custom properties
 	var properties := {}
-	for property_name in node.custom_properties:
+	for property_name in text_resource.custom_properties:
 		properties[property_name] = _expression_evaluator.evaluate(
-			node.custom_properties[property_name]['expression']
+			text_resource.custom_properties[property_name]['expression']
 		)
 	
 	if _split_dialogue_for_node(dialogue_type, _split_dialogue):
@@ -345,13 +362,6 @@ func _process_dialogue_node_internal(node, for_choice=false, choice_type=null):
 		]
 		if return_value != null:
 			_context.set_last_return_value(return_value)
-	# If this dialogue is the child of a choice node,
-	# it is the choice node that needs to decide the
-	# next node to process.
-	if not for_choice:
-		_context.set_current_node(
-			_context.get_node_by_id(node.next)
-		)
 
 
 func _process_match_branch_node():

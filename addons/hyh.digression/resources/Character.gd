@@ -145,4 +145,3 @@ func _strip_group(property: String) -> String:
 	if not property.begins_with("custom_"):
 		return property
 	return property.erase(0, len("custom_"))
-
