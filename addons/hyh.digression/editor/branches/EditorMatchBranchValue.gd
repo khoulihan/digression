@@ -5,6 +5,9 @@ extends MarginContainer
 
 signal remove_requested()
 signal modified()
+signal preparing_to_change_parent()
+signal dropped_after(section)
+
 
 const Logging = preload("../../utility/Logging.gd")
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
@@ -66,3 +69,7 @@ func _on_remove_button_pressed() -> void:
 
 func _on_value_edit_value_changed() -> void:
 	modified.emit()
+
+
+func _on_drag_target_dropped(arg: Variant, at_position: Variant) -> void:
+	dropped_after.emit(arg)

@@ -1,8 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://cj3nuku0ns6o0"]
+[gd_scene load_steps=7 format=3 uid="uid://cj3nuku0ns6o0"]
 
 [ext_resource type="PackedScene" uid="uid://b46vwf6pxf1tl" path="res://addons/hyh.digression/editor/controls/expressions/OperatorExpression.tscn" id="1_m0gfp"]
 [ext_resource type="Script" path="res://addons/hyh.digression/editor/branches/EditorIfBranchValue.gd" id="1_u2dra"]
 [ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.digression/icons/icon_remove.svg" id="2_2hdln"]
+[ext_resource type="Texture2D" uid="uid://dexnm3exsn0ns" path="res://addons/hyh.digression/icons/icon_drag_vertical.svg" id="2_vfo8d"]
+[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/drag/DragHandle.gd" id="3_hoerc"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o06wu"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -25,6 +27,16 @@ script = ExtResource("1_u2dra")
 
 [node name="Condition" type="HBoxContainer" parent="."]
 layout_mode = 2
+
+[node name="DragHandle" type="TextureRect" parent="Condition" node_paths=PackedStringArray("target")]
+layout_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 13
+texture = ExtResource("2_vfo8d")
+stretch_mode = 3
+script = ExtResource("3_hoerc")
+target = NodePath("../..")
+drag_class = 3
 
 [node name="Label" type="Label" parent="Condition"]
 custom_minimum_size = Vector2(35, 0)

@@ -4,7 +4,11 @@ extends TextureRect
 
 enum DragClass {
 	ARGUMENT,
-	DIALOGUE_SECTION
+	DIALOGUE_SECTION,
+	MATCH_BRANCH,
+	IF_BRANCH,
+	RANDOM_BRANCH,
+	CHOICE
 }
 
 const Logging = preload("../../../utility/Logging.gd")

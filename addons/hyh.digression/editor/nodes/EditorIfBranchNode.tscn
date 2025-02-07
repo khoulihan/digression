@@ -45,27 +45,29 @@ slot/2/right_type = 0
 slot/2/right_color = Color(0.94902, 0.94902, 0.94902, 0.882353)
 slot/2/right_icon = null
 slot/2/draw_stylebox = true
+slot/3/left_enabled = false
+slot/3/left_type = 0
+slot/3/left_color = Color(1, 1, 1, 1)
+slot/3/left_icon = null
+slot/3/right_enabled = false
+slot/3/right_type = 0
+slot/3/right_color = Color(1, 1, 1, 1)
+slot/3/right_icon = null
+slot/3/draw_stylebox = true
 script = ExtResource("6_cvu84")
 
-[node name="MC" type="MarginContainer" parent="."]
+[node name="DefaultContainer" type="MarginContainer" parent="."]
 layout_mode = 2
 theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
+theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="DefaultContainer" type="HBoxContainer" parent="MC"]
+[node name="Label" type="Label" parent="DefaultContainer"]
 layout_mode = 2
-
-[node name="Label" type="Label" parent="MC/DefaultContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 10
 text = "else"
-
-[node name="AddBranchButton" type="Button" parent="MC/DefaultContainer"]
-layout_mode = 2
-icon = ExtResource("6_obc87")
-flat = true
+horizontal_alignment = 2
 
 [node name="EditorIfBranchValue" parent="." instance=ExtResource("7_7trmo")]
 layout_mode = 2
@@ -73,7 +75,20 @@ layout_mode = 2
 [node name="EditorIfBranchValue2" parent="." instance=ExtResource("7_7trmo")]
 layout_mode = 2
 
-[connection signal="pressed" from="MC/DefaultContainer/AddBranchButton" to="." method="_on_add_branch_button_pressed"]
+[node name="AddBranchContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="AddBranchButton" type="Button" parent="AddBranchContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Add Branch"
+icon = ExtResource("6_obc87")
+flat = true
+
 [connection signal="modified" from="EditorIfBranchValue" to="." method="_on_branch_modified" binds= [0]]
 [connection signal="remove_requested" from="EditorIfBranchValue" to="." method="_on_branch_remove_requested" binds= [0]]
 [connection signal="modified" from="EditorIfBranchValue2" to="." method="_on_branch_modified" binds= [1]]

@@ -587,6 +587,11 @@ func _on_node_modified(node_name):
 		if editor_node is EditorAnchorNodeClass:
 			_refresh_anchor_maps()
 			_populate_anchor_destinations()
+		var res = editor_node.node_resource
+		# TODO: Would like to include a flag with this signal to indicate if
+		# connections have been modified, to avoid recreating them unnecessarily.
+		_clear_connections_for_node(res)
+		_create_connections_for_node(res)
 	perform_save()
 
 
@@ -997,11 +1002,42 @@ func _create_connections_for_node(node):
 				connections[index]
 			]
 		)
+		_logger.debug("Adding connection %s port %s to %s port %s" % [
+			editor_node.name,
+			index,
+			to.name,
+			0
+		])
 		_graph_edit.connect_node(
 			editor_node.name,
 			index,
 			to.name,
 			0
+		)
+
+
+# TODO: This should probably accept the editor node directly instead of having
+# to fetch it
+func _clear_connections_for_node(node):
+	# This method operates on the connections established by the editor node,
+	# NOT the ones implied by the resource node.
+	var editor_node = _get_editor_node_for_graph_node(node)
+	var connections_list = _graph_edit.get_connection_list()
+	for index in range(0, len(connections_list)):
+		var connection = connections_list[index]
+		if not connection['from_node'] == editor_node.name:
+			continue
+		_logger.debug("Removing connection %s port %s to %s port %s" % [
+			connection['from_node'],
+			connection['from_port'],
+			connection['to_node'],
+			connection['to_port']
+		])
+		_graph_edit.disconnect_node(
+			connection['from_node'],
+			connection['from_port'],
+			connection['to_node'],
+			connection['to_port']
 		)
 
 

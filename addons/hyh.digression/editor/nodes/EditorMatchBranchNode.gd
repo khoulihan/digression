@@ -14,7 +14,7 @@ var _variable_scope
 var _variable_type
 
 @onready var _variable_selection_control = $MC/VB/HeaderContainer/GC/VariableSelectionControl
-@onready var _add_branch_button : Button = $MC/VB/HeaderContainer/AddBranchButton
+@onready var _add_branch_button : Button = $AddBranchContainer/AddBranchButton
 
 
 ## Configure the editor node for a given graph node.
@@ -65,7 +65,7 @@ func set_variable(val):
 
 func get_branches():
 	var t: Array[MatchBranch] = []
-	for index in range(1, get_child_count()):
+	for index in range(1, get_child_count() - 1):
 		t.append(get_child(index).get_branch())
 	return t
 
@@ -90,12 +90,12 @@ func get_type():
 
 func set_type(val):
 	_variable_type = val
-	for index in range(1, get_child_count()):
+	for index in range(1, get_child_count() - 1):
 		get_child(index).set_type(val)
 
 
 func clear_branches():
-	for index in range(get_child_count() - 1, 0, -1):
+	for index in range(get_child_count() - 2, 0, -1):
 		remove_branch(index)
 
 
@@ -108,6 +108,9 @@ func remove_branch(index):
 	)
 	node.modified.disconnect(
 		_on_branch_modified
+	)
+	node.dropped_after.disconnect(
+		_on_branch_dropped_after
 	)
 	_reconnect_signals()
 	# This should resize the control to the maximum required for the remaining
@@ -123,23 +126,40 @@ func _add_branch(branch):
 func _create_branch():
 	var new_value_line = _branch_value_scene.instantiate()
 	add_child(new_value_line)
+	move_child(new_value_line, get_child_count() - 2)
 	new_value_line.set_type(node_resource.variable_type)
 	new_value_line.remove_requested.connect(
 		_on_branch_remove_requested.bind(
-			get_child_count() - 1
+			get_child_count() - 2
 		)
 	)
 	new_value_line.modified.connect(
 		_on_branch_modified.bind(
-			get_child_count() - 1
+			get_child_count() - 2
 		)
 	)
+	new_value_line.dropped_after.connect(
+		_on_branch_dropped_after.bind(
+			new_value_line
+		)
+	)
+	# This is the new branch
+	set_slot(
+		get_child_count() - 2,
+		false,
+		0,
+		CONNECTOR_COLOUR,
+		true,
+		0,
+		CONNECTOR_COLOUR
+	)
+	# This is the button slot
 	set_slot(
 		get_child_count() - 1,
 		false,
 		0,
 		CONNECTOR_COLOUR,
-		true,
+		false,
 		0,
 		CONNECTOR_COLOUR
 	)
@@ -148,12 +168,15 @@ func _create_branch():
 
 func _reconnect_signals():
 	if get_child_count() > 1:
-		for index in range(1, get_child_count()):
+		for index in range(1, get_child_count() - 1):
 			get_child(index).remove_requested.disconnect(
 				_on_branch_remove_requested
 			)
 			get_child(index).modified.disconnect(
 				_on_branch_modified
+			)
+			get_child(index).dropped_after.disconnect(
+				_on_branch_dropped_after
 			)
 			get_child(index).remove_requested.connect(
 				_on_branch_remove_requested.bind(index)
@@ -161,6 +184,59 @@ func _reconnect_signals():
 			get_child(index).modified.connect(
 				_on_branch_modified.bind(index)
 			)
+			get_child(index).dropped_after.connect(
+				_on_branch_dropped_after.bind(
+					get_child(index)
+				)
+			)
+
+
+func _move_dropped_branch_to_index(dropped, index):
+	if dropped.get_parent() == self:
+		if dropped.get_index() < index:
+			index = index - 1
+		if dropped.get_index() == index:
+			return
+		_move_branch_to_position(
+			dropped,
+			index
+		)
+	else:
+		# This indicates a drag from a different node.
+		# TODO: Ensure this is implemented.
+		dropped.prepare_to_change_parent()
+		_add_branch_at_position(
+			dropped,
+			index
+		)
+	modified.emit()
+
+
+func _move_branch_to_position(branch, index):
+	var current_index = branch.get_index()
+	self.move_child(branch, index)
+	
+	# The resources will be at indices one less than in the GUI
+	# because of the initial header section of the GUI
+	node_resource.branches.insert(
+		index - 1,
+		node_resource.branches.pop_at(current_index - 1)
+	)
+
+
+func _add_branch_at_position(branch, index):
+	# TODO: Implement this to enable drag from other nodes
+	#var size_diff = section.size.y
+	#_sections_container.add_child(section)
+	#_sections_container.move_child(section, index)
+	#self.size = Vector2(self.size.x, self.size.y + size_diff)
+	#node_resource.sections.insert(
+	#	index,
+	#	section.section_resource
+	#)
+	#section.populate_variants(_get_variants_for_selected_character())
+	#_connect_signals_for_section(section)
+	pass
 
 
 func _on_add_branch_button_pressed():
@@ -192,7 +268,22 @@ func _on_variable_selection_control_variable_selected(variable):
 		_variable_scope,
 		_variable_type,
 	)
-	for i in range(1, get_child_count()):
+	for i in range(1, get_child_count() - 1):
 		get_child(i).set_type(_variable_type)
 	_add_branch_button.disabled = false
 	modified.emit()
+
+
+func _on_branch_dropped_after(dropped, after):
+	_move_dropped_branch_to_index(
+		dropped,
+		after.get_index() + 1
+	)
+
+
+func _on_drag_target_dropped(arg: Variant, at_position: Variant) -> void:
+	# Drop at the topmost separator - move the target to the top.
+	_move_dropped_branch_to_index(
+		arg,
+		1
+	)

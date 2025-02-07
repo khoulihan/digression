@@ -1,28 +1,37 @@
-[gd_scene load_steps=5 format=3 uid="uid://dk0btqqtgur07"]
+[gd_scene load_steps=8 format=3 uid="uid://dk0btqqtgur07"]
 
 [ext_resource type="Script" path="res://addons/hyh.digression/editor/branches/EditorRandomValue.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.digression/icons/icon_remove.svg" id="2"]
+[ext_resource type="Texture2D" uid="uid://dexnm3exsn0ns" path="res://addons/hyh.digression/icons/icon_drag_vertical.svg" id="2_11qbb"]
 [ext_resource type="PackedScene" uid="uid://mvafher5yr07" path="res://addons/hyh.digression/editor/controls/ConditionControl.tscn" id="2_e0v4u"]
 [ext_resource type="PackedScene" uid="uid://m2fx01xh1uml" path="res://addons/hyh.digression/editor/controls/WeightControl.tscn" id="2_kl24e"]
+[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/drag/DragHandle.gd" id="3_5qfe4"]
+[ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="6_x812e"]
 
 [node name="RandomValue" type="MarginContainer"]
 offset_right = 324.0
-offset_bottom = 72.0
+offset_bottom = 74.0
 theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
+theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
 script = ExtResource("1")
 
 [node name="VB" type="VBoxContainer" parent="."]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="HSeparator" type="HSeparator" parent="VB"]
-layout_mode = 2
-
 [node name="HB" type="HBoxContainer" parent="VB"]
 layout_mode = 2
+
+[node name="DragHandle" type="TextureRect" parent="VB/HB" node_paths=PackedStringArray("target")]
+layout_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 13
+texture = ExtResource("2_11qbb")
+stretch_mode = 3
+script = ExtResource("3_5qfe4")
+target = NodePath("../../..")
+drag_class = 4
 
 [node name="VariableContainer" type="GridContainer" parent="VB/HB"]
 layout_mode = 2
@@ -41,6 +50,9 @@ layout_mode = 2
 size_flags_vertical = 0
 icon = ExtResource("2")
 flat = true
+
+[node name="DragTargetHSeparator" parent="VB" instance=ExtResource("6_x812e")]
+layout_mode = 2
 
 [connection signal="changed" from="VB/HB/VariableContainer/WeightControl" to="." method="_on_weight_control_changed"]
 [connection signal="cleared" from="VB/HB/VariableContainer/WeightControl" to="." method="_on_weight_control_cleared"]
