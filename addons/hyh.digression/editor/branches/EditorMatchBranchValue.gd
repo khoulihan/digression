@@ -63,6 +63,9 @@ func set_branch(branch: MatchBranch) -> void:
 	set_value(_branch_resource.value)
 
 
+func prepare_to_change_parent():
+	preparing_to_change_parent.emit()
+
 func _on_remove_button_pressed() -> void:
 	remove_requested.emit()
 

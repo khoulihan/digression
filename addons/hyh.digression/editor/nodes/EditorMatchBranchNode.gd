@@ -103,6 +103,16 @@ func remove_branch(index):
 	removing_slot.emit(index)
 	var node = get_child(index)
 	remove_child(node)
+	# This is the button slot
+	set_slot(
+		get_child_count() - 1,
+		false,
+		0,
+		CONNECTOR_COLOUR,
+		false,
+		0,
+		CONNECTOR_COLOUR
+	)
 	node.remove_requested.disconnect(
 		_on_branch_remove_requested
 	)
@@ -111,6 +121,9 @@ func remove_branch(index):
 	)
 	node.dropped_after.disconnect(
 		_on_branch_dropped_after
+	)
+	node.preparing_to_change_parent.disconnect(
+		_on_branch_preparing_to_change_parent
 	)
 	_reconnect_signals()
 	# This should resize the control to the maximum required for the remaining
@@ -140,6 +153,11 @@ func _create_branch():
 	)
 	new_value_line.dropped_after.connect(
 		_on_branch_dropped_after.bind(
+			new_value_line
+		)
+	)
+	new_value_line.preparing_to_change_parent.connect(
+		_on_branch_preparing_to_change_parent.bind(
 			new_value_line
 		)
 	)
@@ -178,6 +196,9 @@ func _reconnect_signals():
 			get_child(index).dropped_after.disconnect(
 				_on_branch_dropped_after
 			)
+			get_child(index).preparing_to_change_parent.disconnect(
+				_on_branch_preparing_to_change_parent
+			)
 			get_child(index).remove_requested.connect(
 				_on_branch_remove_requested.bind(index)
 			)
@@ -186,6 +207,11 @@ func _reconnect_signals():
 			)
 			get_child(index).dropped_after.connect(
 				_on_branch_dropped_after.bind(
+					get_child(index)
+				)
+			)
+			get_child(index).preparing_to_change_parent.connect(
+				_on_branch_preparing_to_change_parent.bind(
 					get_child(index)
 				)
 			)
@@ -203,7 +229,6 @@ func _move_dropped_branch_to_index(dropped, index):
 		)
 	else:
 		# This indicates a drag from a different node.
-		# TODO: Ensure this is implemented.
 		dropped.prepare_to_change_parent()
 		_add_branch_at_position(
 			dropped,
@@ -225,18 +250,23 @@ func _move_branch_to_position(branch, index):
 
 
 func _add_branch_at_position(branch, index):
-	# TODO: Implement this to enable drag from other nodes
-	#var size_diff = section.size.y
-	#_sections_container.add_child(section)
-	#_sections_container.move_child(section, index)
-	#self.size = Vector2(self.size.x, self.size.y + size_diff)
-	#node_resource.sections.insert(
-	#	index,
-	#	section.section_resource
-	#)
-	#section.populate_variants(_get_variants_for_selected_character())
-	#_connect_signals_for_section(section)
-	pass
+	self.add_child(branch)
+	self.move_child(branch, index)
+	# The resources will be at indices one less than in the GUI
+	# because of the initial header section of the GUI
+	node_resource.branches.insert(index - 1, branch.get_branch())
+	# This is the slot that will have been opened up by the insertion of the
+	# dropped branch.
+	set_slot(
+		get_child_count() - 2,
+		false,
+		0,
+		CONNECTOR_COLOUR,
+		true,
+		0,
+		CONNECTOR_COLOUR
+	)
+	_reconnect_signals()
 
 
 func _on_add_branch_button_pressed():
@@ -286,4 +316,14 @@ func _on_drag_target_dropped(arg: Variant, at_position: Variant) -> void:
 	_move_dropped_branch_to_index(
 		arg,
 		1
+	)
+
+
+func _on_branch_preparing_to_change_parent(branch):
+	# Remove the GUI branch and the resource branch from their parents.
+	self.remove_branch(branch.get_index())
+	node_resource.branches.remove_at(
+		node_resource.branches.find(
+			branch.get_branch()
+		)
 	)
