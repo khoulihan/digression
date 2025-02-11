@@ -54,6 +54,3 @@ func get_value_expression():
 
 func set_value_expression(val):
 	value_expression = val
-
-
-

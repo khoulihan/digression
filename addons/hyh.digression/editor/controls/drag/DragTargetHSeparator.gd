@@ -6,9 +6,12 @@ signal dropped(arg, at_position)
 
 
 const DragClass = preload("res://addons/hyh.digression/editor/controls/drag/DragHandle.gd").DragClass
+const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
+const DragVariableTypeRestriction = preload("DragHandle.gd").DragVariableTypeRestriction
 
 
 @export var accepted_classes : Array[DragClass]
+@export var accepted_type_restriction : DragVariableTypeRestriction
 
 var _mouse_over := false
 
@@ -22,6 +25,12 @@ func _ready() -> void:
 	_drop_icon_left.visible = false
 	_drop_icon_right.visible = false
 	_separator.accepted_classes = accepted_classes
+	_separator.accepted_type_restriction = accepted_type_restriction
+
+
+func update_accepted_type_restriction(t: DragVariableTypeRestriction) -> void:
+	accepted_type_restriction = t
+	_separator.accepted_type_restriction = accepted_type_restriction
 
 
 func _indicate_droppable(state: bool) -> void:

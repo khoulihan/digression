@@ -96,6 +96,7 @@ text = "default"
 [node name="DragTargetHSeparator" parent="MC/VB" index="1" instance=ExtResource("9_7nl6g")]
 layout_mode = 2
 accepted_classes = Array[int]([2])
+accepted_type_restriction = 0
 
 [node name="BranchValue" parent="." index="2" instance=ExtResource("9_ii30g")]
 layout_mode = 2
