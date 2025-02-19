@@ -44,11 +44,11 @@ func _get_drag_data(at_position):
 		"control": target,
 	}
 	if self.type_restriction != DragVariableTypeRestriction.NONE:
-		drag_data["dge_drag_variable_type"] = _map_type_restriction(type_restriction)
+		drag_data["dge_drag_variable_type"] = map_type_restriction_to_type(type_restriction)
 	return drag_data
 
 
-func _map_type_restriction(restriction_type: DragVariableTypeRestriction) -> VariableType:
+static func map_type_restriction_to_type(restriction_type: DragVariableTypeRestriction) -> VariableType:
 	match (restriction_type):
 		DragVariableTypeRestriction.BOOL:
 			return VariableType.TYPE_BOOL
@@ -61,6 +61,20 @@ func _map_type_restriction(restriction_type: DragVariableTypeRestriction) -> Var
 		_:
 			# We should never end up here.
 			return VariableType.TYPE_BOOL
+
+
+static func map_type_to_type_restriction(vartype: VariableType) -> DragVariableTypeRestriction:
+	match (vartype):
+		VariableType.TYPE_BOOL:
+			return DragVariableTypeRestriction.BOOL
+		VariableType.TYPE_INT:
+			return DragVariableTypeRestriction.INT
+		VariableType.TYPE_FLOAT:
+			return DragVariableTypeRestriction.FLOAT
+		VariableType.TYPE_STRING:
+			return DragVariableTypeRestriction.STRING
+		_:
+			return DragVariableTypeRestriction.NONE
 
 
 func _get_drag_class_string(dc : DragClass) -> String:

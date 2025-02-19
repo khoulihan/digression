@@ -6,7 +6,8 @@ extends "EditorGraphNodeBase.gd"
 const MatchBranch = preload("../../resources/graph/branches/MatchBranch.gd")
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
-const DragVariableTypeRestriction = preload("../controls/drag/DragHandle.gd").DragVariableTypeRestriction
+const DragHandle = preload("../controls/drag/DragHandle.gd")
+const DragVariableTypeRestriction = DragHandle.DragVariableTypeRestriction
 
 
 var _branch_value_scene = preload("../branches/EditorMatchBranchValue.tscn")
@@ -96,7 +97,7 @@ func set_type(val):
 	for index in range(1, get_child_count() - 1):
 		get_child(index).set_type(val)
 	_top_drag_target.update_accepted_type_restriction(
-		_map_type_restriction(_variable_type)
+		DragHandle.map_type_to_type_restriction(_variable_type)
 	)
 
 
@@ -273,20 +274,6 @@ func _add_branch_at_position(branch, index):
 		CONNECTOR_COLOUR
 	)
 	_reconnect_signals()
-
-
-func _map_type_restriction(vartype: VariableType) -> DragVariableTypeRestriction:
-	match (vartype):
-		VariableType.TYPE_BOOL:
-			return DragVariableTypeRestriction.BOOL
-		VariableType.TYPE_INT:
-			return DragVariableTypeRestriction.INT
-		VariableType.TYPE_FLOAT:
-			return DragVariableTypeRestriction.FLOAT
-		VariableType.TYPE_STRING:
-			return DragVariableTypeRestriction.STRING
-		_:
-			return DragVariableTypeRestriction.NONE
 
 
 func _on_add_branch_button_pressed():
