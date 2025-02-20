@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://cj3nuku0ns6o0"]
+[gd_scene load_steps=8 format=3 uid="uid://cj3nuku0ns6o0"]
 
 [ext_resource type="PackedScene" uid="uid://b46vwf6pxf1tl" path="res://addons/hyh.digression/editor/controls/expressions/OperatorExpression.tscn" id="1_m0gfp"]
 [ext_resource type="Script" path="res://addons/hyh.digression/editor/branches/EditorIfBranchValue.gd" id="1_u2dra"]
 [ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.digression/icons/icon_remove.svg" id="2_2hdln"]
 [ext_resource type="Texture2D" uid="uid://dexnm3exsn0ns" path="res://addons/hyh.digression/icons/icon_drag_vertical.svg" id="2_vfo8d"]
 [ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/drag/DragHandle.gd" id="3_hoerc"]
+[ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="6_exyde"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o06wu"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -25,30 +26,33 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 script = ExtResource("1_u2dra")
 
-[node name="Condition" type="HBoxContainer" parent="."]
+[node name="VB" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="DragHandle" type="TextureRect" parent="Condition" node_paths=PackedStringArray("target")]
+[node name="Condition" type="HBoxContainer" parent="VB"]
+layout_mode = 2
+
+[node name="DragHandle" type="TextureRect" parent="VB/Condition" node_paths=PackedStringArray("target")]
 layout_mode = 2
 mouse_filter = 0
 mouse_default_cursor_shape = 13
 texture = ExtResource("2_vfo8d")
 stretch_mode = 3
 script = ExtResource("3_hoerc")
-target = NodePath("../..")
+target = NodePath("../../..")
 drag_class = 3
 
-[node name="Label" type="Label" parent="Condition"]
+[node name="Label" type="Label" parent="VB/Condition"]
 custom_minimum_size = Vector2(35, 0)
 layout_mode = 2
 text = "if "
 
-[node name="PC" type="PanelContainer" parent="Condition"]
+[node name="PC" type="PanelContainer" parent="VB/Condition"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_o06wu")
 
-[node name="MC" type="MarginContainer" parent="Condition/PC"]
+[node name="MC" type="MarginContainer" parent="VB/Condition/PC"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 9
@@ -56,16 +60,22 @@ theme_override_constants/margin_top = 3
 theme_override_constants/margin_right = 9
 theme_override_constants/margin_bottom = 3
 
-[node name="ConditionExpression" parent="Condition/PC/MC" instance=ExtResource("1_m0gfp")]
+[node name="ConditionExpression" parent="VB/Condition/PC/MC" instance=ExtResource("1_m0gfp")]
 layout_mode = 2
 type = 1
 
-[node name="RemoveButton" type="Button" parent="Condition"]
+[node name="RemoveButton" type="Button" parent="VB/Condition"]
 layout_mode = 2
 size_flags_vertical = 0
 icon = ExtResource("2_2hdln")
 flat = true
 
-[connection signal="modified" from="Condition/PC/MC/ConditionExpression" to="." method="_on_condition_expression_modified"]
-[connection signal="size_changed" from="Condition/PC/MC/ConditionExpression" to="." method="_on_condition_expression_size_changed"]
-[connection signal="pressed" from="Condition/RemoveButton" to="." method="_on_remove_button_pressed"]
+[node name="DragTargetHSeparator" parent="VB" instance=ExtResource("6_exyde")]
+layout_mode = 2
+accepted_classes = Array[int]([3])
+hide_until_hover = true
+
+[connection signal="modified" from="VB/Condition/PC/MC/ConditionExpression" to="." method="_on_condition_expression_modified"]
+[connection signal="size_changed" from="VB/Condition/PC/MC/ConditionExpression" to="." method="_on_condition_expression_size_changed"]
+[connection signal="pressed" from="VB/Condition/RemoveButton" to="." method="_on_remove_button_pressed"]
+[connection signal="dropped" from="VB/DragTargetHSeparator" to="." method="_on_drag_target_dropped"]

@@ -12,6 +12,7 @@ const DragVariableTypeRestriction = preload("DragHandle.gd").DragVariableTypeRes
 
 @export var accepted_classes : Array[DragClass]
 @export var accepted_type_restriction : DragVariableTypeRestriction
+@export var hide_until_hover : bool = false
 
 var _mouse_over := false
 
@@ -26,6 +27,8 @@ func _ready() -> void:
 	_drop_icon_right.visible = false
 	_separator.accepted_classes = accepted_classes
 	_separator.accepted_type_restriction = accepted_type_restriction
+	if hide_until_hover:
+		_separator.modulate = Color.TRANSPARENT
 
 
 func update_accepted_type_restriction(t: DragVariableTypeRestriction) -> void:
@@ -34,9 +37,13 @@ func update_accepted_type_restriction(t: DragVariableTypeRestriction) -> void:
 
 
 func _indicate_droppable(state: bool) -> void:
+	#_separator.visible = state if hide_until_hover else true
 	_drop_icon_left.visible = state
 	_drop_icon_right.visible = state
-	_separator.modulate = Color.BLACK if state else Color.WHITE
+	if not hide_until_hover:
+		_separator.modulate = Color.BLACK if state else Color.WHITE
+	else:
+		_separator.modulate = Color.BLACK if state else Color.TRANSPARENT
 
 
 func _on_drag_target_can_drop(at_position: Variant, data: Variant) -> void:

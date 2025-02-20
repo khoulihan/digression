@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dr2ery2ai70gm"]
+[gd_scene load_steps=10 format=3 uid="uid://dr2ery2ai70gm"]
 
 [ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.digression/editor/nodes/styles/node_theme.tres" id="1_3m3eq"]
 [ext_resource type="StyleBox" uid="uid://cy2mtyhieui8q" path="res://addons/hyh.digression/editor/nodes/styles/control_node.tres" id="2_ftk5c"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://addons/hyh.digression/editor/nodes/EditorIfBranchNode.gd" id="6_cvu84"]
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="6_obc87"]
 [ext_resource type="PackedScene" uid="uid://cj3nuku0ns6o0" path="res://addons/hyh.digression/editor/branches/EditorIfBranchValue.tscn" id="7_7trmo"]
+[ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="7_t8s6h"]
 
 [node name="EditorIfBranchNode" type="GraphNode"]
 offset_right = 458.0
@@ -63,11 +64,19 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Label" type="Label" parent="DefaultContainer"]
+[node name="VB" type="VBoxContainer" parent="DefaultContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="DefaultContainer/VB"]
 layout_mode = 2
 size_flags_horizontal = 10
 text = "else"
 horizontal_alignment = 2
+
+[node name="DragTargetHSeparator" parent="DefaultContainer/VB" instance=ExtResource("7_t8s6h")]
+layout_mode = 2
+accepted_classes = Array[int]([3])
+hide_until_hover = true
 
 [node name="EditorIfBranchValue" parent="." instance=ExtResource("7_7trmo")]
 layout_mode = 2
@@ -89,7 +98,13 @@ text = "Add Branch"
 icon = ExtResource("6_obc87")
 flat = true
 
+[connection signal="dropped" from="DefaultContainer/VB/DragTargetHSeparator" to="." method="_on_drag_target_dropped"]
+[connection signal="dropped_after" from="EditorIfBranchValue" to="." method="_on_branch_dropped_after"]
 [connection signal="modified" from="EditorIfBranchValue" to="." method="_on_branch_modified" binds= [0]]
+[connection signal="preparing_to_change_parent" from="EditorIfBranchValue" to="." method="_on_branch_preparing_to_change_parent"]
 [connection signal="remove_requested" from="EditorIfBranchValue" to="." method="_on_branch_remove_requested" binds= [0]]
+[connection signal="dropped_after" from="EditorIfBranchValue2" to="." method="_on_branch_dropped_after"]
 [connection signal="modified" from="EditorIfBranchValue2" to="." method="_on_branch_modified" binds= [1]]
+[connection signal="preparing_to_change_parent" from="EditorIfBranchValue2" to="." method="_on_branch_preparing_to_change_parent"]
 [connection signal="remove_requested" from="EditorIfBranchValue2" to="." method="_on_branch_remove_requested" binds= [1]]
+[connection signal="pressed" from="AddBranchContainer/AddBranchButton" to="." method="_on_add_branch_button_pressed"]
