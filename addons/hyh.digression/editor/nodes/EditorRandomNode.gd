@@ -9,6 +9,9 @@ const VariableType = preload("../../resources/graph/VariableSetNode.gd").Variabl
 var _random_value_scene = preload("../branches/EditorRandomValue.tscn")
 var _original_size: Vector2
 
+@onready var _add_branch_button : Button = $AddBranchContainer/AddBranchButton
+@onready var _top_drag_target := $MarginContainer/VB/DragTargetHSeparator
+
 
 ## Configure the editor node for a given graph node.
 func configure_for_node(g, n):
@@ -35,7 +38,7 @@ func clear_node_relationships():
 ## Get the branch resources.
 func get_branches():
 	var t: Array[RandomBranch] = []
-	for index in range(1, get_child_count()):
+	for index in range(1, get_child_count() - 1):
 		t.append(get_child(index).get_branch())
 	return t
 
@@ -51,7 +54,7 @@ func set_branches(branches):
 
 ## Clear all branches.
 func clear_branches():
-	for index in range(get_child_count() - 1, 0, -1):
+	for index in range(get_child_count() - 2, 0, -1):
 		remove_branch(index)
 
 
@@ -60,8 +63,29 @@ func remove_branch(index):
 	removing_slot.emit(index)
 	var node = get_child(index)
 	remove_child(node)
-	node.remove_requested.disconnect(_on_branch_remove_requested)
-	node.modified.disconnect(_on_branch_modified)
+	node_resource.remove_branch(node.branch_resource)
+	# This is the button slot
+	set_slot(
+		get_child_count() - 1,
+		false,
+		0,
+		CONNECTOR_COLOUR,
+		false,
+		0,
+		CONNECTOR_COLOUR
+	)
+	node.remove_requested.disconnect(
+		_on_branch_remove_requested
+	)
+	node.modified.disconnect(
+		_on_branch_modified
+	)
+	node.dropped_after.disconnect(
+		_on_branch_dropped_after
+	)
+	node.preparing_to_change_parent.disconnect(
+		_on_branch_preparing_to_change_parent
+	)
 	_reconnect_signals()
 	# This should restore the control to the minimum required for the remaining
 	# choices, but a bit more than strictly necessary horizontally.
@@ -80,18 +104,30 @@ func _create_branch():
 	var branch_resource = RandomBranch.new()
 	new_value_line.branch_resource = branch_resource
 	add_child(new_value_line)
+	move_child(new_value_line, get_child_count() - 2)
 	new_value_line.remove_requested.connect(
 		_on_branch_remove_requested.bind(
-			get_child_count() - 1
+			get_child_count() - 2
 		)
 	)
 	new_value_line.modified.connect(
 		_on_branch_modified.bind(
-			get_child_count() - 1
+			get_child_count() - 2
 		)
 	)
+	new_value_line.dropped_after.connect(
+		_on_branch_dropped_after.bind(
+			new_value_line
+		)
+	)
+	new_value_line.preparing_to_change_parent.connect(
+		_on_branch_preparing_to_change_parent.bind(
+			new_value_line
+		)
+	)
+	# This is the new branch
 	set_slot(
-		get_child_count() - 1,
+		get_child_count() - 2,
 		false,
 		0,
 		CONNECTOR_COLOUR,
@@ -99,23 +135,101 @@ func _create_branch():
 		0,
 		CONNECTOR_COLOUR
 	)
+	# This is the button slot
+	set_slot(
+		get_child_count() - 1,
+		false,
+		0,
+		CONNECTOR_COLOUR,
+		false,
+		0,
+		CONNECTOR_COLOUR
+	)
 	return new_value_line
 
 
+func _move_dropped_branch_to_index(dropped, index):
+	if dropped.get_parent() == self:
+		if dropped.get_index() < index:
+			index = index - 1
+		if dropped.get_index() == index:
+			return
+		_move_branch_to_position(
+			dropped,
+			index
+		)
+	else:
+		# This indicates a drag from a different node.
+		dropped.prepare_to_change_parent()
+		_add_branch_at_position(
+			dropped,
+			index
+		)
+	modified.emit()
+
+
+func _move_branch_to_position(branch, index):
+	var current_index = branch.get_index()
+	self.move_child(branch, index)
+	
+	# The resources will be at indices one less than in the GUI
+	# because of the initial header section of the GUI
+	node_resource.branches.insert(
+		index - 1,
+		node_resource.branches.pop_at(current_index - 1)
+	)
+
+
+func _add_branch_at_position(branch, index):
+	self.add_child(branch)
+	self.move_child(branch, index)
+	# The resources will be at indices one less than in the GUI
+	# because of the initial header section of the GUI
+	node_resource.branches.insert(index - 1, branch.get_branch())
+	# This is the slot that will have been opened up by the insertion of the
+	# dropped branch.
+	set_slot(
+		get_child_count() - 2,
+		false,
+		0,
+		CONNECTOR_COLOUR,
+		true,
+		0,
+		CONNECTOR_COLOUR
+	)
+	_reconnect_signals()
+
+
 func _reconnect_signals():
-	if get_child_count() > 1:
-		for index in range(1, get_child_count()):
+	if get_child_count() > 2:
+		for index in range(1, get_child_count() - 1):
 			get_child(index).remove_requested.disconnect(
 				_on_branch_remove_requested
 			)
 			get_child(index).modified.disconnect(
 				_on_branch_modified
 			)
+			get_child(index).dropped_after.disconnect(
+				_on_branch_dropped_after
+			)
+			get_child(index).preparing_to_change_parent.disconnect(
+				_on_branch_preparing_to_change_parent
+			)
 			get_child(index).remove_requested.connect(
 				_on_branch_remove_requested.bind(index)
 			)
 			get_child(index).modified.connect(
 				_on_branch_modified.bind(index)
+			)
+			get_child(index).dropped_after.connect(
+				_on_branch_dropped_after.bind(
+					get_child(index)
+				)
+			)
+			get_child(index).preparing_to_change_parent.connect(
+				_on_branch_preparing_to_change_parent.bind(
+					get_child(index)
+				)
 			)
 
 
@@ -136,3 +250,27 @@ func _on_branch_modified(index):
 func _on_gui_input(ev):
 	super._on_gui_input(ev)
 
+
+func _on_branch_dropped_after(dropped, after) -> void:
+	_move_dropped_branch_to_index(
+		dropped,
+		after.get_index() + 1
+	)
+
+
+func _on_branch_preparing_to_change_parent(branch):
+	# Remove the GUI branch and the resource branch from their parents.
+	self.remove_branch(branch.get_index())
+	node_resource.branches.remove_at(
+		node_resource.branches.find(
+			branch.get_branch()
+		)
+	)
+
+
+func _on_drag_target_dropped(arg, at_position) -> void:
+	# Drop at the topmost separator - move the target to the top.
+	_move_dropped_branch_to_index(
+		arg,
+		1
+	)

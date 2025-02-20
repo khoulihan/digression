@@ -53,8 +53,11 @@ flat = true
 
 [node name="DragTargetHSeparator" parent="VB" instance=ExtResource("6_x812e")]
 layout_mode = 2
+accepted_classes = Array[int]([4])
+accepted_type_restriction = 0
 
 [connection signal="changed" from="VB/HB/VariableContainer/WeightControl" to="." method="_on_weight_control_changed"]
 [connection signal="cleared" from="VB/HB/VariableContainer/WeightControl" to="." method="_on_weight_control_cleared"]
 [connection signal="size_changed" from="VB/HB/VariableContainer/ConditionControl" to="." method="_on_condition_control_size_changed"]
 [connection signal="pressed" from="VB/HB/RemoveButton" to="." method="_on_remove_button_pressed"]
+[connection signal="dropped" from="VB/DragTargetHSeparator" to="." method="_on_drag_target_dropped"]

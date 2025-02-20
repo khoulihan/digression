@@ -110,6 +110,7 @@ func remove_branch(index):
 	removing_slot.emit(index)
 	var node = get_child(index)
 	remove_child(node)
+	node_resource.remove_branch(node.get_branch())
 	# This is the button slot
 	set_slot(
 		get_child_count() - 1,
@@ -286,6 +287,7 @@ func _on_add_branch_button_pressed():
 
 func _on_branch_remove_requested(index):
 	remove_branch(index)
+	modified.emit()
 
 
 func _on_branch_modified(index):

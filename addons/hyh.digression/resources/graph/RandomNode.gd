@@ -23,3 +23,9 @@ func connect_to_node(connection_index: int, node_id: int) -> void:
 		next = node_id
 		return
 	branches[connection_index - 1].next = node_id
+
+
+func remove_branch(branch: RandomBranch) -> void:
+	branches.remove_at(
+		branches.find(branch)
+	)
