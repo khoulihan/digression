@@ -5,6 +5,7 @@ extends "Expression.gd"
 
 const FunctionType = preload("../../../resources/graph/expressions/ExpressionResource.gd").FunctionType
 const ExpressionType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionType
+const DragClass = preload("../drag/DragHandle.gd").DragClass
 
 @onready var _add_element_button = $AddElementButton
 
@@ -165,7 +166,7 @@ func _can_drop_data(at_position, data):
 		return false
 	if not "dge_drag_class" in data:
 		return false
-	if data["dge_drag_class"] != "expression":
+	if data["dge_drag_class"] != DragClass.EXPRESSION:
 		return false
 	if type != data["type"]:
 		return false

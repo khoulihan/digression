@@ -8,7 +8,8 @@ enum DragClass {
 	MATCH_BRANCH,
 	IF_BRANCH,
 	RANDOM_BRANCH,
-	CHOICE
+	CHOICE,
+	EXPRESSION
 }
 
 enum DragVariableTypeRestriction {
