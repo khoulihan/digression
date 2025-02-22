@@ -53,14 +53,16 @@ func configure_for_node(g, n):
 	set_choices(
 		n.choices
 	)
+	var dialogue_resource = _get_dialogue_resource(n)
+	var dialogue_text_resource = _get_dialogue_text_resource(n)
 	set_show_dialogue_for_default(n.show_dialogue_for_default)
-	set_dialogue_text(n.dialogue.text)
-	set_dialogue_translation_key(n.dialogue.text_translation_key)
-	select_character(n.dialogue.character)
-	select_variant(n.dialogue.character_variant)
-	select_dialogue_type(n.dialogue.dialogue_type, false)
+	set_dialogue_text(dialogue_text_resource.text)
+	set_dialogue_translation_key(dialogue_text_resource.text_translation_key)
+	select_character(dialogue_resource.character)
+	select_variant(dialogue_text_resource.character_variant)
+	select_dialogue_type(dialogue_resource.dialogue_type, false)
 	select_choice_type(n.choice_type, false)
-	_populate_properties(n.dialogue.custom_properties)
+	_populate_properties(dialogue_text_resource.custom_properties)
 	if n.size != null and n.size != Vector2.ZERO:
 		size = n.size
 
@@ -72,19 +74,21 @@ func persist_changes_to_node():
 	node_resource.choice_type = get_choice_type()
 	node_resource.show_dialogue_for_default = get_show_dialogue_for_default()
 	node_resource.size = self.size
-	# TODO: Persist dialogue, choice type.
-	node_resource.dialogue.dialogue_type = get_dialogue_type()
-	node_resource.dialogue.text = get_dialogue_text()
-	node_resource.dialogue.text_translation_key = get_dialogue_translation_key()
+	# Persist dialogue, choice type.
+	var dialogue_resource = _get_dialogue_resource(node_resource)
+	var dialogue_text_resource = _get_dialogue_text_resource(node_resource)
+	dialogue_resource.dialogue_type = get_dialogue_type()
+	dialogue_text_resource.text = get_dialogue_text()
+	dialogue_text_resource.text_translation_key = get_dialogue_translation_key()
 	var selected_c = get_selected_character()
 	if selected_c != -1:
-		node_resource.dialogue.character = _characters[selected_c]
+		dialogue_resource.character = _characters[selected_c]
 		var selected_v = get_selected_variant()
 		if selected_v != -1:
-			node_resource.dialogue.character_variant = node_resource.dialogue.character.character_variants[selected_v]
+			dialogue_text_resource.character_variant = dialogue_resource.character.character_variants[selected_v]
 	else:
-		node_resource.dialogue.character = null
-	node_resource.dialogue.custom_properties = _get_properties()
+		dialogue_resource.character = null
+	dialogue_text_resource.custom_properties = _get_properties()
 
 
 ## Clear all branches.
@@ -125,6 +129,16 @@ func get_choices():
 	for index in range(2, get_child_count()):
 		t.append(get_child(index).get_choice())
 	return t
+
+
+# Get the embedded dialogue resource for the choice resource.
+func _get_dialogue_resource(choice_resource):
+	return choice_resource.dialogue
+
+
+# Get the first dialogue text section of the embedded dialogue resource.
+func _get_dialogue_text_resource(choice_resource):
+	return choice_resource.dialogue.sections[0]
 
 
 ## Add a branch.
