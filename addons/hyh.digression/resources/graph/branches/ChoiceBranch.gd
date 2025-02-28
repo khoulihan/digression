@@ -80,6 +80,3 @@ func add_custom_property(name: String, type: VariableType) -> Dictionary:
 ## Remove a custom property.
 func remove_custom_property(name: String) -> void:
 	custom_properties.erase(name)
-
-
-

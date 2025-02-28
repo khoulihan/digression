@@ -35,3 +35,9 @@ func connect_to_node(connection_index: int, node_id: int) -> void:
 		next = node_id
 		return
 	choices[connection_index - 1].next = node_id
+
+
+func remove_choice(choice: ChoiceBranch) -> void:
+	choices.remove_at(
+		choices.find(choice)
+	)

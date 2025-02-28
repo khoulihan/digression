@@ -241,6 +241,7 @@ func _on_branch_preparing_to_change_parent(branch):
 	# Remove the GUI branch and the resource branch from their parents.
 	self.remove_branch(branch.get_index())
 	node_resource.remove_branch(branch.get_branch())
+	modified.emit()
 
 
 func _on_drag_target_dropped(arg, at_position) -> void:

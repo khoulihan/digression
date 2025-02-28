@@ -5,6 +5,8 @@ extends MarginContainer
 
 signal remove_requested()
 signal modified()
+signal preparing_to_change_parent()
+signal dropped_after(section)
 signal size_changed(size_change)
 
 const Logging = preload("../../utility/Logging.gd")
@@ -44,6 +46,10 @@ func set_choice(choice: ChoiceBranch) -> void:
 	_display_edit.text = self.choice_resource.display
 	_translation_key_edit.text = self.choice_resource.display_translation_key
 	_populate_properties(self.choice_resource.custom_properties)
+
+
+func prepare_to_change_parent():
+	preparing_to_change_parent.emit()
 
 
 func _populate_properties(properties: Dictionary) -> void:
@@ -90,3 +96,7 @@ func _on_custom_properties_control_remove_property_requested(property_name) -> v
 
 func _on_custom_properties_control_size_changed(size_change) -> void:
 	size_changed.emit(size_change)
+
+
+func _on_drag_target_dropped(arg: Variant, at_position: Variant) -> void:
+	dropped_after.emit(arg)

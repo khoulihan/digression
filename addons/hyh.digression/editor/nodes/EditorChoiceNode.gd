@@ -93,19 +93,30 @@ func persist_changes_to_node():
 
 ## Clear all branches.
 func clear_choices():
-	for index in range(get_child_count() - 1, 1, -1):
+	for index in range(get_child_count() - 2, 1, -1):
 		remove_choice(index)
 
 
 ## Remove a branch by index.
 func remove_choice(index):
-	removing_slot.emit(index)
+	# This is one less than the index because the first output port is one the
+	# second slot in this case, where it is usually on the first.
+	removing_slot.emit(index - 1)
 	var node = get_child(index)
 	var height = node.size.y
 	remove_child(node)
-	node.remove_requested.disconnect(_on_branch_remove_requested)
-	node.modified.disconnect(_on_branch_modified)
-	node.size_changed.disconnect(_on_branch_size_changed)
+	node_resource.remove_choice(node.choice_resource)
+	# This is the button slot
+	set_slot(
+		get_child_count() - 1,
+		false,
+		0,
+		CONNECTOR_COLOUR,
+		false,
+		0,
+		CONNECTOR_COLOUR
+	)
+	_disconnect_signals_for_choice(node)
 	_reconnect_removal_signals()
 	# This should restore the control to the minimum required for the remaining
 	# choices, but a bit more than strictly necessary horizontally.
@@ -126,9 +137,49 @@ func set_choices(
 ## Get all the nodes branches.
 func get_choices():
 	var t: Array[ChoiceBranch] = []
-	for index in range(2, get_child_count()):
+	for index in range(2, get_child_count() - 1):
 		t.append(get_child(index).get_choice())
 	return t
+
+
+func _connect_signals_for_choice(choice, index):
+	choice.remove_requested.connect(
+		_on_branch_remove_requested.bind(
+			index
+		)
+	)
+	choice.modified.connect(
+		_on_branch_modified.bind(
+			index
+		)
+	)
+	choice.size_changed.connect(
+		_on_branch_size_changed.bind(
+			index
+		)
+	)
+	choice.dropped_after.connect(
+		_on_choice_dropped_after.bind(
+			choice
+		)
+	)
+	choice.preparing_to_change_parent.connect(
+		_on_choice_preparing_to_change_parent.bind(
+			choice
+		)
+	)
+
+
+func _disconnect_signals_for_choice(choice):
+	choice.remove_requested.disconnect(_on_branch_remove_requested)
+	choice.modified.disconnect(_on_branch_modified)
+	choice.size_changed.disconnect(_on_branch_size_changed)
+	choice.dropped_after.disconnect(
+		_on_choice_dropped_after
+	)
+	choice.preparing_to_change_parent.disconnect(
+		_on_choice_preparing_to_change_parent
+	)
 
 
 # Get the embedded dialogue resource for the choice resource.
@@ -267,7 +318,6 @@ func set_dialogue_types(dialogue_types):
 			next_id,
 		)
 		next_id += 1
-	#set_dialogue_type(node_resource.dialogue_type)
 
 
 ## Select the specified dialogue type for the embedded dialogue node.
@@ -302,7 +352,6 @@ func set_choice_types(choice_types):
 			next_id,
 		)
 		next_id += 1
-	#set_choice_type(node_resource.dialogue_type)
 
 
 ## Get the selected choice type.
@@ -340,7 +389,7 @@ func clear_node_relationships():
 
 func _reconnect_removal_signals():
 	if get_child_count() > 2:
-		for index in range(2, get_child_count()):
+		for index in range(2, get_child_count() - 1):
 			get_child(index).remove_requested.disconnect(
 				_on_branch_remove_requested
 			)
@@ -358,32 +407,30 @@ func _create_branch(adjust_size):
 	)
 	new_value_line.choice_resource = choice_resource
 	add_child(new_value_line)
+	move_child(new_value_line, get_child_count() - 2)
 	if adjust_size:
 		# TODO: Unknown why, but the branch scene has a height of 136 
 		# when first created, but the actual size increase required is
 		# 130
 		size = Vector2(size.x, size.y + 130)
-	new_value_line.remove_requested.connect(
-		_on_branch_remove_requested.bind(
-			get_child_count() - 1,
-		)
+	_connect_signals_for_choice(new_value_line, get_child_count() - 2)
+	# New choice
+	set_slot(
+		get_child_count() - 2,
+		false,
+		0,
+		CONNECTOR_COLOUR,
+		true,
+		0,
+		CONNECTOR_COLOUR,
 	)
-	new_value_line.modified.connect(
-		_on_branch_modified.bind(
-			get_child_count() - 1,
-		)
-	)
-	new_value_line.size_changed.connect(
-		_on_branch_size_changed.bind(
-			get_child_count() - 1,
-		)
-	)
+	# Add choice button
 	set_slot(
 		get_child_count() - 1,
 		false,
 		0,
 		CONNECTOR_COLOUR,
-		true,
+		false,
 		0,
 		CONNECTOR_COLOUR,
 	)
@@ -475,7 +522,60 @@ func _get_id_for_choice_type(type):
 	return _choice_types_by_id.find_key(type)
 
 
-func _on_add_branch_button_pressed():
+func _move_dropped_choice_to_index(dropped, index):
+	if dropped.get_parent() == self:
+		if dropped.get_index() < index:
+			index = index - 1
+		if dropped.get_index() == index:
+			return
+		_move_choice_to_position(
+			dropped,
+			index
+		)
+	else:
+		# This indicates a drag from a different node.
+		dropped.prepare_to_change_parent()
+		_add_choice_at_position(
+			dropped,
+			index
+		)
+	modified.emit()
+
+
+func _move_choice_to_position(choice, index):
+	var current_index = choice.get_index()
+	self.move_child(choice, index)
+	
+	# The resources will be at indices two less than in the GUI
+	# because of the initial header sections of the GUI
+	node_resource.choices.insert(
+		index - 2,
+		node_resource.choices.pop_at(current_index - 2)
+	)
+
+
+func _add_choice_at_position(choice, index):
+	self.add_child(choice)
+	self.move_child(choice, index)
+	# The resources will be at indices two less than in the GUI
+	# because of the initial header sections of the GUI
+	node_resource.choices.insert(index - 2, choice.get_choice())
+	_connect_signals_for_choice(choice, index)
+	# This is the slot that will have been opened up by the insertion of the
+	# dropped branch.
+	set_slot(
+		get_child_count() - 2,
+		false,
+		0,
+		CONNECTOR_COLOUR,
+		true,
+		0,
+		CONNECTOR_COLOUR
+	)
+	_reconnect_removal_signals()
+
+
+func _on_add_choice_button_pressed() -> void:
 	_create_branch(true)
 	modified.emit()
 
@@ -572,3 +672,24 @@ func _on_clear_character_button_pressed():
 
 func _on_clear_variant_button_pressed():
 	select_variant(null)
+
+
+func _on_choice_dropped_after(dropped, after) -> void:
+	_move_dropped_choice_to_index(
+		dropped,
+		after.get_index() + 1
+	)
+
+
+func _on_choice_preparing_to_change_parent(choice):
+	# Remove the GUI choice and the resource choice from their parents.
+	self.remove_choice(choice.get_index())
+	node_resource.remove_choice(choice.get_choice())
+
+
+func _on_drag_target_dropped(arg, at_position) -> void:
+	# Drop at the topmost separator - move the target to the top.
+	_move_dropped_choice_to_index(
+		arg,
+		2
+	)
