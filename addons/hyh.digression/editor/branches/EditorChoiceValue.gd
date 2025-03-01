@@ -11,6 +11,7 @@ signal size_changed(size_change)
 
 const Logging = preload("../../utility/Logging.gd")
 const ChoiceBranch = preload("../../resources/graph/branches/ChoiceBranch.gd")
+const HANDLE_ICON = preload("../../icons/icon_drag_light.svg")
 
 var choice_resource: ChoiceBranch
 
@@ -54,6 +55,20 @@ func prepare_to_change_parent():
 
 func _populate_properties(properties: Dictionary) -> void:
 	_custom_properties_control.configure(properties)
+
+
+func get_drag_preview():
+	var preview = HBoxContainer.new()
+	var icon = TextureRect.new()
+	icon.texture = HANDLE_ICON
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	icon.stretch_mode = TextureRect.STRETCH_KEEP
+	var ptext = Label.new()
+	ptext.text = "Choice"
+	preview.add_child(icon)
+	preview.add_child(ptext)
+	preview.modulate = Color.from_string("#777777FF", Color.DIM_GRAY)
+	return preview
 
 
 func _on_remove_button_pressed() -> void:

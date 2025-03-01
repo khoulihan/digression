@@ -8,6 +8,7 @@ signal preparing_to_change_parent()
 signal dropped_after(section)
 
 const DialogueText = preload("res://addons/hyh.digression/resources/graph/DialogueText.gd")
+const HANDLE_ICON = preload("../../icons/icon_drag_light.svg")
 
 @export var section_resource: DialogueText
 
@@ -117,6 +118,20 @@ func populate_variants(variants):
 
 func prepare_to_change_parent():
 	preparing_to_change_parent.emit()
+
+
+func get_drag_preview():
+	var preview = HBoxContainer.new()
+	var icon = TextureRect.new()
+	icon.texture = HANDLE_ICON
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	icon.stretch_mode = TextureRect.STRETCH_KEEP
+	var ptext = Label.new()
+	ptext.text = "Dialogue Section"
+	preview.add_child(icon)
+	preview.add_child(ptext)
+	preview.modulate = Color.from_string("#777777FF", Color.DIM_GRAY)
+	return preview
 
 
 func _get_properties() -> Dictionary:
