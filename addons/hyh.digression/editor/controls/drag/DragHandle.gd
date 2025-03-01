@@ -92,7 +92,6 @@ func _get_default_drag_preview():
 	ptext.text = _get_type_name()
 	preview.add_child(icon)
 	preview.add_child(ptext)
-	# TODO: This is hard to see over a node, which is where it should be most visible!
 	preview.modulate = Color.from_string("#777777FF", Color.DIM_GRAY)
 	return preview
 
