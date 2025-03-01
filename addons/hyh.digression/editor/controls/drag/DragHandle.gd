@@ -22,7 +22,7 @@ enum DragVariableTypeRestriction {
 
 const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
 const Logging = preload("../../../utility/Logging.gd")
-const HANDLE_ICON = preload("../../../icons/icon_triple_bar.svg")
+const HANDLE_ICON = preload("../../../icons/icon_drag_vertical_light.svg")
 
 
 @export var target : Node
@@ -93,7 +93,7 @@ func _get_default_drag_preview():
 	preview.add_child(icon)
 	preview.add_child(ptext)
 	# TODO: This is hard to see over a node, which is where it should be most visible!
-	preview.modulate = Color.from_string("#FFFFFF88", Color.WHITE)
+	preview.modulate = Color.from_string("#777777FF", Color.DIM_GRAY)
 	return preview
 
 

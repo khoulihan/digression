@@ -2,7 +2,7 @@
 extends MarginContainer
 
 # TODO: Maybe a better icon for this?
-const ARGUMENT_ICON = preload("../../../icons/icon_triple_bar.svg")
+const ARGUMENT_ICON = preload("../../../icons/icon_drag_vertical_light.svg")
 
 @onready var OrdinalLabel: Label = get_node("ExpressionContainer/OrdinalLabel")
 @onready var DragHandle: TextureRect = get_node("ExpressionContainer/DragHandle")
@@ -38,7 +38,7 @@ func get_drag_preview():
 	ptext.text = "%s Argument" % _get_type_name()
 	preview.add_child(icon)
 	preview.add_child(ptext)
-	preview.modulate = Color.from_string("#FFFFFF88", Color.WHITE)
+	preview.modulate = Color.from_string("#777777FF", Color.DIM_GRAY)
 	return preview
 
 
