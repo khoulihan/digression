@@ -335,7 +335,7 @@ func _populate_return_details(return_type, variable):
 func _persist_action_details():
 	node_resource.action_mechanism = _action_mechanism_option.get_selected_id()
 	
-	if node_resource.action_mechanism ==ActionMechanism.METHOD:
+	if node_resource.action_mechanism == ActionMechanism.METHOD:
 		node_resource.action_or_method_name = _method_name_edit.text
 		node_resource.node = _node_selection_control.get_selected_path()
 		node_resource.returns_immediately = _returns_immediately_check.button_pressed
