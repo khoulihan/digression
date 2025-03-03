@@ -8,7 +8,6 @@
 [node name="DragTargetHSeparator" type="MarginContainer"]
 theme_override_constants/margin_bottom = -5
 script = ExtResource("1_aauwx")
-hide_until_hover = null
 
 [node name="HB" type="HBoxContainer" parent="."]
 layout_mode = 2

@@ -7,7 +7,15 @@ const FunctionType = preload("../../../resources/graph/expressions/ExpressionRes
 const ExpressionType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionType
 const DragClass = preload("../drag/DragHandle.gd").DragClass
 
+var _drop_indicator_scene = preload("../../controls/drag/DropIndicator.tscn")
+var _drop_indicator
+var _mouse_over := false
+
 @onready var _add_element_button = $AddElementButton
+
+
+func _ready() -> void:
+	_drop_indicator = _drop_indicator_scene.instantiate()
 
 
 ## Configure the expression.
@@ -162,6 +170,13 @@ func _child_size_changed(amount):
 
 
 func _can_drop_data(at_position, data):
+	var can_drop := _can_drop_data_internal(at_position, data)
+	_update_drop_indicator(can_drop, at_position, data)
+	return can_drop
+
+
+func _can_drop_data_internal(at_position, data) -> bool:
+	var can_drop := true
 	if not typeof(data) == TYPE_DICTIONARY:
 		return false
 	if not "dge_drag_class" in data:
@@ -170,7 +185,6 @@ func _can_drop_data(at_position, data):
 		return false
 	if type != data["type"]:
 		return false
-	# TODO: I assume this would be the place to highlight the drop location?
 	return true
 
 
@@ -179,13 +193,45 @@ func _drop_data(at_position, data):
 	var parent = target.get_parent()
 	parent.remove_child_expression(target)
 	parent.refresh()
+	_update_drop_indicator(false, null, null)
 	_add_at_position(at_position, target)
 
 
-func _add_at_position(at_position, target):
+func _update_drop_indicator(can_drop: bool, at_position, data):
+	var parent = _drop_indicator.get_parent()
+	if not can_drop:
+		if parent == null:
+			return
+		parent.remove_child(_drop_indicator)
+		return
+	
+	var target = data["control"]
+	var closest_arr = _get_closest(at_position, target)
+	var closest = closest_arr[0]
+	var add_before: bool = closest_arr[1]
+	if parent == null and (closest == null or closest != target):
+		add_child(_drop_indicator)
+	if closest != null:
+		# Don't move if the target was closest to itself!
+		if closest != target:
+			if add_before:
+				if (_drop_indicator.get_index() != closest.get_index() - 1):
+					move_child(_drop_indicator, closest.get_index())
+			else:
+				move_child(_drop_indicator, closest.get_index() + 1)
+	else:
+		# Leave it at the bottom, but move the add button down
+		move_child(_add_element_button, -1)
+
+
+func _ignore_for_drop_evaluation(child) -> bool:
+	return child == _drop_indicator or child == _add_element_button
+
+
+func _get_closest(at_position, target):
 	# I think what we have to do here is find the MoveableExpression
 	# under the point, and then determine if we are closer to the top or
-	# bottom of it, and insert accordingly.
+	# bottom of it.
 	var children = get_children().slice(0, -1)
 	var distance_to_child = null
 	var closest = null
@@ -195,10 +241,12 @@ func _add_at_position(at_position, target):
 
 	# Calculate the distance to each child.
 	for child in children:
+		if _ignore_for_drop_evaluation(child):
+			continue
 		var top = child.offset_top
 		var bottom = child.offset_bottom
 		# This calculates the centre of the child.
-		distances[child] = abs(y - (top + bottom) / 2.0)
+		distances[child] = abs(y - ((top + bottom) / 2.0))
 	
 	# Determine which child is the closest.
 	for child in distances:
@@ -216,6 +264,13 @@ func _add_at_position(at_position, target):
 		var bottom = closest.offset_bottom
 		var centre = (top + bottom) / 2.0
 		add_before = y < centre
+	return [closest, add_before]
+
+
+func _add_at_position(at_position, target):
+	var closest_arr = _get_closest(at_position, target)
+	var closest = closest_arr[0]
+	var add_before: bool = closest_arr[1]
 	
 	var size_before = self.size.y
 	# Don't insert if the target was closest to itself!
@@ -263,3 +318,12 @@ func _deserialise_child(serialised):
 		ExpressionType.FUNCTION:
 			child = _add_function(type, serialised["function_type"], true)
 	child.deserialise(serialised)
+
+
+func _on_mouse_entered() -> void:
+	_mouse_over = true
+
+
+func _on_mouse_exited() -> void:
+	_mouse_over = false
+	_update_drop_indicator(false, null, null)

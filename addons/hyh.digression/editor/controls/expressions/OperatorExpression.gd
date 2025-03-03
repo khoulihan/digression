@@ -128,3 +128,7 @@ func _operator_to_keep(previous, current, to_remove):
 		return previous
 	to_remove.append(previous)
 	return current
+
+
+func _ignore_for_drop_evaluation(child) -> bool:
+	return super(child) or child is OperatorClass
