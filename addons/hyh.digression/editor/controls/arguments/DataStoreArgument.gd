@@ -8,8 +8,8 @@ const LOCAL_ICON = preload("../../../icons/icon_scope_local.svg")
 const DIALOGUE_GRAPH_ICON = preload("../../../icons/icon_scope_dialogue_graph.svg")
 const GLOBAL_ICON = preload("../../../icons/icon_scope_global.svg")
 
-@onready var DataStoreLabel : Label = get_node("ExpressionContainer/PC/ArgumentValueContainer/HB/DataStoreLabel")
-@onready var ScopeIcon : TextureRect = get_node("ExpressionContainer/PC/ArgumentValueContainer/HB/ScopeIcon")
+@onready var DataStoreLabel : Label = get_node("VB/ExpressionContainer/PC/ArgumentValueContainer/HB/DataStoreLabel")
+@onready var ScopeIcon : TextureRect = get_node("VB/ExpressionContainer/PC/ArgumentValueContainer/HB/ScopeIcon")
 
 
 @export var scope : VariableScope

@@ -224,9 +224,7 @@ func _add_data_store_argument(scope):
 func _add_argument_to_list(arg):
 	arg.ordinal = _arguments_list_container.get_child_count()
 	_arguments_list_container.add_child(arg)
-	arg.remove_requested.connect(_argument_remove_requested.bind(arg))
-	arg.remove_immediately.connect(_argument_remove_immediately.bind(arg))
-	arg.modified.connect(_argument_modified)
+	_connect_signals_for_argument(arg)
 	arg.configure()
 
 
@@ -246,9 +244,7 @@ func _argument_remove_requested(ordinal, argument):
 
 
 func _argument_remove_immediately(ordinal, argument):
-	argument.remove_requested.disconnect(_argument_remove_requested)
-	argument.remove_immediately.disconnect(_argument_remove_immediately)
-	argument.modified.disconnect(_argument_modified)
+	_disconnect_signals_for_argument(argument)
 	_arguments_list_container.remove_child(argument)
 	_recalculate_ordinals()
 	_correct_size()
@@ -381,72 +377,60 @@ func _configure_for_return_type(id):
 	_correct_size()
 
 
-func _get_closest_argument(at_position, target):
-	var children = _arguments_list_container.get_children()
-	var distance_to_child = null
-	var closest = null
-	var add_before = false
-	var y = at_position.y
-	var distances = {}
-
-	# Calculate the distance to each child.
-	for child in children:
-		var top = child.offset_top
-		var bottom = child.offset_bottom
-		# This calculates the centre of the child.
-		distances[child] = abs(y - (top + bottom) / 2.0)
-	
-	# Determine which child is the closest.
-	for child in distances:
-		if distance_to_child == null:
-			distance_to_child = distances[child]
-			closest = child
-			continue
-		if distances[child] < distance_to_child:
-			distance_to_child = distances[child]
-			closest = child
-	
-	# Determine if we are before or after the identified closest child
-	if closest != null:
-		var top = closest.offset_top
-		var bottom = closest.offset_bottom
-		var centre = (top + bottom) / 2.0
-		add_before = y < centre
-	
-	return [closest, add_before]
+func _move_dropped_argument_to_index(dropped, index):
+	if dropped.get_parent() == _arguments_list_container:
+		if dropped.get_index() < index:
+			index = index - 1
+		if dropped.get_index() == index:
+			return
+		_move_argument_to_position(
+			dropped,
+			index
+		)
+	else:
+		# This indicates a drag from a different node.
+		dropped.prepare_to_change_parent()
+		_add_argument_at_position(
+			dropped,
+			index
+		)
+	modified.emit()
 
 
-func _add_at_position(at_position, target):
-	var cab = _get_closest_argument(at_position, target)
-	var closest = cab[0]
-	var add_before = cab[1]
-	
-	# Don't insert if the target was closest to itself!
-	if closest == null or closest != target:
-		_arguments_list_container.add_child(target)
-	if closest != null:
-		# Don't move if the target was closest to itself!
-		if closest != target:
-			if add_before:
-				_arguments_list_container.move_child(target, closest.get_index())
-			else:
-				_arguments_list_container.move_child(target, closest.get_index() + 1)
-	target.remove_requested.connect(_argument_remove_requested.bind(target))
-	target.remove_immediately.connect(_argument_remove_immediately.bind(target))
+func _move_argument_to_position(argument, index):
+	var current_index = argument.get_index()
+	_arguments_list_container.move_child(argument, index)
 
 
-func _move_to_position(at_position, target):
-	var cab = _get_closest_argument(at_position, target)
-	var closest = cab[0]
-	var add_before = cab[1]
-	
-	if closest != null:
-		var closest_index = closest.get_index()
-		var target_index = target.get_index()
-		var move_index = closest_index if add_before else closest_index + 1
-		if target_index < closest_index:
-			move_index = move_index - 1
-		_arguments_list_container.move_child(target, move_index)
+func _add_argument_at_position(argument, index):
+	_arguments_list_container.add_child(argument)
+	_arguments_list_container.move_child(argument, index)
+	_connect_signals_for_argument(argument)
+	#_reconnect_signals()
+
+
+func _connect_signals_for_argument(arg):
+	arg.remove_requested.connect(_argument_remove_requested.bind(arg))
+	arg.remove_immediately.connect(_argument_remove_immediately.bind(arg))
+	arg.preparing_to_change_parent.connect(
+		_on_argument_preparing_to_change_parent.bind(arg)
+	)
+	arg.dropped_after.connect(
+		_on_argument_dropped_after.bind(arg)
+	)
+	arg.modified.connect(_argument_modified)
+
+
+func _disconnect_signals_for_argument(arg):
+	arg.remove_requested.disconnect(_argument_remove_requested)
+	arg.remove_immediately.disconnect(_argument_remove_immediately)
+	arg.modified.disconnect(_argument_modified)
+	arg.preparing_to_change_parent.disconnect(
+		_on_argument_preparing_to_change_parent
+	)
+	arg.dropped_after.disconnect(
+		_on_argument_dropped_after
+	)
 
 
 func _on_action_mechanism_option_item_selected(index):
@@ -459,8 +443,7 @@ func _on_action_mechanism_option_item_selected(index):
 
 func _on_argument_remove_confirmed(argument, confirm):
 	get_tree().root.remove_child(confirm)
-	argument.remove_requested.disconnect(_argument_remove_requested)
-	argument.remove_immediately.disconnect(_argument_remove_immediately)
+	_disconnect_signals_for_argument(argument)
 	_arguments_list_container.remove_child(argument)
 	_recalculate_ordinals()
 	_correct_size()
@@ -481,12 +464,12 @@ func _on_return_option_item_selected(index):
 	modified.emit()
 
 
-func _on_argument_dropped(arg, at_position):
-	if arg.get_parent() == _arguments_list_container:
-		_move_to_position(at_position, arg)
-	else:
-		arg.remove_from_parent()
-		_add_at_position(at_position, arg)
+func _on_argument_dropped_after(dropped_argument, target_argument):
+	var target_index = target_argument.get_index() + 1
+	_move_dropped_argument_to_index(
+		dropped_argument,
+		target_index
+	)
 	_recalculate_ordinals()
 	_correct_size()
 	modified.emit()
@@ -510,3 +493,20 @@ func _on_node_selection_control_node_selected(path):
 
 func _on_return_variable_selection_control_variable_selected(variable):
 	modified.emit()
+
+
+func _on_drag_target_dropped(arg: Variant, at_position: Variant) -> void:
+	_move_dropped_argument_to_index(
+		arg,
+		0
+	)
+	_recalculate_ordinals()
+	_correct_size()
+	modified.emit()
+
+
+func _on_argument_preparing_to_change_parent(argument):
+	_disconnect_signals_for_argument(argument)
+	_arguments_list_container.remove_child(argument)
+	_recalculate_ordinals()
+	_correct_size()

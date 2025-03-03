@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://buyggyfeoik2l" path="res://addons/hyh.digression/editor/controls/NodeSelectionControl.tscn" id="7_d61r0"]
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="7_t8f01"]
 [ext_resource type="PackedScene" uid="uid://c31q0dbk4i25w" path="res://addons/hyh.digression/editor/controls/VariableSelectionControl.tscn" id="8_1o0k2"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/nodes/ArgumentListDragTarget.gd" id="8_i3pr5"]
+[ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="9_pc82h"]
 
 [node name="EditorActionNode" type="GraphNode"]
 offset_right = 416.0
@@ -143,8 +143,14 @@ item_count = 3
 popup/item_0/text = "Expression"
 popup/item_0/id = 1
 popup/item_1/text = "Character"
+popup/item_1/id = 1
 popup/item_2/text = "Data Store"
 popup/item_2/id = 6
+
+[node name="DragTarget" parent="ArgumentsContainer/VB" instance=ExtResource("9_pc82h")]
+layout_mode = 2
+accepted_classes = Array[int]([0])
+hide_until_hover = true
 
 [node name="MC" type="MarginContainer" parent="ArgumentsContainer/VB"]
 layout_mode = 2
@@ -152,7 +158,6 @@ theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 6
 theme_override_constants/margin_bottom = 10
-script = ExtResource("8_i3pr5")
 
 [node name="ArgumentsListContainer" type="VBoxContainer" parent="ArgumentsContainer/VB/MC"]
 layout_mode = 2
@@ -201,6 +206,6 @@ layout_mode = 2
 [connection signal="node_selected" from="RootContainer/MethodContainer/NodeSelectionControl" to="." method="_on_node_selection_control_node_selected"]
 [connection signal="text_changed" from="RootContainer/MethodContainer/MethodNameEdit" to="." method="_on_method_name_edit_text_changed"]
 [connection signal="pressed" from="RootContainer/MethodContainer/ReturnsImmediatelyCheck" to="." method="_on_returns_immediately_check_pressed"]
-[connection signal="argument_dropped" from="ArgumentsContainer/VB/MC" to="." method="_on_argument_dropped"]
+[connection signal="dropped" from="ArgumentsContainer/VB/DragTarget" to="." method="_on_drag_target_dropped"]
 [connection signal="item_selected" from="ReturnContainer/GC/ReturnOption" to="." method="_on_return_option_item_selected"]
 [connection signal="variable_selected" from="ReturnContainer/GC/ReturnVariableSelectionControl" to="." method="_on_return_variable_selection_control_variable_selected"]

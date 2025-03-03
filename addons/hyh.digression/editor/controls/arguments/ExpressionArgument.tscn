@@ -8,7 +8,7 @@
 script = ExtResource("2_g3he5")
 type = 0
 
-[node name="OperatorExpression" parent="ExpressionContainer/PC/ArgumentValueContainer" index="0" instance=ExtResource("3_6046o")]
+[node name="OperatorExpression" parent="VB/ExpressionContainer/PC/ArgumentValueContainer" index="0" instance=ExtResource("3_6046o")]
 layout_mode = 2
 
-[connection signal="modified" from="ExpressionContainer/PC/ArgumentValueContainer/OperatorExpression" to="." method="_on_operator_expression_modified"]
+[connection signal="modified" from="VB/ExpressionContainer/PC/ArgumentValueContainer/OperatorExpression" to="." method="_on_operator_expression_modified"]

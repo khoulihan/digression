@@ -1,19 +1,24 @@
-[gd_scene load_steps=7 format=3 uid="uid://bwdtji5o7o3kv"]
+[gd_scene load_steps=8 format=3 uid="uid://bwdtji5o7o3kv"]
 
 [ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/arguments/Argument.gd" id="1_c68w6"]
 [ext_resource type="Texture2D" uid="uid://dexnm3exsn0ns" path="res://addons/hyh.digression/icons/icon_drag_vertical.svg" id="2_4dxj2"]
 [ext_resource type="StyleBox" uid="uid://bxxrrj712pltv" path="res://addons/hyh.digression/editor/controls/BracketPanel.tres" id="2_twngc"]
+[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/drag/DragHandle.gd" id="3_0gmsf"]
 [ext_resource type="Texture2D" uid="uid://mksqvoqy2yi4" path="res://addons/hyh.digression/icons/icon_node_warning.svg" id="3_611at"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/arguments/ArgumentDragHandle.gd" id="3_u3phv"]
 [ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.digression/icons/icon_remove.svg" id="4_5pvrr"]
+[ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="7_po2b1"]
 
 [node name="Argument" type="MarginContainer"]
 script = ExtResource("1_c68w6")
 
-[node name="ExpressionContainer" type="HBoxContainer" parent="."]
+[node name="VB" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="ExpressionContainer" type="HBoxContainer" parent="VB"]
 layout_mode = 2
 
-[node name="DragHandle" type="TextureRect" parent="ExpressionContainer"]
+[node name="DragHandle" type="TextureRect" parent="VB/ExpressionContainer" node_paths=PackedStringArray("target")]
 modulate = Color(0.137255, 0.137255, 0.137255, 1)
 layout_mode = 2
 size_flags_vertical = 4
@@ -22,33 +27,40 @@ mouse_filter = 0
 mouse_default_cursor_shape = 13
 texture = ExtResource("2_4dxj2")
 stretch_mode = 2
-script = ExtResource("3_u3phv")
+script = ExtResource("3_0gmsf")
+target = NodePath("../../..")
 
-[node name="OrdinalLabel" type="Label" parent="ExpressionContainer"]
+[node name="OrdinalLabel" type="Label" parent="VB/ExpressionContainer"]
 layout_mode = 2
 text = "0"
 
-[node name="PC" type="PanelContainer" parent="ExpressionContainer"]
+[node name="PC" type="PanelContainer" parent="VB/ExpressionContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = ExtResource("2_twngc")
 
-[node name="ArgumentValueContainer" type="MarginContainer" parent="ExpressionContainer/PC"]
+[node name="ArgumentValueContainer" type="MarginContainer" parent="VB/ExpressionContainer/PC"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="ValidationWarning" type="TextureRect" parent="ExpressionContainer"]
+[node name="ValidationWarning" type="TextureRect" parent="VB/ExpressionContainer"]
 layout_mode = 2
 texture = ExtResource("3_611at")
 stretch_mode = 3
 
-[node name="RemoveButton" type="Button" parent="ExpressionContainer"]
+[node name="RemoveButton" type="Button" parent="VB/ExpressionContainer"]
 layout_mode = 2
 size_flags_horizontal = 10
 icon = ExtResource("4_5pvrr")
 flat = true
 
-[connection signal="pressed" from="ExpressionContainer/RemoveButton" to="." method="_on_remove_button_pressed"]
+[node name="DragTargetHSeparator" parent="VB" instance=ExtResource("7_po2b1")]
+layout_mode = 2
+accepted_classes = Array[int]([0])
+hide_until_hover = true
+
+[connection signal="pressed" from="VB/ExpressionContainer/RemoveButton" to="." method="_on_remove_button_pressed"]
+[connection signal="dropped" from="VB/DragTargetHSeparator" to="." method="_on_drag_target_dropped"]
