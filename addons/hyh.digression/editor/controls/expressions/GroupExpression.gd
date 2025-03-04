@@ -301,6 +301,8 @@ func _serialise_children():
 	var child_exps = []
 	var children = get_children().slice(0, -1)
 	for child in children:
+		if child == _drop_indicator:
+			continue
 		child_exps.append(child.serialise())
 	return child_exps
 
