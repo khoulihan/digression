@@ -642,9 +642,9 @@ func _on_choice_type_option_item_selected(index):
 
 func _on_custom_properties_control_add_property_requested(property_definition):
 	var name = property_definition['name']
-	if name in node_resource.dialogue.custom_properties:
+	if name in _get_dialogue_text_resource(node_resource).custom_properties:
 		return
-	var property = node_resource.dialogue.add_custom_property(
+	var property = _get_dialogue_text_resource(node_resource).add_custom_property(
 		property_definition['name'],
 		property_definition['type'],
 	)
