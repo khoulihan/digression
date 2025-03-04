@@ -49,6 +49,11 @@ func _get_drag_data(at_position):
 	return drag_data
 
 
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		accept_event()
+
+
 static func map_type_restriction_to_type(restriction_type: DragVariableTypeRestriction) -> VariableType:
 	match (restriction_type):
 		DragVariableTypeRestriction.BOOL:

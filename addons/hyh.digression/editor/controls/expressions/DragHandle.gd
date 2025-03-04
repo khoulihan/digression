@@ -22,3 +22,8 @@ func _get_drag_data(at_position):
 		"control": target,
 		"type": type,
 	}
+
+
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		accept_event()
