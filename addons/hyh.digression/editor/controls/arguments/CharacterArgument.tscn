@@ -23,3 +23,6 @@ text = "Variant:"
 
 [node name="VariantOption" type="OptionButton" parent="VB/ExpressionContainer/PC/ArgumentValueContainer/GC" index="3"]
 layout_mode = 2
+
+[connection signal="item_selected" from="VB/ExpressionContainer/PC/ArgumentValueContainer/GC/CharacterOption" to="." method="_on_character_option_item_selected"]
+[connection signal="item_selected" from="VB/ExpressionContainer/PC/ArgumentValueContainer/GC/VariantOption" to="." method="_on_variant_option_item_selected"]

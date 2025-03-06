@@ -196,6 +196,7 @@ func _add_character_argument(character=null, variant=null):
 	var arg = CharacterArgument.instantiate()
 	arg.set_characters(_characters)
 	_add_argument_to_list(arg)
+	arg.configure()
 	if character != null:
 		arg.set_character(character)
 	if variant != null:
