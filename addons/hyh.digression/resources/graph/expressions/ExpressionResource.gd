@@ -31,6 +31,7 @@ enum FunctionType {
 	MAX,
 	CONTAINS,
 	TO_LOWER,
+	FLOOR,
 }
 
 ## Possible operators. Operators are mostly specific to types, but `int` and
@@ -79,25 +80,35 @@ const EXPRESSION_FUNCTIONS = {
 		},
 	},
 	VariableType.TYPE_INT: {
+		FunctionType.FLOOR: {
+			"display": "floori ( x )",
+			"tooltip": "Rounds x downward (towards negative infinity), returning the largest whole number that is not more than x.",
+			"arguments": { "x": VariableType.TYPE_FLOAT },
+		},
 		FunctionType.MIN: {
-			"display": "min ( ... )",
+			"display": "mini ( ... )",
 			"tooltip": "Returns the smallest of the arguments.",
 			"arguments": VariableType.TYPE_INT,
 		},
 		FunctionType.MAX: {
-			"display": "max ( ... )",
+			"display": "maxi ( ... )",
 			"tooltip": "Returns the largest of the arguments.",
 			"arguments": VariableType.TYPE_INT,
 		}
 	},
 	VariableType.TYPE_FLOAT: {
+		FunctionType.FLOOR: {
+			"display": "floorf ( x )",
+			"tooltip": "Rounds x downward (towards negative infinity), returning the largest whole number that is not more than x.",
+			"arguments": { "x": VariableType.TYPE_FLOAT },
+		},
 		FunctionType.MIN: {
-			"display": "min ( ... )",
+			"display": "minf ( ... )",
 			"tooltip": "Returns the smallest of the arguments.",
 			"arguments": VariableType.TYPE_FLOAT,
 		},
 		FunctionType.MAX: {
-			"display": "max ( ... )",
+			"display": "maxf ( ... )",
 			"tooltip": "Returns the largest of the arguments.",
 			"arguments": VariableType.TYPE_FLOAT,
 		}

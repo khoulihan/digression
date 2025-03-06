@@ -21,8 +21,10 @@ enum ExpressionMenuId {
 	FUNCTION,
 	BOOL_NOT,
 	BOOL_STRING_CONTAINS,
+	INT_FLOOR,
 	INT_MAX,
 	INT_MIN,
+	FLOAT_FLOOR,
 	FLOAT_MAX,
 	FLOAT_MIN,
 	STRING_TO_LOWER,
@@ -85,6 +87,8 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 	match id:
 		ExpressionMenuId.BOOL_NOT:
 			return FunctionType.NOT
+		ExpressionMenuId.INT_FLOOR, ExpressionMenuId.FLOAT_FLOOR:
+			return FunctionType.FLOOR
 		ExpressionMenuId.INT_MIN, ExpressionMenuId.FLOAT_MIN:
 			return FunctionType.MIN
 		ExpressionMenuId.INT_MAX, ExpressionMenuId.FLOAT_MAX:
@@ -159,17 +163,16 @@ func _add_bool_functions(menu: PopupMenu):
 
 
 func _add_int_functions(menu: PopupMenu):
+	_add_function_item(menu, ExpressionMenuId.INT_FLOOR, "floor")
 	_add_function_item(menu, ExpressionMenuId.INT_MAX, "max")
 	_add_function_item(menu, ExpressionMenuId.INT_MIN, "min")
 
 
 func _add_float_functions(menu: PopupMenu):
+	_add_function_item(menu, ExpressionMenuId.FLOAT_FLOOR, "floor")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_MAX, "max")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_MIN, "min")
 
 
 func _add_string_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.STRING_TO_LOWER, "to_lower")
-
-
-

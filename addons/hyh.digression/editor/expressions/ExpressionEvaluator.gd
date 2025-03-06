@@ -162,8 +162,16 @@ func _match_function(
 				function_spec,
 				arguments
 			)
-		VariableType.TYPE_INT, VariableType.TYPE_FLOAT:
-			return _match_numeric_function(
+		VariableType.TYPE_INT:
+			return _match_int_function(
+				variable_type,
+				function_type,
+				expression,
+				function_spec,
+				arguments
+			)
+		VariableType.TYPE_FLOAT:
+			return _match_float_function(
 				variable_type,
 				function_type,
 				expression,
@@ -194,7 +202,7 @@ func _match_bool_function(
 	return null
 
 
-func _match_numeric_function(
+func _match_int_function(
 	variable_type,
 	function_type,
 	expression,
@@ -206,7 +214,27 @@ func _match_numeric_function(
 			return arguments.min()
 		FunctionType.MAX:
 			return arguments.max()
-	_logger.error("Unrecognised numeric function type.")
+		FunctionType.FLOOR:
+			return floori(arguments['x'])
+	_logger.error("Unrecognised integer function type.")
+	return null
+
+
+func _match_float_function(
+	variable_type,
+	function_type,
+	expression,
+	function_spec,
+	arguments
+):
+	match function_type:
+		FunctionType.MIN:
+			return arguments.min()
+		FunctionType.MAX:
+			return arguments.max()
+		FunctionType.FLOOR:
+			return floorf(arguments['x'])
+	_logger.error("Unrecognised float function type.")
 	return null
 
 
