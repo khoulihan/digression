@@ -53,14 +53,16 @@ func configure_for_node(g, n):
 	set_choices(
 		n.choices
 	)
+	var dialogue_resource = _get_dialogue_resource(n)
+	var dialogue_text_resource = _get_dialogue_text_resource(n)
 	set_show_dialogue_for_default(n.show_dialogue_for_default)
-	set_dialogue_text(n.dialogue.text)
-	set_dialogue_translation_key(n.dialogue.text_translation_key)
-	select_character(n.dialogue.character)
-	select_variant(n.dialogue.character_variant)
-	select_dialogue_type(n.dialogue.dialogue_type, false)
+	set_dialogue_text(dialogue_text_resource.text)
+	set_dialogue_translation_key(dialogue_text_resource.text_translation_key)
+	select_character(dialogue_resource.character)
+	select_variant(dialogue_text_resource.character_variant)
+	select_dialogue_type(dialogue_resource.dialogue_type, false)
 	select_choice_type(n.choice_type, false)
-	_populate_properties(n.dialogue.custom_properties)
+	_populate_properties(dialogue_text_resource.custom_properties)
 	if n.size != null and n.size != Vector2.ZERO:
 		size = n.size
 
@@ -72,36 +74,49 @@ func persist_changes_to_node():
 	node_resource.choice_type = get_choice_type()
 	node_resource.show_dialogue_for_default = get_show_dialogue_for_default()
 	node_resource.size = self.size
-	# TODO: Persist dialogue, choice type.
-	node_resource.dialogue.dialogue_type = get_dialogue_type()
-	node_resource.dialogue.text = get_dialogue_text()
-	node_resource.dialogue.text_translation_key = get_dialogue_translation_key()
+	# Persist dialogue, choice type.
+	var dialogue_resource = _get_dialogue_resource(node_resource)
+	var dialogue_text_resource = _get_dialogue_text_resource(node_resource)
+	dialogue_resource.dialogue_type = get_dialogue_type()
+	dialogue_text_resource.text = get_dialogue_text()
+	dialogue_text_resource.text_translation_key = get_dialogue_translation_key()
 	var selected_c = get_selected_character()
 	if selected_c != -1:
-		node_resource.dialogue.character = _characters[selected_c]
+		dialogue_resource.character = _characters[selected_c]
 		var selected_v = get_selected_variant()
 		if selected_v != -1:
-			node_resource.dialogue.character_variant = node_resource.dialogue.character.character_variants[selected_v]
+			dialogue_text_resource.character_variant = dialogue_resource.character.character_variants[selected_v]
 	else:
-		node_resource.dialogue.character = null
-	node_resource.dialogue.custom_properties = _get_properties()
+		dialogue_resource.character = null
+	dialogue_text_resource.custom_properties = _get_properties()
 
 
 ## Clear all branches.
 func clear_choices():
-	for index in range(get_child_count() - 1, 1, -1):
+	for index in range(get_child_count() - 2, 1, -1):
 		remove_choice(index)
 
 
 ## Remove a branch by index.
 func remove_choice(index):
-	removing_slot.emit(index)
+	# This is one less than the index because the first output port is one the
+	# second slot in this case, where it is usually on the first.
+	removing_slot.emit(index - 1)
 	var node = get_child(index)
 	var height = node.size.y
 	remove_child(node)
-	node.remove_requested.disconnect(_on_branch_remove_requested)
-	node.modified.disconnect(_on_branch_modified)
-	node.size_changed.disconnect(_on_branch_size_changed)
+	node_resource.remove_choice(node.choice_resource)
+	# This is the button slot
+	set_slot(
+		get_child_count() - 1,
+		false,
+		0,
+		CONNECTOR_COLOUR,
+		false,
+		0,
+		CONNECTOR_COLOUR
+	)
+	_disconnect_signals_for_choice(node)
 	_reconnect_removal_signals()
 	# This should restore the control to the minimum required for the remaining
 	# choices, but a bit more than strictly necessary horizontally.
@@ -122,9 +137,59 @@ func set_choices(
 ## Get all the nodes branches.
 func get_choices():
 	var t: Array[ChoiceBranch] = []
-	for index in range(2, get_child_count()):
+	for index in range(2, get_child_count() - 1):
 		t.append(get_child(index).get_choice())
 	return t
+
+
+func _connect_signals_for_choice(choice, index):
+	choice.remove_requested.connect(
+		_on_branch_remove_requested.bind(
+			index
+		)
+	)
+	choice.modified.connect(
+		_on_branch_modified.bind(
+			index
+		)
+	)
+	choice.size_changed.connect(
+		_on_branch_size_changed.bind(
+			index
+		)
+	)
+	choice.dropped_after.connect(
+		_on_choice_dropped_after.bind(
+			choice
+		)
+	)
+	choice.preparing_to_change_parent.connect(
+		_on_choice_preparing_to_change_parent.bind(
+			choice
+		)
+	)
+
+
+func _disconnect_signals_for_choice(choice):
+	choice.remove_requested.disconnect(_on_branch_remove_requested)
+	choice.modified.disconnect(_on_branch_modified)
+	choice.size_changed.disconnect(_on_branch_size_changed)
+	choice.dropped_after.disconnect(
+		_on_choice_dropped_after
+	)
+	choice.preparing_to_change_parent.disconnect(
+		_on_choice_preparing_to_change_parent
+	)
+
+
+# Get the embedded dialogue resource for the choice resource.
+func _get_dialogue_resource(choice_resource):
+	return choice_resource.dialogue
+
+
+# Get the first dialogue text section of the embedded dialogue resource.
+func _get_dialogue_text_resource(choice_resource):
+	return choice_resource.dialogue.sections[0]
 
 
 ## Add a branch.
@@ -253,7 +318,6 @@ func set_dialogue_types(dialogue_types):
 			next_id,
 		)
 		next_id += 1
-	#set_dialogue_type(node_resource.dialogue_type)
 
 
 ## Select the specified dialogue type for the embedded dialogue node.
@@ -288,7 +352,6 @@ func set_choice_types(choice_types):
 			next_id,
 		)
 		next_id += 1
-	#set_choice_type(node_resource.dialogue_type)
 
 
 ## Get the selected choice type.
@@ -326,7 +389,7 @@ func clear_node_relationships():
 
 func _reconnect_removal_signals():
 	if get_child_count() > 2:
-		for index in range(2, get_child_count()):
+		for index in range(2, get_child_count() - 1):
 			get_child(index).remove_requested.disconnect(
 				_on_branch_remove_requested
 			)
@@ -344,32 +407,30 @@ func _create_branch(adjust_size):
 	)
 	new_value_line.choice_resource = choice_resource
 	add_child(new_value_line)
+	move_child(new_value_line, get_child_count() - 2)
 	if adjust_size:
 		# TODO: Unknown why, but the branch scene has a height of 136 
 		# when first created, but the actual size increase required is
 		# 130
 		size = Vector2(size.x, size.y + 130)
-	new_value_line.remove_requested.connect(
-		_on_branch_remove_requested.bind(
-			get_child_count() - 1,
-		)
+	_connect_signals_for_choice(new_value_line, get_child_count() - 2)
+	# New choice
+	set_slot(
+		get_child_count() - 2,
+		false,
+		0,
+		CONNECTOR_COLOUR,
+		true,
+		0,
+		CONNECTOR_COLOUR,
 	)
-	new_value_line.modified.connect(
-		_on_branch_modified.bind(
-			get_child_count() - 1,
-		)
-	)
-	new_value_line.size_changed.connect(
-		_on_branch_size_changed.bind(
-			get_child_count() - 1,
-		)
-	)
+	# Add choice button
 	set_slot(
 		get_child_count() - 1,
 		false,
 		0,
 		CONNECTOR_COLOUR,
-		true,
+		false,
 		0,
 		CONNECTOR_COLOUR,
 	)
@@ -461,7 +522,60 @@ func _get_id_for_choice_type(type):
 	return _choice_types_by_id.find_key(type)
 
 
-func _on_add_branch_button_pressed():
+func _move_dropped_choice_to_index(dropped, index):
+	if dropped.get_parent() == self:
+		if dropped.get_index() < index:
+			index = index - 1
+		if dropped.get_index() == index:
+			return
+		_move_choice_to_position(
+			dropped,
+			index
+		)
+	else:
+		# This indicates a drag from a different node.
+		dropped.prepare_to_change_parent()
+		_add_choice_at_position(
+			dropped,
+			index
+		)
+	modified.emit()
+
+
+func _move_choice_to_position(choice, index):
+	var current_index = choice.get_index()
+	self.move_child(choice, index)
+	
+	# The resources will be at indices two less than in the GUI
+	# because of the initial header sections of the GUI
+	node_resource.choices.insert(
+		index - 2,
+		node_resource.choices.pop_at(current_index - 2)
+	)
+
+
+func _add_choice_at_position(choice, index):
+	self.add_child(choice)
+	self.move_child(choice, index)
+	# The resources will be at indices two less than in the GUI
+	# because of the initial header sections of the GUI
+	node_resource.choices.insert(index - 2, choice.get_choice())
+	_connect_signals_for_choice(choice, index)
+	# This is the slot that will have been opened up by the insertion of the
+	# dropped branch.
+	set_slot(
+		get_child_count() - 2,
+		false,
+		0,
+		CONNECTOR_COLOUR,
+		true,
+		0,
+		CONNECTOR_COLOUR
+	)
+	_reconnect_removal_signals()
+
+
+func _on_add_choice_button_pressed() -> void:
 	_create_branch(true)
 	modified.emit()
 
@@ -528,9 +642,9 @@ func _on_choice_type_option_item_selected(index):
 
 func _on_custom_properties_control_add_property_requested(property_definition):
 	var name = property_definition['name']
-	if name in node_resource.dialogue.custom_properties:
+	if name in _get_dialogue_text_resource(node_resource).custom_properties:
 		return
-	var property = node_resource.dialogue.add_custom_property(
+	var property = _get_dialogue_text_resource(node_resource).add_custom_property(
 		property_definition['name'],
 		property_definition['type'],
 	)
@@ -558,3 +672,24 @@ func _on_clear_character_button_pressed():
 
 func _on_clear_variant_button_pressed():
 	select_variant(null)
+
+
+func _on_choice_dropped_after(dropped, after) -> void:
+	_move_dropped_choice_to_index(
+		dropped,
+		after.get_index() + 1
+	)
+
+
+func _on_choice_preparing_to_change_parent(choice):
+	# Remove the GUI choice and the resource choice from their parents.
+	self.remove_choice(choice.get_index())
+	node_resource.remove_choice(choice.get_choice())
+
+
+func _on_drag_target_dropped(arg, at_position) -> void:
+	# Drop at the topmost separator - move the target to the top.
+	_move_dropped_choice_to_index(
+		arg,
+		2
+	)

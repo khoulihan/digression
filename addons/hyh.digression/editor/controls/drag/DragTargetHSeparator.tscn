@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://brt3bw3yhakpp" path="res://addons/hyh.digression/icons/icon_tree_arrow_left_dark.svg" id="4_8cjdu"]
 
 [node name="DragTargetHSeparator" type="MarginContainer"]
+theme_override_constants/margin_bottom = -5
 script = ExtResource("1_aauwx")
 
 [node name="HB" type="HBoxContainer" parent="."]

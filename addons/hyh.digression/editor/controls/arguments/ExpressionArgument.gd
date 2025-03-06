@@ -3,7 +3,7 @@ extends "Argument.gd"
 
 const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
 
-@onready var OperatorExpression = get_node("ExpressionContainer/PC/ArgumentValueContainer/OperatorExpression")
+@onready var OperatorExpression = get_node("VB/ExpressionContainer/PC/ArgumentValueContainer/OperatorExpression")
 
 @export
 var type : VariableType

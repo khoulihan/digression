@@ -1,27 +1,36 @@
-[gd_scene load_steps=4 format=3 uid="uid://blu15ehhb5avh"]
+[gd_scene load_steps=7 format=3 uid="uid://blu15ehhb5avh"]
 
 [ext_resource type="Script" path="res://addons/hyh.digression/editor/branches/EditorMatchBranchValue.gd" id="1_jkr88"]
+[ext_resource type="Texture2D" uid="uid://dexnm3exsn0ns" path="res://addons/hyh.digression/icons/icon_drag_vertical.svg" id="2_5a6vm"]
 [ext_resource type="PackedScene" uid="uid://c1584iplg8kg5" path="res://addons/hyh.digression/editor/controls/VariableValueEditControl.tscn" id="2_feac7"]
 [ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.digression/icons/icon_remove.svg" id="3_7f4ia"]
+[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/drag/DragHandle.gd" id="3_kas3r"]
+[ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="6_4lolu"]
 
 [node name="BranchValue" type="MarginContainer"]
 offset_right = 245.0
-offset_bottom = 66.0
+offset_bottom = 47.0
 theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
 script = ExtResource("1_jkr88")
 
 [node name="VB" type="VBoxContainer" parent="."]
 layout_mode = 2
 theme_override_constants/separation = 9
 
-[node name="HSeparator" type="HSeparator" parent="VB"]
-layout_mode = 2
-
 [node name="HorizontalLayout" type="HBoxContainer" parent="VB"]
 layout_mode = 2
 theme_override_constants/separation = 10
+
+[node name="DragHandle" type="TextureRect" parent="VB/HorizontalLayout" node_paths=PackedStringArray("target")]
+layout_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 13
+texture = ExtResource("2_5a6vm")
+script = ExtResource("3_kas3r")
+target = NodePath("../../..")
+drag_class = 2
 
 [node name="GridContainer" type="GridContainer" parent="VB/HorizontalLayout"]
 layout_mode = 2
@@ -34,11 +43,18 @@ text = "Value:"
 
 [node name="ValueEdit" parent="VB/HorizontalLayout/GridContainer" instance=ExtResource("2_feac7")]
 layout_mode = 2
+variable_type = 0
 
 [node name="RemoveButton" type="Button" parent="VB/HorizontalLayout"]
 layout_mode = 2
 icon = ExtResource("3_7f4ia")
 flat = true
 
+[node name="DragTargetHSeparator" parent="VB" instance=ExtResource("6_4lolu")]
+layout_mode = 2
+accepted_classes = Array[int]([2])
+accepted_type_restriction = 0
+
 [connection signal="value_changed" from="VB/HorizontalLayout/GridContainer/ValueEdit" to="." method="_on_value_edit_value_changed"]
 [connection signal="pressed" from="VB/HorizontalLayout/RemoveButton" to="." method="_on_remove_button_pressed"]
+[connection signal="dropped" from="VB/DragTargetHSeparator" to="." method="_on_drag_target_dropped"]

@@ -2,17 +2,19 @@
 extends MarginContainer
 
 # TODO: Maybe a better icon for this?
-const ARGUMENT_ICON = preload("../../../icons/icon_triple_bar.svg")
+const ARGUMENT_ICON = preload("../../../icons/icon_drag_vertical_light.svg")
 
-@onready var OrdinalLabel: Label = get_node("ExpressionContainer/OrdinalLabel")
-@onready var DragHandle: TextureRect = get_node("ExpressionContainer/DragHandle")
-@onready var ValidationWarning : TextureRect = get_node("ExpressionContainer/ValidationWarning")
+@onready var OrdinalLabel: Label = get_node("VB/ExpressionContainer/OrdinalLabel")
+@onready var DragHandle: TextureRect = get_node("VB/ExpressionContainer/DragHandle")
+@onready var ValidationWarning : TextureRect = get_node("VB/ExpressionContainer/ValidationWarning")
 
 @export var ordinal: int
 
 signal modified()
 signal remove_requested(ord)
 signal remove_immediately(ord)
+signal preparing_to_change_parent()
+signal dropped_after(argument)
 
 
 func configure():
@@ -22,10 +24,6 @@ func configure():
 
 func refresh():
 	OrdinalLabel.text = str(ordinal)
-
-
-func _on_remove_button_pressed():
-	remove_requested.emit(ordinal)
 
 
 func get_drag_preview():
@@ -38,12 +36,8 @@ func get_drag_preview():
 	ptext.text = "%s Argument" % _get_type_name()
 	preview.add_child(icon)
 	preview.add_child(ptext)
-	preview.modulate = Color.from_string("#FFFFFF88", Color.WHITE)
+	preview.modulate = Color.from_string("#777777FF", Color.DIM_GRAY)
 	return preview
-
-
-func _get_type_name():
-	return "Argument"
 
 
 func remove_from_parent():
@@ -52,3 +46,20 @@ func remove_from_parent():
 
 func validate():
 	pass
+
+
+# TODO: This might have a duplicate purpose to remove_from_parent
+func prepare_to_change_parent():
+	preparing_to_change_parent.emit()
+
+
+func _get_type_name():
+	return "Argument"
+
+
+func _on_remove_button_pressed():
+	remove_requested.emit(ordinal)
+
+
+func _on_drag_target_dropped(arg: Variant, at_position: Variant) -> void:
+	dropped_after.emit(arg)

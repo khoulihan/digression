@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cs8d2h3ldiamk"]
+[gd_scene load_steps=11 format=3 uid="uid://cs8d2h3ldiamk"]
 
 [ext_resource type="PackedScene" uid="uid://c0pw3rdictm2v" path="res://addons/hyh.digression/editor/nodes/EditorGraphNodeBase.tscn" id="1_40vcr"]
 [ext_resource type="StyleBox" uid="uid://cy2mtyhieui8q" path="res://addons/hyh.digression/editor/nodes/styles/control_node.tres" id="2_rv5vu"]
@@ -8,13 +8,13 @@
 [ext_resource type="Script" path="res://addons/hyh.digression/editor/nodes/EditorMatchBranchNode.gd" id="6_2lu8v"]
 [ext_resource type="PackedScene" uid="uid://c31q0dbk4i25w" path="res://addons/hyh.digression/editor/controls/VariableSelectionControl.tscn" id="7_61d5t"]
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="8_pxhqs"]
+[ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="9_7nl6g"]
 [ext_resource type="PackedScene" uid="uid://blu15ehhb5avh" path="res://addons/hyh.digression/editor/branches/EditorMatchBranchValue.tscn" id="9_ii30g"]
 
 [node name="EditorBranchNode" instance=ExtResource("1_40vcr")]
 offset_top = 1.0
-offset_right = 471.0
-offset_bottom = 196.0
-theme_override_constants/separation = 10
+offset_right = 556.0
+offset_bottom = 250.0
 theme_override_styles/panel = ExtResource("2_rv5vu")
 theme_override_styles/panel_selected = ExtResource("3_likff")
 theme_override_styles/titlebar = ExtResource("4_e0k6l")
@@ -47,6 +47,15 @@ slot/2/right_type = 0
 slot/2/right_color = Color(0.94902, 0.94902, 0.94902, 0.882353)
 slot/2/right_icon = null
 slot/2/draw_stylebox = true
+slot/3/left_enabled = false
+slot/3/left_type = 0
+slot/3/left_color = Color(1, 1, 1, 1)
+slot/3/left_icon = null
+slot/3/right_enabled = false
+slot/3/right_type = 0
+slot/3/right_color = Color(1, 1, 1, 1)
+slot/3/right_icon = null
+slot/3/draw_stylebox = true
 script = ExtResource("6_2lu8v")
 
 [node name="MC" type="MarginContainer" parent="." index="1"]
@@ -79,14 +88,15 @@ text = "Variable:"
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="AddBranchButton" type="Button" parent="MC/VB/HeaderContainer" index="1"]
+[node name="Label2" type="Label" parent="MC/VB/HeaderContainer" index="1"]
 layout_mode = 2
-size_flags_vertical = 8
-icon = ExtResource("8_pxhqs")
-flat = true
+size_flags_horizontal = 8
+text = "default"
 
-[node name="ScopeContainer" type="HBoxContainer" parent="MC/VB" index="1"]
+[node name="DragTargetHSeparator" parent="MC/VB" index="1" instance=ExtResource("9_7nl6g")]
 layout_mode = 2
+accepted_classes = Array[int]([2])
+accepted_type_restriction = 0
 
 [node name="BranchValue" parent="." index="2" instance=ExtResource("9_ii30g")]
 layout_mode = 2
@@ -94,10 +104,28 @@ layout_mode = 2
 [node name="BranchValue2" parent="." index="3" instance=ExtResource("9_ii30g")]
 layout_mode = 2
 
+[node name="AddBranchContainer" type="MarginContainer" parent="." index="4"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+
+[node name="AddBranchButton" type="Button" parent="AddBranchContainer" index="0"]
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Add Branch"
+icon = ExtResource("8_pxhqs")
+flat = true
+
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="variable_selected" from="MC/VB/HeaderContainer/GC/VariableSelectionControl" to="." method="_on_variable_selection_control_variable_selected"]
-[connection signal="pressed" from="MC/VB/HeaderContainer/AddBranchButton" to="." method="_on_add_branch_button_pressed"]
+[connection signal="dropped" from="MC/VB/DragTargetHSeparator" to="." method="_on_drag_target_dropped"]
+[connection signal="dropped_after" from="BranchValue" to="." method="_on_branch_dropped_after" binds= [true]]
 [connection signal="modified" from="BranchValue" to="." method="_on_branch_modified" binds= [0]]
+[connection signal="preparing_to_change_parent" from="BranchValue" to="." method="_on_branch_preparing_to_change_parent" binds= [true]]
 [connection signal="remove_requested" from="BranchValue" to="." method="_on_branch_remove_requested" binds= [0]]
+[connection signal="dropped_after" from="BranchValue2" to="." method="_on_branch_dropped_after" binds= [false]]
 [connection signal="modified" from="BranchValue2" to="." method="_on_branch_modified" binds= [1]]
+[connection signal="preparing_to_change_parent" from="BranchValue2" to="." method="_on_branch_preparing_to_change_parent" binds= [false]]
 [connection signal="remove_requested" from="BranchValue2" to="." method="_on_branch_remove_requested" binds= [1]]
+[connection signal="pressed" from="AddBranchContainer/AddBranchButton" to="." method="_on_add_branch_button_pressed"]

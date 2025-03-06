@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bygmop6vopi43"]
+[gd_scene load_steps=16 format=3 uid="uid://bygmop6vopi43"]
 
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="1"]
 [ext_resource type="Script" path="res://addons/hyh.digression/editor/nodes/EditorChoiceNode.gd" id="2"]
@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://cmpxsjfcm0kpq" path="res://addons/hyh.digression/icons/icon_node_info.svg" id="7_k8avd"]
 [ext_resource type="PackedScene" uid="uid://rg4q2rccwgo5" path="res://addons/hyh.digression/editor/controls/properties/CustomPropertiesControl.tscn" id="8_08e3u"]
 [ext_resource type="Texture2D" uid="uid://d65jtbo3b07t" path="res://addons/hyh.digression/icons/icon_clear.svg" id="8_pesv0"]
+[ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="12_g4p45"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kse8j"]
 bg_color = Color(0.388235, 0.905882, 0.796078, 1)
@@ -32,7 +33,7 @@ variation_embolden = 0.3
 
 [node name="EditorChoiceNode" instance=ExtResource("4")]
 offset_right = 511.0
-offset_bottom = 558.0
+offset_bottom = 787.0
 theme_override_constants/separation = 0
 theme_override_styles/panel = ExtResource("2_028dr")
 theme_override_styles/panel_selected = ExtResource("3_pqk3a")
@@ -44,7 +45,7 @@ slot/0/left_enabled = true
 slot/0/left_type = 0
 slot/0/left_color = Color(0.94902, 0.94902, 0.94902, 0.882353)
 slot/0/left_icon = null
-slot/0/right_enabled = true
+slot/0/right_enabled = false
 slot/0/right_type = 0
 slot/0/right_color = Color(0.94902, 0.94902, 0.94902, 0.882353)
 slot/0/right_icon = null
@@ -53,7 +54,7 @@ slot/1/left_enabled = false
 slot/1/left_type = 0
 slot/1/left_color = Color(0.94902, 0.94902, 0.94902, 0.882353)
 slot/1/left_icon = null
-slot/1/right_enabled = false
+slot/1/right_enabled = true
 slot/1/right_type = 0
 slot/1/right_color = Color(0.94902, 0.94902, 0.94902, 0.882353)
 slot/1/right_icon = null
@@ -76,6 +77,15 @@ slot/3/right_type = 0
 slot/3/right_color = Color(0.94902, 0.94902, 0.94902, 0.882353)
 slot/3/right_icon = null
 slot/3/draw_stylebox = true
+slot/4/left_enabled = false
+slot/4/left_type = 0
+slot/4/left_color = Color(1, 1, 1, 1)
+slot/4/left_icon = null
+slot/4/right_enabled = false
+slot/4/right_type = 0
+slot/4/right_color = Color(1, 1, 1, 1)
+slot/4/right_icon = null
+slot/4/draw_stylebox = true
 script = ExtResource("2")
 
 [node name="DialogueMarginContainer" type="MarginContainer" parent="." index="1"]
@@ -105,15 +115,14 @@ size_flags_horizontal = 0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = SubResource("FontVariation_ldvhs")
 theme_override_styles/focus = ExtResource("6_8ilf1")
-theme_override_styles/normal = ExtResource("6_8ilf1")
 theme_override_styles/hover = ExtResource("6_8ilf1")
 theme_override_styles/pressed = ExtResource("6_8ilf1")
+theme_override_styles/normal = ExtResource("6_8ilf1")
 flat = true
-item_count = 3
 selected = 0
 fit_to_longest_item = false
+item_count = 3
 popup/item_0/text = "Dialogue"
-popup/item_0/id = 0
 popup/item_1/text = "Narration"
 popup/item_1/id = 1
 popup/item_2/text = "A Really Long Type For Example Purposes"
@@ -193,11 +202,7 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="HSeparator" type="HSeparator" parent="HeaderContainer/VB" index="0"]
-visible = false
-layout_mode = 2
-
-[node name="HorizontalLayout" type="HBoxContainer" parent="HeaderContainer/VB" index="1"]
+[node name="HorizontalLayout" type="HBoxContainer" parent="HeaderContainer/VB" index="0"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
@@ -224,17 +229,34 @@ text = "Display Dialogue for Default
 flat = true
 
 [node name="AddBranchButton" type="Button" parent="HeaderContainer/VB/HorizontalLayout" index="3"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_stretch_ratio = 0.0
 icon = ExtResource("1")
 flat = true
 
+[node name="DragTargetHSeparator" parent="HeaderContainer/VB" index="1" instance=ExtResource("12_g4p45")]
+layout_mode = 2
+accepted_classes = Array[int]([5])
+hide_until_hover = false
+
 [node name="ChoiceValue" parent="." index="3" instance=ExtResource("3")]
 layout_mode = 2
 
 [node name="ChoiceValue2" parent="." index="4" instance=ExtResource("3")]
 layout_mode = 2
+
+[node name="AddChoiceContainer" type="MarginContainer" parent="." index="5"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 5
+
+[node name="AddChoiceButton" type="Button" parent="AddChoiceContainer" index="0"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Add Choice"
+icon = ExtResource("1")
+flat = true
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="resize_request" from="." to="." method="_on_resize_request"]
@@ -250,9 +272,15 @@ layout_mode = 2
 [connection signal="remove_property_requested" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_remove_property_requested"]
 [connection signal="size_changed" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_size_changed"]
 [connection signal="pressed" from="HeaderContainer/VB/HorizontalLayout/AddBranchButton" to="." method="_on_add_branch_button_pressed"]
+[connection signal="dropped" from="HeaderContainer/VB/DragTargetHSeparator" to="." method="_on_drag_target_dropped"]
+[connection signal="dropped_after" from="ChoiceValue" to="." method="_on_choice_dropped_after"]
 [connection signal="modified" from="ChoiceValue" to="." method="_on_branch_modified"]
+[connection signal="preparing_to_change_parent" from="ChoiceValue" to="." method="_on_choice_preparing_to_change_parent"]
 [connection signal="remove_requested" from="ChoiceValue" to="." method="_on_branch_remove_requested" binds= [0]]
 [connection signal="size_changed" from="ChoiceValue" to="." method="_on_branch_size_changed"]
+[connection signal="dropped_after" from="ChoiceValue2" to="." method="_on_choice_dropped_after"]
 [connection signal="modified" from="ChoiceValue2" to="." method="_on_branch_modified"]
+[connection signal="preparing_to_change_parent" from="ChoiceValue2" to="." method="_on_choice_preparing_to_change_parent"]
 [connection signal="remove_requested" from="ChoiceValue2" to="." method="_on_branch_remove_requested" binds= [1]]
 [connection signal="size_changed" from="ChoiceValue2" to="." method="_on_branch_size_changed"]
+[connection signal="pressed" from="AddChoiceContainer/AddChoiceButton" to="." method="_on_add_choice_button_pressed"]

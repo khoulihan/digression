@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3 uid="uid://dlnmwu1athsos"]
+
+[ext_resource type="Texture2D" uid="uid://7sby15rdg417" path="res://addons/hyh.digression/icons/icon_tree_arrow_right_dark.svg" id="1_axkmn"]
+[ext_resource type="Texture2D" uid="uid://brt3bw3yhakpp" path="res://addons/hyh.digression/icons/icon_tree_arrow_left_dark.svg" id="2_vtmm4"]
+
+[node name="DropIndicator" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 206.0
+mouse_filter = 1
+
+[node name="HB" type="HBoxContainer" parent="."]
+layout_mode = 2
+offset_top = -8.0
+offset_right = 174.0
+offset_bottom = 8.0
+
+[node name="DropIconLeft" type="TextureRect" parent="HB"]
+layout_mode = 2
+texture = ExtResource("1_axkmn")
+
+[node name="HSeparator" type="HSeparator" parent="HB"]
+custom_minimum_size = Vector2(32, 16)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 1
+
+[node name="DropIconRight" type="TextureRect" parent="HB"]
+visible = false
+layout_mode = 2
+texture = ExtResource("2_vtmm4")

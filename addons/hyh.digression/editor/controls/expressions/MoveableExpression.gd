@@ -9,6 +9,7 @@ const BOOL_ICON = preload("../../../icons/icon_type_bool.svg")
 const INT_ICON = preload("../../../icons/icon_type_int.svg")
 const FLOAT_ICON = preload("../../../icons/icon_type_float.svg")
 const STRING_ICON = preload("../../../icons/icon_type_string.svg")
+const HANDLE_ICON = preload("../../../icons/icon_drag_vertical_light.svg")
 
 @onready var _panel : PanelContainer = $PanelContainer
 @onready var _expression_container : VBoxContainer = $PanelContainer/MC/ExpressionContainer
@@ -36,6 +37,10 @@ func set_title(text, tooltip):
 ## Get a control to serve as a drag preview.
 func get_drag_preview():
 	var preview = HBoxContainer.new()
+	var handle_icon = TextureRect.new()
+	handle_icon.texture = HANDLE_ICON
+	handle_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	handle_icon.stretch_mode = TextureRect.STRETCH_KEEP
 	var icon = TextureRect.new()
 	icon.texture = _get_type_icon(type)
 	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -44,9 +49,10 @@ func get_drag_preview():
 	# TODO: Maybe include the value for value expressions, function names for
 	# functions?
 	ptext.text = "%s Expression" % _get_type_name(type)
+	preview.add_child(handle_icon)
 	preview.add_child(icon)
 	preview.add_child(ptext)
-	preview.modulate = Color.from_string("#FFFFFF88", Color.WHITE)
+	preview.modulate = Color.from_string("#777777FF", Color.DIM_GRAY)
 	return preview
 
 

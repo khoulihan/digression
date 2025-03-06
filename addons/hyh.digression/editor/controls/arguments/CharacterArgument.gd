@@ -2,8 +2,8 @@
 extends "Argument.gd"
 
 
-@onready var CharacterOption = get_node("ExpressionContainer/PC/ArgumentValueContainer/GC/CharacterOption")
-@onready var VariantOption = get_node("ExpressionContainer/PC/ArgumentValueContainer/GC/VariantOption")
+@onready var CharacterOption = get_node("VB/ExpressionContainer/PC/ArgumentValueContainer/GC/CharacterOption")
+@onready var VariantOption = get_node("VB/ExpressionContainer/PC/ArgumentValueContainer/GC/VariantOption")
 
 var _characters
 

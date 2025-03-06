@@ -23,6 +23,8 @@ func validate():
 	for child in children:
 		if child is OperatorClass:
 			continue
+		if child == _drop_indicator:
+			continue
 		var warning = child.validate()
 		if warning == null:
 			continue
@@ -86,6 +88,8 @@ func _rectify_operators():
 	var to_remove = []
 	var previous = null
 	for child in children:
+		if child == _drop_indicator:
+			continue
 		if child is OperatorClass:
 			if previous == null:
 				to_remove.append(child)
@@ -128,3 +132,7 @@ func _operator_to_keep(previous, current, to_remove):
 		return previous
 	to_remove.append(previous)
 	return current
+
+
+func _ignore_for_drop_evaluation(child) -> bool:
+	return super(child) or child is OperatorClass

@@ -8,6 +8,8 @@ signal preparing_to_change_parent()
 signal dropped_after(section)
 
 const DialogueText = preload("res://addons/hyh.digression/resources/graph/DialogueText.gd")
+const HANDLE_ICON = preload("../../icons/icon_drag_light.svg")
+const PREVIEW_LENGTH = 25
 
 @export var section_resource: DialogueText
 
@@ -117,6 +119,32 @@ func populate_variants(variants):
 
 func prepare_to_change_parent():
 	preparing_to_change_parent.emit()
+
+
+func get_drag_preview():
+	var preview = HBoxContainer.new()
+	var icon = TextureRect.new()
+	icon.texture = HANDLE_ICON
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	icon.stretch_mode = TextureRect.STRETCH_KEEP
+	var ptext = Label.new()
+	ptext.text = _get_drag_preview_text()
+	preview.add_child(icon)
+	preview.add_child(ptext)
+	preview.modulate = Color.from_string("#777777FF", Color.DIM_GRAY)
+	return preview
+
+
+func _get_drag_preview_text():
+	var preview_text = "Dialogue Section"
+	var text = self.get_text().strip_edges()
+	if text.is_empty():
+		return preview_text
+	var first_line = text.split("\n", false, 1)[0].strip_edges().strip_escapes()
+	if len(first_line) > PREVIEW_LENGTH:
+		first_line = "{0}...".format([first_line.substr(0, PREVIEW_LENGTH)])
+	preview_text = "{0} (\"{1}\")".format([preview_text, first_line])
+	return preview_text
 
 
 func _get_properties() -> Dictionary:

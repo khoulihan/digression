@@ -5,10 +5,15 @@ extends MarginContainer
 
 signal remove_requested()
 signal modified()
+signal preparing_to_change_parent()
+signal dropped_after(section)
+
 
 const Logging = preload("../../utility/Logging.gd")
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
 const MatchBranch = preload("../../resources/graph/branches/MatchBranch.gd")
+const DragHandle = preload("../controls/drag/DragHandle.gd")
+const DragVariableTypeRestriction = DragHandle.DragVariableTypeRestriction
 
 var _logger := Logging.new(
 	Logging.DGE_EDITOR_LOG_NAME,
@@ -18,6 +23,8 @@ var _type: VariableType
 var _branch_resource: MatchBranch
 
 @onready var _value_edit = $VB/HorizontalLayout/GridContainer/ValueEdit
+@onready var _drag_target = $VB/DragTargetHSeparator
+@onready var _drag_handle = $VB/HorizontalLayout/DragHandle
 
 
 func _ready() -> void:
@@ -30,6 +37,12 @@ func set_type(t: VariableType) -> void:
 	_type = t
 	if _value_edit != null:
 		_value_edit.set_variable_type(t)
+	if _drag_target != null:
+		_drag_target.update_accepted_type_restriction(
+			DragHandle.map_type_to_type_restriction(t)
+		)
+	if _drag_handle != null:
+		_drag_handle.type_restriction = DragHandle.map_type_to_type_restriction(t)
 
 
 ## Set the current value to match.
@@ -60,9 +73,17 @@ func set_branch(branch: MatchBranch) -> void:
 	set_value(_branch_resource.value)
 
 
+func prepare_to_change_parent():
+	preparing_to_change_parent.emit()
+
+
 func _on_remove_button_pressed() -> void:
 	remove_requested.emit()
 
 
 func _on_value_edit_value_changed() -> void:
 	modified.emit()
+
+
+func _on_drag_target_dropped(arg: Variant, at_position: Variant) -> void:
+	dropped_after.emit(arg)

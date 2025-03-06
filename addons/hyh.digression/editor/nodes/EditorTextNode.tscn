@@ -41,7 +41,6 @@ theme_override_constants/margin_right = 10
 
 [node name="VerticalLayout" type="VBoxContainer" parent="RootContainer" index="0"]
 layout_mode = 2
-theme_override_constants/separation = 10
 
 [node name="CharacterOptionsContainer" type="GridContainer" parent="RootContainer/VerticalLayout" index="0"]
 layout_mode = 2

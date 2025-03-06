@@ -5,10 +5,14 @@ extends MarginContainer
 
 signal remove_requested()
 signal modified()
+signal preparing_to_change_parent()
+signal dropped_after(section)
 signal size_changed(size_change)
 
 const Logging = preload("../../utility/Logging.gd")
 const ChoiceBranch = preload("../../resources/graph/branches/ChoiceBranch.gd")
+const HANDLE_ICON = preload("../../icons/icon_drag_light.svg")
+const PREVIEW_LENGTH = 25
 
 var choice_resource: ChoiceBranch
 
@@ -46,8 +50,38 @@ func set_choice(choice: ChoiceBranch) -> void:
 	_populate_properties(self.choice_resource.custom_properties)
 
 
+func prepare_to_change_parent():
+	preparing_to_change_parent.emit()
+
+
 func _populate_properties(properties: Dictionary) -> void:
 	_custom_properties_control.configure(properties)
+
+
+func get_drag_preview():
+	var preview = HBoxContainer.new()
+	var icon = TextureRect.new()
+	icon.texture = HANDLE_ICON
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	icon.stretch_mode = TextureRect.STRETCH_KEEP
+	var ptext = Label.new()
+	ptext.text = _get_drag_preview_text()
+	preview.add_child(icon)
+	preview.add_child(ptext)
+	preview.modulate = Color.from_string("#777777FF", Color.DIM_GRAY)
+	return preview
+
+
+func _get_drag_preview_text():
+	var preview_text = "Choice"
+	var text = _display_edit.text.strip_edges()
+	if text.is_empty():
+		return preview_text
+	var first_line = text.split("\n", false, 1)[0].strip_edges().strip_escapes()
+	if len(first_line) > PREVIEW_LENGTH:
+		first_line = "{0}...".format([first_line.substr(0, PREVIEW_LENGTH)])
+	preview_text = "{0} (\"{1}\")".format([preview_text, first_line])
+	return preview_text
 
 
 func _on_remove_button_pressed() -> void:
@@ -90,3 +124,7 @@ func _on_custom_properties_control_remove_property_requested(property_name) -> v
 
 func _on_custom_properties_control_size_changed(size_change) -> void:
 	size_changed.emit(size_change)
+
+
+func _on_drag_target_dropped(arg: Variant, at_position: Variant) -> void:
+	dropped_after.emit(arg)

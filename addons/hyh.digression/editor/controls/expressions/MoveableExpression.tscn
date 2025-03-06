@@ -2,10 +2,10 @@
 
 [ext_resource type="PackedScene" uid="uid://b08wjtbos7nqd" path="res://addons/hyh.digression/editor/controls/expressions/Expression.tscn" id="1_ephjt"]
 [ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/expressions/MoveableExpression.gd" id="2_56m4y"]
-[ext_resource type="Texture2D" uid="uid://yu1u674q1ejm" path="res://addons/hyh.digression/icons/icon_triple_bar.svg" id="2_c0qoh"]
 [ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.digression/icons/icon_remove.svg" id="3_4lvh7"]
 [ext_resource type="StyleBox" uid="uid://dsdm0xyo6dsx8" path="res://addons/hyh.digression/editor/controls/expressions/clear_panel_style.tres" id="3_fq6yt"]
 [ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/expressions/DragHandle.gd" id="4_c35qm"]
+[ext_resource type="Texture2D" uid="uid://dexnm3exsn0ns" path="res://addons/hyh.digression/icons/icon_drag_vertical.svg" id="4_hjxku"]
 [ext_resource type="Texture2D" uid="uid://mksqvoqy2yi4" path="res://addons/hyh.digression/icons/icon_node_warning.svg" id="5_j3mfo"]
 
 [node name="MoveableExpression" instance=ExtResource("1_ephjt")]
@@ -13,6 +13,7 @@ script = ExtResource("2_56m4y")
 
 [node name="PanelContainer" type="PanelContainer" parent="." index="0"]
 layout_mode = 2
+mouse_filter = 1
 theme_override_styles/panel = ExtResource("3_fq6yt")
 
 [node name="MC" type="MarginContainer" parent="PanelContainer" index="0"]
@@ -33,9 +34,8 @@ modulate = Color(0.137255, 0.137255, 0.137255, 1)
 layout_mode = 2
 size_flags_vertical = 4
 tooltip_text = "Drag to rearrange expressions."
-mouse_filter = 0
 mouse_default_cursor_shape = 13
-texture = ExtResource("2_c0qoh")
+texture = ExtResource("4_hjxku")
 stretch_mode = 2
 script = ExtResource("4_c35qm")
 
@@ -52,6 +52,7 @@ stretch_mode = 3
 [node name="RemoveButton" type="Button" parent="PanelContainer/MC/ExpressionContainer/Header" index="3"]
 layout_mode = 2
 size_flags_horizontal = 10
+mouse_filter = 1
 icon = ExtResource("3_4lvh7")
 flat = true
 

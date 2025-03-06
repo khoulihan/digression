@@ -5,14 +5,16 @@ extends MarginContainer
 
 signal remove_requested()
 signal modified()
+signal preparing_to_change_parent()
+signal dropped_after(section)
 signal size_changed(size_change)
 
 const IfBranch = preload("../../resources/graph/branches/IfBranch.gd")
 
 var _branch_resource: IfBranch
 
-@onready var _condition_expression = $Condition/PC/MC/ConditionExpression
-@onready var _if_label = $Condition/Label
+@onready var _condition_expression = $VB/Condition/PC/MC/ConditionExpression
+@onready var _if_label = $VB/Condition/Label
 
 
 ## Get the branch resource updated with the current values.
@@ -34,6 +36,10 @@ func set_label(text: String) -> void:
 	_if_label.text = text
 
 
+func prepare_to_change_parent():
+	preparing_to_change_parent.emit()
+
+
 func _on_remove_button_pressed() -> void:
 	remove_requested.emit()
 
@@ -44,3 +50,7 @@ func _on_condition_expression_modified() -> void:
 
 func _on_condition_expression_size_changed(amount) -> void:
 	size_changed.emit(amount)
+
+
+func _on_drag_target_dropped(arg: Variant, at_position: Variant) -> void:
+	dropped_after.emit(arg)
