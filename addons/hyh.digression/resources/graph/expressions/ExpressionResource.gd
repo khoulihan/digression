@@ -42,6 +42,7 @@ enum FunctionType {
 	RAND,
 	RAND_FN,
 	RAND_RANGE,
+	ROUND,
 }
 
 ## Possible operators. Operators are mostly specific to types, but `int` and
@@ -160,6 +161,13 @@ const EXPRESSION_FUNCTIONS = {
 				"to": VariableType.TYPE_INT,
 			},
 		},
+		FunctionType.ROUND: {
+			"display": "roundi ( x )",
+			"tooltip": "Rounds x to the nearest whole number, with halfway cases rounded away from 0.",
+			"arguments": {
+				"x": VariableType.TYPE_FLOAT,
+			},
+		},
 	},
 	VariableType.TYPE_FLOAT: {
 		FunctionType.ABS: {
@@ -239,6 +247,13 @@ const EXPRESSION_FUNCTIONS = {
 			"arguments": {
 				"from": VariableType.TYPE_FLOAT,
 				"to": VariableType.TYPE_FLOAT,
+			},
+		},
+		FunctionType.ROUND: {
+			"display": "roundf ( x )",
+			"tooltip": "Rounds x to the nearest whole number, with halfway cases rounded away from 0.",
+			"arguments": {
+				"x": VariableType.TYPE_FLOAT,
 			},
 		},
 	},
