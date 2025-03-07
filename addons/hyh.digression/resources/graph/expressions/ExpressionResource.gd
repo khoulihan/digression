@@ -34,6 +34,7 @@ enum FunctionType {
 	FLOOR,
 	CEIL,
 	ABS,
+	CLAMP,
 }
 
 ## Possible operators. Operators are mostly specific to types, but `int` and
@@ -92,6 +93,15 @@ const EXPRESSION_FUNCTIONS = {
 			"tooltip": "Rounds x upward (towards positive infinity), returning the smallest whole number that is not less than x.",
 			"arguments": { "x": VariableType.TYPE_FLOAT },
 		},
+		FunctionType.CLAMP: {
+			"display": "clampi ( value, min, max )",
+			"tooltip": "Clamps the value, returning an int not less than min and not more than max.",
+			"arguments": {
+				"value": VariableType.TYPE_INT,
+				"min": VariableType.TYPE_INT,
+				"max": VariableType.TYPE_INT,
+			},
+		},
 		FunctionType.FLOOR: {
 			"display": "floori ( x )",
 			"tooltip": "Rounds x downward (towards negative infinity), returning the largest whole number that is not more than x.",
@@ -118,6 +128,15 @@ const EXPRESSION_FUNCTIONS = {
 			"display": "ceilf ( x )",
 			"tooltip": "Rounds x upward (towards positive infinity), returning the smallest whole number that is not less than x.",
 			"arguments": { "x": VariableType.TYPE_FLOAT },
+		},
+		FunctionType.CLAMP: {
+			"display": "clampf ( value, min, max )",
+			"tooltip": "Clamps the value, returning a float not less than min and not more than max.",
+			"arguments": {
+				"value": VariableType.TYPE_FLOAT,
+				"min": VariableType.TYPE_FLOAT,
+				"max": VariableType.TYPE_FLOAT,
+			},
 		},
 		FunctionType.FLOOR: {
 			"display": "floorf ( x )",

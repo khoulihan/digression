@@ -214,6 +214,12 @@ func _match_int_function(
 			return absi(arguments['x'])
 		FunctionType.CEIL:
 			return ceili(arguments['x'])
+		FunctionType.CLAMP:
+			return clampi(
+				arguments['value'],
+				arguments['min'],
+				arguments['max'],
+			)
 		FunctionType.MIN:
 			return arguments.min()
 		FunctionType.MAX:
@@ -236,6 +242,12 @@ func _match_float_function(
 			return absf(arguments['x'])
 		FunctionType.CEIL:
 			return ceilf(arguments['x'])
+		FunctionType.CLAMP:
+			return clampf(
+				arguments['value'],
+				arguments['min'],
+				arguments['max'],
+			)
 		FunctionType.MIN:
 			return arguments.min()
 		FunctionType.MAX:

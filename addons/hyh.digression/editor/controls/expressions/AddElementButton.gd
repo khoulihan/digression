@@ -23,11 +23,13 @@ enum ExpressionMenuId {
 	BOOL_STRING_CONTAINS,
 	INT_ABS,
 	INT_CEIL,
+	INT_CLAMP,
 	INT_FLOOR,
 	INT_MAX,
 	INT_MIN,
 	FLOAT_ABS,
 	FLOAT_CEIL,
+	FLOAT_CLAMP,
 	FLOAT_FLOOR,
 	FLOAT_MAX,
 	FLOAT_MIN,
@@ -95,6 +97,8 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.ABS
 		ExpressionMenuId.INT_CEIL, ExpressionMenuId.FLOAT_CEIL:
 			return FunctionType.CEIL
+		ExpressionMenuId.INT_CLAMP, ExpressionMenuId.FLOAT_CLAMP:
+			return FunctionType.CLAMP
 		ExpressionMenuId.INT_FLOOR, ExpressionMenuId.FLOAT_FLOOR:
 			return FunctionType.FLOOR
 		ExpressionMenuId.INT_MIN, ExpressionMenuId.FLOAT_MIN:
@@ -173,6 +177,7 @@ func _add_bool_functions(menu: PopupMenu):
 func _add_int_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.INT_ABS, "abs")
 	_add_function_item(menu, ExpressionMenuId.INT_CEIL, "ceil")
+	_add_function_item(menu, ExpressionMenuId.INT_CLAMP, "clamp")
 	_add_function_item(menu, ExpressionMenuId.INT_FLOOR, "floor")
 	_add_function_item(menu, ExpressionMenuId.INT_MAX, "max")
 	_add_function_item(menu, ExpressionMenuId.INT_MIN, "min")
@@ -181,6 +186,7 @@ func _add_int_functions(menu: PopupMenu):
 func _add_float_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.FLOAT_ABS, "abs")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_CEIL, "ceil")
+	_add_function_item(menu, ExpressionMenuId.FLOAT_CLAMP, "clamp")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_FLOOR, "floor")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_MAX, "max")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_MIN, "min")
