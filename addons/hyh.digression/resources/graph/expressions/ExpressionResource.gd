@@ -31,6 +31,7 @@ enum FunctionType {
 	CLAMP,
 	CONTAINS,
 	FLOOR,
+	IS_EQUAL_APPROX,
 	MAX,
 	MIN,
 	MOD,
@@ -77,6 +78,14 @@ const VariableType = preload("../VariableSetNode.gd").VariableType
 
 const EXPRESSION_FUNCTIONS = {
 	VariableType.TYPE_BOOL: {
+		FunctionType.IS_EQUAL_APPROX: {
+			"display": "is_equal_approx ( a, b )",
+			"tooltip": "Returns true if a and b are approximately equal to each other.",
+			"arguments": {
+				"a": VariableType.TYPE_FLOAT,
+				"b": VariableType.TYPE_FLOAT,
+			}
+		},
 		FunctionType.NOT: {
 			"display": "not ( x )",
 			"tooltip": "Negates the argument.",

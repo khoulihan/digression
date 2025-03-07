@@ -194,6 +194,8 @@ func _match_bool_function(
 	arguments
 ):
 	match function_type:
+		FunctionType.IS_EQUAL_APPROX:
+			return is_equal_approx(arguments["a"], arguments["b"])
 		FunctionType.NOT:
 			return not arguments["x"]
 		FunctionType.CONTAINS:

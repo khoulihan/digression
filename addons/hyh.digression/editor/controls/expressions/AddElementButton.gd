@@ -19,6 +19,7 @@ enum ExpressionMenuId {
 	COMPARISON_FLOAT,
 	COMPARISON_STRING,
 	FUNCTION,
+	BOOL_IS_EQUAL_APPROX,
 	BOOL_NOT,
 	BOOL_STRING_CONTAINS,
 	INT_ABS,
@@ -110,6 +111,8 @@ func _expression_type_for_id(id: ExpressionMenuId) -> ExpressionType:
 
 func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 	match id:
+		ExpressionMenuId.BOOL_IS_EQUAL_APPROX:
+			return FunctionType.IS_EQUAL_APPROX
 		ExpressionMenuId.BOOL_NOT:
 			return FunctionType.NOT
 		ExpressionMenuId.INT_ABS, ExpressionMenuId.FLOAT_ABS:
@@ -211,6 +214,7 @@ func _add_function_item(
 
 
 func _add_bool_functions(menu: PopupMenu):
+	_add_function_item(menu, ExpressionMenuId.BOOL_IS_EQUAL_APPROX, "is_equal_approx")
 	_add_function_item(menu, ExpressionMenuId.BOOL_NOT, "not")
 	_add_function_item(menu, ExpressionMenuId.BOOL_STRING_CONTAINS, "String.contains")
 
