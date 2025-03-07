@@ -44,6 +44,7 @@ enum FunctionType {
 	RAND_RANGE,
 	ROUND,
 	SIGN,
+	SNAPPED,
 }
 
 ## Possible operators. Operators are mostly specific to types, but `int` and
@@ -176,6 +177,14 @@ const EXPRESSION_FUNCTIONS = {
 				"x": VariableType.TYPE_INT,
 			},
 		},
+		FunctionType.SNAPPED: {
+			"display": "snappedi ( x, step )",
+			"tooltip": "Returns the multiple of step that is the closest to x.",
+			"arguments": {
+				"x": VariableType.TYPE_INT,
+				"step": VariableType.TYPE_INT,
+			},
+		},
 	},
 	VariableType.TYPE_FLOAT: {
 		FunctionType.ABS: {
@@ -269,6 +278,14 @@ const EXPRESSION_FUNCTIONS = {
 			"tooltip": "Returns -1.0 if x is negative, 1.0 if x is positive, and 0.0 if x is zero. For nan values of x it returns 0.0.",
 			"arguments": {
 				"x": VariableType.TYPE_FLOAT,
+			},
+		},
+		FunctionType.SNAPPED: {
+			"display": "snappedf ( x, step )",
+			"tooltip": "Returns the multiple of step that is the closest to x.",
+			"arguments": {
+				"x": VariableType.TYPE_FLOAT,
+				"step": VariableType.TYPE_FLOAT,
 			},
 		},
 	},

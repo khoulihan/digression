@@ -240,6 +240,8 @@ func _match_int_function(
 			return roundi(arguments['x'])
 		FunctionType.SIGN:
 			return signi(arguments['x'])
+		FunctionType.SNAPPED:
+			return snappedi(arguments['x'], arguments['step'])
 	_logger.error("Unrecognised integer function type.")
 	return null
 
@@ -284,6 +286,8 @@ func _match_float_function(
 			return roundf(arguments['x'])
 		FunctionType.SIGN:
 			return signf(arguments['x'])
+		FunctionType.SNAPPED:
+			return snappedf(arguments['x'], arguments['step'])
 	_logger.error("Unrecognised float function type.")
 	return null
 
