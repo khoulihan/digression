@@ -196,6 +196,10 @@ func _match_bool_function(
 	match function_type:
 		FunctionType.IS_EQUAL_APPROX:
 			return is_equal_approx(arguments["a"], arguments["b"])
+		FunctionType.IS_FINITE:
+			return is_finite(arguments["x"])
+		FunctionType.IS_INFINITE:
+			return is_inf(arguments["x"])
 		FunctionType.NOT:
 			return not arguments["x"]
 		FunctionType.CONTAINS:

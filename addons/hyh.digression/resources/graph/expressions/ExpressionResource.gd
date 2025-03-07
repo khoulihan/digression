@@ -32,6 +32,8 @@ enum FunctionType {
 	CONTAINS,
 	FLOOR,
 	IS_EQUAL_APPROX,
+	IS_FINITE,
+	IS_INFINITE,
 	MAX,
 	MIN,
 	MOD,
@@ -84,6 +86,20 @@ const EXPRESSION_FUNCTIONS = {
 			"arguments": {
 				"a": VariableType.TYPE_FLOAT,
 				"b": VariableType.TYPE_FLOAT,
+			}
+		},
+		FunctionType.IS_FINITE: {
+			"display": "is_finite ( x )",
+			"tooltip": "Returns whether x is a finite value, i.e. it is not NAN, positive infinity, or negative infinity.",
+			"arguments": {
+				"x": VariableType.TYPE_FLOAT,
+			}
+		},
+		FunctionType.IS_INFINITE: {
+			"display": "is_inf ( x )",
+			"tooltip": "Returns true if x is either positive infinity or negative infinity.",
+			"arguments": {
+				"x": VariableType.TYPE_FLOAT,
 			}
 		},
 		FunctionType.NOT: {
