@@ -310,10 +310,10 @@ const EXPRESSION_FUNCTIONS = {
 	},
 	VariableType.TYPE_STRING: {
 		FunctionType.TO_LOWER: {
-			"display": "to_lower ( what )",
-			"tooltip": "Converts the argument to lowercase.",
+			"display": "value.to_lower ( )",
+			"tooltip": "Converts value to lowercase.",
 			"arguments": {
-				"what": VariableType.TYPE_STRING,
+				"value": VariableType.TYPE_STRING,
 			}
 		},
 	},

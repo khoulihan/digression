@@ -253,4 +253,4 @@ func _add_float_functions(menu: PopupMenu):
 
 
 func _add_string_functions(menu: PopupMenu):
-	_add_function_item(menu, ExpressionMenuId.STRING_TO_LOWER, "to_lower")
+	_add_function_item(menu, ExpressionMenuId.STRING_TO_LOWER, "String.to_lower")

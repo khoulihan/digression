@@ -312,7 +312,7 @@ func _match_string_function(
 ):
 	match function_type:
 		FunctionType.TO_LOWER:
-			return arguments["what"].to_lower()
+			return arguments["value"].to_lower()
 	_logger.error("Unrecognised string function type.")
 	return null
 
