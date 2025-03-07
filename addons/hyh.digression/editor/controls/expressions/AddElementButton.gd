@@ -28,6 +28,7 @@ enum ExpressionMenuId {
 	INT_MAX,
 	INT_MIN,
 	INT_MOD,
+	INT_POSMOD,
 	FLOAT_ABS,
 	FLOAT_CEIL,
 	FLOAT_CLAMP,
@@ -35,6 +36,7 @@ enum ExpressionMenuId {
 	FLOAT_MAX,
 	FLOAT_MIN,
 	FLOAT_MOD,
+	FLOAT_POSMOD,
 	STRING_TO_LOWER,
 }
 
@@ -109,6 +111,8 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.MAX
 		ExpressionMenuId.INT_MOD, ExpressionMenuId.FLOAT_MOD:
 			return FunctionType.MOD
+		ExpressionMenuId.INT_POSMOD, ExpressionMenuId.FLOAT_POSMOD:
+			return FunctionType.POSMOD
 		ExpressionMenuId.BOOL_STRING_CONTAINS:
 			return FunctionType.CONTAINS
 		ExpressionMenuId.STRING_TO_LOWER:
@@ -186,6 +190,7 @@ func _add_int_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.INT_MAX, "max")
 	_add_function_item(menu, ExpressionMenuId.INT_MIN, "min")
 	_add_function_item(menu, ExpressionMenuId.INT_MOD, "mod")
+	_add_function_item(menu, ExpressionMenuId.INT_POSMOD, "posmod")
 
 
 func _add_float_functions(menu: PopupMenu):
@@ -196,6 +201,7 @@ func _add_float_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.FLOAT_MAX, "max")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_MIN, "min")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_MOD, "mod")
+	_add_function_item(menu, ExpressionMenuId.FLOAT_POSMOD, "posmod")
 
 
 func _add_string_functions(menu: PopupMenu):

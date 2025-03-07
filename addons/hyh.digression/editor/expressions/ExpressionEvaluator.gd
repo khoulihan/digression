@@ -228,6 +228,8 @@ func _match_int_function(
 			return floori(arguments['x'])
 		FunctionType.MOD:
 			return arguments['x'] % arguments['y']
+		FunctionType.POSMOD:
+			return posmod(arguments['x'], arguments['y'])
 	_logger.error("Unrecognised integer function type.")
 	return null
 
@@ -258,6 +260,8 @@ func _match_float_function(
 			return floorf(arguments['x'])
 		FunctionType.MOD:
 			return fmod(arguments['x'], arguments['y'])
+		FunctionType.POSMOD:
+			return fposmod(arguments['x'], arguments['y'])
 	_logger.error("Unrecognised float function type.")
 	return null
 

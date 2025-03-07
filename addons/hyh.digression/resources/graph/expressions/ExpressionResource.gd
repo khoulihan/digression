@@ -36,6 +36,7 @@ enum FunctionType {
 	ABS,
 	CLAMP,
 	MOD,
+	POSMOD,
 }
 
 ## Possible operators. Operators are mostly specific to types, but `int` and
@@ -126,6 +127,14 @@ const EXPRESSION_FUNCTIONS = {
 				"y": VariableType.TYPE_INT,
 			},
 		},
+		FunctionType.POSMOD: {
+			"display": "posmod ( x, y )",
+			"tooltip": "Returns the integer modulus of x divided by y that wraps equally in positive and negative.",
+			"arguments": {
+				"x": VariableType.TYPE_INT,
+				"y": VariableType.TYPE_INT,
+			},
+		},
 	},
 	VariableType.TYPE_FLOAT: {
 		FunctionType.ABS: {
@@ -165,6 +174,14 @@ const EXPRESSION_FUNCTIONS = {
 		FunctionType.MOD: {
 			"display": "fmod ( x, y )",
 			"tooltip": "Returns the floating-point remainder of x divided by y, keeping the sign of x.",
+			"arguments": {
+				"x": VariableType.TYPE_FLOAT,
+				"y": VariableType.TYPE_FLOAT,
+			},
+		},
+		FunctionType.POSMOD: {
+			"display": "fposmod ( x, y )",
+			"tooltip": "Returns the floating-point modulus of x divided by y, wrapping equally in positive and negative.",
 			"arguments": {
 				"x": VariableType.TYPE_FLOAT,
 				"y": VariableType.TYPE_FLOAT,
