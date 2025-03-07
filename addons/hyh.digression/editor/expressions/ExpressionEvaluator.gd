@@ -238,6 +238,8 @@ func _match_int_function(
 			return randi_range(arguments['from'], arguments['to'])
 		FunctionType.ROUND:
 			return roundi(arguments['x'])
+		FunctionType.SIGN:
+			return signi(arguments['x'])
 	_logger.error("Unrecognised integer function type.")
 	return null
 
@@ -280,6 +282,8 @@ func _match_float_function(
 			return randf_range(arguments['from'], arguments['to'])
 		FunctionType.ROUND:
 			return roundf(arguments['x'])
+		FunctionType.SIGN:
+			return signf(arguments['x'])
 	_logger.error("Unrecognised float function type.")
 	return null
 

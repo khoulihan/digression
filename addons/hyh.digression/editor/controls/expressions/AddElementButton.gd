@@ -33,6 +33,7 @@ enum ExpressionMenuId {
 	INT_RAND_RANGE,
 	INT_ROUND,
 	INT_POSMOD,
+	INT_SIGN,
 	FLOAT_ABS,
 	FLOAT_CEIL,
 	FLOAT_CLAMP,
@@ -46,6 +47,7 @@ enum ExpressionMenuId {
 	FLOAT_RAND_FN,
 	FLOAT_RAND_RANGE,
 	FLOAT_ROUND,
+	FLOAT_SIGN,
 	STRING_TO_LOWER,
 }
 
@@ -134,6 +136,8 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.RAND_RANGE
 		ExpressionMenuId.INT_ROUND, ExpressionMenuId.FLOAT_ROUND:
 			return FunctionType.ROUND
+		ExpressionMenuId.INT_SIGN, ExpressionMenuId.FLOAT_SIGN:
+			return FunctionType.SIGN
 		ExpressionMenuId.BOOL_STRING_CONTAINS:
 			return FunctionType.CONTAINS
 		ExpressionMenuId.STRING_TO_LOWER:
@@ -216,6 +220,7 @@ func _add_int_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.INT_RAND, "rand")
 	_add_function_item(menu, ExpressionMenuId.INT_RAND_RANGE, "rand_range")
 	_add_function_item(menu, ExpressionMenuId.INT_ROUND, "round")
+	_add_function_item(menu, ExpressionMenuId.INT_SIGN, "sign")
 
 
 func _add_float_functions(menu: PopupMenu):
@@ -232,6 +237,7 @@ func _add_float_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.FLOAT_RAND_FN, "randfn")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_RAND_RANGE, "rand_range")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_ROUND, "round")
+	_add_function_item(menu, ExpressionMenuId.FLOAT_SIGN, "sign")
 
 
 func _add_string_functions(menu: PopupMenu):

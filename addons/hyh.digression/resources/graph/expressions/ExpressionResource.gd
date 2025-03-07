@@ -43,6 +43,7 @@ enum FunctionType {
 	RAND_FN,
 	RAND_RANGE,
 	ROUND,
+	SIGN,
 }
 
 ## Possible operators. Operators are mostly specific to types, but `int` and
@@ -168,6 +169,13 @@ const EXPRESSION_FUNCTIONS = {
 				"x": VariableType.TYPE_FLOAT,
 			},
 		},
+		FunctionType.SIGN: {
+			"display": "signi ( x )",
+			"tooltip": "Returns -1 if x is negative, 1 if x is positive, and 0 if x is zero.",
+			"arguments": {
+				"x": VariableType.TYPE_INT,
+			},
+		},
 	},
 	VariableType.TYPE_FLOAT: {
 		FunctionType.ABS: {
@@ -252,6 +260,13 @@ const EXPRESSION_FUNCTIONS = {
 		FunctionType.ROUND: {
 			"display": "roundf ( x )",
 			"tooltip": "Rounds x to the nearest whole number, with halfway cases rounded away from 0.",
+			"arguments": {
+				"x": VariableType.TYPE_FLOAT,
+			},
+		},
+		FunctionType.SIGN: {
+			"display": "signf ( x )",
+			"tooltip": "Returns -1.0 if x is negative, 1.0 if x is positive, and 0.0 if x is zero. For nan values of x it returns 0.0.",
 			"arguments": {
 				"x": VariableType.TYPE_FLOAT,
 			},
