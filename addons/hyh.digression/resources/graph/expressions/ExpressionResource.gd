@@ -33,6 +33,7 @@ enum FunctionType {
 	TO_LOWER,
 	FLOOR,
 	CEIL,
+	ABS,
 }
 
 ## Possible operators. Operators are mostly specific to types, but `int` and
@@ -81,6 +82,11 @@ const EXPRESSION_FUNCTIONS = {
 		},
 	},
 	VariableType.TYPE_INT: {
+		FunctionType.ABS: {
+			"display": "absi ( x )",
+			"tooltip": "Returns the absolute value of a Variant parameter x (i.e. non-negative value).",
+			"arguments": { "x": VariableType.TYPE_INT },
+		},
 		FunctionType.CEIL: {
 			"display": "ceili ( x )",
 			"tooltip": "Rounds x upward (towards positive infinity), returning the smallest whole number that is not less than x.",
@@ -103,6 +109,11 @@ const EXPRESSION_FUNCTIONS = {
 		}
 	},
 	VariableType.TYPE_FLOAT: {
+		FunctionType.ABS: {
+			"display": "absf ( x )",
+			"tooltip": "Returns the absolute value of a Variant parameter x (i.e. non-negative value).",
+			"arguments": { "x": VariableType.TYPE_FLOAT },
+		},
 		FunctionType.CEIL: {
 			"display": "ceilf ( x )",
 			"tooltip": "Rounds x upward (towards positive infinity), returning the smallest whole number that is not less than x.",

@@ -210,6 +210,8 @@ func _match_int_function(
 	arguments
 ):
 	match function_type:
+		FunctionType.ABS:
+			return absi(arguments['x'])
 		FunctionType.CEIL:
 			return ceili(arguments['x'])
 		FunctionType.MIN:
@@ -230,6 +232,8 @@ func _match_float_function(
 	arguments
 ):
 	match function_type:
+		FunctionType.ABS:
+			return absf(arguments['x'])
 		FunctionType.CEIL:
 			return ceilf(arguments['x'])
 		FunctionType.MIN:
