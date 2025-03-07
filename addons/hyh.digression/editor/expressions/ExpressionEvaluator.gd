@@ -226,6 +226,8 @@ func _match_int_function(
 			return arguments.max()
 		FunctionType.FLOOR:
 			return floori(arguments['x'])
+		FunctionType.MOD:
+			return arguments['x'] % arguments['y']
 	_logger.error("Unrecognised integer function type.")
 	return null
 
@@ -254,6 +256,8 @@ func _match_float_function(
 			return arguments.max()
 		FunctionType.FLOOR:
 			return floorf(arguments['x'])
+		FunctionType.MOD:
+			return fmod(arguments['x'], arguments['y'])
 	_logger.error("Unrecognised float function type.")
 	return null
 

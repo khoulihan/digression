@@ -35,6 +35,7 @@ enum FunctionType {
 	CEIL,
 	ABS,
 	CLAMP,
+	MOD,
 }
 
 ## Possible operators. Operators are mostly specific to types, but `int` and
@@ -116,7 +117,15 @@ const EXPRESSION_FUNCTIONS = {
 			"display": "maxi ( ... )",
 			"tooltip": "Returns the largest of the arguments.",
 			"arguments": VariableType.TYPE_INT,
-		}
+		},
+		FunctionType.MOD: {
+			"display": "mod ( x, y )",
+			"tooltip": "Returns the integer remainder of x divided by y (x % y in GDScript).",
+			"arguments": {
+				"x": VariableType.TYPE_INT,
+				"y": VariableType.TYPE_INT,
+			},
+		},
 	},
 	VariableType.TYPE_FLOAT: {
 		FunctionType.ABS: {
@@ -152,7 +161,15 @@ const EXPRESSION_FUNCTIONS = {
 			"display": "maxf ( ... )",
 			"tooltip": "Returns the largest of the arguments.",
 			"arguments": VariableType.TYPE_FLOAT,
-		}
+		},
+		FunctionType.MOD: {
+			"display": "fmod ( x, y )",
+			"tooltip": "Returns the floating-point remainder of x divided by y, keeping the sign of x.",
+			"arguments": {
+				"x": VariableType.TYPE_FLOAT,
+				"y": VariableType.TYPE_FLOAT,
+			},
+		},
 	},
 	VariableType.TYPE_STRING: {
 		FunctionType.TO_LOWER: {
