@@ -39,6 +39,9 @@ enum FunctionType {
 	POSMOD,
 	NEAREST_PO2,
 	PINGPONG,
+	RAND,
+	RAND_FN,
+	RAND_RANGE,
 }
 
 ## Possible operators. Operators are mostly specific to types, but `int` and
@@ -144,6 +147,19 @@ const EXPRESSION_FUNCTIONS = {
 				"y": VariableType.TYPE_INT,
 			},
 		},
+		FunctionType.RAND: {
+			"display": "randi ( )",
+			"tooltip": "Returns a random unsigned 32-bit integer.",
+			"arguments": {},
+		},
+		FunctionType.RAND_RANGE: {
+			"display": "randi_range ( from, to )",
+			"tooltip": "Returns a random signed 32-bit integer between from and to (inclusive). If to is lesser than from, they are swapped.",
+			"arguments": {
+				"from": VariableType.TYPE_INT,
+				"to": VariableType.TYPE_INT,
+			},
+		},
 	},
 	VariableType.TYPE_FLOAT: {
 		FunctionType.ABS: {
@@ -202,6 +218,27 @@ const EXPRESSION_FUNCTIONS = {
 			"arguments": {
 				"x": VariableType.TYPE_FLOAT,
 				"y": VariableType.TYPE_FLOAT,
+			},
+		},
+		FunctionType.RAND: {
+			"display": "randf ( )",
+			"tooltip": "Returns a random floating-point value between 0.0 and 1.0 (inclusive).",
+			"arguments": {},
+		},
+		FunctionType.RAND_FN: {
+			"display": "randfn ( mean, deviation )",
+			"tooltip": "Returns a normally-distributed, pseudo-random floating-point value from the specified mean and a standard deviation. This is also known as a Gaussian distribution.",
+			"arguments": {
+				"mean": VariableType.TYPE_FLOAT,
+				"deviation": VariableType.TYPE_FLOAT,
+			},
+		},
+		FunctionType.RAND_RANGE: {
+			"display": "randf_range ( from, to )",
+			"tooltip": "Returns a random floating-point value between from and to (inclusive).",
+			"arguments": {
+				"from": VariableType.TYPE_FLOAT,
+				"to": VariableType.TYPE_FLOAT,
 			},
 		},
 	},

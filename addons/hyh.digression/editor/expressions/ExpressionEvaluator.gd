@@ -232,6 +232,10 @@ func _match_int_function(
 			return nearest_po2(arguments['value'])
 		FunctionType.POSMOD:
 			return posmod(arguments['x'], arguments['y'])
+		FunctionType.RAND:
+			return randi()
+		FunctionType.RAND_RANGE:
+			return randi_range(arguments['from'], arguments['to'])
 	_logger.error("Unrecognised integer function type.")
 	return null
 
@@ -266,6 +270,12 @@ func _match_float_function(
 			return pingpong(arguments['value'], arguments['length'])
 		FunctionType.POSMOD:
 			return fposmod(arguments['x'], arguments['y'])
+		FunctionType.RAND:
+			return randf()
+		FunctionType.RAND_FN:
+			return randfn(arguments['mean'], arguments['deviation'])
+		FunctionType.RAND_RANGE:
+			return randf_range(arguments['from'], arguments['to'])
 	_logger.error("Unrecognised float function type.")
 	return null
 
