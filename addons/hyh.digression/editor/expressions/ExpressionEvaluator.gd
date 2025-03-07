@@ -200,6 +200,8 @@ func _match_bool_function(
 			return is_finite(arguments["x"])
 		FunctionType.IS_INFINITE:
 			return is_inf(arguments["x"])
+		FunctionType.IS_NAN:
+			return is_nan(arguments["x"])
 		FunctionType.NOT:
 			return not arguments["x"]
 		FunctionType.CONTAINS:
