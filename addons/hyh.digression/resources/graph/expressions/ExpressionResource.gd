@@ -38,6 +38,7 @@ enum FunctionType {
 	MOD,
 	POSMOD,
 	NEAREST_PO2,
+	PINGPONG,
 }
 
 ## Possible operators. Operators are mostly specific to types, but `int` and
@@ -185,6 +186,14 @@ const EXPRESSION_FUNCTIONS = {
 			"arguments": {
 				"x": VariableType.TYPE_FLOAT,
 				"y": VariableType.TYPE_FLOAT,
+			},
+		},
+		FunctionType.PINGPONG: {
+			"display": "pingpong ( value, length )",
+			"tooltip": "Wraps value between 0 and the length. If the limit is reached, the next value the function returns is decreased to the 0 side or increased to the length side (like a triangle wave). If length is less than zero, it becomes positive.",
+			"arguments": {
+				"value": VariableType.TYPE_FLOAT,
+				"length": VariableType.TYPE_FLOAT,
 			},
 		},
 		FunctionType.POSMOD: {

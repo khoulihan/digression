@@ -262,6 +262,8 @@ func _match_float_function(
 			return floorf(arguments['x'])
 		FunctionType.MOD:
 			return fmod(arguments['x'], arguments['y'])
+		FunctionType.PINGPONG:
+			return pingpong(arguments['value'], arguments['length'])
 		FunctionType.POSMOD:
 			return fposmod(arguments['x'], arguments['y'])
 	_logger.error("Unrecognised float function type.")
