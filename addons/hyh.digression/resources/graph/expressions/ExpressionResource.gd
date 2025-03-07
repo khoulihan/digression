@@ -30,6 +30,7 @@ enum FunctionType {
 	CEIL,
 	CLAMP,
 	CONTAINS,
+	CONTAINSN,
 	FLOOR,
 	IS_EQUAL_APPROX,
 	IS_FINITE,
@@ -82,6 +83,22 @@ const VariableType = preload("../VariableSetNode.gd").VariableType
 
 const EXPRESSION_FUNCTIONS = {
 	VariableType.TYPE_BOOL: {
+		FunctionType.CONTAINS: {
+			"display": "value.contains ( what )",
+			"tooltip": "Returns true if value contains what.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"what": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.CONTAINSN: {
+			"display": "value.containsn ( what )",
+			"tooltip": "Returns true if value contains what, ignoring case.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"what": VariableType.TYPE_STRING,
+			}
+		},
 		FunctionType.IS_EQUAL_APPROX: {
 			"display": "is_equal_approx ( a, b )",
 			"tooltip": "Returns true if a and b are approximately equal to each other.",
@@ -123,14 +140,6 @@ const EXPRESSION_FUNCTIONS = {
 			"tooltip": "Negates the argument.",
 			"arguments": {
 				"x": VariableType.TYPE_BOOL,
-			}
-		},
-		FunctionType.CONTAINS: {
-			"display": "value.contains ( what )",
-			"tooltip": "Returns true if value contains what.",
-			"arguments": {
-				"value": VariableType.TYPE_STRING,
-				"what": VariableType.TYPE_STRING,
 			}
 		},
 	},

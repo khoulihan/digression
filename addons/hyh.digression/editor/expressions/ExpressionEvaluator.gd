@@ -208,6 +208,8 @@ func _match_bool_function(
 			return not arguments["x"]
 		FunctionType.CONTAINS:
 			return arguments["value"].contains(arguments["what"])
+		FunctionType.CONTAINSN:
+			return arguments["value"].containsn(arguments["what"])
 	_logger.error("Unrecognised boolean function type.")
 	return null
 

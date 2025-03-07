@@ -26,6 +26,7 @@ enum ExpressionMenuId {
 	BOOL_IS_ZERO_APPROX,
 	BOOL_NOT,
 	BOOL_STRING_CONTAINS,
+	BOOL_STRING_CONTAINSN,
 	INT_ABS,
 	INT_CEIL,
 	INT_CLAMP,
@@ -127,6 +128,10 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.IS_ZERO_APPROX
 		ExpressionMenuId.BOOL_NOT:
 			return FunctionType.NOT
+		ExpressionMenuId.BOOL_STRING_CONTAINS:
+			return FunctionType.CONTAINS
+		ExpressionMenuId.BOOL_STRING_CONTAINSN:
+			return FunctionType.CONTAINSN
 		ExpressionMenuId.INT_ABS, ExpressionMenuId.FLOAT_ABS:
 			return FunctionType.ABS
 		ExpressionMenuId.INT_CEIL, ExpressionMenuId.FLOAT_CEIL:
@@ -161,8 +166,6 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.SNAPPED
 		ExpressionMenuId.INT_WRAP, ExpressionMenuId.FLOAT_WRAP:
 			return FunctionType.WRAP
-		ExpressionMenuId.BOOL_STRING_CONTAINS:
-			return FunctionType.CONTAINS
 		ExpressionMenuId.STRING_TO_LOWER:
 			return FunctionType.TO_LOWER
 	return null
@@ -233,6 +236,7 @@ func _add_bool_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.BOOL_IS_ZERO_APPROX, "is_zero_approx")
 	_add_function_item(menu, ExpressionMenuId.BOOL_NOT, "not")
 	_add_function_item(menu, ExpressionMenuId.BOOL_STRING_CONTAINS, "String.contains")
+	_add_function_item(menu, ExpressionMenuId.BOOL_STRING_CONTAINSN, "String.containsn")
 
 
 func _add_int_functions(menu: PopupMenu):
