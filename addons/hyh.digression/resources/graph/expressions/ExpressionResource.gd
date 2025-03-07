@@ -35,6 +35,7 @@ enum FunctionType {
 	IS_FINITE,
 	IS_INFINITE,
 	IS_NAN,
+	IS_ZERO_APPROX,
 	MAX,
 	MIN,
 	MOD,
@@ -106,6 +107,13 @@ const EXPRESSION_FUNCTIONS = {
 		FunctionType.IS_NAN: {
 			"display": "is_nan ( x )",
 			"tooltip": "Returns true if x is a NaN (\"Not a Number\" or invalid) value.",
+			"arguments": {
+				"x": VariableType.TYPE_FLOAT,
+			}
+		},
+		FunctionType.IS_ZERO_APPROX: {
+			"display": "is_zero_approx ( x )",
+			"tooltip": "Returns true if x is zero or almost zero.",
 			"arguments": {
 				"x": VariableType.TYPE_FLOAT,
 			}

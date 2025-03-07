@@ -23,6 +23,7 @@ enum ExpressionMenuId {
 	BOOL_IS_FINITE,
 	BOOL_IS_INFINITE,
 	BOOL_IS_NAN,
+	BOOL_IS_ZERO_APPROX,
 	BOOL_NOT,
 	BOOL_STRING_CONTAINS,
 	INT_ABS,
@@ -122,6 +123,8 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.IS_INFINITE
 		ExpressionMenuId.BOOL_IS_NAN:
 			return FunctionType.IS_NAN
+		ExpressionMenuId.BOOL_IS_ZERO_APPROX:
+			return FunctionType.IS_ZERO_APPROX
 		ExpressionMenuId.BOOL_NOT:
 			return FunctionType.NOT
 		ExpressionMenuId.INT_ABS, ExpressionMenuId.FLOAT_ABS:
@@ -227,6 +230,7 @@ func _add_bool_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.BOOL_IS_FINITE, "is_finite")
 	_add_function_item(menu, ExpressionMenuId.BOOL_IS_INFINITE, "is_inf")
 	_add_function_item(menu, ExpressionMenuId.BOOL_IS_NAN, "is_nan")
+	_add_function_item(menu, ExpressionMenuId.BOOL_IS_ZERO_APPROX, "is_zero_approx")
 	_add_function_item(menu, ExpressionMenuId.BOOL_NOT, "not")
 	_add_function_item(menu, ExpressionMenuId.BOOL_STRING_CONTAINS, "String.contains")
 
