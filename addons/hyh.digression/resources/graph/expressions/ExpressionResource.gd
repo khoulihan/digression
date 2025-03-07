@@ -45,6 +45,7 @@ enum FunctionType {
 	ROUND,
 	SIGN,
 	SNAPPED,
+	WRAP,
 }
 
 ## Possible operators. Operators are mostly specific to types, but `int` and
@@ -185,6 +186,15 @@ const EXPRESSION_FUNCTIONS = {
 				"step": VariableType.TYPE_INT,
 			},
 		},
+		FunctionType.WRAP: {
+			"display": "wrapi ( value, min, max )",
+			"tooltip": "Wraps the integer value between min and max.",
+			"arguments": {
+				"value": VariableType.TYPE_INT,
+				"min": VariableType.TYPE_INT,
+				"max": VariableType.TYPE_INT,
+			},
+		},
 	},
 	VariableType.TYPE_FLOAT: {
 		FunctionType.ABS: {
@@ -286,6 +296,15 @@ const EXPRESSION_FUNCTIONS = {
 			"arguments": {
 				"x": VariableType.TYPE_FLOAT,
 				"step": VariableType.TYPE_FLOAT,
+			},
+		},
+		FunctionType.WRAP: {
+			"display": "wrapf ( value, min, max )",
+			"tooltip": "Wraps the float value between min and max.",
+			"arguments": {
+				"value": VariableType.TYPE_FLOAT,
+				"min": VariableType.TYPE_FLOAT,
+				"max": VariableType.TYPE_FLOAT,
 			},
 		},
 	},

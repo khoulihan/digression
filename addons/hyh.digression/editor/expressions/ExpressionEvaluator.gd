@@ -242,6 +242,12 @@ func _match_int_function(
 			return signi(arguments['x'])
 		FunctionType.SNAPPED:
 			return snappedi(arguments['x'], arguments['step'])
+		FunctionType.WRAP:
+			return wrapi(
+				arguments['value'],
+				arguments['min'],
+				arguments['max'],
+			)
 	_logger.error("Unrecognised integer function type.")
 	return null
 
@@ -288,6 +294,12 @@ func _match_float_function(
 			return signf(arguments['x'])
 		FunctionType.SNAPPED:
 			return snappedf(arguments['x'], arguments['step'])
+		FunctionType.WRAP:
+			return wrapf(
+				arguments['value'],
+				arguments['min'],
+				arguments['max'],
+			)
 	_logger.error("Unrecognised float function type.")
 	return null
 
