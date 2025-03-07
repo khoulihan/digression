@@ -212,7 +212,7 @@ func _add_function_item(
 
 func _add_bool_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.BOOL_NOT, "not")
-	_add_function_item(menu, ExpressionMenuId.BOOL_STRING_CONTAINS, "contains")
+	_add_function_item(menu, ExpressionMenuId.BOOL_STRING_CONTAINS, "String.contains")
 
 
 func _add_int_functions(menu: PopupMenu):

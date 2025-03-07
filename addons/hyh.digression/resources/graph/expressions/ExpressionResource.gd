@@ -85,11 +85,11 @@ const EXPRESSION_FUNCTIONS = {
 			}
 		},
 		FunctionType.CONTAINS: {
-			"display": "contains ( in, query )",
-			"tooltip": "Returns true if \"in\" contains the substring \"query\".",
+			"display": "value.contains ( what )",
+			"tooltip": "Returns true if value contains what.",
 			"arguments": {
-				"in": VariableType.TYPE_STRING,
-				"query": VariableType.TYPE_STRING,
+				"value": VariableType.TYPE_STRING,
+				"what": VariableType.TYPE_STRING,
 			}
 		},
 	},
