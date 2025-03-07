@@ -37,6 +37,7 @@ enum FunctionType {
 	CLAMP,
 	MOD,
 	POSMOD,
+	NEAREST_PO2,
 }
 
 ## Possible operators. Operators are mostly specific to types, but `int` and
@@ -125,6 +126,13 @@ const EXPRESSION_FUNCTIONS = {
 			"arguments": {
 				"x": VariableType.TYPE_INT,
 				"y": VariableType.TYPE_INT,
+			},
+		},
+		FunctionType.NEAREST_PO2: {
+			"display": "nearest_po2 ( value )",
+			"tooltip": "Returns the smallest integer power of 2 that is greater than or equal to value.",
+			"arguments": {
+				"value": VariableType.TYPE_INT,
 			},
 		},
 		FunctionType.POSMOD: {

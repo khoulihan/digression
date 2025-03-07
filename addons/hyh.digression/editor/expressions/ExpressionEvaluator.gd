@@ -228,6 +228,8 @@ func _match_int_function(
 			return floori(arguments['x'])
 		FunctionType.MOD:
 			return arguments['x'] % arguments['y']
+		FunctionType.NEAREST_PO2:
+			return nearest_po2(arguments['value'])
 		FunctionType.POSMOD:
 			return posmod(arguments['x'], arguments['y'])
 	_logger.error("Unrecognised integer function type.")
