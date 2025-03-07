@@ -27,10 +27,15 @@ enum ExpressionType {
 enum FunctionType {
 	CUSTOM,
 	ABS,
+	BEGINS_WITH,
 	CEIL,
 	CLAMP,
 	CONTAINS,
 	CONTAINSN,
+	ENDS_WITH,
+	IS_EMPTY,
+	IS_SUBSEQUENCE_OF,
+	IS_SUBSEQUENCE_OFN,
 	FLOOR,
 	IS_EQUAL_APPROX,
 	IS_FINITE,
@@ -83,6 +88,14 @@ const VariableType = preload("../VariableSetNode.gd").VariableType
 
 const EXPRESSION_FUNCTIONS = {
 	VariableType.TYPE_BOOL: {
+		FunctionType.BEGINS_WITH: {
+			"display": "value.begins_with ( text )",
+			"tooltip": "Returns true if value begins with the given text.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"text": VariableType.TYPE_STRING,
+			}
+		},
 		FunctionType.CONTAINS: {
 			"display": "value.contains ( what )",
 			"tooltip": "Returns true if value contains what.",
@@ -97,6 +110,21 @@ const EXPRESSION_FUNCTIONS = {
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
 				"what": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.ENDS_WITH: {
+			"display": "value.ends_with ( text )",
+			"tooltip": "Returns true if value ends with the given text.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"text": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.IS_EMPTY: {
+			"display": "value.is_empty ( )",
+			"tooltip": "Returns true if the string's length is 0.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
 			}
 		},
 		FunctionType.IS_EQUAL_APPROX: {
@@ -126,6 +154,22 @@ const EXPRESSION_FUNCTIONS = {
 			"tooltip": "Returns true if x is a NaN (\"Not a Number\" or invalid) value.",
 			"arguments": {
 				"x": VariableType.TYPE_FLOAT,
+			}
+		},
+		FunctionType.IS_SUBSEQUENCE_OF: {
+			"display": "value.is_subsequence_of ( text )",
+			"tooltip": "Returns true if all characters of value can be found in text in their original order.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"text": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.IS_SUBSEQUENCE_OFN: {
+			"display": "value.is_subsequence_ofn ( text )",
+			"tooltip": "Returns true if all characters of value can be found in text in their original order, ignoring case.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"text": VariableType.TYPE_STRING,
 			}
 		},
 		FunctionType.IS_ZERO_APPROX: {

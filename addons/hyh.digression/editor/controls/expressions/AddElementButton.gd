@@ -25,8 +25,13 @@ enum ExpressionMenuId {
 	BOOL_IS_NAN,
 	BOOL_IS_ZERO_APPROX,
 	BOOL_NOT,
+	BOOL_STRING_BEGINS_WITH,
+	BOOL_STRING_ENDS_WITH,
 	BOOL_STRING_CONTAINS,
 	BOOL_STRING_CONTAINSN,
+	BOOL_STRING_IS_EMPTY,
+	BOOL_STRING_IS_SUBSEQUENCE_OF,
+	BOOL_STRING_IS_SUBSEQUENCE_OFN,
 	INT_ABS,
 	INT_CEIL,
 	INT_CLAMP,
@@ -128,10 +133,20 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.IS_ZERO_APPROX
 		ExpressionMenuId.BOOL_NOT:
 			return FunctionType.NOT
+		ExpressionMenuId.BOOL_STRING_BEGINS_WITH:
+			return FunctionType.BEGINS_WITH
+		ExpressionMenuId.BOOL_STRING_ENDS_WITH:
+			return FunctionType.ENDS_WITH
 		ExpressionMenuId.BOOL_STRING_CONTAINS:
 			return FunctionType.CONTAINS
 		ExpressionMenuId.BOOL_STRING_CONTAINSN:
 			return FunctionType.CONTAINSN
+		ExpressionMenuId.BOOL_STRING_IS_EMPTY:
+			return FunctionType.IS_EMPTY
+		ExpressionMenuId.BOOL_STRING_IS_SUBSEQUENCE_OF:
+			return FunctionType.IS_SUBSEQUENCE_OF
+		ExpressionMenuId.BOOL_STRING_IS_SUBSEQUENCE_OFN:
+			return FunctionType.IS_SUBSEQUENCE_OFN
 		ExpressionMenuId.INT_ABS, ExpressionMenuId.FLOAT_ABS:
 			return FunctionType.ABS
 		ExpressionMenuId.INT_CEIL, ExpressionMenuId.FLOAT_CEIL:
@@ -235,8 +250,21 @@ func _add_bool_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.BOOL_IS_NAN, "is_nan")
 	_add_function_item(menu, ExpressionMenuId.BOOL_IS_ZERO_APPROX, "is_zero_approx")
 	_add_function_item(menu, ExpressionMenuId.BOOL_NOT, "not")
+	_add_function_item(menu, ExpressionMenuId.BOOL_STRING_BEGINS_WITH, "String.begins_with")
 	_add_function_item(menu, ExpressionMenuId.BOOL_STRING_CONTAINS, "String.contains")
 	_add_function_item(menu, ExpressionMenuId.BOOL_STRING_CONTAINSN, "String.containsn")
+	_add_function_item(menu, ExpressionMenuId.BOOL_STRING_ENDS_WITH, "String.ends_with")
+	_add_function_item(menu, ExpressionMenuId.BOOL_STRING_IS_EMPTY, "String.is_empty")
+	_add_function_item(
+		menu,
+		ExpressionMenuId.BOOL_STRING_IS_SUBSEQUENCE_OF,
+		"String.is_subsequence_of"
+	)
+	_add_function_item(
+		menu,
+		ExpressionMenuId.BOOL_STRING_IS_SUBSEQUENCE_OFN,
+		"String.is_subsequence_ofn"
+	)
 
 
 func _add_int_functions(menu: PopupMenu):

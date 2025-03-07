@@ -194,6 +194,16 @@ func _match_bool_function(
 	arguments
 ):
 	match function_type:
+		FunctionType.BEGINS_WITH:
+			return arguments["value"].begins_with(arguments["text"])
+		FunctionType.CONTAINS:
+			return arguments["value"].contains(arguments["what"])
+		FunctionType.CONTAINSN:
+			return arguments["value"].containsn(arguments["what"])
+		FunctionType.ENDS_WITH:
+			return arguments["value"].ends_with(arguments["text"])
+		FunctionType.IS_EMPTY:
+			return arguments["value"].is_empty()
 		FunctionType.IS_EQUAL_APPROX:
 			return is_equal_approx(arguments["a"], arguments["b"])
 		FunctionType.IS_FINITE:
@@ -202,14 +212,14 @@ func _match_bool_function(
 			return is_inf(arguments["x"])
 		FunctionType.IS_NAN:
 			return is_nan(arguments["x"])
+		FunctionType.IS_SUBSEQUENCE_OF:
+			return arguments["value"].is_subsequence_of(arguments["text"])
+		FunctionType.IS_SUBSEQUENCE_OFN:
+			return arguments["value"].is_subsequence_ofn(arguments["text"])
 		FunctionType.IS_ZERO_APPROX:
 			return is_zero_approx(arguments["x"])
 		FunctionType.NOT:
 			return not arguments["x"]
-		FunctionType.CONTAINS:
-			return arguments["value"].contains(arguments["what"])
-		FunctionType.CONTAINSN:
-			return arguments["value"].containsn(arguments["what"])
 	_logger.error("Unrecognised boolean function type.")
 	return null
 
