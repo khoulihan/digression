@@ -356,6 +356,14 @@ func _match_string_function(
 			return arguments["value"].lstrip(arguments["chars"])
 		FunctionType.MD5_TEXT:
 			return arguments["value"].md5_text()
+		FunctionType.REPEAT:
+			return arguments["value"].repeat(arguments["count"])
+		FunctionType.REPLACE:
+			return arguments["value"].replace(arguments["what"], arguments["forwhat"])
+		FunctionType.REPLACEN:
+			return arguments["value"].replacen(arguments["what"], arguments["forwhat"])
+		FunctionType.REVERSE:
+			return arguments["value"].reverse()
 		FunctionType.RIGHT:
 			return arguments["value"].right(arguments["length"])
 		FunctionType.RPAD:

@@ -74,6 +74,10 @@ enum ExpressionMenuId {
 	STRING_LSTRIP,
 	STRING_MD5_TEXT,
 	STRING_RIGHT,
+	STRING_REPEAT,
+	STRING_REPLACE,
+	STRING_REPLACEN,
+	STRING_REVERSE,
 	STRING_RPAD,
 	STRING_RSTRIP,
 	STRING_SHA1_TEXT,
@@ -222,6 +226,14 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.LSTRIP
 		ExpressionMenuId.STRING_MD5_TEXT:
 			return FunctionType.MD5_TEXT
+		ExpressionMenuId.STRING_REPEAT:
+			return FunctionType.REPEAT
+		ExpressionMenuId.STRING_REPLACE:
+			return FunctionType.REPLACE
+		ExpressionMenuId.STRING_REPLACEN:
+			return FunctionType.REPLACEN
+		ExpressionMenuId.STRING_REVERSE:
+			return FunctionType.REVERSE
 		ExpressionMenuId.STRING_RIGHT:
 			return FunctionType.RIGHT
 		ExpressionMenuId.STRING_RPAD:
@@ -378,6 +390,10 @@ func _add_string_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.STRING_LPAD, "String.lpad")
 	_add_function_item(menu, ExpressionMenuId.STRING_LSTRIP, "String.lstrip")
 	_add_function_item(menu, ExpressionMenuId.STRING_MD5_TEXT, "String.md5_text")
+	_add_function_item(menu, ExpressionMenuId.STRING_REPEAT, "String.repeat")
+	_add_function_item(menu, ExpressionMenuId.STRING_REPLACE, "String.replace")
+	_add_function_item(menu, ExpressionMenuId.STRING_REPLACEN, "String.replacen")
+	_add_function_item(menu, ExpressionMenuId.STRING_REVERSE, "String.reverse")
 	_add_function_item(menu, ExpressionMenuId.STRING_RIGHT, "String.right")
 	_add_function_item(menu, ExpressionMenuId.STRING_RPAD, "String.rpad")
 	_add_function_item(menu, ExpressionMenuId.STRING_RSTRIP, "String.rstrip")

@@ -62,6 +62,10 @@ enum FunctionType {
 	RAND,
 	RAND_FN,
 	RAND_RANGE,
+	REPEAT,
+	REPLACE,
+	REPLACEN,
+	REVERSE,
 	RIGHT,
 	ROUND,
 	RPAD,
@@ -498,6 +502,39 @@ const EXPRESSION_FUNCTIONS = {
 		FunctionType.MD5_TEXT: {
 			"display": "value.md5_text ( )",
 			"tooltip": "Returns the MD5 hash of the string as another String.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.REPEAT: {
+			"display": "value.repeat ( count )",
+			"tooltip": "Repeats value a number of times.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"count": VariableType.TYPE_INT,
+			}
+		},
+		FunctionType.REPLACE: {
+			"display": "value.replace ( what, forwhat )",
+			"tooltip": "Replaces all occurrences of what inside the string with the given forwhat.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"what": VariableType.TYPE_STRING,
+				"forwhat": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.REPLACEN: {
+			"display": "value.replacen ( what, forwhat )",
+			"tooltip": "Replaces all case-insensitive occurrences of what inside the string with the given forwhat.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"what": VariableType.TYPE_STRING,
+				"forwhat": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.REVERSE: {
+			"display": "value.reverse ( )",
+			"tooltip": "Returns the copy of this string in reverse order. ",
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
 			}
