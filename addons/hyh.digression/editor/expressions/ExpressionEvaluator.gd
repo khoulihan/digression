@@ -343,6 +343,10 @@ func _match_string_function(
 			return arguments["template"].format(arguments["values"])
 		FunctionType.JOIN:
 			return arguments["value"].join(arguments["parts"])
+		FunctionType.LEFT:
+			return arguments["value"].left(arguments["length"])
+		FunctionType.RIGHT:
+			return arguments["value"].right(arguments["length"])
 		FunctionType.TO_CAMEL_CASE:
 			return arguments["value"].to_camel_case()
 		FunctionType.TO_LOWER:

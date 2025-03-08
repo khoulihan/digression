@@ -45,6 +45,7 @@ enum FunctionType {
 	IS_NAN,
 	IS_ZERO_APPROX,
 	JOIN,
+	LEFT,
 	MATCH,
 	MATCHN,
 	MAX,
@@ -57,6 +58,7 @@ enum FunctionType {
 	RAND,
 	RAND_FN,
 	RAND_RANGE,
+	RIGHT,
 	ROUND,
 	SIGN,
 	SNAPPED,
@@ -449,6 +451,22 @@ const EXPRESSION_FUNCTIONS = {
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
 				"parts": [VariableType.TYPE_STRING],
+			}
+		},
+		FunctionType.LEFT: {
+			"display": "value.left ( length )",
+			"tooltip": "Returns the first length characters from the beginning of the string.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"length": VariableType.TYPE_INT,
+			}
+		},
+		FunctionType.RIGHT: {
+			"display": "value.right ( length )",
+			"tooltip": "Returns the first length characters from the end of the string.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"length": VariableType.TYPE_INT,
 			}
 		},
 		FunctionType.TO_CAMEL_CASE: {
