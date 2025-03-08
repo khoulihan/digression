@@ -44,6 +44,7 @@ enum FunctionType {
 	IS_INFINITE,
 	IS_NAN,
 	IS_ZERO_APPROX,
+	JOIN,
 	MATCH,
 	MATCHN,
 	MAX,
@@ -440,6 +441,14 @@ const EXPRESSION_FUNCTIONS = {
 			"arguments": {
 				"template": VariableType.TYPE_STRING,
 				"values": [VariableType.TYPE_STRING],
+			}
+		},
+		FunctionType.JOIN: {
+			"display": "value.join ( parts )",
+			"tooltip": "Concatenates all members of parts, separated by value.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"parts": [VariableType.TYPE_STRING],
 			}
 		},
 		FunctionType.TO_CAMEL_CASE: {
