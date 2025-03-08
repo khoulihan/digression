@@ -94,12 +94,22 @@ func _add_named_arguments(args):
 		var arg_name = Label.new()
 		arg_name.text = "%s:" % arg
 		_arguments_container.add_child(arg_name)
-		var arg_expression = OperatorExpression.instantiate()
-		arg_expression.type = args[arg]
-		_arguments_container.add_child(arg_expression)
-		arg_expression.configure()
-		arg_expression.modified.connect(_argument_expression_modified)
-		arg_expression.size_changed.connect(_argument_expression_size_changed)
+		var arg_type = typeof(args[arg])
+		
+		if arg_type == TYPE_ARRAY:
+			var group = GroupExpression.instantiate()
+			group.type = args[arg][0]
+			_arguments_container.add_child(group)
+			group.configure()
+			group.modified.connect(_argument_expression_modified)
+			group.size_changed.connect(_argument_expression_size_changed)
+		else:
+			var arg_expression = OperatorExpression.instantiate()
+			arg_expression.type = args[arg]
+			_arguments_container.add_child(arg_expression)
+			arg_expression.configure()
+			arg_expression.modified.connect(_argument_expression_modified)
+			arg_expression.size_changed.connect(_argument_expression_size_changed)
 
 
 func _add_set_arguments(type):

@@ -34,6 +34,7 @@ enum FunctionType {
 	CONTAINS,
 	CONTAINSN,
 	ENDS_WITH,
+	FORMAT,
 	IS_EMPTY,
 	IS_SUBSEQUENCE_OF,
 	IS_SUBSEQUENCE_OFN,
@@ -58,6 +59,7 @@ enum FunctionType {
 	ROUND,
 	SIGN,
 	SNAPPED,
+	TO_CAMEL_CASE,
 	TO_LOWER,
 	TO_PASCAL_CASE,
 	TO_SNAKE_CASE,
@@ -428,6 +430,21 @@ const EXPRESSION_FUNCTIONS = {
 		FunctionType.CAPITALIZE: {
 			"display": "value.capitalize ( )",
 			"tooltip": "Converts value to a format more suitable for display (see the Godot docs for more details).",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.FORMAT: {
+			"display": "template.format ( values )",
+			"tooltip": "Formats the string by replacing all occurrences of placeholders with the provided values. Unlike the GDScript method, the placeholder cannot be customised and only ordered placeholders are supported.",
+			"arguments": {
+				"template": VariableType.TYPE_STRING,
+				"values": [VariableType.TYPE_STRING],
+			}
+		},
+		FunctionType.TO_CAMEL_CASE: {
+			"display": "value.to_camel_case ( )",
+			"tooltip": "Converts value to camelCase.",
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
 			}

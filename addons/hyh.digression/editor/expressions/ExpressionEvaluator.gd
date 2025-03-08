@@ -339,6 +339,10 @@ func _match_string_function(
 	match function_type:
 		FunctionType.CAPITALIZE:
 			return arguments["value"].capitalize()
+		FunctionType.FORMAT:
+			return arguments["template"].format(arguments["values"])
+		FunctionType.TO_CAMEL_CASE:
+			return arguments["value"].to_camel_case()
 		FunctionType.TO_LOWER:
 			return arguments["value"].to_lower()
 		FunctionType.TO_PASCAL_CASE:

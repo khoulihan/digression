@@ -66,6 +66,8 @@ enum ExpressionMenuId {
 	FLOAT_SNAPPED,
 	FLOAT_WRAP,
 	STRING_CAPITALIZE,
+	STRING_FORMAT,
+	STRING_TO_CAMEL_CASE,
 	STRING_TO_LOWER,
 	STRING_TO_PASCAL_CASE,
 	STRING_TO_SNAKE_CASE,
@@ -193,6 +195,10 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.WRAP
 		ExpressionMenuId.STRING_CAPITALIZE:
 			return FunctionType.CAPITALIZE
+		ExpressionMenuId.STRING_FORMAT:
+			return FunctionType.FORMAT
+		ExpressionMenuId.STRING_TO_CAMEL_CASE:
+			return FunctionType.TO_CAMEL_CASE
 		ExpressionMenuId.STRING_TO_LOWER:
 			return FunctionType.TO_LOWER
 		ExpressionMenuId.STRING_TO_PASCAL_CASE:
@@ -326,6 +332,8 @@ func _add_float_functions(menu: PopupMenu):
 
 func _add_string_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.STRING_CAPITALIZE, "String.capitalize")
+	_add_function_item(menu, ExpressionMenuId.STRING_FORMAT, "String.format")
+	_add_function_item(menu, ExpressionMenuId.STRING_TO_CAMEL_CASE, "String.to_camel_case")
 	_add_function_item(menu, ExpressionMenuId.STRING_TO_LOWER, "String.to_lower")
 	_add_function_item(menu, ExpressionMenuId.STRING_TO_PASCAL_CASE, "String.to_pascal_case")
 	_add_function_item(menu, ExpressionMenuId.STRING_TO_SNAKE_CASE, "String.to_snake_case")
