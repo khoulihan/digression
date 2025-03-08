@@ -32,6 +32,8 @@ enum ExpressionMenuId {
 	BOOL_STRING_IS_EMPTY,
 	BOOL_STRING_IS_SUBSEQUENCE_OF,
 	BOOL_STRING_IS_SUBSEQUENCE_OFN,
+	BOOL_STRING_MATCH,
+	BOOL_STRING_MATCHN,
 	INT_ABS,
 	INT_CEIL,
 	INT_CLAMP,
@@ -147,6 +149,10 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.IS_SUBSEQUENCE_OF
 		ExpressionMenuId.BOOL_STRING_IS_SUBSEQUENCE_OFN:
 			return FunctionType.IS_SUBSEQUENCE_OFN
+		ExpressionMenuId.BOOL_STRING_MATCH:
+			return FunctionType.MATCH
+		ExpressionMenuId.BOOL_STRING_MATCHN:
+			return FunctionType.MATCHN
 		ExpressionMenuId.INT_ABS, ExpressionMenuId.FLOAT_ABS:
 			return FunctionType.ABS
 		ExpressionMenuId.INT_CEIL, ExpressionMenuId.FLOAT_CEIL:
@@ -265,6 +271,8 @@ func _add_bool_functions(menu: PopupMenu):
 		ExpressionMenuId.BOOL_STRING_IS_SUBSEQUENCE_OFN,
 		"String.is_subsequence_ofn"
 	)
+	_add_function_item(menu, ExpressionMenuId.BOOL_STRING_MATCH, "String.match")
+	_add_function_item(menu, ExpressionMenuId.BOOL_STRING_MATCHN, "String.matchn")
 
 
 func _add_int_functions(menu: PopupMenu):

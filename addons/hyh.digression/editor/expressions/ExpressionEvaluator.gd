@@ -218,6 +218,10 @@ func _match_bool_function(
 			return arguments["value"].is_subsequence_ofn(arguments["text"])
 		FunctionType.IS_ZERO_APPROX:
 			return is_zero_approx(arguments["x"])
+		FunctionType.MATCH:
+			return arguments["value"].match(arguments['expr'])
+		FunctionType.MATCHN:
+			return arguments["value"].matchn(arguments['expr'])
 		FunctionType.NOT:
 			return not arguments["x"]
 	_logger.error("Unrecognised boolean function type.")

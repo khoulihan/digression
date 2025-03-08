@@ -42,6 +42,8 @@ enum FunctionType {
 	IS_INFINITE,
 	IS_NAN,
 	IS_ZERO_APPROX,
+	MATCH,
+	MATCHN,
 	MAX,
 	MIN,
 	MOD,
@@ -177,6 +179,22 @@ const EXPRESSION_FUNCTIONS = {
 			"tooltip": "Returns true if x is zero or almost zero.",
 			"arguments": {
 				"x": VariableType.TYPE_FLOAT,
+			}
+		},
+		FunctionType.MATCH: {
+			"display": "value.match ( expr )",
+			"tooltip": "Does a simple expression match (also called \"glob\" or \"globbing\"), where * matches zero or more arbitrary characters and ? matches any single character except a period (.).",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"expr": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.MATCHN: {
+			"display": "value.match ( expr )",
+			"tooltip": "Does a simple case-insensitive expression match (also called \"glob\" or \"globbing\"), where * matches zero or more arbitrary characters and ? matches any single character except a period (.).",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"expr": VariableType.TYPE_STRING,
 			}
 		},
 		FunctionType.NOT: {
