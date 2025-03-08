@@ -345,8 +345,22 @@ func _match_string_function(
 			return arguments["value"].join(arguments["parts"])
 		FunctionType.LEFT:
 			return arguments["value"].left(arguments["length"])
+		FunctionType.LPAD:
+			return arguments["value"].lpad(
+				arguments["min_length"],
+				arguments["character"]
+			)
+		FunctionType.LSTRIP:
+			return arguments["value"].lstrip(arguments["chars"])
 		FunctionType.RIGHT:
 			return arguments["value"].right(arguments["length"])
+		FunctionType.RPAD:
+			return arguments["value"].rpad(
+				arguments["min_length"],
+				arguments["character"]
+			)
+		FunctionType.RSTRIP:
+			return arguments["value"].rstrip(arguments["chars"])
 		FunctionType.TO_CAMEL_CASE:
 			return arguments["value"].to_camel_case()
 		FunctionType.TO_LOWER:

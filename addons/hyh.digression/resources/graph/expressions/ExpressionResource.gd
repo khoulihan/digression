@@ -46,6 +46,8 @@ enum FunctionType {
 	IS_ZERO_APPROX,
 	JOIN,
 	LEFT,
+	LPAD,
+	LSTRIP,
 	MATCH,
 	MATCHN,
 	MAX,
@@ -60,6 +62,8 @@ enum FunctionType {
 	RAND_RANGE,
 	RIGHT,
 	ROUND,
+	RPAD,
+	RSTRIP,
 	SIGN,
 	SNAPPED,
 	TO_CAMEL_CASE,
@@ -461,12 +465,46 @@ const EXPRESSION_FUNCTIONS = {
 				"length": VariableType.TYPE_INT,
 			}
 		},
+		FunctionType.LPAD: {
+			"display": "value.lpad ( min_length, character )",
+			"tooltip": "Formats the string to be at least min_length long by adding characters to the left of the string, if necessary.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"min_length": VariableType.TYPE_INT,
+				"character": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.LSTRIP: {
+			"display": "value.lstrip ( chars )",
+			"tooltip": "Removes a set of characters defined in chars from the string's beginning.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"chars": VariableType.TYPE_STRING,
+			}
+		},
 		FunctionType.RIGHT: {
 			"display": "value.right ( length )",
 			"tooltip": "Returns the first length characters from the end of the string.",
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
 				"length": VariableType.TYPE_INT,
+			}
+		},
+		FunctionType.RPAD: {
+			"display": "value.rpad ( min_length, character )",
+			"tooltip": "Formats the string to be at least min_length long by adding characters to the right of the string, if necessary.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"min_length": VariableType.TYPE_INT,
+				"character": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.RSTRIP: {
+			"display": "value.rstrip ( chars )",
+			"tooltip": "Removes a set of characters defined in chars from the string's end.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"chars": VariableType.TYPE_STRING,
 			}
 		},
 		FunctionType.TO_CAMEL_CASE: {

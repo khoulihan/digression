@@ -69,7 +69,11 @@ enum ExpressionMenuId {
 	STRING_FORMAT,
 	STRING_JOIN,
 	STRING_LEFT,
+	STRING_LPAD,
+	STRING_LSTRIP,
 	STRING_RIGHT,
+	STRING_RPAD,
+	STRING_RSTRIP,
 	STRING_TO_CAMEL_CASE,
 	STRING_TO_LOWER,
 	STRING_TO_PASCAL_CASE,
@@ -204,8 +208,16 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.JOIN
 		ExpressionMenuId.STRING_LEFT:
 			return FunctionType.LEFT
+		ExpressionMenuId.STRING_LPAD:
+			return FunctionType.LPAD
+		ExpressionMenuId.STRING_LSTRIP:
+			return FunctionType.LSTRIP
 		ExpressionMenuId.STRING_RIGHT:
 			return FunctionType.RIGHT
+		ExpressionMenuId.STRING_RPAD:
+			return FunctionType.RPAD
+		ExpressionMenuId.STRING_RSTRIP:
+			return FunctionType.RSTRIP
 		ExpressionMenuId.STRING_TO_CAMEL_CASE:
 			return FunctionType.TO_CAMEL_CASE
 		ExpressionMenuId.STRING_TO_LOWER:
@@ -344,7 +356,11 @@ func _add_string_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.STRING_FORMAT, "String.format")
 	_add_function_item(menu, ExpressionMenuId.STRING_JOIN, "String.join")
 	_add_function_item(menu, ExpressionMenuId.STRING_LEFT, "String.left")
+	_add_function_item(menu, ExpressionMenuId.STRING_LPAD, "String.lpad")
+	_add_function_item(menu, ExpressionMenuId.STRING_LSTRIP, "String.lstrip")
 	_add_function_item(menu, ExpressionMenuId.STRING_RIGHT, "String.right")
+	_add_function_item(menu, ExpressionMenuId.STRING_RPAD, "String.rpad")
+	_add_function_item(menu, ExpressionMenuId.STRING_RSTRIP, "String.rstrip")
 	_add_function_item(menu, ExpressionMenuId.STRING_TO_CAMEL_CASE, "String.to_camel_case")
 	_add_function_item(menu, ExpressionMenuId.STRING_TO_LOWER, "String.to_lower")
 	_add_function_item(menu, ExpressionMenuId.STRING_TO_PASCAL_CASE, "String.to_pascal_case")
