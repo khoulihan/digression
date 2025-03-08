@@ -352,6 +352,8 @@ func _match_string_function(
 			)
 		FunctionType.LSTRIP:
 			return arguments["value"].lstrip(arguments["chars"])
+		FunctionType.MD5_TEXT:
+			return arguments["value"].md5_text()
 		FunctionType.RIGHT:
 			return arguments["value"].right(arguments["length"])
 		FunctionType.RPAD:
@@ -361,6 +363,10 @@ func _match_string_function(
 			)
 		FunctionType.RSTRIP:
 			return arguments["value"].rstrip(arguments["chars"])
+		FunctionType.SHA1_TEXT:
+			return arguments["value"].sha1_text()
+		FunctionType.SHA256_TEXT:
+			return arguments["value"].sha256_text()
 		FunctionType.TO_CAMEL_CASE:
 			return arguments["value"].to_camel_case()
 		FunctionType.TO_LOWER:

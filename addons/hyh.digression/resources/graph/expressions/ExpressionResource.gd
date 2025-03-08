@@ -51,6 +51,7 @@ enum FunctionType {
 	MATCH,
 	MATCHN,
 	MAX,
+	MD5_TEXT,
 	MIN,
 	MOD,
 	NEAREST_PO2,
@@ -64,6 +65,8 @@ enum FunctionType {
 	ROUND,
 	RPAD,
 	RSTRIP,
+	SHA1_TEXT,
+	SHA256_TEXT,
 	SIGN,
 	SNAPPED,
 	TO_CAMEL_CASE,
@@ -484,6 +487,13 @@ const EXPRESSION_FUNCTIONS = {
 				"chars": VariableType.TYPE_STRING,
 			}
 		},
+		FunctionType.MD5_TEXT: {
+			"display": "value.md5_text ( )",
+			"tooltip": "Returns the MD5 hash of the string as another String.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+			}
+		},
 		FunctionType.RIGHT: {
 			"display": "value.right ( length )",
 			"tooltip": "Returns the first length characters from the end of the string.",
@@ -507,6 +517,20 @@ const EXPRESSION_FUNCTIONS = {
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
 				"chars": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.SHA1_TEXT: {
+			"display": "value.sha1_text ( )",
+			"tooltip": "Returns the SHA-1 hash of the string as another String.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.SHA256_TEXT: {
+			"display": "value.sha256_text ( )",
+			"tooltip": "Returns the SHA-256 hash of the string as another String.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
 			}
 		},
 		FunctionType.TO_CAMEL_CASE: {
