@@ -337,8 +337,16 @@ func _match_string_function(
 	arguments
 ):
 	match function_type:
+		FunctionType.CAPITALIZE:
+			return arguments["value"].capitalize()
 		FunctionType.TO_LOWER:
 			return arguments["value"].to_lower()
+		FunctionType.TO_PASCAL_CASE:
+			return arguments["value"].to_pascal_case()
+		FunctionType.TO_SNAKE_CASE:
+			return arguments["value"].to_snake_case()
+		FunctionType.TO_UPPER:
+			return arguments["value"].to_upper()
 	_logger.error("Unrecognised string function type.")
 	return null
 

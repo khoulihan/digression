@@ -28,6 +28,7 @@ enum FunctionType {
 	CUSTOM,
 	ABS,
 	BEGINS_WITH,
+	CAPITALIZE,
 	CEIL,
 	CLAMP,
 	CONTAINS,
@@ -58,6 +59,9 @@ enum FunctionType {
 	SIGN,
 	SNAPPED,
 	TO_LOWER,
+	TO_PASCAL_CASE,
+	TO_SNAKE_CASE,
+	TO_UPPER,
 	WRAP,
 }
 
@@ -421,9 +425,37 @@ const EXPRESSION_FUNCTIONS = {
 		},
 	},
 	VariableType.TYPE_STRING: {
+		FunctionType.CAPITALIZE: {
+			"display": "value.capitalize ( )",
+			"tooltip": "Converts value to a format more suitable for display (see the Godot docs for more details).",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+			}
+		},
 		FunctionType.TO_LOWER: {
 			"display": "value.to_lower ( )",
 			"tooltip": "Converts value to lowercase.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.TO_PASCAL_CASE: {
+			"display": "value.to_pascal_case ( )",
+			"tooltip": "Returns the string converted to PascalCase.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.TO_SNAKE_CASE: {
+			"display": "value.to_snake_case ( )",
+			"tooltip": "Returns the string converted to snake_case.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.TO_UPPER: {
+			"display": "value.to_upper ( )",
+			"tooltip": "Converts value to UPPERCASE.",
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
 			}

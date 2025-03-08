@@ -65,7 +65,11 @@ enum ExpressionMenuId {
 	FLOAT_SIGN,
 	FLOAT_SNAPPED,
 	FLOAT_WRAP,
+	STRING_CAPITALIZE,
 	STRING_TO_LOWER,
+	STRING_TO_PASCAL_CASE,
+	STRING_TO_SNAKE_CASE,
+	STRING_TO_UPPER,
 }
 
 const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
@@ -187,8 +191,16 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.SNAPPED
 		ExpressionMenuId.INT_WRAP, ExpressionMenuId.FLOAT_WRAP:
 			return FunctionType.WRAP
+		ExpressionMenuId.STRING_CAPITALIZE:
+			return FunctionType.CAPITALIZE
 		ExpressionMenuId.STRING_TO_LOWER:
 			return FunctionType.TO_LOWER
+		ExpressionMenuId.STRING_TO_PASCAL_CASE:
+			return FunctionType.TO_PASCAL_CASE
+		ExpressionMenuId.STRING_TO_SNAKE_CASE:
+			return FunctionType.TO_SNAKE_CASE
+		ExpressionMenuId.STRING_TO_UPPER:
+			return FunctionType.TO_UPPER
 	return null
 
 
@@ -313,4 +325,8 @@ func _add_float_functions(menu: PopupMenu):
 
 
 func _add_string_functions(menu: PopupMenu):
+	_add_function_item(menu, ExpressionMenuId.STRING_CAPITALIZE, "String.capitalize")
 	_add_function_item(menu, ExpressionMenuId.STRING_TO_LOWER, "String.to_lower")
+	_add_function_item(menu, ExpressionMenuId.STRING_TO_PASCAL_CASE, "String.to_pascal_case")
+	_add_function_item(menu, ExpressionMenuId.STRING_TO_SNAKE_CASE, "String.to_snake_case")
+	_add_function_item(menu, ExpressionMenuId.STRING_TO_UPPER, "String.to_upper")
