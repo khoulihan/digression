@@ -339,6 +339,8 @@ func _match_string_function(
 	match function_type:
 		FunctionType.CAPITALIZE:
 			return arguments["value"].capitalize()
+		FunctionType.CHR:
+			return String.chr(arguments["char"])
 		FunctionType.FORMAT:
 			return arguments["template"].format(arguments["values"])
 		FunctionType.JOIN:

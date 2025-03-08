@@ -30,6 +30,7 @@ enum FunctionType {
 	BEGINS_WITH,
 	CAPITALIZE,
 	CEIL,
+	CHR,
 	CLAMP,
 	CONTAINS,
 	CONTAINSN,
@@ -444,6 +445,13 @@ const EXPRESSION_FUNCTIONS = {
 			"tooltip": "Converts value to a format more suitable for display (see the Godot docs for more details).",
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.CHR: {
+			"display": "String.chr ( char )",
+			"tooltip": "Returns a single Unicode character from the decimal char.",
+			"arguments": {
+				"char": VariableType.TYPE_INT,
 			}
 		},
 		FunctionType.FORMAT: {

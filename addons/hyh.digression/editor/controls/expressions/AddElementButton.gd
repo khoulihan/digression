@@ -66,6 +66,7 @@ enum ExpressionMenuId {
 	FLOAT_SNAPPED,
 	FLOAT_WRAP,
 	STRING_CAPITALIZE,
+	STRING_CHR,
 	STRING_FORMAT,
 	STRING_JOIN,
 	STRING_LEFT,
@@ -207,6 +208,8 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.WRAP
 		ExpressionMenuId.STRING_CAPITALIZE:
 			return FunctionType.CAPITALIZE
+		ExpressionMenuId.STRING_CHR:
+			return FunctionType.CHR
 		ExpressionMenuId.STRING_FORMAT:
 			return FunctionType.FORMAT
 		ExpressionMenuId.STRING_JOIN:
@@ -368,6 +371,7 @@ func _add_float_functions(menu: PopupMenu):
 
 func _add_string_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.STRING_CAPITALIZE, "String.capitalize")
+	_add_function_item(menu, ExpressionMenuId.STRING_CHR, "String.chr")
 	_add_function_item(menu, ExpressionMenuId.STRING_FORMAT, "String.format")
 	_add_function_item(menu, ExpressionMenuId.STRING_JOIN, "String.join")
 	_add_function_item(menu, ExpressionMenuId.STRING_LEFT, "String.left")
