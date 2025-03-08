@@ -71,6 +71,8 @@ enum FunctionType {
 	TO_PASCAL_CASE,
 	TO_SNAKE_CASE,
 	TO_UPPER,
+	TRIM_PREFIX,
+	TRIM_SUFFIX,
 	WRAP,
 }
 
@@ -540,6 +542,22 @@ const EXPRESSION_FUNCTIONS = {
 			"tooltip": "Converts value to UPPERCASE.",
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.TRIM_PREFIX: {
+			"display": "value.trim_prefix ( prefix )",
+			"tooltip": "Removes the given prefix from the start of the string, or returns the string unchanged.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"prefix": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.TRIM_SUFFIX: {
+			"display": "value.trim_suffix ( suffix )",
+			"tooltip": "Removes the given suffix from the end of the string, or returns the string unchanged.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"suffix": VariableType.TYPE_STRING,
 			}
 		},
 	},

@@ -79,6 +79,8 @@ enum ExpressionMenuId {
 	STRING_TO_PASCAL_CASE,
 	STRING_TO_SNAKE_CASE,
 	STRING_TO_UPPER,
+	STRING_TRIM_PREFIX,
+	STRING_TRIM_SUFFIX,
 }
 
 const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
@@ -228,6 +230,10 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.TO_SNAKE_CASE
 		ExpressionMenuId.STRING_TO_UPPER:
 			return FunctionType.TO_UPPER
+		ExpressionMenuId.STRING_TRIM_PREFIX:
+			return FunctionType.TRIM_PREFIX
+		ExpressionMenuId.STRING_TRIM_SUFFIX:
+			return FunctionType.TRIM_SUFFIX
 	return null
 
 
@@ -366,3 +372,5 @@ func _add_string_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.STRING_TO_PASCAL_CASE, "String.to_pascal_case")
 	_add_function_item(menu, ExpressionMenuId.STRING_TO_SNAKE_CASE, "String.to_snake_case")
 	_add_function_item(menu, ExpressionMenuId.STRING_TO_UPPER, "String.to_upper")
+	_add_function_item(menu, ExpressionMenuId.STRING_TRIM_PREFIX, "String.trim_prefix")
+	_add_function_item(menu, ExpressionMenuId.STRING_TRIM_SUFFIX, "String.trim_suffix")

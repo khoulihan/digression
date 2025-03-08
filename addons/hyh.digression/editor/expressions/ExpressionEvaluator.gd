@@ -371,6 +371,10 @@ func _match_string_function(
 			return arguments["value"].to_snake_case()
 		FunctionType.TO_UPPER:
 			return arguments["value"].to_upper()
+		FunctionType.TRIM_PREFIX:
+			return arguments["value"].trim_prefix(arguments["prefix"])
+		FunctionType.TRIM_SUFFIX:
+			return arguments["value"].trim_suffix(arguments["suffix"])
 	_logger.error("Unrecognised string function type.")
 	return null
 
