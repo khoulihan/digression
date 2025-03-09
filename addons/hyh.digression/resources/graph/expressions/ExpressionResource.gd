@@ -38,6 +38,7 @@ enum FunctionType {
 	ERASE,
 	FORMAT,
 	GET_SLICE,
+	INSERT,
 	IS_EMPTY,
 	IS_SUBSEQUENCE_OF,
 	IS_SUBSEQUENCE_OFN,
@@ -484,6 +485,15 @@ const EXPRESSION_FUNCTIONS = {
 				"value": VariableType.TYPE_STRING,
 				"delimiter": VariableType.TYPE_STRING,
 				"slice": VariableType.TYPE_INT,
+			}
+		},
+		FunctionType.INSERT: {
+			"display": "value.insert ( position, what )",
+			"tooltip": "Inserts what at the given position in the string.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"position": VariableType.TYPE_INT,
+				"what": VariableType.TYPE_STRING,
 			}
 		},
 		FunctionType.JOIN: {

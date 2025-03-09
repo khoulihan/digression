@@ -350,6 +350,8 @@ func _match_string_function(
 				arguments["delimiter"],
 				arguments["slice"]
 			)
+		FunctionType.INSERT:
+			return arguments["value"].insert(arguments["position"], arguments["what"])
 		FunctionType.JOIN:
 			return arguments["value"].join(arguments["parts"])
 		FunctionType.LEFT:
