@@ -339,8 +339,12 @@ func _match_string_function(
 	match function_type:
 		FunctionType.CAPITALIZE:
 			return arguments["value"].capitalize()
+		FunctionType.C_ESCAPE:
+			return arguments["value"].c_escape()
 		FunctionType.CHR:
 			return String.chr(arguments["char"])
+		FunctionType.C_UNESCAPE:
+			return arguments["value"].c_unescape()
 		FunctionType.ERASE:
 			return arguments["value"].erase(arguments["position"], arguments["chars"])
 		FunctionType.FORMAT:

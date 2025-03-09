@@ -66,7 +66,9 @@ enum ExpressionMenuId {
 	FLOAT_SNAPPED,
 	FLOAT_WRAP,
 	STRING_CAPITALIZE,
+	STRING_C_ESCAPE,
 	STRING_CHR,
+	STRING_C_UNESCAPE,
 	STRING_ERASE,
 	STRING_FORMAT,
 	STRING_GET_SLICE,
@@ -217,8 +219,12 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.WRAP
 		ExpressionMenuId.STRING_CAPITALIZE:
 			return FunctionType.CAPITALIZE
+		ExpressionMenuId.STRING_C_ESCAPE:
+			return FunctionType.C_ESCAPE
 		ExpressionMenuId.STRING_CHR:
 			return FunctionType.CHR
+		ExpressionMenuId.STRING_C_UNESCAPE:
+			return FunctionType.C_UNESCAPE
 		ExpressionMenuId.STRING_ERASE:
 			return FunctionType.ERASE
 		ExpressionMenuId.STRING_FORMAT:
@@ -398,7 +404,9 @@ func _add_float_functions(menu: PopupMenu):
 
 func _add_string_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.STRING_CAPITALIZE, "String.capitalize")
+	_add_function_item(menu, ExpressionMenuId.STRING_C_ESCAPE, "String.c_escape")
 	_add_function_item(menu, ExpressionMenuId.STRING_CHR, "String.chr")
+	_add_function_item(menu, ExpressionMenuId.STRING_C_UNESCAPE, "String.c_unescape")
 	_add_function_item(menu, ExpressionMenuId.STRING_ERASE, "String.erase")
 	_add_function_item(menu, ExpressionMenuId.STRING_FORMAT, "String.format")
 	_add_function_item(menu, ExpressionMenuId.STRING_GET_SLICE, "String.get_slice")

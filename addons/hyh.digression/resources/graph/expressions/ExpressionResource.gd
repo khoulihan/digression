@@ -30,10 +30,12 @@ enum FunctionType {
 	BEGINS_WITH,
 	CAPITALIZE,
 	CEIL,
+	C_ESCAPE,
 	CHR,
 	CLAMP,
 	CONTAINS,
 	CONTAINSN,
+	C_UNESCAPE,
 	ENDS_WITH,
 	ERASE,
 	FORMAT,
@@ -456,11 +458,25 @@ const EXPRESSION_FUNCTIONS = {
 				"value": VariableType.TYPE_STRING,
 			}
 		},
+		FunctionType.C_ESCAPE: {
+			"display": "value.c_escape ( )",
+			"tooltip": "Returns a copy of the string with special characters escaped using the C language standard.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+			}
+		},
 		FunctionType.CHR: {
 			"display": "String.chr ( char )",
 			"tooltip": "Returns a single Unicode character from the decimal char.",
 			"arguments": {
 				"char": VariableType.TYPE_INT,
+			}
+		},
+		FunctionType.C_UNESCAPE: {
+			"display": "value.c_unescape ( )",
+			"tooltip": "Returns a copy of the string with escaped characters replaced by their meanings. ",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
 			}
 		},
 		FunctionType.ERASE: {
