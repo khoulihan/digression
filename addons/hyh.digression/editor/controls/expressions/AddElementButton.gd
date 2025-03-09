@@ -61,7 +61,10 @@ enum ExpressionMenuId {
 	FLOAT_ABS,
 	FLOAT_CEIL,
 	FLOAT_CLAMP,
+	FLOAT_EASE,
 	FLOAT_FLOOR,
+	FLOAT_LERP,
+	FLOAT_LERP_ANGLE,
 	FLOAT_MAX,
 	FLOAT_MIN,
 	FLOAT_MOD,
@@ -76,6 +79,7 @@ enum ExpressionMenuId {
 	FLOAT_ROTATE_TOWARD,
 	FLOAT_ROUND,
 	FLOAT_SIGN,
+	FLOAT_SMOOTHSTEP,
 	FLOAT_SNAPPED,
 	FLOAT_SQRT,
 	FLOAT_STRING_SIMILARITY,
@@ -206,8 +210,14 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.CEIL
 		ExpressionMenuId.INT_CLAMP, ExpressionMenuId.FLOAT_CLAMP:
 			return FunctionType.CLAMP
+		ExpressionMenuId.FLOAT_EASE:
+			return FunctionType.EASE
 		ExpressionMenuId.INT_FLOOR, ExpressionMenuId.FLOAT_FLOOR:
 			return FunctionType.FLOOR
+		ExpressionMenuId.FLOAT_LERP:
+			return FunctionType.LERP
+		ExpressionMenuId.FLOAT_LERP_ANGLE:
+			return FunctionType.LERP_ANGLE
 		ExpressionMenuId.INT_MIN, ExpressionMenuId.FLOAT_MIN:
 			return FunctionType.MIN
 		ExpressionMenuId.INT_MAX, ExpressionMenuId.FLOAT_MAX:
@@ -238,6 +248,8 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.ROUND
 		ExpressionMenuId.INT_SIGN, ExpressionMenuId.FLOAT_SIGN:
 			return FunctionType.SIGN
+		ExpressionMenuId.FLOAT_SMOOTHSTEP:
+			return FunctionType.SMOOTHSTEP
 		ExpressionMenuId.INT_SNAPPED, ExpressionMenuId.FLOAT_SNAPPED:
 			return FunctionType.SNAPPED
 		ExpressionMenuId.FLOAT_SQRT:
@@ -447,7 +459,10 @@ func _add_float_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.FLOAT_ABS, "abs")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_CEIL, "ceil")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_CLAMP, "clamp")
+	_add_function_item(menu, ExpressionMenuId.FLOAT_EASE, "ease")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_FLOOR, "floor")
+	_add_function_item(menu, ExpressionMenuId.FLOAT_LERP, "lerp")
+	_add_function_item(menu, ExpressionMenuId.FLOAT_LERP_ANGLE, "lerp_angle")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_MAX, "max")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_MIN, "min")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_MOD, "mod")
@@ -462,6 +477,7 @@ func _add_float_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.FLOAT_ROTATE_TOWARD, "rotate_toward")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_ROUND, "round")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_SIGN, "sign")
+	_add_function_item(menu, ExpressionMenuId.FLOAT_SMOOTHSTEP, "smoothstep")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_SNAPPED, "snapped")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_SQRT, "sqrt")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_STRING_SIMILARITY, "String.similarity")

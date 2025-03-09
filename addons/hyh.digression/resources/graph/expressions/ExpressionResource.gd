@@ -38,6 +38,7 @@ enum FunctionType {
 	COUNT,
 	COUNTN,
 	C_UNESCAPE,
+	EASE,
 	ENDS_WITH,
 	ERASE,
 	FIND,
@@ -58,6 +59,8 @@ enum FunctionType {
 	JOIN,
 	LEFT,
 	LENGTH,
+	LERP,
+	LERP_ANGLE,
 	LPAD,
 	LSTRIP,
 	MATCH,
@@ -91,6 +94,7 @@ enum FunctionType {
 	SHA256_TEXT,
 	SIGN,
 	SIMILARITY,
+	SMOOTHSTEP,
 	SNAPPED,
 	SQRT,
 	STRIP_EDGES,
@@ -445,10 +449,36 @@ const EXPRESSION_FUNCTIONS = {
 				"max": VariableType.TYPE_FLOAT,
 			},
 		},
+		FunctionType.EASE: {
+			"display": "ease ( x, curve )",
+			"tooltip": "Returns an \"eased\" value of x based on an easing function defined with curve.",
+			"arguments": {
+				"x": VariableType.TYPE_FLOAT,
+				"curve": VariableType.TYPE_FLOAT,
+			},
+		},
 		FunctionType.FLOOR: {
 			"display": "floorf ( x )",
 			"tooltip": "Rounds x downward (towards negative infinity), returning the largest whole number that is not more than x.",
 			"arguments": { "x": VariableType.TYPE_FLOAT },
+		},
+		FunctionType.LERP: {
+			"display": "lerpf ( from, to, weight )",
+			"tooltip": "Linearly interpolates between two values by the factor defined in weight.",
+			"arguments": {
+				"from": VariableType.TYPE_FLOAT,
+				"to": VariableType.TYPE_FLOAT,
+				"weight": VariableType.TYPE_FLOAT,
+			},
+		},
+		FunctionType.LERP_ANGLE: {
+			"display": "lerp_angle ( from, to, weight )",
+			"tooltip": "Linearly interpolates between two angles (in radians) by a weight value between 0.0 and 1.0.",
+			"arguments": {
+				"from": VariableType.TYPE_FLOAT,
+				"to": VariableType.TYPE_FLOAT,
+				"weight": VariableType.TYPE_FLOAT,
+			},
 		},
 		FunctionType.MIN: {
 			"display": "minf ( ... )",
@@ -563,6 +593,15 @@ const EXPRESSION_FUNCTIONS = {
 				"value": VariableType.TYPE_STRING,
 				"text": VariableType.TYPE_STRING,
 			}
+		},
+		FunctionType.SMOOTHSTEP: {
+			"display": "smoothstep ( from, to, x )",
+			"tooltip": "Returns a smooth cubic Hermite interpolation between 0 and 1.",
+			"arguments": {
+				"from": VariableType.TYPE_FLOAT,
+				"to": VariableType.TYPE_FLOAT,
+				"x": VariableType.TYPE_FLOAT,
+			},
 		},
 		FunctionType.SNAPPED: {
 			"display": "snappedf ( x, step )",

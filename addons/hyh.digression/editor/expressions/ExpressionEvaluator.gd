@@ -314,6 +314,23 @@ func _match_float_function(
 				arguments['min'],
 				arguments['max'],
 			)
+		FunctionType.EASE:
+			return ease(
+				arguments['x'],
+				arguments['curve'],
+			)
+		FunctionType.LERP:
+			return lerpf(
+				arguments['from'],
+				arguments['to'],
+				arguments['weight'],
+			)
+		FunctionType.LERP_ANGLE:
+			return lerp_angle(
+				arguments['from'],
+				arguments['to'],
+				arguments['weight'],
+			)
 		FunctionType.MIN:
 			return arguments.min()
 		FunctionType.MAX:
@@ -350,6 +367,12 @@ func _match_float_function(
 			return roundf(arguments['x'])
 		FunctionType.SIGN:
 			return signf(arguments['x'])
+		FunctionType.SMOOTHSTEP:
+			return smoothstep(
+				arguments['from'],
+				arguments['to'],
+				arguments['x'],
+			)
 		FunctionType.SIMILARITY:
 			return arguments['value'].similarity(arguments['text'])
 		FunctionType.SNAPPED:
