@@ -52,6 +52,8 @@ enum ExpressionMenuId {
 	INT_STRING_COUNTN,
 	INT_STRING_FIND,
 	INT_STRING_FINDN,
+	INT_STRING_GET_SLICE_COUNT,
+	INT_STRING_LENGTH,
 	INT_STRING_RFIND,
 	INT_STRING_RFINDN,
 	INT_WRAP,
@@ -230,6 +232,10 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.FIND
 		ExpressionMenuId.INT_STRING_FINDN:
 			return FunctionType.FINDN
+		ExpressionMenuId.INT_STRING_GET_SLICE_COUNT:
+			return FunctionType.GET_SLICE_COUNT
+		ExpressionMenuId.INT_STRING_LENGTH:
+			return FunctionType.LENGTH
 		ExpressionMenuId.INT_STRING_RFIND:
 			return FunctionType.RFIND
 		ExpressionMenuId.INT_STRING_RFINDN:
@@ -405,6 +411,8 @@ func _add_int_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.INT_STRING_COUNTN, "String.countn")
 	_add_function_item(menu, ExpressionMenuId.INT_STRING_FIND, "String.find")
 	_add_function_item(menu, ExpressionMenuId.INT_STRING_FINDN, "String.findn")
+	_add_function_item(menu, ExpressionMenuId.INT_STRING_GET_SLICE_COUNT, "String.get_slice_count")
+	_add_function_item(menu, ExpressionMenuId.INT_STRING_LENGTH, "String.length")
 	_add_function_item(menu, ExpressionMenuId.INT_STRING_RFIND, "String.rfind")
 	_add_function_item(menu, ExpressionMenuId.INT_STRING_RFINDN, "String.rfindn")
 	_add_function_item(menu, ExpressionMenuId.INT_WRAP, "wrap")

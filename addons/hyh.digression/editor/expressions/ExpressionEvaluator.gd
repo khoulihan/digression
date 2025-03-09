@@ -276,6 +276,10 @@ func _match_int_function(
 			return arguments['value'].find(arguments['what'])
 		FunctionType.FINDN:
 			return arguments['value'].findn(arguments['what'])
+		FunctionType.GET_SLICE_COUNT:
+			return arguments['value'].get_slice_count(arguments['delimiter'])
+		FunctionType.LENGTH:
+			return arguments['value'].length()
 		FunctionType.RFIND:
 			return arguments['value'].rfind(arguments['what'])
 		FunctionType.RFINDN:

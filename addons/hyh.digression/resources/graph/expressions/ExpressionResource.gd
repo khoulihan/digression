@@ -44,6 +44,7 @@ enum FunctionType {
 	FINDN,
 	FORMAT,
 	GET_SLICE,
+	GET_SLICE_COUNT,
 	INSERT,
 	IS_EMPTY,
 	IS_SUBSEQUENCE_OF,
@@ -56,6 +57,7 @@ enum FunctionType {
 	IS_ZERO_APPROX,
 	JOIN,
 	LEFT,
+	LENGTH,
 	LPAD,
 	LSTRIP,
 	MATCH,
@@ -298,6 +300,21 @@ const EXPRESSION_FUNCTIONS = {
 			"display": "floori ( x )",
 			"tooltip": "Rounds x downward (towards negative infinity), returning the largest whole number that is not more than x.",
 			"arguments": { "x": VariableType.TYPE_FLOAT },
+		},
+		FunctionType.GET_SLICE_COUNT: {
+			"display": "value.get_slice_count ( delimiter )",
+			"tooltip": "Returns the total number of slices when the string is split with the given delimiter.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"delimiter": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.LENGTH: {
+			"display": "value.length ( )",
+			"tooltip": "Returns the number of characters in the string.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+			}
 		},
 		FunctionType.MIN: {
 			"display": "mini ( ... )",
