@@ -386,6 +386,10 @@ func _match_string_function(
 			return arguments["value"].sha1_text()
 		FunctionType.SHA256_TEXT:
 			return arguments["value"].sha256_text()
+		FunctionType.STRIP_EDGES:
+			return arguments["value"].strip_edges()
+		FunctionType.STRIP_ESCAPES:
+			return arguments["value"].strip_escapes()
 		FunctionType.TO_CAMEL_CASE:
 			return arguments["value"].to_camel_case()
 		FunctionType.TO_LOWER:

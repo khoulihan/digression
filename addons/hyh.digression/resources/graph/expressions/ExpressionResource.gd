@@ -77,6 +77,8 @@ enum FunctionType {
 	SHA256_TEXT,
 	SIGN,
 	SNAPPED,
+	STRIP_EDGES,
+	STRIP_ESCAPES,
 	TO_CAMEL_CASE,
 	TO_LOWER,
 	TO_PASCAL_CASE,
@@ -604,6 +606,20 @@ const EXPRESSION_FUNCTIONS = {
 		FunctionType.SHA256_TEXT: {
 			"display": "value.sha256_text ( )",
 			"tooltip": "Returns the SHA-256 hash of the string as another String.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.STRIP_EDGES: {
+			"display": "value.strip_edges ( )",
+			"tooltip": "Strips all non-printable characters from the beginning and the end of the string.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.STRIP_ESCAPES: {
+			"display": "value.strip_escapes ( )",
+			"tooltip": "Strips all escape characters from the string.",
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
 			}
