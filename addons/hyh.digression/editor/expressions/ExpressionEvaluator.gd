@@ -326,6 +326,8 @@ func _match_float_function(
 			return pingpong(arguments['value'], arguments['length'])
 		FunctionType.POSMOD:
 			return fposmod(arguments['x'], arguments['y'])
+		FunctionType.POW:
+			return pow(arguments['base'], arguments['exp'])
 		FunctionType.RAND:
 			return randf()
 		FunctionType.RAND_FN:
@@ -340,6 +342,8 @@ func _match_float_function(
 			return arguments['value'].similarity(arguments['text'])
 		FunctionType.SNAPPED:
 			return snappedf(arguments['x'], arguments['step'])
+		FunctionType.SQRT:
+			return sqrt(arguments['x'])
 		FunctionType.TO_FLOAT:
 			return arguments['value'].to_float()
 		FunctionType.WRAP:

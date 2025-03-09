@@ -67,12 +67,14 @@ enum ExpressionMenuId {
 	FLOAT_MOD,
 	FLOAT_PINGPONG,
 	FLOAT_POSMOD,
+	FLOAT_POW,
 	FLOAT_RAND,
 	FLOAT_RAND_FN,
 	FLOAT_RAND_RANGE,
 	FLOAT_ROUND,
 	FLOAT_SIGN,
 	FLOAT_SNAPPED,
+	FLOAT_SQRT,
 	FLOAT_STRING_SIMILARITY,
 	FLOAT_STRING_TO_FLOAT,
 	FLOAT_WRAP,
@@ -215,6 +217,8 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.PINGPONG
 		ExpressionMenuId.INT_POSMOD, ExpressionMenuId.FLOAT_POSMOD:
 			return FunctionType.POSMOD
+		ExpressionMenuId.FLOAT_POW:
+			return FunctionType.POW
 		ExpressionMenuId.INT_RAND, ExpressionMenuId.FLOAT_RAND:
 			return FunctionType.RAND
 		ExpressionMenuId.FLOAT_RAND_FN:
@@ -227,6 +231,8 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.SIGN
 		ExpressionMenuId.INT_SNAPPED, ExpressionMenuId.FLOAT_SNAPPED:
 			return FunctionType.SNAPPED
+		ExpressionMenuId.FLOAT_SQRT:
+			return FunctionType.SQRT
 		ExpressionMenuId.INT_STRING_COUNT:
 			return FunctionType.COUNT
 		ExpressionMenuId.INT_STRING_COUNTN:
@@ -438,12 +444,14 @@ func _add_float_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.FLOAT_MOD, "mod")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_PINGPONG, "pingpong")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_POSMOD, "posmod")
+	_add_function_item(menu, ExpressionMenuId.FLOAT_POW, "pow")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_RAND, "rand")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_RAND_FN, "randfn")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_RAND_RANGE, "rand_range")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_ROUND, "round")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_SIGN, "sign")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_SNAPPED, "snapped")
+	_add_function_item(menu, ExpressionMenuId.FLOAT_SQRT, "sqrt")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_STRING_SIMILARITY, "String.similarity")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_STRING_TO_FLOAT, "String.to_float")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_WRAP, "wrap")

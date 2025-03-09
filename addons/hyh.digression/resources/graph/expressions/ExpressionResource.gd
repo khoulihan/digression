@@ -70,6 +70,7 @@ enum FunctionType {
 	NOT,
 	PINGPONG,
 	POSMOD,
+	POW,
 	RAND,
 	RAND_FN,
 	RAND_RANGE,
@@ -88,6 +89,7 @@ enum FunctionType {
 	SIGN,
 	SIMILARITY,
 	SNAPPED,
+	SQRT,
 	STRIP_EDGES,
 	STRIP_ESCAPES,
 	SUBSTR,
@@ -479,6 +481,14 @@ const EXPRESSION_FUNCTIONS = {
 				"y": VariableType.TYPE_FLOAT,
 			},
 		},
+		FunctionType.POW: {
+			"display": "pow ( base, exp )",
+			"tooltip": "Returns the result of base raised to the power of exp.",
+			"arguments": {
+				"base": VariableType.TYPE_FLOAT,
+				"exp": VariableType.TYPE_FLOAT,
+			},
+		},
 		FunctionType.RAND: {
 			"display": "randf ( )",
 			"tooltip": "Returns a random floating-point value between 0.0 and 1.0 (inclusive).",
@@ -528,6 +538,13 @@ const EXPRESSION_FUNCTIONS = {
 			"arguments": {
 				"x": VariableType.TYPE_FLOAT,
 				"step": VariableType.TYPE_FLOAT,
+			},
+		},
+		FunctionType.SQRT: {
+			"display": "sqrt ( x )",
+			"tooltip": "Returns the square root of x, where x is a non-negative number.",
+			"arguments": {
+				"x": VariableType.TYPE_FLOAT,
 			},
 		},
 		FunctionType.TO_FLOAT: {
