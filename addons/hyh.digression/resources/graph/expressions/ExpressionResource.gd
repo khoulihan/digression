@@ -74,6 +74,7 @@ enum FunctionType {
 	RAND,
 	RAND_FN,
 	RAND_RANGE,
+	REMAP,
 	REPEAT,
 	REPLACE,
 	REPLACEN,
@@ -508,6 +509,17 @@ const EXPRESSION_FUNCTIONS = {
 			"arguments": {
 				"from": VariableType.TYPE_FLOAT,
 				"to": VariableType.TYPE_FLOAT,
+			},
+		},
+		FunctionType.REMAP: {
+			"display": "remap ( value, istart, istop, ostart, ostop )",
+			"tooltip": "Maps a value from range [istart, istop] to [ostart, ostop].",
+			"arguments": {
+				"value": VariableType.TYPE_FLOAT,
+				"istart": VariableType.TYPE_FLOAT,
+				"istop": VariableType.TYPE_FLOAT,
+				"ostart": VariableType.TYPE_FLOAT,
+				"ostop": VariableType.TYPE_FLOAT,
 			},
 		},
 		FunctionType.ROUND: {

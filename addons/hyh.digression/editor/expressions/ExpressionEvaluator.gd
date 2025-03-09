@@ -334,6 +334,14 @@ func _match_float_function(
 			return randfn(arguments['mean'], arguments['deviation'])
 		FunctionType.RAND_RANGE:
 			return randf_range(arguments['from'], arguments['to'])
+		FunctionType.REMAP:
+			return remap(
+				arguments['value'],
+				arguments['istart'],
+				arguments['istop'],
+				arguments['ostart'],
+				arguments['ostop']
+			)
 		FunctionType.ROUND:
 			return roundf(arguments['x'])
 		FunctionType.SIGN:
