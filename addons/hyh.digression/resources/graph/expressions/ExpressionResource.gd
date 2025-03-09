@@ -81,6 +81,7 @@ enum FunctionType {
 	SNAPPED,
 	STRIP_EDGES,
 	STRIP_ESCAPES,
+	SUBSTR,
 	TO_CAMEL_CASE,
 	TO_LOWER,
 	TO_PASCAL_CASE,
@@ -638,6 +639,15 @@ const EXPRESSION_FUNCTIONS = {
 			"tooltip": "Strips all escape characters from the string.",
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.SUBSTR: {
+			"display": "value.substr ( from, len )",
+			"tooltip": "Returns part of the string from the position from with length len. If len is -1, returns the rest of the string starting from the given position.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"from": VariableType.TYPE_INT,
+				"len": VariableType.TYPE_INT,
 			}
 		},
 		FunctionType.TO_CAMEL_CASE: {

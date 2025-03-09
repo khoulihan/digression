@@ -89,6 +89,7 @@ enum ExpressionMenuId {
 	STRING_SHA256_TEXT,
 	STRING_STRIP_EDGES,
 	STRING_STRIP_ESCAPES,
+	STRING_SUBSTR,
 	STRING_TO_CAMEL_CASE,
 	STRING_TO_LOWER,
 	STRING_TO_PASCAL_CASE,
@@ -265,6 +266,8 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.STRIP_EDGES
 		ExpressionMenuId.STRING_STRIP_ESCAPES:
 			return FunctionType.STRIP_ESCAPES
+		ExpressionMenuId.STRING_SUBSTR:
+			return FunctionType.SUBSTR
 		ExpressionMenuId.STRING_TO_CAMEL_CASE:
 			return FunctionType.TO_CAMEL_CASE
 		ExpressionMenuId.STRING_TO_LOWER:
@@ -427,6 +430,7 @@ func _add_string_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.STRING_SHA256_TEXT, "String.sha256_text")
 	_add_function_item(menu, ExpressionMenuId.STRING_STRIP_EDGES, "String.strip_edges")
 	_add_function_item(menu, ExpressionMenuId.STRING_STRIP_ESCAPES, "String.strip_escapes")
+	_add_function_item(menu, ExpressionMenuId.STRING_SUBSTR, "String.substr")
 	_add_function_item(menu, ExpressionMenuId.STRING_TO_CAMEL_CASE, "String.to_camel_case")
 	_add_function_item(menu, ExpressionMenuId.STRING_TO_LOWER, "String.to_lower")
 	_add_function_item(menu, ExpressionMenuId.STRING_TO_PASCAL_CASE, "String.to_pascal_case")

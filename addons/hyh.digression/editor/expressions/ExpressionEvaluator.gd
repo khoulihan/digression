@@ -394,6 +394,8 @@ func _match_string_function(
 			return arguments["value"].strip_edges()
 		FunctionType.STRIP_ESCAPES:
 			return arguments["value"].strip_escapes()
+		FunctionType.SUBSTR:
+			return arguments["value"].substr(arguments["from"], arguments["len"])
 		FunctionType.TO_CAMEL_CASE:
 			return arguments["value"].to_camel_case()
 		FunctionType.TO_LOWER:
