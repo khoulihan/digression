@@ -37,6 +37,7 @@ enum FunctionType {
 	ENDS_WITH,
 	ERASE,
 	FORMAT,
+	GET_SLICE,
 	IS_EMPTY,
 	IS_SUBSEQUENCE_OF,
 	IS_SUBSEQUENCE_OFN,
@@ -474,6 +475,15 @@ const EXPRESSION_FUNCTIONS = {
 			"arguments": {
 				"template": VariableType.TYPE_STRING,
 				"values": [VariableType.TYPE_STRING],
+			}
+		},
+		FunctionType.GET_SLICE: {
+			"display": "value.get_slice ( delimiter, slice )",
+			"tooltip": "Splits the string using a delimiter and returns the substring at index slice.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"delimiter": VariableType.TYPE_STRING,
+				"slice": VariableType.TYPE_INT,
 			}
 		},
 		FunctionType.JOIN: {

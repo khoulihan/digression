@@ -69,6 +69,7 @@ enum ExpressionMenuId {
 	STRING_CHR,
 	STRING_ERASE,
 	STRING_FORMAT,
+	STRING_GET_SLICE,
 	STRING_JOIN,
 	STRING_LEFT,
 	STRING_LPAD,
@@ -219,6 +220,8 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.ERASE
 		ExpressionMenuId.STRING_FORMAT:
 			return FunctionType.FORMAT
+		ExpressionMenuId.STRING_GET_SLICE:
+			return FunctionType.GET_SLICE
 		ExpressionMenuId.STRING_JOIN:
 			return FunctionType.JOIN
 		ExpressionMenuId.STRING_LEFT:
@@ -389,6 +392,7 @@ func _add_string_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.STRING_CHR, "String.chr")
 	_add_function_item(menu, ExpressionMenuId.STRING_ERASE, "String.erase")
 	_add_function_item(menu, ExpressionMenuId.STRING_FORMAT, "String.format")
+	_add_function_item(menu, ExpressionMenuId.STRING_GET_SLICE, "String.get_slice")
 	_add_function_item(menu, ExpressionMenuId.STRING_JOIN, "String.join")
 	_add_function_item(menu, ExpressionMenuId.STRING_LEFT, "String.left")
 	_add_function_item(menu, ExpressionMenuId.STRING_LPAD, "String.lpad")

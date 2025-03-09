@@ -345,6 +345,11 @@ func _match_string_function(
 			return arguments["value"].erase(arguments["position"], arguments["chars"])
 		FunctionType.FORMAT:
 			return arguments["template"].format(arguments["values"])
+		FunctionType.GET_SLICE:
+			return arguments["value"].get_slice(
+				arguments["delimiter"],
+				arguments["slice"]
+			)
 		FunctionType.JOIN:
 			return arguments["value"].join(arguments["parts"])
 		FunctionType.LEFT:
