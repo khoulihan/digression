@@ -86,6 +86,7 @@ enum FunctionType {
 	SHA1_TEXT,
 	SHA256_TEXT,
 	SIGN,
+	SIMILARITY,
 	SNAPPED,
 	STRIP_EDGES,
 	STRIP_ESCAPES,
@@ -512,6 +513,14 @@ const EXPRESSION_FUNCTIONS = {
 			"arguments": {
 				"x": VariableType.TYPE_FLOAT,
 			},
+		},
+		FunctionType.SIMILARITY: {
+			"display": "value.similarity ( text )",
+			"tooltip": "Returns the similarity index (Sørensen-Dice coefficient) of this string compared to another.\nA result of 1.0 means totally similar, while 0.0 means totally dissimilar.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"text": VariableType.TYPE_STRING,
+			}
 		},
 		FunctionType.SNAPPED: {
 			"display": "snappedf ( x, step )",

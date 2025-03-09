@@ -336,6 +336,8 @@ func _match_float_function(
 			return roundf(arguments['x'])
 		FunctionType.SIGN:
 			return signf(arguments['x'])
+		FunctionType.SIMILARITY:
+			return arguments['value'].similarity(arguments['text'])
 		FunctionType.SNAPPED:
 			return snappedf(arguments['x'], arguments['step'])
 		FunctionType.TO_FLOAT:

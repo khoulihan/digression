@@ -73,6 +73,7 @@ enum ExpressionMenuId {
 	FLOAT_ROUND,
 	FLOAT_SIGN,
 	FLOAT_SNAPPED,
+	FLOAT_STRING_SIMILARITY,
 	FLOAT_STRING_TO_FLOAT,
 	FLOAT_WRAP,
 	STRING_CAPITALIZE,
@@ -246,6 +247,8 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.TO_INT
 		ExpressionMenuId.FLOAT_STRING_TO_FLOAT:
 			return FunctionType.TO_FLOAT
+		ExpressionMenuId.FLOAT_STRING_SIMILARITY:
+			return FunctionType.SIMILARITY
 		ExpressionMenuId.INT_WRAP, ExpressionMenuId.FLOAT_WRAP:
 			return FunctionType.WRAP
 		ExpressionMenuId.STRING_CAPITALIZE:
@@ -441,6 +444,7 @@ func _add_float_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.FLOAT_ROUND, "round")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_SIGN, "sign")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_SNAPPED, "snapped")
+	_add_function_item(menu, ExpressionMenuId.FLOAT_STRING_SIMILARITY, "String.similarity")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_STRING_TO_FLOAT, "String.to_float")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_WRAP, "wrap")
 
