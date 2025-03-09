@@ -341,6 +341,8 @@ func _match_string_function(
 			return arguments["value"].capitalize()
 		FunctionType.CHR:
 			return String.chr(arguments["char"])
+		FunctionType.ERASE:
+			return arguments["value"].erase(arguments["position"], arguments["chars"])
 		FunctionType.FORMAT:
 			return arguments["template"].format(arguments["values"])
 		FunctionType.JOIN:

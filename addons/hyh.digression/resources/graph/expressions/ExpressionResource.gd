@@ -35,6 +35,7 @@ enum FunctionType {
 	CONTAINS,
 	CONTAINSN,
 	ENDS_WITH,
+	ERASE,
 	FORMAT,
 	IS_EMPTY,
 	IS_SUBSEQUENCE_OF,
@@ -456,6 +457,15 @@ const EXPRESSION_FUNCTIONS = {
 			"tooltip": "Returns a single Unicode character from the decimal char.",
 			"arguments": {
 				"char": VariableType.TYPE_INT,
+			}
+		},
+		FunctionType.ERASE: {
+			"display": "value.erase ( position, chars )",
+			"tooltip": "Returns a string with chars characters erased starting from position.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"position": VariableType.TYPE_INT,
+				"chars": VariableType.TYPE_INT,
 			}
 		},
 		FunctionType.FORMAT: {
