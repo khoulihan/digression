@@ -50,6 +50,8 @@ enum ExpressionMenuId {
 	INT_SNAPPED,
 	INT_STRING_COUNT,
 	INT_STRING_COUNTN,
+	INT_STRING_FIND,
+	INT_STRING_FINDN,
 	INT_WRAP,
 	FLOAT_ABS,
 	FLOAT_CEIL,
@@ -222,6 +224,10 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.COUNT
 		ExpressionMenuId.INT_STRING_COUNTN:
 			return FunctionType.COUNTN
+		ExpressionMenuId.INT_STRING_FIND:
+			return FunctionType.FIND
+		ExpressionMenuId.INT_STRING_FINDN:
+			return FunctionType.FINDN
 		ExpressionMenuId.INT_WRAP, ExpressionMenuId.FLOAT_WRAP:
 			return FunctionType.WRAP
 		ExpressionMenuId.STRING_CAPITALIZE:
@@ -391,6 +397,8 @@ func _add_int_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.INT_SNAPPED, "snapped")
 	_add_function_item(menu, ExpressionMenuId.INT_STRING_COUNT, "String.count")
 	_add_function_item(menu, ExpressionMenuId.INT_STRING_COUNTN, "String.countn")
+	_add_function_item(menu, ExpressionMenuId.INT_STRING_FIND, "String.find")
+	_add_function_item(menu, ExpressionMenuId.INT_STRING_FINDN, "String.findn")
 	_add_function_item(menu, ExpressionMenuId.INT_WRAP, "wrap")
 
 

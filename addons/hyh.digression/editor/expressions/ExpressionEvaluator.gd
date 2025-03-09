@@ -272,6 +272,10 @@ func _match_int_function(
 			return arguments['value'].count(arguments['what'])
 		FunctionType.COUNTN:
 			return arguments['value'].countn(arguments['what'])
+		FunctionType.FIND:
+			return arguments['value'].find(arguments['what'])
+		FunctionType.FINDN:
+			return arguments['value'].findn(arguments['what'])
 		FunctionType.WRAP:
 			return wrapi(
 				arguments['value'],

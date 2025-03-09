@@ -40,6 +40,8 @@ enum FunctionType {
 	C_UNESCAPE,
 	ENDS_WITH,
 	ERASE,
+	FIND,
+	FINDN,
 	FORMAT,
 	GET_SLICE,
 	INSERT,
@@ -269,6 +271,22 @@ const EXPRESSION_FUNCTIONS = {
 		FunctionType.COUNTN: {
 			"display": "value.countn ( what )",
 			"tooltip": "Returns the number of occurrences of the substring what, ignoring case.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"what": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.FIND: {
+			"display": "value.find ( what )",
+			"tooltip": "Returns the index of the first occurrence of what in this string, or -1 if there are none.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"what": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.FINDN: {
+			"display": "value.findn ( what )",
+			"tooltip": "Returns the index of the first case-insensitive occurrence of what in this string, or -1 if there are none.",
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
 				"what": VariableType.TYPE_STRING,
