@@ -284,6 +284,8 @@ func _match_int_function(
 			return arguments['value'].rfind(arguments['what'])
 		FunctionType.RFINDN:
 			return arguments['value'].rfindn(arguments['what'])
+		FunctionType.TO_INT:
+			return arguments['value'].to_int()
 		FunctionType.WRAP:
 			return wrapi(
 				arguments['value'],
@@ -336,6 +338,8 @@ func _match_float_function(
 			return signf(arguments['x'])
 		FunctionType.SNAPPED:
 			return snappedf(arguments['x'], arguments['step'])
+		FunctionType.TO_FLOAT:
+			return arguments['value'].to_float()
 		FunctionType.WRAP:
 			return wrapf(
 				arguments['value'],

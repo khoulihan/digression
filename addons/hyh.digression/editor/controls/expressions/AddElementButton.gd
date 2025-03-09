@@ -56,6 +56,7 @@ enum ExpressionMenuId {
 	INT_STRING_LENGTH,
 	INT_STRING_RFIND,
 	INT_STRING_RFINDN,
+	INT_STRING_TO_INT,
 	INT_WRAP,
 	FLOAT_ABS,
 	FLOAT_CEIL,
@@ -72,6 +73,7 @@ enum ExpressionMenuId {
 	FLOAT_ROUND,
 	FLOAT_SIGN,
 	FLOAT_SNAPPED,
+	FLOAT_STRING_TO_FLOAT,
 	FLOAT_WRAP,
 	STRING_CAPITALIZE,
 	STRING_C_ESCAPE,
@@ -240,6 +242,10 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.RFIND
 		ExpressionMenuId.INT_STRING_RFINDN:
 			return FunctionType.RFINDN
+		ExpressionMenuId.INT_STRING_TO_INT:
+			return FunctionType.TO_INT
+		ExpressionMenuId.FLOAT_STRING_TO_FLOAT:
+			return FunctionType.TO_FLOAT
 		ExpressionMenuId.INT_WRAP, ExpressionMenuId.FLOAT_WRAP:
 			return FunctionType.WRAP
 		ExpressionMenuId.STRING_CAPITALIZE:
@@ -415,6 +421,7 @@ func _add_int_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.INT_STRING_LENGTH, "String.length")
 	_add_function_item(menu, ExpressionMenuId.INT_STRING_RFIND, "String.rfind")
 	_add_function_item(menu, ExpressionMenuId.INT_STRING_RFINDN, "String.rfindn")
+	_add_function_item(menu, ExpressionMenuId.INT_STRING_TO_INT, "String.to_int")
 	_add_function_item(menu, ExpressionMenuId.INT_WRAP, "wrap")
 
 
@@ -434,6 +441,7 @@ func _add_float_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.FLOAT_ROUND, "round")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_SIGN, "sign")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_SNAPPED, "snapped")
+	_add_function_item(menu, ExpressionMenuId.FLOAT_STRING_TO_FLOAT, "String.to_float")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_WRAP, "wrap")
 
 

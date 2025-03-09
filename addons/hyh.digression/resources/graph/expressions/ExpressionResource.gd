@@ -91,6 +91,8 @@ enum FunctionType {
 	STRIP_ESCAPES,
 	SUBSTR,
 	TO_CAMEL_CASE,
+	TO_FLOAT,
+	TO_INT,
 	TO_LOWER,
 	TO_PASCAL_CASE,
 	TO_SNAKE_CASE,
@@ -400,6 +402,13 @@ const EXPRESSION_FUNCTIONS = {
 				"step": VariableType.TYPE_INT,
 			},
 		},
+		FunctionType.TO_INT: {
+			"display": "value.to_int ( )",
+			"tooltip": "Converts the string representing an integer number into an int.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+			}
+		},
 		FunctionType.WRAP: {
 			"display": "wrapi ( value, min, max )",
 			"tooltip": "Wraps the integer value between min and max.",
@@ -511,6 +520,13 @@ const EXPRESSION_FUNCTIONS = {
 				"x": VariableType.TYPE_FLOAT,
 				"step": VariableType.TYPE_FLOAT,
 			},
+		},
+		FunctionType.TO_FLOAT: {
+			"display": "value.to_float ( )",
+			"tooltip": "Converts the string representing a decimal number into a float.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+			}
 		},
 		FunctionType.WRAP: {
 			"display": "wrapf ( value, min, max )",
