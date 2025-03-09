@@ -268,6 +268,10 @@ func _match_int_function(
 			return signi(arguments['x'])
 		FunctionType.SNAPPED:
 			return snappedi(arguments['x'], arguments['step'])
+		FunctionType.COUNT:
+			return arguments['value'].count(arguments['what'])
+		FunctionType.COUNTN:
+			return arguments['value'].countn(arguments['what'])
 		FunctionType.WRAP:
 			return wrapi(
 				arguments['value'],

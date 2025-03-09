@@ -35,6 +35,8 @@ enum FunctionType {
 	CLAMP,
 	CONTAINS,
 	CONTAINSN,
+	COUNT,
+	COUNTN,
 	C_UNESCAPE,
 	ENDS_WITH,
 	ERASE,
@@ -255,6 +257,22 @@ const EXPRESSION_FUNCTIONS = {
 				"min": VariableType.TYPE_INT,
 				"max": VariableType.TYPE_INT,
 			},
+		},
+		FunctionType.COUNT: {
+			"display": "value.count ( what )",
+			"tooltip": "Returns the number of occurrences of the substring what.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"what": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.COUNTN: {
+			"display": "value.countn ( what )",
+			"tooltip": "Returns the number of occurrences of the substring what, ignoring case.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"what": VariableType.TYPE_STRING,
+			}
 		},
 		FunctionType.FLOOR: {
 			"display": "floori ( x )",
