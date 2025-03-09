@@ -65,6 +65,7 @@ enum ExpressionMenuId {
 	FLOAT_MAX,
 	FLOAT_MIN,
 	FLOAT_MOD,
+	FLOAT_MOVE_TOWARD,
 	FLOAT_PINGPONG,
 	FLOAT_POSMOD,
 	FLOAT_POW,
@@ -72,6 +73,7 @@ enum ExpressionMenuId {
 	FLOAT_RAND_FN,
 	FLOAT_RAND_RANGE,
 	FLOAT_REMAP,
+	FLOAT_ROTATE_TOWARD,
 	FLOAT_ROUND,
 	FLOAT_SIGN,
 	FLOAT_SNAPPED,
@@ -212,6 +214,8 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.MAX
 		ExpressionMenuId.INT_MOD, ExpressionMenuId.FLOAT_MOD:
 			return FunctionType.MOD
+		ExpressionMenuId.FLOAT_MOVE_TOWARD:
+			return FunctionType.MOVE_TOWARD
 		ExpressionMenuId.INT_NEAREST_PO2:
 			return FunctionType.NEAREST_PO2
 		ExpressionMenuId.FLOAT_PINGPONG:
@@ -228,6 +232,8 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.RAND_RANGE
 		ExpressionMenuId.FLOAT_REMAP:
 			return FunctionType.REMAP
+		ExpressionMenuId.FLOAT_ROTATE_TOWARD:
+			return FunctionType.ROTATE_TOWARD
 		ExpressionMenuId.INT_ROUND, ExpressionMenuId.FLOAT_ROUND:
 			return FunctionType.ROUND
 		ExpressionMenuId.INT_SIGN, ExpressionMenuId.FLOAT_SIGN:
@@ -445,6 +451,7 @@ func _add_float_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.FLOAT_MAX, "max")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_MIN, "min")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_MOD, "mod")
+	_add_function_item(menu, ExpressionMenuId.FLOAT_MOVE_TOWARD, "move_toward")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_PINGPONG, "pingpong")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_POSMOD, "posmod")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_POW, "pow")
@@ -452,6 +459,7 @@ func _add_float_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.FLOAT_RAND_FN, "randfn")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_RAND_RANGE, "rand_range")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_REMAP, "remap")
+	_add_function_item(menu, ExpressionMenuId.FLOAT_ROTATE_TOWARD, "rotate_toward")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_ROUND, "round")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_SIGN, "sign")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_SNAPPED, "snapped")

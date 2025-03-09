@@ -322,6 +322,8 @@ func _match_float_function(
 			return floorf(arguments['x'])
 		FunctionType.MOD:
 			return fmod(arguments['x'], arguments['y'])
+		FunctionType.MOVE_TOWARD:
+			return move_toward(arguments['from'], arguments['to'], arguments['delta'])
 		FunctionType.PINGPONG:
 			return pingpong(arguments['value'], arguments['length'])
 		FunctionType.POSMOD:
@@ -342,6 +344,8 @@ func _match_float_function(
 				arguments['ostart'],
 				arguments['ostop']
 			)
+		FunctionType.ROTATE_TOWARD:
+			return rotate_toward(arguments['from'], arguments['to'], arguments['delta'])
 		FunctionType.ROUND:
 			return roundf(arguments['x'])
 		FunctionType.SIGN:

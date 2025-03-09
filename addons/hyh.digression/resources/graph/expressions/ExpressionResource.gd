@@ -66,6 +66,7 @@ enum FunctionType {
 	MD5_TEXT,
 	MIN,
 	MOD,
+	MOVE_TOWARD,
 	NEAREST_PO2,
 	NOT,
 	PINGPONG,
@@ -82,6 +83,7 @@ enum FunctionType {
 	RFIND,
 	RFINDN,
 	RIGHT,
+	ROTATE_TOWARD,
 	ROUND,
 	RPAD,
 	RSTRIP,
@@ -466,6 +468,15 @@ const EXPRESSION_FUNCTIONS = {
 				"y": VariableType.TYPE_FLOAT,
 			},
 		},
+		FunctionType.MOVE_TOWARD: {
+			"display": "move_toward ( from, to, delta )",
+			"tooltip": "Moves from toward to by the delta amount. Will not go past to.",
+			"arguments": {
+				"from": VariableType.TYPE_FLOAT,
+				"to": VariableType.TYPE_FLOAT,
+				"delta": VariableType.TYPE_FLOAT,
+			},
+		},
 		FunctionType.PINGPONG: {
 			"display": "pingpong ( value, length )",
 			"tooltip": "Wraps value between 0 and the length. If the limit is reached, the next value the function returns is decreased to the 0 side or increased to the length side (like a triangle wave). If length is less than zero, it becomes positive.",
@@ -520,6 +531,15 @@ const EXPRESSION_FUNCTIONS = {
 				"istop": VariableType.TYPE_FLOAT,
 				"ostart": VariableType.TYPE_FLOAT,
 				"ostop": VariableType.TYPE_FLOAT,
+			},
+		},
+		FunctionType.ROTATE_TOWARD: {
+			"display": "rotate_toward ( from, to, delta )",
+			"tooltip": "Rotates from toward to by the delta amount. Will not go past to.",
+			"arguments": {
+				"from": VariableType.TYPE_FLOAT,
+				"to": VariableType.TYPE_FLOAT,
+				"delta": VariableType.TYPE_FLOAT,
 			},
 		},
 		FunctionType.ROUND: {
