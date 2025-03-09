@@ -75,6 +75,8 @@ enum FunctionType {
 	REPLACE,
 	REPLACEN,
 	REVERSE,
+	RFIND,
+	RFINDN,
 	RIGHT,
 	ROUND,
 	RPAD,
@@ -342,6 +344,22 @@ const EXPRESSION_FUNCTIONS = {
 				"from": VariableType.TYPE_INT,
 				"to": VariableType.TYPE_INT,
 			},
+		},
+		FunctionType.RFIND: {
+			"display": "value.rfind ( what )",
+			"tooltip": "Returns the index of the last occurrence of what in this string, or -1 if there are none.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"what": VariableType.TYPE_STRING,
+			}
+		},
+		FunctionType.RFINDN: {
+			"display": "value.rfindn ( what )",
+			"tooltip": "Returns the index of the last case-insensitive occurrence of what in this string, or -1 if there are none.",
+			"arguments": {
+				"value": VariableType.TYPE_STRING,
+				"what": VariableType.TYPE_STRING,
+			}
 		},
 		FunctionType.ROUND: {
 			"display": "roundi ( x )",

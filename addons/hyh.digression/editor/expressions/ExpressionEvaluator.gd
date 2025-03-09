@@ -276,6 +276,10 @@ func _match_int_function(
 			return arguments['value'].find(arguments['what'])
 		FunctionType.FINDN:
 			return arguments['value'].findn(arguments['what'])
+		FunctionType.RFIND:
+			return arguments['value'].rfind(arguments['what'])
+		FunctionType.RFINDN:
+			return arguments['value'].rfindn(arguments['what'])
 		FunctionType.WRAP:
 			return wrapi(
 				arguments['value'],
