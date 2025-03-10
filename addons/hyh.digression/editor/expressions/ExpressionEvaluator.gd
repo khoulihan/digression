@@ -194,10 +194,36 @@ func _match_bool_function(
 	arguments
 ):
 	match function_type:
+		FunctionType.BEGINS_WITH:
+			return arguments["value"].begins_with(arguments["text"])
+		FunctionType.CONTAINS:
+			return arguments["value"].contains(arguments["what"])
+		FunctionType.CONTAINSN:
+			return arguments["value"].containsn(arguments["what"])
+		FunctionType.ENDS_WITH:
+			return arguments["value"].ends_with(arguments["text"])
+		FunctionType.IS_EMPTY:
+			return arguments["value"].is_empty()
+		FunctionType.IS_EQUAL_APPROX:
+			return is_equal_approx(arguments["a"], arguments["b"])
+		FunctionType.IS_FINITE:
+			return is_finite(arguments["x"])
+		FunctionType.IS_INFINITE:
+			return is_inf(arguments["x"])
+		FunctionType.IS_NAN:
+			return is_nan(arguments["x"])
+		FunctionType.IS_SUBSEQUENCE_OF:
+			return arguments["value"].is_subsequence_of(arguments["text"])
+		FunctionType.IS_SUBSEQUENCE_OFN:
+			return arguments["value"].is_subsequence_ofn(arguments["text"])
+		FunctionType.IS_ZERO_APPROX:
+			return is_zero_approx(arguments["x"])
+		FunctionType.MATCH:
+			return arguments["value"].match(arguments['expr'])
+		FunctionType.MATCHN:
+			return arguments["value"].matchn(arguments['expr'])
 		FunctionType.NOT:
 			return not arguments["x"]
-		FunctionType.CONTAINS:
-			return arguments["in"].contains(arguments["query"])
 	_logger.error("Unrecognised boolean function type.")
 	return null
 
@@ -210,12 +236,62 @@ func _match_int_function(
 	arguments
 ):
 	match function_type:
+		FunctionType.ABS:
+			return absi(arguments['x'])
+		FunctionType.CEIL:
+			return ceili(arguments['x'])
+		FunctionType.CLAMP:
+			return clampi(
+				arguments['value'],
+				arguments['min'],
+				arguments['max'],
+			)
 		FunctionType.MIN:
 			return arguments.min()
 		FunctionType.MAX:
 			return arguments.max()
 		FunctionType.FLOOR:
 			return floori(arguments['x'])
+		FunctionType.MOD:
+			return arguments['x'] % arguments['y']
+		FunctionType.NEAREST_PO2:
+			return nearest_po2(arguments['value'])
+		FunctionType.POSMOD:
+			return posmod(arguments['x'], arguments['y'])
+		FunctionType.RAND:
+			return randi()
+		FunctionType.RAND_RANGE:
+			return randi_range(arguments['from'], arguments['to'])
+		FunctionType.ROUND:
+			return roundi(arguments['x'])
+		FunctionType.SIGN:
+			return signi(arguments['x'])
+		FunctionType.SNAPPED:
+			return snappedi(arguments['x'], arguments['step'])
+		FunctionType.COUNT:
+			return arguments['value'].count(arguments['what'])
+		FunctionType.COUNTN:
+			return arguments['value'].countn(arguments['what'])
+		FunctionType.FIND:
+			return arguments['value'].find(arguments['what'])
+		FunctionType.FINDN:
+			return arguments['value'].findn(arguments['what'])
+		FunctionType.GET_SLICE_COUNT:
+			return arguments['value'].get_slice_count(arguments['delimiter'])
+		FunctionType.LENGTH:
+			return arguments['value'].length()
+		FunctionType.RFIND:
+			return arguments['value'].rfind(arguments['what'])
+		FunctionType.RFINDN:
+			return arguments['value'].rfindn(arguments['what'])
+		FunctionType.TO_INT:
+			return arguments['value'].to_int()
+		FunctionType.WRAP:
+			return wrapi(
+				arguments['value'],
+				arguments['min'],
+				arguments['max'],
+			)
 	_logger.error("Unrecognised integer function type.")
 	return null
 
@@ -228,12 +304,95 @@ func _match_float_function(
 	arguments
 ):
 	match function_type:
+		FunctionType.ABS:
+			return absf(arguments['x'])
+		FunctionType.CEIL:
+			return ceilf(arguments['x'])
+		FunctionType.CLAMP:
+			return clampf(
+				arguments['value'],
+				arguments['min'],
+				arguments['max'],
+			)
+		FunctionType.EASE:
+			return ease(
+				arguments['x'],
+				arguments['curve'],
+			)
+		FunctionType.INVERSE_LERP:
+			return inverse_lerp(
+				arguments['from'],
+				arguments['to'],
+				arguments['weight'],
+			)
+		FunctionType.LERP:
+			return lerpf(
+				arguments['from'],
+				arguments['to'],
+				arguments['weight'],
+			)
+		FunctionType.LERP_ANGLE:
+			return lerp_angle(
+				arguments['from'],
+				arguments['to'],
+				arguments['weight'],
+			)
 		FunctionType.MIN:
 			return arguments.min()
 		FunctionType.MAX:
 			return arguments.max()
 		FunctionType.FLOOR:
 			return floorf(arguments['x'])
+		FunctionType.MOD:
+			return fmod(arguments['x'], arguments['y'])
+		FunctionType.MOVE_TOWARD:
+			return move_toward(arguments['from'], arguments['to'], arguments['delta'])
+		FunctionType.PINGPONG:
+			return pingpong(arguments['value'], arguments['length'])
+		FunctionType.POSMOD:
+			return fposmod(arguments['x'], arguments['y'])
+		FunctionType.POW:
+			return pow(arguments['base'], arguments['exp'])
+		FunctionType.RAND:
+			return randf()
+		FunctionType.RAND_FN:
+			return randfn(arguments['mean'], arguments['deviation'])
+		FunctionType.RAND_RANGE:
+			return randf_range(arguments['from'], arguments['to'])
+		FunctionType.REMAP:
+			return remap(
+				arguments['value'],
+				arguments['istart'],
+				arguments['istop'],
+				arguments['ostart'],
+				arguments['ostop']
+			)
+		FunctionType.ROTATE_TOWARD:
+			return rotate_toward(arguments['from'], arguments['to'], arguments['delta'])
+		FunctionType.ROUND:
+			return roundf(arguments['x'])
+		FunctionType.SIGN:
+			return signf(arguments['x'])
+		FunctionType.SMOOTHSTEP:
+			return smoothstep(
+				arguments['from'],
+				arguments['to'],
+				arguments['x'],
+			)
+		FunctionType.SIMILARITY:
+			return arguments['value'].similarity(arguments['text'])
+		FunctionType.SNAPPED:
+			return snappedf(arguments['x'], arguments['step'])
+		FunctionType.SQRT:
+			return sqrt(arguments['x'])
+		FunctionType.TO_FLOAT:
+			return arguments['value'].to_float()
+		FunctionType.WRAP:
+			return wrapf(
+				arguments['value'],
+				arguments['min'],
+				arguments['max'],
+			)
 	_logger.error("Unrecognised float function type.")
 	return null
 
@@ -245,8 +404,79 @@ func _match_string_function(
 	arguments
 ):
 	match function_type:
+		FunctionType.CAPITALIZE:
+			return arguments["value"].capitalize()
+		FunctionType.C_ESCAPE:
+			return arguments["value"].c_escape()
+		FunctionType.CHR:
+			return String.chr(arguments["char"])
+		FunctionType.C_UNESCAPE:
+			return arguments["value"].c_unescape()
+		FunctionType.ERASE:
+			return arguments["value"].erase(arguments["position"], arguments["chars"])
+		FunctionType.FORMAT:
+			return arguments["template"].format(arguments["values"])
+		FunctionType.GET_SLICE:
+			return arguments["value"].get_slice(
+				arguments["delimiter"],
+				arguments["slice"]
+			)
+		FunctionType.INSERT:
+			return arguments["value"].insert(arguments["position"], arguments["what"])
+		FunctionType.JOIN:
+			return arguments["value"].join(arguments["parts"])
+		FunctionType.LEFT:
+			return arguments["value"].left(arguments["length"])
+		FunctionType.LPAD:
+			return arguments["value"].lpad(
+				arguments["min_length"],
+				arguments["character"]
+			)
+		FunctionType.LSTRIP:
+			return arguments["value"].lstrip(arguments["chars"])
+		FunctionType.MD5_TEXT:
+			return arguments["value"].md5_text()
+		FunctionType.REPEAT:
+			return arguments["value"].repeat(arguments["count"])
+		FunctionType.REPLACE:
+			return arguments["value"].replace(arguments["what"], arguments["forwhat"])
+		FunctionType.REPLACEN:
+			return arguments["value"].replacen(arguments["what"], arguments["forwhat"])
+		FunctionType.REVERSE:
+			return arguments["value"].reverse()
+		FunctionType.RIGHT:
+			return arguments["value"].right(arguments["length"])
+		FunctionType.RPAD:
+			return arguments["value"].rpad(
+				arguments["min_length"],
+				arguments["character"]
+			)
+		FunctionType.RSTRIP:
+			return arguments["value"].rstrip(arguments["chars"])
+		FunctionType.SHA1_TEXT:
+			return arguments["value"].sha1_text()
+		FunctionType.SHA256_TEXT:
+			return arguments["value"].sha256_text()
+		FunctionType.STRIP_EDGES:
+			return arguments["value"].strip_edges()
+		FunctionType.STRIP_ESCAPES:
+			return arguments["value"].strip_escapes()
+		FunctionType.SUBSTR:
+			return arguments["value"].substr(arguments["from"], arguments["len"])
+		FunctionType.TO_CAMEL_CASE:
+			return arguments["value"].to_camel_case()
 		FunctionType.TO_LOWER:
-			return arguments["what"].to_lower()
+			return arguments["value"].to_lower()
+		FunctionType.TO_PASCAL_CASE:
+			return arguments["value"].to_pascal_case()
+		FunctionType.TO_SNAKE_CASE:
+			return arguments["value"].to_snake_case()
+		FunctionType.TO_UPPER:
+			return arguments["value"].to_upper()
+		FunctionType.TRIM_PREFIX:
+			return arguments["value"].trim_prefix(arguments["prefix"])
+		FunctionType.TRIM_SUFFIX:
+			return arguments["value"].trim_suffix(arguments["suffix"])
 	_logger.error("Unrecognised string function type.")
 	return null
 
