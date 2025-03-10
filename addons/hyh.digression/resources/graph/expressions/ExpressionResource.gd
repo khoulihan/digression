@@ -47,6 +47,7 @@ enum FunctionType {
 	GET_SLICE,
 	GET_SLICE_COUNT,
 	INSERT,
+	INVERSE_LERP,
 	IS_EMPTY,
 	IS_SUBSEQUENCE_OF,
 	IS_SUBSEQUENCE_OFN,
@@ -461,6 +462,15 @@ const EXPRESSION_FUNCTIONS = {
 			"display": "floorf ( x )",
 			"tooltip": "Rounds x downward (towards negative infinity), returning the largest whole number that is not more than x.",
 			"arguments": { "x": VariableType.TYPE_FLOAT },
+		},
+		FunctionType.INVERSE_LERP: {
+			"display": "inverse_lerp ( from, to, weight )",
+			"tooltip": "Returns an interpolation or extrapolation factor considering the range specified in from and to, and the interpolated value specified in weight.",
+			"arguments": {
+				"from": VariableType.TYPE_FLOAT,
+				"to": VariableType.TYPE_FLOAT,
+				"weight": VariableType.TYPE_FLOAT,
+			},
 		},
 		FunctionType.LERP: {
 			"display": "lerpf ( from, to, weight )",

@@ -63,6 +63,7 @@ enum ExpressionMenuId {
 	FLOAT_CLAMP,
 	FLOAT_EASE,
 	FLOAT_FLOOR,
+	FLOAT_INVERSE_LERP,
 	FLOAT_LERP,
 	FLOAT_LERP_ANGLE,
 	FLOAT_MAX,
@@ -214,6 +215,8 @@ func _function_type_for_id(id: ExpressionMenuId) -> Variant:
 			return FunctionType.EASE
 		ExpressionMenuId.INT_FLOOR, ExpressionMenuId.FLOAT_FLOOR:
 			return FunctionType.FLOOR
+		ExpressionMenuId.FLOAT_INVERSE_LERP:
+			return FunctionType.INVERSE_LERP
 		ExpressionMenuId.FLOAT_LERP:
 			return FunctionType.LERP
 		ExpressionMenuId.FLOAT_LERP_ANGLE:
@@ -461,6 +464,7 @@ func _add_float_functions(menu: PopupMenu):
 	_add_function_item(menu, ExpressionMenuId.FLOAT_CLAMP, "clamp")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_EASE, "ease")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_FLOOR, "floor")
+	_add_function_item(menu, ExpressionMenuId.FLOAT_INVERSE_LERP, "inverse_lerp")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_LERP, "lerp")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_LERP_ANGLE, "lerp_angle")
 	_add_function_item(menu, ExpressionMenuId.FLOAT_MAX, "max")

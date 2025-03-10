@@ -319,6 +319,12 @@ func _match_float_function(
 				arguments['x'],
 				arguments['curve'],
 			)
+		FunctionType.INVERSE_LERP:
+			return inverse_lerp(
+				arguments['from'],
+				arguments['to'],
+				arguments['weight'],
+			)
 		FunctionType.LERP:
 			return lerpf(
 				arguments['from'],
