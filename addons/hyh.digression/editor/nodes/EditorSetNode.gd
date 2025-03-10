@@ -91,6 +91,10 @@ func set_type(val):
 	_expression_control.configure()
 
 
+func _correct_size(new_minsize: Vector2):
+	set_deferred("size", Vector2(new_minsize.x, 0))
+
+
 func _on_gui_input(ev):
 	super._on_gui_input(ev)
 
@@ -98,11 +102,12 @@ func _on_gui_input(ev):
 func _on_expression_modified():
 	# TODO: Need somewhere to display the overall result of this
 	_expression_control.validate()
+	_correct_size(self.size)
 	modified.emit()
 
 
 func _on_resize_request(new_minsize):
-	size = Vector2(new_minsize.x, 0)
+	_correct_size(new_minsize)
 
 
 func _on_variable_selection_control_variable_selected(variable):
