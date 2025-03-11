@@ -17,7 +17,7 @@ func refresh():
 ## Validate the expression.
 func validate():
 	var children = get_children().slice(0, -1)
-	if len(children) == 0:
+	if len(children) == 0 and not allow_empty:
 		return "Group expression has no children."
 	var child_warnings = []
 	for child in children:

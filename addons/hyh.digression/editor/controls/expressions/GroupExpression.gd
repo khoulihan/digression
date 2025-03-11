@@ -7,6 +7,8 @@ const FunctionType = preload("../../../resources/graph/expressions/ExpressionRes
 const ExpressionType = preload("../../../resources/graph/expressions/ExpressionResource.gd").ExpressionType
 const DragClass = preload("../drag/DragHandle.gd").DragClass
 
+@export var allow_empty := false
+
 var _drop_indicator_scene = preload("../../controls/drag/DropIndicator.tscn")
 var _drop_indicator
 var _mouse_over := false
@@ -42,7 +44,7 @@ func remove_child_expression(child):
 ## Validate the expression.
 func validate():
 	var children = get_children().slice(0, -1)
-	if len(children) == 0:
+	if len(children) == 0 and not allow_empty:
 		return "Group expression has no children."
 	var child_warnings = []
 	for child in children:

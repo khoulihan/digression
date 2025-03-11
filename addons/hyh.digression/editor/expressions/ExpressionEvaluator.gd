@@ -415,7 +415,10 @@ func _match_string_function(
 		FunctionType.ERASE:
 			return arguments["value"].erase(arguments["position"], arguments["chars"])
 		FunctionType.FORMAT:
-			return arguments["template"].format(arguments["values"])
+			return arguments["template"].format(
+				arguments["values"],
+				_get_argument_or_default("placeholder", arguments, function_spec)
+			)
 		FunctionType.GET_SLICE:
 			return arguments["value"].get_slice(
 				arguments["delimiter"],
@@ -479,6 +482,15 @@ func _match_string_function(
 			return arguments["value"].trim_suffix(arguments["suffix"])
 	_logger.error("Unrecognised string function type.")
 	return null
+
+
+func _get_argument_or_default(arg, arguments, function_spec):
+	if not "defaults" in function_spec:
+		return arguments[arg]
+	if not arguments[arg] == null:
+		return arguments[arg]
+	var defaults: Dictionary = function_spec["defaults"]
+	return defaults[arg]
 
 
 func _evaluate_brackets(variable_type, expression, local_context=null):

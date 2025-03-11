@@ -38,8 +38,9 @@ func configure():
 		# No arguments
 		pass
 	elif args_type == TYPE_DICTIONARY:
+		var defaults = function_spec.get("defaults", {})
 		# Enumerated, named arguments
-		_add_named_arguments(arguments)
+		_add_named_arguments(arguments, defaults)
 	else:
 		# Set of arguments of specified type
 		_add_set_arguments(arguments)
@@ -89,17 +90,19 @@ func clear():
 	pass
 
 
-func _add_named_arguments(args):
+func _add_named_arguments(args, defaults):
 	for arg in args:
 		var arg_name = Label.new()
 		arg_name.text = "%s:" % arg
 		_arguments_container.add_child(arg_name)
 		var arg_type = typeof(args[arg])
+		var has_default = arg in defaults
 		
 		if arg_type == TYPE_ARRAY:
 			var group = GroupExpression.instantiate()
 			group.type = args[arg][0]
 			_arguments_container.add_child(group)
+			group.allow_empty = has_default
 			group.configure()
 			group.modified.connect(_argument_expression_modified)
 			group.size_changed.connect(_argument_expression_size_changed)
@@ -107,6 +110,7 @@ func _add_named_arguments(args):
 			var arg_expression = OperatorExpression.instantiate()
 			arg_expression.type = args[arg]
 			_arguments_container.add_child(arg_expression)
+			arg_expression.allow_empty = has_default
 			arg_expression.configure()
 			arg_expression.modified.connect(_argument_expression_modified)
 			arg_expression.size_changed.connect(_argument_expression_size_changed)

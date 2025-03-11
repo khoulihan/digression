@@ -684,11 +684,15 @@ const EXPRESSION_FUNCTIONS = {
 			}
 		},
 		FunctionType.FORMAT: {
-			"display": "template.format ( values )",
-			"tooltip": "Formats the string by replacing all occurrences of placeholders with the provided values. Unlike the GDScript method, the placeholder cannot be customised and only ordered placeholders are supported.",
+			"display": "template.format ( values, placeholder=\"{_}\" )",
+			"tooltip": "Formats the string by replacing all occurrences of placeholders with the provided values. Unlike the GDScript method, only ordered placeholders are supported.",
 			"arguments": {
 				"template": VariableType.TYPE_STRING,
 				"values": [VariableType.TYPE_STRING],
+				"placeholder": VariableType.TYPE_STRING,
+			},
+			"defaults": {
+				"placeholder": "{_}"
 			}
 		},
 		FunctionType.GET_SLICE: {
