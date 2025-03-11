@@ -269,21 +269,41 @@ func _match_int_function(
 		FunctionType.SNAPPED:
 			return snappedi(arguments['x'], arguments['step'])
 		FunctionType.COUNT:
-			return arguments['value'].count(arguments['what'])
+			return arguments['value'].count(
+				arguments['what'],
+				_get_argument_or_default("from", arguments, function_spec),
+				_get_argument_or_default("to", arguments, function_spec),
+			)
 		FunctionType.COUNTN:
-			return arguments['value'].countn(arguments['what'])
+			return arguments['value'].countn(
+				arguments['what'],
+				_get_argument_or_default("from", arguments, function_spec),
+				_get_argument_or_default("to", arguments, function_spec),
+			)
 		FunctionType.FIND:
-			return arguments['value'].find(arguments['what'])
+			return arguments['value'].find(
+				arguments['what'],
+				_get_argument_or_default("from", arguments, function_spec),
+			)
 		FunctionType.FINDN:
-			return arguments['value'].findn(arguments['what'])
+			return arguments['value'].findn(
+				arguments['what'],
+				_get_argument_or_default("from", arguments, function_spec),
+			)
 		FunctionType.GET_SLICE_COUNT:
 			return arguments['value'].get_slice_count(arguments['delimiter'])
 		FunctionType.LENGTH:
 			return arguments['value'].length()
 		FunctionType.RFIND:
-			return arguments['value'].rfind(arguments['what'])
+			return arguments['value'].rfind(
+				arguments['what'],
+				_get_argument_or_default("from", arguments, function_spec)
+			)
 		FunctionType.RFINDN:
-			return arguments['value'].rfindn(arguments['what'])
+			return arguments['value'].rfindn(
+				arguments['what'],
+				_get_argument_or_default("from", arguments, function_spec)
+			)
 		FunctionType.TO_INT:
 			return arguments['value'].to_int()
 		FunctionType.WRAP:
@@ -413,7 +433,10 @@ func _match_string_function(
 		FunctionType.C_UNESCAPE:
 			return arguments["value"].c_unescape()
 		FunctionType.ERASE:
-			return arguments["value"].erase(arguments["position"], arguments["chars"])
+			return arguments["value"].erase(
+				arguments["position"],
+				_get_argument_or_default("chars", arguments, function_spec),
+			)
 		FunctionType.FORMAT:
 			return arguments["template"].format(
 				arguments["values"],
@@ -433,7 +456,7 @@ func _match_string_function(
 		FunctionType.LPAD:
 			return arguments["value"].lpad(
 				arguments["min_length"],
-				arguments["character"]
+				_get_argument_or_default("character", arguments, function_spec),
 			)
 		FunctionType.LSTRIP:
 			return arguments["value"].lstrip(arguments["chars"])
@@ -452,7 +475,7 @@ func _match_string_function(
 		FunctionType.RPAD:
 			return arguments["value"].rpad(
 				arguments["min_length"],
-				arguments["character"]
+				_get_argument_or_default("character", arguments, function_spec),
 			)
 		FunctionType.RSTRIP:
 			return arguments["value"].rstrip(arguments["chars"])
@@ -461,11 +484,17 @@ func _match_string_function(
 		FunctionType.SHA256_TEXT:
 			return arguments["value"].sha256_text()
 		FunctionType.STRIP_EDGES:
-			return arguments["value"].strip_edges()
+			return arguments["value"].strip_edges(
+				_get_argument_or_default("left", arguments, function_spec),
+				_get_argument_or_default("right", arguments, function_spec),
+			)
 		FunctionType.STRIP_ESCAPES:
 			return arguments["value"].strip_escapes()
 		FunctionType.SUBSTR:
-			return arguments["value"].substr(arguments["from"], arguments["len"])
+			return arguments["value"].substr(
+				arguments["from"],
+				_get_argument_or_default("len", arguments, function_spec),
+			)
 		FunctionType.TO_CAMEL_CASE:
 			return arguments["value"].to_camel_case()
 		FunctionType.TO_LOWER:

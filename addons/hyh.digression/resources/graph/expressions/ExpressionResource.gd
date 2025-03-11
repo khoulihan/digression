@@ -278,35 +278,55 @@ const EXPRESSION_FUNCTIONS = {
 			},
 		},
 		FunctionType.COUNT: {
-			"display": "value.count ( what )",
-			"tooltip": "Returns the number of occurrences of the substring what.",
+			"display": "value.count ( what, from=0, to=0 )",
+			"tooltip": "Returns the number of occurrences of the substring whatbetween from and to positions.\nIf to is 0, the search continues until the end of the string.",
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
 				"what": VariableType.TYPE_STRING,
+				"from": VariableType.TYPE_INT,
+				"to": VariableType.TYPE_INT,
+			},
+			"defaults": {
+				"from": 0,
+				"to": 0,
 			}
 		},
 		FunctionType.COUNTN: {
-			"display": "value.countn ( what )",
-			"tooltip": "Returns the number of occurrences of the substring what, ignoring case.",
+			"display": "value.countn ( what, from=0, to=0 )",
+			"tooltip": "Returns the number of occurrences of the substring what, ignoring case.\nIf to is 0, the search continues until the end of the string.",
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
 				"what": VariableType.TYPE_STRING,
+				"from": VariableType.TYPE_INT,
+				"to": VariableType.TYPE_INT,
+			},
+			"defaults": {
+				"from": 0,
+				"to": 0,
 			}
 		},
 		FunctionType.FIND: {
-			"display": "value.find ( what )",
-			"tooltip": "Returns the index of the first occurrence of what in this string, or -1 if there are none.",
+			"display": "value.find ( what, from=0 )",
+			"tooltip": "Returns the index of the first occurrence of what in this string, or -1 if there are none.\nThe search's start can be specified with from, continuing to the end of the string.",
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
 				"what": VariableType.TYPE_STRING,
+				"from": VariableType.TYPE_INT,
+			},
+			"defaults": {
+				"from": 0,
 			}
 		},
 		FunctionType.FINDN: {
-			"display": "value.findn ( what )",
-			"tooltip": "Returns the index of the first case-insensitive occurrence of what in this string, or -1 if there are none.",
+			"display": "value.findn ( what, from=0 )",
+			"tooltip": "Returns the index of the first case-insensitive occurrence of what in this string, or -1 if there are none.\nThe search's start can be specified with from, continuing to the end of the string.",
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
 				"what": VariableType.TYPE_STRING,
+				"from": VariableType.TYPE_INT,
+			},
+			"defaults": {
+				"from": 0,
 			}
 		},
 		FunctionType.FLOOR: {
@@ -376,19 +396,27 @@ const EXPRESSION_FUNCTIONS = {
 			},
 		},
 		FunctionType.RFIND: {
-			"display": "value.rfind ( what )",
-			"tooltip": "Returns the index of the last occurrence of what in this string, or -1 if there are none.",
+			"display": "value.rfind ( what, from=-1 )",
+			"tooltip": "Returns the index of the last occurrence of what in this string, or -1 if there are none.\nThe search's start can be specified with from, continuing to the beginning of the string. ",
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
 				"what": VariableType.TYPE_STRING,
+				"from": VariableType.TYPE_INT,
+			},
+			"defaults": {
+				"from": -1
 			}
 		},
 		FunctionType.RFINDN: {
-			"display": "value.rfindn ( what )",
-			"tooltip": "Returns the index of the last case-insensitive occurrence of what in this string, or -1 if there are none.",
+			"display": "value.rfindn ( what, from=-1 )",
+			"tooltip": "Returns the index of the last case-insensitive occurrence of what in this string, or -1 if there are none.\nThe search's start can be specified with from, continuing to the beginning of the string. ",
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
 				"what": VariableType.TYPE_STRING,
+				"from": VariableType.TYPE_INT,
+			},
+			"defaults": {
+				"from": -1
 			}
 		},
 		FunctionType.ROUND: {
@@ -675,12 +703,15 @@ const EXPRESSION_FUNCTIONS = {
 			}
 		},
 		FunctionType.ERASE: {
-			"display": "value.erase ( position, chars )",
+			"display": "value.erase ( position, chars=1 )",
 			"tooltip": "Returns a string with chars characters erased starting from position.",
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
 				"position": VariableType.TYPE_INT,
 				"chars": VariableType.TYPE_INT,
+			},
+			"defaults": {
+				"chars": 1
 			}
 		},
 		FunctionType.FORMAT: {
@@ -730,12 +761,15 @@ const EXPRESSION_FUNCTIONS = {
 			}
 		},
 		FunctionType.LPAD: {
-			"display": "value.lpad ( min_length, character )",
+			"display": "value.lpad ( min_length, character=\" \" )",
 			"tooltip": "Formats the string to be at least min_length long by adding characters to the left of the string, if necessary.",
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
 				"min_length": VariableType.TYPE_INT,
 				"character": VariableType.TYPE_STRING,
+			},
+			"defaults": {
+				"character": " "
 			}
 		},
 		FunctionType.LSTRIP: {
@@ -795,12 +829,15 @@ const EXPRESSION_FUNCTIONS = {
 			}
 		},
 		FunctionType.RPAD: {
-			"display": "value.rpad ( min_length, character )",
+			"display": "value.rpad ( min_length, character=\" \" )",
 			"tooltip": "Formats the string to be at least min_length long by adding characters to the right of the string, if necessary.",
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
 				"min_length": VariableType.TYPE_INT,
 				"character": VariableType.TYPE_STRING,
+			},
+			"defaults": {
+				"character": " "
 			}
 		},
 		FunctionType.RSTRIP: {
@@ -826,10 +863,16 @@ const EXPRESSION_FUNCTIONS = {
 			}
 		},
 		FunctionType.STRIP_EDGES: {
-			"display": "value.strip_edges ( )",
+			"display": "value.strip_edges ( left=true, right=true )",
 			"tooltip": "Strips all non-printable characters from the beginning and the end of the string.",
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
+				"left": VariableType.TYPE_BOOL,
+				"right": VariableType.TYPE_BOOL,
+			},
+			"defaults": {
+				"left": true,
+				"right": true,
 			}
 		},
 		FunctionType.STRIP_ESCAPES: {
@@ -840,12 +883,15 @@ const EXPRESSION_FUNCTIONS = {
 			}
 		},
 		FunctionType.SUBSTR: {
-			"display": "value.substr ( from, len )",
-			"tooltip": "Returns part of the string from the position from with length len. If len is -1, returns the rest of the string starting from the given position.",
+			"display": "value.substr ( from, len=-1 )",
+			"tooltip": "Returns part of the string from the position from with length len. If len is -1 (the default), returns the rest of the string starting from the given position.",
 			"arguments": {
 				"value": VariableType.TYPE_STRING,
 				"from": VariableType.TYPE_INT,
 				"len": VariableType.TYPE_INT,
+			},
+			"defaults": {
+				"len": -1
 			}
 		},
 		FunctionType.TO_CAMEL_CASE: {
