@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b7d0dq7n58gk1"]
 
 [ext_resource type="PackedScene" uid="uid://bwdtji5o7o3kv" path="res://addons/hyh.digression/editor/controls/arguments/Argument.tscn" id="1_kq20n"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/arguments/CharacterArgument.gd" id="2_dee4g"]
+[ext_resource type="Script" uid="uid://bv8xwrkkthabr" path="res://addons/hyh.digression/editor/controls/arguments/CharacterArgument.gd" id="2_dee4g"]
 
 [node name="CharacterArgument" instance=ExtResource("1_kq20n")]
 script = ExtResource("2_dee4g")

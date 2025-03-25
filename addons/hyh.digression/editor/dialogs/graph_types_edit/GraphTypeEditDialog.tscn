@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://0ait4dcdapj3"]
 
 [ext_resource type="PackedScene" uid="uid://bqesqojgpo7q2" path="res://addons/hyh.digression/editor/dialogs/graph_types_edit/GraphTypeEditDialogContents.tscn" id="1_vb075"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/dialogs/graph_types_edit/GraphTypeEditDialog.gd" id="1_w7iyb"]
+[ext_resource type="Script" uid="uid://bfrseqpw62v7b" path="res://addons/hyh.digression/editor/dialogs/graph_types_edit/GraphTypeEditDialog.gd" id="1_w7iyb"]
 
 [node name="GraphTypeEditDialog" type="Window"]
 title = "Graph Types"

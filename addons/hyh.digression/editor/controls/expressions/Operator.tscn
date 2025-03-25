@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b15b0wmfjxo1l"]
 
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="1_7ipl4"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/expressions/Operator.gd" id="1_p1kyc"]
+[ext_resource type="Script" uid="uid://dj1wl6pi0d1xu" path="res://addons/hyh.digression/editor/controls/expressions/Operator.gd" id="1_p1kyc"]
 
 [node name="Operator" type="MarginContainer"]
 theme_override_constants/margin_left = 50

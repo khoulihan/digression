@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://jmvcltk586ae"]
 
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/preview/minimap/MiniMapCommentNode.gd" id="1_u6nej"]
+[ext_resource type="Script" uid="uid://co5a5yrhpvp60" path="res://addons/hyh.digression/editor/preview/minimap/MiniMapCommentNode.gd" id="1_u6nej"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rlm5v"]
 

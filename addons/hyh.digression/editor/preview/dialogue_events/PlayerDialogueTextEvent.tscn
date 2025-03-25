@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://c7ga38jilebfu"]
 
 [ext_resource type="PackedScene" uid="uid://bvml3e7w05dn2" path="res://addons/hyh.digression/editor/preview/dialogue_events/DialogueTextEvent.tscn" id="1_lyjbb"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/preview/dialogue_events/PlayerDialogueTextEvent.gd" id="2_cy2jo"]
+[ext_resource type="Script" uid="uid://sgroyy6nnasx" path="res://addons/hyh.digression/editor/preview/dialogue_events/PlayerDialogueTextEvent.gd" id="2_cy2jo"]
 [ext_resource type="StyleBox" uid="uid://cw7r00c5xr4xr" path="res://addons/hyh.digression/editor/preview/dialogue_events/styles/dialogue_box_panel_green_right.tres" id="2_w03nt"]
 [ext_resource type="StyleBox" uid="uid://bq5lkop8a7i7e" path="res://addons/hyh.digression/editor/preview/dialogue_events/styles/dialogue_box_indicator_green_right.tres" id="4_owt07"]
 

@@ -3,7 +3,7 @@
 [ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.digression/editor/nodes/styles/node_theme.tres" id="1_alste"]
 [ext_resource type="StyleBox" uid="uid://cy2mtyhieui8q" path="res://addons/hyh.digression/editor/nodes/styles/control_node.tres" id="2_0600f"]
 [ext_resource type="StyleBox" uid="uid://dt03i76r27rvt" path="res://addons/hyh.digression/editor/nodes/styles/control_node_selected.tres" id="3_uso30"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/nodes/EditorSubGraphNode.gd" id="4"]
+[ext_resource type="Script" uid="uid://ci1o6ej7q3gf7" path="res://addons/hyh.digression/editor/nodes/EditorSubGraphNode.gd" id="4"]
 [ext_resource type="StyleBox" uid="uid://bfb7qelnfi6bj" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar.tres" id="4_oph77"]
 [ext_resource type="StyleBox" uid="uid://cg1qeowcx5883" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar_selected.tres" id="5_km5q4"]
 [ext_resource type="Texture2D" uid="uid://c5ll5urk64ggp" path="res://addons/hyh.digression/icons/icon_gui_option_arrow.svg" id="8_qm7sb"]

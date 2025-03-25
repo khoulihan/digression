@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://d2vbxgl24awpj"]
 
 [ext_resource type="Texture2D" uid="uid://dkeputvqdl5bg" path="res://addons/hyh.digression/icons/icon_tree_arrow_right.svg" id="1_gb1od"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/preview/dialogue_events/ChoiceEventChoice.gd" id="1_lgiro"]
+[ext_resource type="Script" uid="uid://dp20xvw7jr7po" path="res://addons/hyh.digression/editor/preview/dialogue_events/ChoiceEventChoice.gd" id="1_lgiro"]
 
 [node name="ChoiceEventChoice" type="VBoxContainer"]
 offset_left = 209.0

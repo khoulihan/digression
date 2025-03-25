@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://c32oxnvny8art"]
 
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/dialogs/dialogue_types_edit/DialogueTypesEditDialog.gd" id="1_tarot"]
+[ext_resource type="Script" uid="uid://8857utykntac" path="res://addons/hyh.digression/editor/dialogs/dialogue_types_edit/DialogueTypesEditDialog.gd" id="1_tarot"]
 [ext_resource type="PackedScene" uid="uid://hwgq3su6tx5d" path="res://addons/hyh.digression/editor/dialogs/dialogue_types_edit/DialogueTypesEditDialogContents.tscn" id="2_htywv"]
 
 [node name="DialogueTypesEditDialog" type="Window"]

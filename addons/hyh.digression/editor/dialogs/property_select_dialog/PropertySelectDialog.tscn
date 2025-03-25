@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://b08swuqfqxdnt"]
 
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/dialogs/property_select_dialog/PropertySelectDialog.gd" id="1_hntn7"]
+[ext_resource type="Script" uid="uid://b7ca7k4hit5bn" path="res://addons/hyh.digression/editor/dialogs/property_select_dialog/PropertySelectDialog.gd" id="1_hntn7"]
 [ext_resource type="PackedScene" uid="uid://bmpi77kqir088" path="res://addons/hyh.digression/editor/dialogs/property_select_dialog/PropertySelectDialogContents.tscn" id="1_nrxpp"]
 
 [node name="PropertySelectDialog" type="Window"]

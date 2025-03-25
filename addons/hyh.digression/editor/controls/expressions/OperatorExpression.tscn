@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b46vwf6pxf1tl"]
 
 [ext_resource type="PackedScene" uid="uid://bm304sfqbb25" path="res://addons/hyh.digression/editor/controls/expressions/GroupExpression.tscn" id="1_5s61m"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/expressions/OperatorExpression.gd" id="2_7qxgw"]
+[ext_resource type="Script" uid="uid://gsba3trkdpuf" path="res://addons/hyh.digression/editor/controls/expressions/OperatorExpression.gd" id="2_7qxgw"]
 
 [node name="OperatorExpression" instance=ExtResource("1_5s61m")]
 script = ExtResource("2_7qxgw")

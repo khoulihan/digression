@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://b8lfk4ccumg1e" path="res://addons/hyh.digression/editor/controls/expressions/MoveableExpression.tscn" id="1_ffysq"]
 [ext_resource type="PackedScene" uid="uid://b46vwf6pxf1tl" path="res://addons/hyh.digression/editor/controls/expressions/OperatorExpression.tscn" id="2_nmkt4"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/expressions/BracketExpression.gd" id="2_wmk45"]
+[ext_resource type="Script" uid="uid://c3xchvqndsp4f" path="res://addons/hyh.digression/editor/controls/expressions/BracketExpression.gd" id="2_wmk45"]
 [ext_resource type="StyleBox" uid="uid://bhnc23oqhs2bh" path="res://addons/hyh.digression/editor/controls/expressions/group_panel_style.tres" id="3_65ynq"]
 
 [node name="BracketExpression" instance=ExtResource("1_ffysq")]

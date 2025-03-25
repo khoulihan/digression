@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://bj0s37lsbrewq"]
 
 [ext_resource type="PackedScene" uid="uid://b8lfk4ccumg1e" path="res://addons/hyh.digression/editor/controls/expressions/MoveableExpression.tscn" id="1_qh1e8"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/expressions/ComparisonExpression.gd" id="2_auu2u"]
+[ext_resource type="Script" uid="uid://xxpqdhqr6x5" path="res://addons/hyh.digression/editor/controls/expressions/ComparisonExpression.gd" id="2_auu2u"]
 [ext_resource type="PackedScene" uid="uid://b46vwf6pxf1tl" path="res://addons/hyh.digression/editor/controls/expressions/OperatorExpression.tscn" id="3_2n82i"]
 [ext_resource type="PackedScene" uid="uid://b15b0wmfjxo1l" path="res://addons/hyh.digression/editor/controls/expressions/Operator.tscn" id="3_d2b3s"]
 [ext_resource type="StyleBox" uid="uid://bhnc23oqhs2bh" path="res://addons/hyh.digression/editor/controls/expressions/group_panel_style.tres" id="3_iv2c6"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dqx2iehi8dl0f"]
 
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/dialogs/node_select_dialog/NodeSelectDialogContents.gd" id="1_qtjdd"]
+[ext_resource type="Script" uid="uid://cv7v2clsgnvsb" path="res://addons/hyh.digression/editor/dialogs/node_select_dialog/NodeSelectDialogContents.gd" id="1_qtjdd"]
 [ext_resource type="Texture2D" uid="uid://dfvamw687u0qj" path="res://addons/hyh.digression/icons/icon_search.svg" id="2_5ejt2"]
 
 [node name="NodeSelectDialogContents" type="MarginContainer"]

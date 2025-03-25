@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://cphlblvt01plb" path="res://addons/hyh.digression/icons/icon_chat.svg" id="2_hackq"]
 [ext_resource type="PackedScene" uid="uid://dhubj3hnf0rxp" path="res://addons/hyh.digression/editor/controls/GraphBreadcrumbs.tscn" id="3_8v60q"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/DialogueGraphEditor.gd" id="6"]
+[ext_resource type="Script" uid="uid://b0a8lsbjxe56m" path="res://addons/hyh.digression/editor/DialogueGraphEditor.gd" id="6"]
 
 [node name="DialogueGraphEditor" type="VBoxContainer"]
 anchors_preset = 15

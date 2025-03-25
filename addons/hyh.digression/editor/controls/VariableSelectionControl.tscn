@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://c31q0dbk4i25w"]
 
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/VariableSelectionControl.gd" id="1_0c44g"]
+[ext_resource type="Script" uid="uid://0uvcwtojpbau" path="res://addons/hyh.digression/editor/controls/VariableSelectionControl.gd" id="1_0c44g"]
 [ext_resource type="Texture2D" uid="uid://c5ll5urk64ggp" path="res://addons/hyh.digression/icons/icon_gui_option_arrow.svg" id="2_t4peq"]
 
 [node name="VariableSelectionControl" type="HBoxContainer"]

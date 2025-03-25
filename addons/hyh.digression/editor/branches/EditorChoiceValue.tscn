@@ -1,10 +1,10 @@
 [gd_scene load_steps=8 format=3 uid="uid://cmr3aolsr6l35"]
 
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/branches/EditorChoiceValue.gd" id="1_4mgxx"]
+[ext_resource type="Script" uid="uid://g36t1vxc36e1" path="res://addons/hyh.digression/editor/branches/EditorChoiceValue.gd" id="1_4mgxx"]
 [ext_resource type="Texture2D" uid="uid://c6ox4e8uvkkds" path="res://addons/hyh.digression/icons/icon_drag.svg" id="2_pxiie"]
 [ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.digression/icons/icon_remove.svg" id="2_svn0u"]
 [ext_resource type="PackedScene" uid="uid://rg4q2rccwgo5" path="res://addons/hyh.digression/editor/controls/properties/CustomPropertiesControl.tscn" id="3_2wt8e"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/drag/DragHandle.gd" id="3_dtavu"]
+[ext_resource type="Script" uid="uid://6d3khtryq2wr" path="res://addons/hyh.digression/editor/controls/drag/DragHandle.gd" id="3_dtavu"]
 [ext_resource type="PackedScene" uid="uid://mvafher5yr07" path="res://addons/hyh.digression/editor/controls/ConditionControl.tscn" id="3_u0o5g"]
 [ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="5_x38qr"]
 

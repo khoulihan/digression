@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://bwdtji5o7o3kv" path="res://addons/hyh.digression/editor/controls/arguments/Argument.tscn" id="1_qipel"]
 [ext_resource type="Texture2D" uid="uid://csu0iehogrsoh" path="res://addons/hyh.digression/icons/icon_datastore.svg" id="2_mjbh1"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/arguments/DataStoreArgument.gd" id="2_o70ao"]
+[ext_resource type="Script" uid="uid://ch8c2j0hfimj4" path="res://addons/hyh.digression/editor/controls/arguments/DataStoreArgument.gd" id="2_o70ao"]
 
 [node name="DataStoreArgument" instance=ExtResource("1_qipel")]
 script = ExtResource("2_o70ao")

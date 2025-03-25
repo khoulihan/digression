@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://i0xv3qj0hcsu"]
 
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="1_evxp6"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/expressions/AddElementButton.gd" id="2_1yran"]
+[ext_resource type="Script" uid="uid://bag4t7c8p4w43" path="res://addons/hyh.digression/editor/controls/expressions/AddElementButton.gd" id="2_1yran"]
 
 [node name="AddElementButton" type="MenuButton"]
 modulate = Color(1, 1, 1, 0.784314)

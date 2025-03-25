@@ -1,10 +1,10 @@
 [gd_scene load_steps=8 format=3 uid="uid://b8lfk4ccumg1e"]
 
 [ext_resource type="PackedScene" uid="uid://b08wjtbos7nqd" path="res://addons/hyh.digression/editor/controls/expressions/Expression.tscn" id="1_ephjt"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/expressions/MoveableExpression.gd" id="2_56m4y"]
+[ext_resource type="Script" uid="uid://c68rhqbovf7g2" path="res://addons/hyh.digression/editor/controls/expressions/MoveableExpression.gd" id="2_56m4y"]
 [ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.digression/icons/icon_remove.svg" id="3_4lvh7"]
 [ext_resource type="StyleBox" uid="uid://dsdm0xyo6dsx8" path="res://addons/hyh.digression/editor/controls/expressions/clear_panel_style.tres" id="3_fq6yt"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/expressions/DragHandle.gd" id="4_c35qm"]
+[ext_resource type="Script" uid="uid://dxa460y6rsxfs" path="res://addons/hyh.digression/editor/controls/expressions/DragHandle.gd" id="4_c35qm"]
 [ext_resource type="Texture2D" uid="uid://dexnm3exsn0ns" path="res://addons/hyh.digression/icons/icon_drag_vertical.svg" id="4_hjxku"]
 [ext_resource type="Texture2D" uid="uid://mksqvoqy2yi4" path="res://addons/hyh.digression/icons/icon_node_warning.svg" id="5_j3mfo"]
 

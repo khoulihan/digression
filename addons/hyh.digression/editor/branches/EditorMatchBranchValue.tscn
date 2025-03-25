@@ -1,10 +1,10 @@
 [gd_scene load_steps=7 format=3 uid="uid://blu15ehhb5avh"]
 
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/branches/EditorMatchBranchValue.gd" id="1_jkr88"]
+[ext_resource type="Script" uid="uid://bvc3ihukvjfk7" path="res://addons/hyh.digression/editor/branches/EditorMatchBranchValue.gd" id="1_jkr88"]
 [ext_resource type="Texture2D" uid="uid://dexnm3exsn0ns" path="res://addons/hyh.digression/icons/icon_drag_vertical.svg" id="2_5a6vm"]
 [ext_resource type="PackedScene" uid="uid://c1584iplg8kg5" path="res://addons/hyh.digression/editor/controls/VariableValueEditControl.tscn" id="2_feac7"]
 [ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.digression/icons/icon_remove.svg" id="3_7f4ia"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/drag/DragHandle.gd" id="3_kas3r"]
+[ext_resource type="Script" uid="uid://6d3khtryq2wr" path="res://addons/hyh.digression/editor/controls/drag/DragHandle.gd" id="3_kas3r"]
 [ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="6_4lolu"]
 
 [node name="BranchValue" type="MarginContainer"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dhubj3hnf0rxp"]
 
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/GraphBreadcrumbs.gd" id="1_8rgse"]
+[ext_resource type="Script" uid="uid://bghs5j7jls62r" path="res://addons/hyh.digression/editor/controls/GraphBreadcrumbs.gd" id="1_8rgse"]
 
 [node name="GraphBreadcrumbs" type="HBoxContainer"]
 script = ExtResource("1_8rgse")

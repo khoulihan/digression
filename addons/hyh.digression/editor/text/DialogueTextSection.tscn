@@ -1,9 +1,9 @@
 [gd_scene load_steps=8 format=3 uid="uid://bi6s5ip3smrd5"]
 
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/text/DialogueTextSection.gd" id="1_8kado"]
+[ext_resource type="Script" uid="uid://nysssfi62cq0" path="res://addons/hyh.digression/editor/text/DialogueTextSection.gd" id="1_8kado"]
 [ext_resource type="Texture2D" uid="uid://c6ox4e8uvkkds" path="res://addons/hyh.digression/icons/icon_drag.svg" id="2_hnmw7"]
 [ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.digression/icons/icon_remove.svg" id="2_xjpqh"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/drag/DragHandle.gd" id="3_2wp64"]
+[ext_resource type="Script" uid="uid://6d3khtryq2wr" path="res://addons/hyh.digression/editor/controls/drag/DragHandle.gd" id="3_2wp64"]
 [ext_resource type="Texture2D" uid="uid://d65jtbo3b07t" path="res://addons/hyh.digression/icons/icon_clear.svg" id="3_vvkil"]
 [ext_resource type="PackedScene" uid="uid://rg4q2rccwgo5" path="res://addons/hyh.digression/editor/controls/properties/CustomPropertiesControl.tscn" id="4_hgski"]
 [ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="7_jmx58"]

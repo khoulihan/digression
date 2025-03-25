@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://c0pw3rdictm2v"]
 
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/nodes/EditorGraphNodeBase.gd" id="1"]
+[ext_resource type="Script" uid="uid://cp1fn0c4t5oqh" path="res://addons/hyh.digression/editor/nodes/EditorGraphNodeBase.gd" id="1"]
 [ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.digression/editor/nodes/styles/node_theme.tres" id="1_4dntx"]
 
 [node name="EditorGraphNodeBase" type="GraphNode"]

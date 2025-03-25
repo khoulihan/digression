@@ -1,9 +1,9 @@
 [gd_scene load_steps=8 format=3 uid="uid://bwdtji5o7o3kv"]
 
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/arguments/Argument.gd" id="1_c68w6"]
+[ext_resource type="Script" uid="uid://dfmtilys8ayq2" path="res://addons/hyh.digression/editor/controls/arguments/Argument.gd" id="1_c68w6"]
 [ext_resource type="Texture2D" uid="uid://dexnm3exsn0ns" path="res://addons/hyh.digression/icons/icon_drag_vertical.svg" id="2_4dxj2"]
 [ext_resource type="StyleBox" uid="uid://bxxrrj712pltv" path="res://addons/hyh.digression/editor/controls/BracketPanel.tres" id="2_twngc"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/drag/DragHandle.gd" id="3_0gmsf"]
+[ext_resource type="Script" uid="uid://6d3khtryq2wr" path="res://addons/hyh.digression/editor/controls/drag/DragHandle.gd" id="3_0gmsf"]
 [ext_resource type="Texture2D" uid="uid://mksqvoqy2yi4" path="res://addons/hyh.digression/icons/icon_node_warning.svg" id="3_611at"]
 [ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.digression/icons/icon_remove.svg" id="4_5pvrr"]
 [ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="7_po2b1"]

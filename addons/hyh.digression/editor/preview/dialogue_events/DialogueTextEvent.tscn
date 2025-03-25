@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bvml3e7w05dn2"]
 
 [ext_resource type="Theme" uid="uid://ca8rtymjhdhox" path="res://addons/hyh.digression/editor/preview/dialogue_events/styles/dialogue_events_theme.tres" id="1_v3xti"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/preview/dialogue_events/DialogueTextEvent.gd" id="1_vi4cx"]
+[ext_resource type="Script" uid="uid://c48raiiqjacct" path="res://addons/hyh.digression/editor/preview/dialogue_events/DialogueTextEvent.gd" id="1_vi4cx"]
 [ext_resource type="StyleBox" uid="uid://bxmk2fvuxr1pr" path="res://addons/hyh.digression/editor/preview/dialogue_events/styles/dialogue_box_indicator_green_left.tres" id="2_pghiv"]
 
 [node name="DialogueTextEvent" type="MarginContainer"]

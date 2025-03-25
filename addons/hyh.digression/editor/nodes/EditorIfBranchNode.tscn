@@ -5,7 +5,7 @@
 [ext_resource type="StyleBox" uid="uid://dt03i76r27rvt" path="res://addons/hyh.digression/editor/nodes/styles/control_node_selected.tres" id="3_ocipx"]
 [ext_resource type="StyleBox" uid="uid://bfb7qelnfi6bj" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar.tres" id="4_1ouyh"]
 [ext_resource type="StyleBox" uid="uid://cg1qeowcx5883" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar_selected.tres" id="5_2f5ef"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/nodes/EditorIfBranchNode.gd" id="6_cvu84"]
+[ext_resource type="Script" uid="uid://c2fdpt32s5lre" path="res://addons/hyh.digression/editor/nodes/EditorIfBranchNode.gd" id="6_cvu84"]
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="6_obc87"]
 [ext_resource type="PackedScene" uid="uid://cj3nuku0ns6o0" path="res://addons/hyh.digression/editor/branches/EditorIfBranchValue.tscn" id="7_7trmo"]
 [ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="7_t8s6h"]

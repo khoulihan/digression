@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bmj6g7pi1ycxn"]
 
 [ext_resource type="PackedScene" uid="uid://b8lfk4ccumg1e" path="res://addons/hyh.digression/editor/controls/expressions/MoveableExpression.tscn" id="1_u0km4"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/expressions/FunctionExpression.gd" id="2_itcq7"]
+[ext_resource type="Script" uid="uid://blipm3acosjd" path="res://addons/hyh.digression/editor/controls/expressions/FunctionExpression.gd" id="2_itcq7"]
 [ext_resource type="StyleBox" uid="uid://bhnc23oqhs2bh" path="res://addons/hyh.digression/editor/controls/expressions/group_panel_style.tres" id="3_2nhjh"]
 
 [node name="FunctionExpression" instance=ExtResource("1_u0km4")]

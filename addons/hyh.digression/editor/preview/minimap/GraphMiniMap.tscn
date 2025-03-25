@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ccvd6pqrqs07a"]
 
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/preview/minimap/GraphMiniMap.gd" id="1_0so6g"]
+[ext_resource type="Script" uid="uid://chguftpfhnh44" path="res://addons/hyh.digression/editor/preview/minimap/GraphMiniMap.gd" id="1_0so6g"]
 
 [node name="GraphMiniMap" type="GraphEdit"]
 offset_right = 400.0

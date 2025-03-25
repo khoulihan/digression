@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://rg4q2rccwgo5"]
 
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="1_0jdfs"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/properties/CustomPropertiesControl.gd" id="1_p6s5m"]
+[ext_resource type="Script" uid="uid://bwmgmx3mkl6gy" path="res://addons/hyh.digression/editor/controls/properties/CustomPropertiesControl.gd" id="1_p6s5m"]
 
 [node name="CustomPropertiesControl" type="MarginContainer"]
 offset_right = 194.0

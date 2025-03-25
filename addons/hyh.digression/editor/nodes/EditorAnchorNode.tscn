@@ -4,7 +4,7 @@
 [ext_resource type="StyleBox" uid="uid://cy2mtyhieui8q" path="res://addons/hyh.digression/editor/nodes/styles/control_node.tres" id="2_usj6s"]
 [ext_resource type="StyleBox" uid="uid://dt03i76r27rvt" path="res://addons/hyh.digression/editor/nodes/styles/control_node_selected.tres" id="3_0q74d"]
 [ext_resource type="StyleBox" uid="uid://bfb7qelnfi6bj" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar.tres" id="4_gbcc2"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/nodes/EditorAnchorNode.gd" id="4_wb78j"]
+[ext_resource type="Script" uid="uid://dh3x60paaws04" path="res://addons/hyh.digression/editor/nodes/EditorAnchorNode.gd" id="4_wb78j"]
 [ext_resource type="StyleBox" uid="uid://cg1qeowcx5883" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar_selected.tres" id="5_vric1"]
 
 [node name="EditorAnchorNode" type="GraphNode"]

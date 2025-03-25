@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://co4le7crf047l"]
 
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.gd" id="1_aauwx"]
+[ext_resource type="Script" uid="uid://cg7pjjxpetjs7" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.gd" id="1_aauwx"]
 [ext_resource type="Texture2D" uid="uid://7sby15rdg417" path="res://addons/hyh.digression/icons/icon_tree_arrow_right_dark.svg" id="2_d56gc"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/drag/DragTarget.gd" id="2_j3aji"]
+[ext_resource type="Script" uid="uid://qlqw1ckoo0fe" path="res://addons/hyh.digression/editor/controls/drag/DragTarget.gd" id="2_j3aji"]
 [ext_resource type="Texture2D" uid="uid://brt3bw3yhakpp" path="res://addons/hyh.digression/icons/icon_tree_arrow_left_dark.svg" id="4_8cjdu"]
 
 [node name="DragTargetHSeparator" type="MarginContainer"]

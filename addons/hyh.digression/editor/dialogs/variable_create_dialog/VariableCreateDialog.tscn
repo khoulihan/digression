@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dtow4yped1ran"]
 
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/dialogs/variable_create_dialog/VariableCreateDialog.gd" id="1_buqw8"]
+[ext_resource type="Script" uid="uid://bwedv5n1ymobs" path="res://addons/hyh.digression/editor/dialogs/variable_create_dialog/VariableCreateDialog.gd" id="1_buqw8"]
 [ext_resource type="PackedScene" uid="uid://gjnoxtngguo5" path="res://addons/hyh.digression/editor/dialogs/variable_create_dialog/VariableCreateDialogContents.tscn" id="1_epo82"]
 
 [node name="VariableCreateDialog" type="Window"]

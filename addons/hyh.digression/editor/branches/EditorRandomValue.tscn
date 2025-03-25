@@ -1,11 +1,11 @@
 [gd_scene load_steps=8 format=3 uid="uid://dk0btqqtgur07"]
 
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/branches/EditorRandomValue.gd" id="1"]
+[ext_resource type="Script" uid="uid://bjeme6wmj13ss" path="res://addons/hyh.digression/editor/branches/EditorRandomValue.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.digression/icons/icon_remove.svg" id="2"]
 [ext_resource type="Texture2D" uid="uid://dexnm3exsn0ns" path="res://addons/hyh.digression/icons/icon_drag_vertical.svg" id="2_11qbb"]
 [ext_resource type="PackedScene" uid="uid://mvafher5yr07" path="res://addons/hyh.digression/editor/controls/ConditionControl.tscn" id="2_e0v4u"]
 [ext_resource type="PackedScene" uid="uid://m2fx01xh1uml" path="res://addons/hyh.digression/editor/controls/WeightControl.tscn" id="2_kl24e"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/drag/DragHandle.gd" id="3_5qfe4"]
+[ext_resource type="Script" uid="uid://6d3khtryq2wr" path="res://addons/hyh.digression/editor/controls/drag/DragHandle.gd" id="3_5qfe4"]
 [ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="6_x812e"]
 
 [node name="RandomValue" type="MarginContainer"]

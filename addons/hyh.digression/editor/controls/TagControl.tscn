@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://b4iwu0haq4ufl"]
 
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/TagControl.gd" id="1_41von"]
+[ext_resource type="Script" uid="uid://b0i6svkh3yapr" path="res://addons/hyh.digression/editor/controls/TagControl.gd" id="1_41von"]
 [ext_resource type="Texture2D" uid="uid://bta3jvd470c36" path="res://addons/hyh.digression/icons/icon_close.svg" id="1_xpcai"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8wel2"]

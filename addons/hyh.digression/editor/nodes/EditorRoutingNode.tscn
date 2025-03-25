@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://4ydpkwm8ah68"]
 
 [ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.digression/editor/nodes/styles/node_theme.tres" id="1_4kyqw"]
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/nodes/EditorRoutingNode.gd" id="1_qblwl"]
+[ext_resource type="Script" uid="uid://b00wd2li8ky5h" path="res://addons/hyh.digression/editor/nodes/EditorRoutingNode.gd" id="1_qblwl"]
 [ext_resource type="StyleBox" uid="uid://cy2mtyhieui8q" path="res://addons/hyh.digression/editor/nodes/styles/control_node.tres" id="2_n7rx5"]
 [ext_resource type="StyleBox" uid="uid://dt03i76r27rvt" path="res://addons/hyh.digression/editor/nodes/styles/control_node_selected.tres" id="3_6t1mp"]
 [ext_resource type="StyleBox" uid="uid://bfb7qelnfi6bj" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar.tres" id="4_o2vcq"]

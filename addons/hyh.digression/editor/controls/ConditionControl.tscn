@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://mvafher5yr07"]
 
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/ConditionControl.gd" id="1_elv8o"]
+[ext_resource type="Script" uid="uid://dacus34yfqhht" path="res://addons/hyh.digression/editor/controls/ConditionControl.gd" id="1_elv8o"]
 [ext_resource type="Texture2D" uid="uid://bta3jvd470c36" path="res://addons/hyh.digression/icons/icon_close.svg" id="3_hasyr"]
 [ext_resource type="PackedScene" uid="uid://b46vwf6pxf1tl" path="res://addons/hyh.digression/editor/controls/expressions/OperatorExpression.tscn" id="3_slwmy"]
 

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://m2fx01xh1uml"]
 
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/controls/WeightControl.gd" id="1_6f7hx"]
+[ext_resource type="Script" uid="uid://comvdcc4p1xil" path="res://addons/hyh.digression/editor/controls/WeightControl.gd" id="1_6f7hx"]
 [ext_resource type="Texture2D" uid="uid://bta3jvd470c36" path="res://addons/hyh.digression/icons/icon_close.svg" id="1_dc2hy"]
 
 [node name="WeightControl" type="MarginContainer"]

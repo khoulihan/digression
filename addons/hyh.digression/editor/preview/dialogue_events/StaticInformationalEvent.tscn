@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://mgp5y07pgu5h"]
 
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/preview/dialogue_events/StaticInformationalEvent.gd" id="1_kblbi"]
+[ext_resource type="Script" uid="uid://bcxkswycw7mld" path="res://addons/hyh.digression/editor/preview/dialogue_events/StaticInformationalEvent.gd" id="1_kblbi"]
 [ext_resource type="PackedScene" uid="uid://f44ru47mc3pp" path="res://addons/hyh.digression/editor/validation/ValidationWarning.tscn" id="2_bt4kn"]
 
 [node name="StaticInformationalEvent" type="MarginContainer"]

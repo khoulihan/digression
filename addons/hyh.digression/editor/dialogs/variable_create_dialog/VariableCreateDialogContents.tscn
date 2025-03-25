@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=3 uid="uid://gjnoxtngguo5"]
 
-[ext_resource type="Script" path="res://addons/hyh.digression/editor/dialogs/variable_create_dialog/VariableCreateDialogContents.gd" id="1_dookr"]
+[ext_resource type="Script" uid="uid://c6h3qto25nvno" path="res://addons/hyh.digression/editor/dialogs/variable_create_dialog/VariableCreateDialogContents.gd" id="1_dookr"]
 [ext_resource type="Texture2D" uid="uid://yw0o1piqpci0" path="res://addons/hyh.digression/icons/icon_scope_transient_light.svg" id="1_tvrdr"]
 [ext_resource type="Texture2D" uid="uid://obagryd77fku" path="res://addons/hyh.digression/icons/icon_scope_local_light.svg" id="2_8fln5"]
 [ext_resource type="Texture2D" uid="uid://daoewvcifx34k" path="res://addons/hyh.digression/icons/icon_scope_dialogue_graph_light.svg" id="3_mw4li"]
