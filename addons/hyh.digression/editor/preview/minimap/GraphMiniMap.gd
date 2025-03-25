@@ -8,7 +8,7 @@ const Logging = preload("../../../utility/Logging.gd")
 # Resource graph nodes.
 const DialogueTextNode = preload("../../../resources/graph/DialogueTextNode.gd")
 const MatchBranchNode = preload("../../../resources/graph/MatchBranchNode.gd")
-const IfBranchNode = preload("../../../resources/graph/MatchBranchNode.gd")
+const IfBranchNode = preload("../../../resources/graph/IfBranchNode.gd")
 const DialogueChoiceNode = preload("../../../resources/graph/DialogueChoiceNode.gd")
 const VariableSetNode = preload("../../../resources/graph/VariableSetNode.gd")
 const ActionNode = preload("../../../resources/graph/ActionNode.gd")
@@ -142,7 +142,7 @@ func _set_tooltip(node, resource):
 	elif resource is MatchBranchNode:
 		node.tooltip_text = "Branch (Match) on \"%s\"" % resource.variable
 	elif resource is IfBranchNode:
-		node.tooltip_text = "Branch (If) on \"%s\"" % resource.variable
+		node.tooltip_text = "Branch (If)"
 	elif resource is DialogueChoiceNode:
 		node.tooltip_text = "Choice"
 	elif resource is DialogueTextNode:
@@ -168,7 +168,7 @@ func _set_tooltip(node, resource):
 
 
 func _add_branches(resource, node):
-	if resource is MatchBranchNode:
+	if resource is MatchBranchNode or resource is IfBranchNode:
 		_add_branch_branches(resource, node)
 	elif resource is RandomNode or resource is DialogueChoiceNode:
 		_add_random_or_choice_branches(resource, node)

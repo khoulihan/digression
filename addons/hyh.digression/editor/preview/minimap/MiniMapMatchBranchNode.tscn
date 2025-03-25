@@ -7,4 +7,4 @@
 theme = ExtResource("2_pgxx2")
 
 [node name="Label" parent="Control" index="0"]
-text = "Branch"
+text = "Match"
