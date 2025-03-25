@@ -149,9 +149,11 @@ func _create_editor_host():
 	editor_button = add_control_to_bottom_panel(editor_host, _get_plugin_name())
 	_get_editor()
 	
-	var button_parent = editor_button.get_parent().get_parent()
 	# Caution: this method of obtaining the expand button could break at any time
-	expand_button = button_parent.get_child(button_parent.get_child_count() - 1)
+	var button_parent = editor_button.get_parent().get_parent().get_parent()
+	expand_button = button_parent.get_child(
+		button_parent.get_child_count() - 1
+	)
 
 
 func _get_editor():
