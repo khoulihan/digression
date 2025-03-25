@@ -79,8 +79,7 @@ columns = 2
 
 [node name="Label" type="Label" parent="RootContainer/SignalContainer"]
 layout_mode = 2
-text = "Action Name:
-"
+text = "Action Name:"
 
 [node name="ActionNameEdit" type="LineEdit" parent="RootContainer/SignalContainer"]
 layout_mode = 2
@@ -143,7 +142,7 @@ item_count = 3
 popup/item_0/text = "Expression"
 popup/item_0/id = 1
 popup/item_1/text = "Character"
-popup/item_1/id = 1
+popup/item_1/id = 0
 popup/item_2/text = "Data Store"
 popup/item_2/id = 6
 
@@ -189,6 +188,7 @@ flat = true
 selected = 0
 item_count = 2
 popup/item_0/text = "None"
+popup/item_0/id = 0
 popup/item_1/text = "Assign to Variable"
 popup/item_1/id = 1
 
