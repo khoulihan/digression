@@ -693,8 +693,11 @@ func _create_node(
 	)
 	
 	_edited.graph.nodes[new_graph_node.id] = new_graph_node
-	if new_editor_node.is_root:
-		_edited.graph.root_node = new_graph_node
+	if _editor_node_can_be_root(new_editor_node):
+		if _edited.graph.root_node == null:
+			new_editor_node.is_root = true
+		if new_editor_node.is_root:
+			_edited.graph.root_node = new_graph_node
 	_connect_node_signals(new_editor_node)
 	
 	_refresh_anchor_maps()
@@ -857,6 +860,7 @@ func _remove_nodes():
 	var connections = _graph_edit.get_connection_list()
 	for n in _node_to_remove:
 		_remove_node(n, connections)
+	_ensure_graph_has_root()
 	_set_dirty(true)
 	_refresh_anchor_maps()
 	_populate_anchor_destinations()
@@ -872,6 +876,8 @@ func _remove_node(n, connections):
 				connection,
 			)
 	
+	if node.node_resource == _edited.graph.root_node:
+		_edited.graph.root_node = null
 	_edited.graph.nodes.erase(node.node_resource.id)
 	_graph_edit.remove_child(node)
 
@@ -1124,6 +1130,22 @@ func _generate_anchor_name():
 		DigressionDialogueGraph.NEW_ANCHOR_PREFIX,
 		_edited.graph.get_next_anchor_number(),
 	]
+
+## Set's the first node as root if there is currently no root node.
+func _ensure_graph_has_root() -> void:
+	if _edited.graph.root_node != null:
+		return
+	var children = _get_graph_edit_children()
+	for child in children:
+		if not _editor_node_can_be_root(child):
+			continue
+		child.is_root = true
+		_edited.graph.root_node = child.node_resource
+		return
+
+
+func _editor_node_can_be_root(n) -> bool:
+	return not (n is EditorCommentNodeClass or n is EditorRepeatNodeClass)
 
 #endregion
 

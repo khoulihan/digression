@@ -14,11 +14,12 @@ const CLOSE_ICON = preload("../../icons/icon_close.svg")
 const GraphNodeBase = preload("../../resources/graph/GraphNodeBase.gd")
 const CONNECTOR_COLOUR = Color("#f2f2f2e1")
 
-@export var is_root : bool : set = set_root
+@export var is_root : bool: get = get_root, set = set_root
 @export var node_resource: GraphNodeBase
 
 var graph
 
+var _is_root: bool
 var _root_indicator: TextureRect
 var _logger = Logging.new(Logging.DGE_EDITOR_LOG_NAME, Logging.DGE_EDITOR_LOG_LEVEL)
 
@@ -62,14 +63,18 @@ func clear_node_relationships():
 	node_resource.next = -1
 
 
+func get_root() -> bool:
+	return _is_root
+
+
 ## Set the node to be the "root" or entry point of the graph.
 func set_root(value: bool):
-	is_root = value
+	_is_root = value
 	# I think this is called with a default value when the object is created
 	# Since that is before _on_ready is called, the root indicator hasn't been
 	# created yet.
 	if _root_indicator != null:
-		_root_indicator.visible = is_root
+		_root_indicator.visible = _is_root
 
 
 func _on_gui_input(ev):
