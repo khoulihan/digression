@@ -21,6 +21,7 @@ var graph
 
 var _is_root: bool
 var _root_indicator: TextureRect
+var _close_button: Button
 var _logger = Logging.new(Logging.DGE_EDITOR_LOG_NAME, Logging.DGE_EDITOR_LOG_LEVEL)
 
 
@@ -40,6 +41,7 @@ func _ready() -> void:
 	root_indicator.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
 	root_indicator.expand_mode = TextureRect.EXPAND_KEEP_SIZE
 	_root_indicator = root_indicator
+	_close_button = close_button
 	titlebar.add_child(close_button)
 	titlebar.add_child(root_indicator)
 	titlebar.move_child(root_indicator, 0)

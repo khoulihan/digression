@@ -41,10 +41,6 @@ enum GraphPopupMenuBounds {
 	UPPER_BOUND = GraphPopupMenuItems.ADD_REPEAT_NODE
 }
 
-enum NodePopupMenuItems {
-	SET_ROOT
-}
-
 enum ConfirmationActions {
 	REMOVE_NODE,
 	REMOVE_CHARACTER,
@@ -86,6 +82,7 @@ const JumpNode = preload("../resources/graph/JumpNode.gd")
 const AnchorNode = preload("../resources/graph/AnchorNode.gd")
 const RoutingNode = preload("../resources/graph/RoutingNode.gd")
 const RepeatNode = preload("../resources/graph/RepeatNode.gd")
+const EntryPointAnchorNode = preload("../resources/graph/EntryPointAnchorNode.gd")
 
 # Editor node classes.
 const EditorTextNodeClass = preload("./nodes/EditorTextNode.gd")
@@ -102,6 +99,7 @@ const EditorJumpNodeClass = preload("./nodes/EditorJumpNode.gd")
 const EditorAnchorNodeClass = preload("./nodes/EditorAnchorNode.gd")
 const EditorRoutingNodeClass = preload("./nodes/EditorRoutingNode.gd")
 const EditorRepeatNodeClass = preload("./nodes/EditorRepeatNode.gd")
+const EditorEntryPointAnchorNodeClass = preload("./nodes/EditorEntryPointAnchorNode.gd")
 
 # Editor node scenes.
 const EditorTextNode = preload("./nodes/EditorTextNode.tscn")
@@ -118,6 +116,7 @@ const EditorJumpNode = preload("./nodes/EditorJumpNode.tscn")
 const EditorAnchorNode = preload("./nodes/EditorAnchorNode.tscn")
 const EditorRoutingNode = preload("./nodes/EditorRoutingNode.tscn")
 const EditorRepeatNode = preload("./nodes/EditorRepeatNode.tscn")
+const EditorEntryPointAnchorNode = preload("./nodes/EditorEntryPointAnchorNode.tscn")
 
 #endregion
 
@@ -171,7 +170,6 @@ var _logger = Logging.new(
 # Nodes
 @onready var _graph_edit = $MarginContainer/GraphEdit
 @onready var _graph_popup = $GraphContextMenu
-@onready var _node_popup = $NodePopupMenu
 @onready var _confirmation_dialog = $ConfirmationDialog
 @onready var _error_dialog = $ErrorDialog
 @onready var _breadcrumbs = $TitleBar/GraphBreadcrumbs
@@ -435,21 +433,6 @@ func _on_graph_popup_index_pressed(index):
 func _on_graph_popup_hide():
 	_logger.debug("Hiding graph popup")
 
-
-func _on_node_popup_index_pressed(index):
-	match index:
-		NodePopupMenuItems.SET_ROOT:
-			_set_root(_node_for_popup)
-
-
-func _set_root(node_name):
-	for child in _get_graph_edit_children():
-		if "is_root" in child:
-			child.is_root = (child.name == node_name)
-			if child.is_root:
-				_edited.graph.root_node = child.node_resource
-	_set_dirty(true)
-
 #endregion
 
 
@@ -520,11 +503,6 @@ func _connect_node_signals(node):
 			node.name
 		)
 	)
-	node.popup_request.connect(
-		_on_node_popup_request.bind(
-			node.name
-		)
-	)
 	node.modified.connect(
 		_on_node_modified.bind(
 			node.name
@@ -564,6 +542,10 @@ func _on_node_delete_request(node_name):
 	_node_to_remove = node_name
 	if not _node_to_remove is Array:
 		_node_to_remove = [_node_to_remove]
+	if _any_node_is_entry_point(_node_to_remove):
+		_error_dialog.dialog_text = "The entry point node cannot be removed."
+		_error_dialog.popup_centered()
+		return
 	var nodes_text = "this node"
 	if len(_node_to_remove) > 1:
 		nodes_text = "these nodes"
@@ -571,14 +553,12 @@ func _on_node_delete_request(node_name):
 	_confirmation_dialog.popup_centered()
 
 
-func _on_node_popup_request(p_position, node_name):
-	_node_for_popup = node_name
-	var node = _graph_edit.get_node(NodePath(node_name))
-	# The repeat node would be a ridiculous place to start, so disallow setting
-	# one as the root.
-	_node_popup.set_item_disabled(0, node is EditorRepeatNodeClass)
-	_node_popup.position = p_position
-	_node_popup.popup()
+func _any_node_is_entry_point(nodes) -> bool:
+	for n in nodes:
+		var node = _graph_edit.get_node(NodePath(n))
+		if node is EditorEntryPointAnchorNodeClass:
+			return true
+	return false
 
 
 func _on_node_modified(node_name):
@@ -693,11 +673,6 @@ func _create_node(
 	)
 	
 	_edited.graph.nodes[new_graph_node.id] = new_graph_node
-	if _editor_node_can_be_root(new_editor_node):
-		if _edited.graph.root_node == null:
-			new_editor_node.is_root = true
-		if new_editor_node.is_root:
-			_edited.graph.root_node = new_graph_node
 	_connect_node_signals(new_editor_node)
 	
 	_refresh_anchor_maps()
@@ -972,12 +947,14 @@ func _instantiate_editor_node_for_graph_node(node):
 		editor_node = EditorCommentNode.instantiate()
 	elif node is JumpNode:
 		editor_node = EditorJumpNode.instantiate()
-	elif node is AnchorNode:
-		editor_node = EditorAnchorNode.instantiate()
 	elif node is RoutingNode:
 		editor_node = EditorRoutingNode.instantiate()
 	elif node is RepeatNode:
 		editor_node = EditorRepeatNode.instantiate()
+	elif node is EntryPointAnchorNode:
+		editor_node = EditorEntryPointAnchorNode.instantiate()
+	elif node is AnchorNode:
+		editor_node = EditorAnchorNode.instantiate()
 	
 	return editor_node
 
@@ -1131,7 +1108,9 @@ func _generate_anchor_name():
 		_edited.graph.get_next_anchor_number(),
 	]
 
-## Set's the first node as root if there is currently no root node.
+## Sets the first Entry point node as root if there is currently no root node.
+## This should be redundant now as there should only be one entry point, and
+## it should not be possible to remove it...
 func _ensure_graph_has_root() -> void:
 	if _edited.graph.root_node != null:
 		return
@@ -1145,7 +1124,7 @@ func _ensure_graph_has_root() -> void:
 
 
 func _editor_node_can_be_root(n) -> bool:
-	return not (n is EditorCommentNodeClass or n is EditorRepeatNodeClass)
+	return n is EditorEntryPointAnchorNodeClass
 
 #endregion
 
@@ -1166,6 +1145,8 @@ func _update_preview_button_state():
 func _get_selected_nodes():
 	var selected_nodes = []
 	for node in _get_graph_edit_children():
+		if node is EditorEntryPointAnchorNodeClass:
+			continue
 		if node.selected:
 			selected_nodes.append(node)
 	return selected_nodes
@@ -1174,6 +1155,8 @@ func _get_selected_nodes():
 func _create_duplicate_nodes(nodes_to_duplicate):
 	var new_nodes = {}
 	for n in nodes_to_duplicate:
+		if n is EditorEntryPointAnchorNodeClass:
+			continue
 		var node_state = _get_node_state(n)
 		var duplicated_node = _create_node(
 			node_state["_node_type"],

@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://2gy5cl1mlp0u"]
+
+[ext_resource type="PackedScene" uid="uid://bsdivdkongt4j" path="res://addons/hyh.digression/editor/nodes/EditorAnchorNode.tscn" id="1_ew82q"]
+[ext_resource type="Script" uid="uid://fmahvj3jfdww" path="res://addons/hyh.digression/editor/nodes/EditorEntryPointAnchorNode.gd" id="2_3gp7a"]
+
+[node name="EditorAnchorNode" instance=ExtResource("1_ew82q")]
+offset_right = 218.0
+title = "Entry Point"
+script = ExtResource("2_3gp7a")
+
+[node name="Label" parent="MC/GC" index="0"]
+text = "Name: entry_point"
+
+[node name="NameLineEdit" parent="MC/GC" index="1"]
+visible = false
+text = "EditorEntryPointAnchorNode"

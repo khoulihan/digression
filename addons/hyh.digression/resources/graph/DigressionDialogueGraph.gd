@@ -16,6 +16,7 @@ const SubGraph = preload("SubGraph.gd")
 const DialogueChoiceNode = preload("DialogueChoiceNode.gd")
 const MatchBranchNode = preload("MatchBranchNode.gd")
 const RandomNode = preload("RandomNode.gd")
+const EntryPointAnchorNode = preload("EntryPointAnchorNode.gd")
 
 const NEW_ANCHOR_PREFIX = "destination_"
 
@@ -49,6 +50,11 @@ func _init():
 			default_graph_type = gt["name"]
 			break
 	self.graph_type = default_graph_type
+	# Add a default entry point
+	var entry_point = EntryPointAnchorNode.new()
+	entry_point.id = get_next_id()
+	self.nodes[entry_point.id] = entry_point
+	self.root_node = entry_point
 
 
 # This is necessary to ensure that "nodes" and "root_node"
