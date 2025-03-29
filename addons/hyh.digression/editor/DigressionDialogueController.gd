@@ -165,9 +165,18 @@ func register_local_store(store):
 
 
 ## Process the specified dialogue graph.
-func process_dialogue_graph(dialogue_graph, state_store):
-	_context.prepare_for_processing(dialogue_graph, state_store)
-	_logger.info("Processing dialogue graph \"%s\"" % _context.graph.name)
+func process_dialogue_graph(dialogue_graph, state_store, start_anchor=null):
+	var entry_name = _context.prepare_for_processing(
+		dialogue_graph,
+		state_store,
+		start_anchor,
+	)
+	_logger.info(
+		"Processing dialogue graph \"%s\" starting at anchor \"%s\"" % [
+			_context.graph.name,
+			entry_name,
+		]
+	)
 	_split_dialogue = _get_split_dialogue_from_graph_type(
 		_context.graph.graph_type
 	)
@@ -581,7 +590,8 @@ func _process_subgraph_node():
 	# TODO: Probably will always be pushing the sub_graph of the current node,
 	# so could have a method for that.
 	_context.push_graph_to_stack(
-		_context.current_node.sub_graph
+		_context.current_node.sub_graph,
+		_context.current_node.entry_point,
 	)
 	sub_graph_entered.emit(
 		_context.graph.name,

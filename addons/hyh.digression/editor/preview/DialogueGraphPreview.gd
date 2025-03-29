@@ -46,6 +46,7 @@ const NOTIFICATION_DISABLED_ICON = preload("../../icons/icon_notification_disabl
 const DialogueTextEvent = preload("dialogue_events/DialogueTextEvent.tscn")
 const PlayerDialogueTextEvent = preload("dialogue_events/PlayerDialogueTextEvent.tscn")
 const StaticInformationalEvent = preload("dialogue_events/StaticInformationalEvent.tscn")
+const FinalStaticInformationalEvent = preload("dialogue_events/FinalStaticInformationalEvent.tscn")
 const ChoiceEvent = preload("dialogue_events/ChoiceEvent.tscn")
 const VariableSelectDialog = preload("../dialogs/variable_select_dialog/VariableSelectDialog.tscn")
 
@@ -54,6 +55,7 @@ const VariableType = preload("../../resources/graph/VariableSetNode.gd").Variabl
 const Controller = preload("../DigressionDialogueController.gd")
 const ProceedSignal = Controller.ProceedSignal
 const CharacterDetails = Controller.CharacterDetails
+const EditorEntryPointAnchorNode = preload("../../editor/nodes/EditorEntryPointAnchorNode.gd")
 
 const DIALOGUE_PANEL_STYLE_BOX_LEFT = preload("dialogue_events/styles/dialogue_box_panel_green_left.tres")
 const DIALOGUE_PANEL_STYLE_BOX_RIGHT = preload("dialogue_events/styles/dialogue_box_panel_green_right.tres")
@@ -106,6 +108,7 @@ var _global_store_root: TreeItem
 var _logger = Logging.new("Digression Dialogue Graph Preview", Logging.DGE_NODES_LOG_LEVEL)
 
 @onready var _show_processing_checkbox = $HSplitContainer/HSplitContainer/VB/PanelContainer/MC/BeginContainer/VB/ShowProcessingCheckBox
+@onready var _entry_point_option = $HSplitContainer/HSplitContainer/VB/PanelContainer/MC/BeginContainer/VB/EntryPointContainer/EntryPointOption
 @onready var _graph_mini_map = $HSplitContainer/HSplitContainer/VSplitContainer/GraphMiniMap
 @onready var _dialogue_scroll_container = $HSplitContainer/HSplitContainer/VB/PanelContainer/MC/DialogueScrollContainer
 @onready var _dialogue_container = $HSplitContainer/HSplitContainer/VB/PanelContainer/MC/DialogueScrollContainer/MC/DialogueContainer
@@ -139,6 +142,7 @@ func _ready():
 	_stores_menu_button.get_popup().id_pressed.connect(
 		_on_stores_menu_id_pressed
 	)
+	_configure_entry_point_options()
 
 
 func _create_dialogue_colour_resources():
@@ -174,6 +178,28 @@ func _connect_internal_signals():
 	i.processed_jump_node.connect(_processed_jump_node)
 	i.processed_anchor_node.connect(_processed_anchor_node)
 	i.processed_routing_node.connect(_processed_routing_node)
+
+
+func _configure_entry_point_options():
+	if _dialogue_graph == null or _dialogue_graph.dialogue_graph == null:
+		return
+	
+	_entry_point_option.clear()
+	var id: int = 0
+	_entry_point_option.add_item(
+		EditorEntryPointAnchorNode.ENTRY_POINT_ANCHOR_NAME,
+		id
+	)
+	_entry_point_option.selected = 0
+	var anchor_maps = _dialogue_graph.dialogue_graph.get_anchor_maps()
+	var by_name = anchor_maps[0]
+	var names = by_name.keys()
+	names.sort()
+	for name in names:
+		if name == EditorEntryPointAnchorNode.ENTRY_POINT_ANCHOR_NAME:
+			continue
+		id += 1
+		_entry_point_option.add_item(name, id)
 
 
 func _processed_routing_node():
@@ -272,6 +298,7 @@ func prepare_to_preview_graph(graph):
 	# a graph is re-displayed for some reason.
 	_graph_mini_map.clear()
 	_graph_mini_map.display_graph(graph)
+	_configure_entry_point_options()
 
 
 func _reset_to_root_graph():
@@ -447,7 +474,10 @@ func _start_processing():
 	starting_preview.emit()
 	_clear_dialogue()
 	_transient_state = _get_context().transient_store.duplicate()
-	_dialogue_graph.trigger()
+	var entry_point = _entry_point_option.get_item_text(
+		_entry_point_option.selected
+	)
+	_dialogue_graph.trigger(entry_point)
 
 
 func _stop_processing():
@@ -645,9 +675,10 @@ func _use_characterwise():
 
 func _on_stop_button_pressed():
 	_stop_processing()
-	var n = StaticInformationalEvent.instantiate()
+	var n = FinalStaticInformationalEvent.instantiate()
 	_insert_event(n)
 	n.populate("Stopped.")
+	n.back_button_pressed.connect(_on_back_button_pressed)
 	_reset_to_root_graph()
 
 
@@ -666,9 +697,10 @@ func _on_graph_controller_dialogue_graph_started(graph_name, graph_type):
 func _on_graph_controller_dialogue_graph_completed():
 	_logger.debug("Dialogue Graph Completed")
 	_get_context().transient_store = _transient_state.duplicate()
-	var n = StaticInformationalEvent.instantiate()
+	var n = FinalStaticInformationalEvent.instantiate()
 	_insert_event(n)
 	n.populate("Dialogue graph complete.")
+	n.back_button_pressed.connect(_on_back_button_pressed)
 	_hide_continue()
 	_update_variable_stores_tree()
 	_set_control_states(false)
@@ -1023,3 +1055,7 @@ func _on_play_audio_button_toggled(button_pressed):
 
 func _on_characterwise_button_toggled(button_pressed):
 	_characterwise_display = button_pressed
+
+
+func _on_back_button_pressed():
+	_show_hide(_begin_container, _dialogue_scroll_container)

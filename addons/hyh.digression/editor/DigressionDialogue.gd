@@ -7,6 +7,7 @@ signal dialogue_graph_triggered(graph)
 
 const Logging = preload("../utility/Logging.gd")
 const DigressionDialogueController = preload("DigressionDialogueController.gd")
+const EditorEntryPointAnchorNode = preload("nodes/EditorEntryPointAnchorNode.gd")
 
 @export var dialogue_graph: DigressionDialogueGraph
 
@@ -72,7 +73,7 @@ func update_state(changes: Dictionary):
 
 
 ## Trigger the node's DigressionDialogueGraph
-func trigger():
+func trigger(entry_point=null):
 	if dialogue_graph == null:
 		_logger.error("Dialogue graph node \"%s\" triggered, but no graph is set." % self)
 		return
@@ -89,7 +90,28 @@ func trigger():
 	else:
 		_state['triggered_count'] = 1
 	dialogue_graph_triggered.emit(self.dialogue_graph)
-	_dialogue_controller.process_dialogue_graph(dialogue_graph, _state)
+	_dialogue_controller.process_dialogue_graph(
+		dialogue_graph,
+		_state,
+		entry_point
+	)
+
+
+## Get a list of the available entry points for the node's DigressionDialogueGraph.
+func get_entry_points() -> Array[String]:
+	var entry_points: Array[String] = []
+	if dialogue_graph == null:
+		return entry_points
+	var anchor_maps = dialogue_graph.get_anchor_maps()
+	var by_name = anchor_maps[0]
+	var ep = by_name.keys()
+	ep.sort()
+	entry_points.append(EditorEntryPointAnchorNode.ENTRY_POINT_ANCHOR_NAME)
+	for name in ep:
+		if name == EditorEntryPointAnchorNode.ENTRY_POINT_ANCHOR_NAME:
+			continue
+		entry_points.append(name)
+	return entry_points
 
 
 func _find_controller(root):

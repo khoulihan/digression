@@ -23,12 +23,14 @@ enum SubGraphMenuItems {
 
 const ResourceHelper = preload("../../utility/ResourceHelper.gd")
 const DIALOGUE_GRAPH_ICON = preload("../../icons/icon_chat.svg")
+const EditorEntryPointAnchorNode = preload("../../editor/nodes/EditorEntryPointAnchorNode.gd")
 
 var _popup: PopupMenu
 var _resource_clipboard
 
 @onready var _resource_button: Button = $MC/VB/HB/ResourceButton
 @onready var _resource_menu_button: MenuButton = $MC/VB/HB/ResourceMenuButton
+@onready var _entry_point_option: OptionButton = $MC/VB/HB2/EntryPointOption
 
 
 func _ready():
@@ -49,6 +51,7 @@ func _ready():
 func configure_for_node(g, n):
 	super.configure_for_node(g, n)
 	_display_sub_graph_on_button()
+	_configure_entry_point_options()
 
 
 ## Persist changes from the editor node's controls into the graph node's properties
@@ -64,6 +67,7 @@ func set_resource_clipboard(clipboard):
 
 func _sub_graph_selected(sub_graph):
 	node_resource.sub_graph = sub_graph
+	_configure_entry_point_options()
 	_display_sub_graph_on_button()
 	modified.emit()
 
@@ -113,6 +117,32 @@ func _configure_popup():
 		SubGraphMenuItems.PASTE,
 		not has_resource or not _clipboard_contents_pasteable()
 	)
+
+
+func _configure_entry_point_options():
+	if node_resource == null:
+		return
+	
+	_entry_point_option.clear()
+	var id: int = 0
+	_entry_point_option.add_item(
+		EditorEntryPointAnchorNode.ENTRY_POINT_ANCHOR_NAME,
+		id
+	)
+	_entry_point_option.selected = 0
+	if node_resource.sub_graph == null:
+		return
+	var anchor_maps = node_resource.sub_graph.get_anchor_maps()
+	var by_name = anchor_maps[0]
+	var names = by_name.keys()
+	names.sort()
+	for name in names:
+		if name == EditorEntryPointAnchorNode.ENTRY_POINT_ANCHOR_NAME:
+			continue
+		id += 1
+		_entry_point_option.add_item(name, id)
+		if node_resource.entry_point != null and name == node_resource.entry_point.name:
+			_entry_point_option.selected = _entry_point_option.item_count - 1
 
 
 func _convert_position(pos):
@@ -286,3 +316,17 @@ func _on_sub_graph_dialog_cancelled(dialog):
 
 func _on_error_dialog_confirmed(d):
 	get_tree().root.remove_child(d)
+
+
+func _on_entry_point_option_item_selected(index: int) -> void:
+	if node_resource == null:
+		return
+	if node_resource.sub_graph == null:
+		return
+	var anchor_maps = node_resource.sub_graph.get_anchor_maps()
+	var name = _entry_point_option.get_item_text(index)
+	if name == EditorEntryPointAnchorNode.ENTRY_POINT_ANCHOR_NAME:
+		node_resource.entry_point = null
+	else:
+		node_resource.entry_point = node_resource.sub_graph.nodes[anchor_maps[0][name]]
+	modified.emit()

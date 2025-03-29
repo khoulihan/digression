@@ -18,6 +18,7 @@ const Logging = preload("../utility/Logging.gd")
 const VariableHelper = preload("./helpers/VariablesHelper.gd")
 const VariableSetNode = preload("../resources/graph/VariableSetNode.gd")
 const VariableScope = VariableSetNode.VariableScope
+const AnchorNode = preload("res://addons/hyh.digression/resources/graph/AnchorNode.gd")
 
 
 var graph
@@ -60,17 +61,32 @@ func _init() -> void:
 			_built_in_variable_names.append(v['name'])
 
 
-func prepare_for_processing(dialogue_graph, state_store):
+func prepare_for_processing(dialogue_graph, state_store, start_anchor=null):
 	_graph_stack = []
 	transient_store = {}
 	dialogue_graph_state_store = state_store
 	var triggered_count = 0 if not '_graph_triggered_count' in dialogue_graph_state_store else dialogue_graph_state_store['_graph_triggered_count']
 	dialogue_graph_state_store['_graph_triggered_count'] = triggered_count + 1
 	graph = dialogue_graph
-	current_node = graph.root_node
+	current_node = _get_start_node(start_anchor)
 	previous_node = null
 	last_choice = null
+	return current_node.name
 
+
+func _get_start_node(start_anchor):
+	if start_anchor == null:
+		return graph.root_node
+	for n in graph.nodes.values():
+		if not n is AnchorNode:
+			continue
+		if n.name == start_anchor:
+			return n
+	_logger.error(
+		"Specified anchor (\"%s\") not found. Starting at root." % start_anchor
+	)
+	return graph.root_node
+	
 
 
 ## Stop processing
@@ -340,7 +356,7 @@ func pop_graph_stack():
 		last_choice = graph_state.last_choice
 
 
-func push_graph_to_stack(new_graph):
+func push_graph_to_stack(new_graph, entry_point=null):
 	var graph_state = GraphState.new()
 	graph_state.graph = graph
 	graph_state.current_node = current_node
@@ -348,7 +364,10 @@ func push_graph_to_stack(new_graph):
 	graph_state.last_choice = last_choice
 	_graph_stack.push_back(graph_state)
 	graph = new_graph
-	current_node = graph.root_node
+	if entry_point == null:
+		current_node = graph.root_node
+	else:
+		current_node = entry_point
 	previous_node = null
 
 #endregion

@@ -89,7 +89,7 @@ keycode = 4194337
 resource_name = "Restart Cutscene"
 events = [SubResource("InputEventKey_3y117")]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8xo1q"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_emlum"]
 content_margin_left = 4.0
 content_margin_top = 4.0
 content_margin_right = 4.0
@@ -171,7 +171,6 @@ icon = ExtResource("10_0arbr")
 item_count = 7
 popup/item_0/text = "Add Variable..."
 popup/item_0/id = 0
-popup/item_1/text = ""
 popup/item_1/id = 1
 popup/item_1/separator = true
 popup/item_2/text = "Load (Add)..."
@@ -180,7 +179,6 @@ popup/item_3/text = "Load (Replace)..."
 popup/item_3/id = 3
 popup/item_4/text = "Save..."
 popup/item_4/id = 4
-popup/item_5/text = ""
 popup/item_5/id = 5
 popup/item_5/separator = true
 popup/item_6/text = "Clear All"
@@ -270,7 +268,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_8xo1q")
+theme_override_styles/panel = SubResource("StyleBoxFlat_emlum")
 
 [node name="MC" type="MarginContainer" parent="HSplitContainer/HSplitContainer/VB/PanelContainer"]
 layout_mode = 2
@@ -312,6 +310,17 @@ text = "Prepare your test environment if necessary and then click run to begin"
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Show processing details"
+
+[node name="EntryPointContainer" type="HBoxContainer" parent="HSplitContainer/HSplitContainer/VB/PanelContainer/MC/BeginContainer/VB"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="HSplitContainer/HSplitContainer/VB/PanelContainer/MC/BeginContainer/VB/EntryPointContainer"]
+layout_mode = 2
+text = "Entry Point:"
+
+[node name="EntryPointOption" type="OptionButton" parent="HSplitContainer/HSplitContainer/VB/PanelContainer/MC/BeginContainer/VB/EntryPointContainer"]
+layout_mode = 2
 
 [node name="RunButton" type="Button" parent="HSplitContainer/HSplitContainer/VB/PanelContainer/MC/BeginContainer/VB"]
 layout_mode = 2

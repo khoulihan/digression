@@ -2,7 +2,7 @@
 extends "res://addons/hyh.digression/editor/nodes/EditorAnchorNode.gd"
 
 
-const ENTRY_POINT_ANCHOR_NAME = "entry_point"
+const ENTRY_POINT_ANCHOR_NAME = "default_entry_point"
 
 
 func configure_for_node(g, n):

@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://d0eu1kvfwa31q"]
+
+[ext_resource type="PackedScene" uid="uid://mgp5y07pgu5h" path="res://addons/hyh.digression/editor/preview/dialogue_events/StaticInformationalEvent.tscn" id="1_fajbd"]
+[ext_resource type="Script" uid="uid://c687xg6nenqa6" path="res://addons/hyh.digression/editor/preview/dialogue_events/FinalStaticInformationalEvent.gd" id="2_bpgic"]
+[ext_resource type="Texture2D" uid="uid://bf0nmtdddna15" path="res://addons/hyh.digression/icons/icon_back.svg" id="3_bpgic"]
+
+[node name="StaticInformationalEvent" instance=ExtResource("1_fajbd")]
+script = ExtResource("2_bpgic")
+
+[node name="Button" type="Button" parent="HB" index="2"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+text = "Back"
+icon = ExtResource("3_bpgic")
+
+[connection signal="pressed" from="HB/Button" to="." method="_on_button_pressed"]
