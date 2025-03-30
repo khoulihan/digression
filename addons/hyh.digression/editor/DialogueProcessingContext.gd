@@ -11,7 +11,8 @@ const BuiltInVariable = {
 	CURRENT_NODE_VISITED_PREVIOUSLY = "_current_node_visited_previously",
 	PREVIOUS_NODE_VISIT_COUNT = "_previous_node_visit_count",
 	CHOICE_VISIT_COUNT = "_choice_visit_count",
-	CHOICE_VISITED_PREVIOUSLY = "_choice_visited_previously"
+	CHOICE_VISITED_PREVIOUSLY = "_choice_visited_previously",
+	SUBGRAPH_EXIT_VALUE = "_subgraph_exit_value",
 }
 
 const Logging = preload("../utility/Logging.gd")
@@ -44,6 +45,8 @@ var _logger = Logging.new(
 var _variable_regex: RegEx
 var _graph_stack
 var _built_in_variable_names: Array[String]
+var _current_graph_exit_value = null
+var _last_graph_exit_value = null
 
 
 func _init() -> void:
@@ -196,6 +199,8 @@ func get_special_variable(variable_name, current_choice=null):
 			return dialogue_graph_state_store.get(BuiltInVariable.GRAPH_TRIGGERED_COUNT, 0) > 1
 		BuiltInVariable.LAST_RETURN_VALUE:
 			return transient_store[BuiltInVariable.LAST_RETURN_VALUE]
+		BuiltInVariable.SUBGRAPH_EXIT_VALUE:
+			return _last_graph_exit_value
 		_:
 			# _choice_visit_count and _choice_visited_previously remain. They have to
 			# work within a choice and for the last choice made.
@@ -306,6 +311,21 @@ func get_current_node_visit_count():
 func increment_current_node_visit_count():
 	increment_visit_count(current_node)
 
+
+func set_exit_value(val):
+	_current_graph_exit_value = val
+
+
+## Get the exit value for the last completed subgraph.
+func get_last_exit_value():
+	return _last_graph_exit_value
+
+
+## Get the exit value set for the current graph. This is used for the completion
+## signal when an exit node completes graph processing.
+func get_current_exit_value():
+	return _current_graph_exit_value
+
 #endregion
 
 
@@ -351,9 +371,12 @@ func pop_graph_stack():
 		var graph_state = _graph_stack.pop_back()
 		graph = graph_state.graph
 		last_choice_node_id = graph_state.last_choice_node_id
-		previous_node = graph_state.graph_state.current_node
+		previous_node = graph_state.current_node
 		current_node = get_node_by_id(graph_state.current_node.next)
 		last_choice = graph_state.last_choice
+		_last_graph_exit_value = _current_graph_exit_value
+		transient_store[BuiltInVariable.SUBGRAPH_EXIT_VALUE] = _last_graph_exit_value
+		_current_graph_exit_value = null
 
 
 func push_graph_to_stack(new_graph, entry_point=null):
@@ -369,6 +392,14 @@ func push_graph_to_stack(new_graph, entry_point=null):
 	else:
 		current_node = entry_point
 	previous_node = null
+	_last_graph_exit_value = null
+	_current_graph_exit_value = null
+
+
+## Remove all graphs from the stack. This means that if the current graph is a
+## subgraph it will not return to the parent after it is finished.
+func clear_stack():
+	_graph_stack.clear()
 
 #endregion
 

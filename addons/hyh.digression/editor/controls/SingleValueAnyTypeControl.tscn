@@ -1,0 +1,73 @@
+[gd_scene load_steps=10 format=3 uid="uid://bhp62qnb4xqye"]
+
+[ext_resource type="Texture2D" uid="uid://c5ll5urk64ggp" path="res://addons/hyh.digression/icons/icon_gui_option_arrow.svg" id="1_7kuqh"]
+[ext_resource type="Script" uid="uid://oe54wulyswie" path="res://addons/hyh.digression/editor/controls/SingleValueAnyTypeControl.gd" id="1_u5ofd"]
+[ext_resource type="Texture2D" uid="uid://c3kvtyvnpubei" path="res://addons/hyh.digression/icons/icon_type_bool.svg" id="2_2lci3"]
+[ext_resource type="Texture2D" uid="uid://dgqyr3ih37my0" path="res://addons/hyh.digression/icons/icon_type_int.svg" id="3_dydr2"]
+[ext_resource type="Texture2D" uid="uid://dhxdv15boo0xg" path="res://addons/hyh.digression/icons/icon_type_float.svg" id="4_u5ofd"]
+[ext_resource type="Texture2D" uid="uid://dpd5q8k0oueoh" path="res://addons/hyh.digression/icons/icon_type_string.svg" id="5_1vode"]
+[ext_resource type="PackedScene" uid="uid://b46vwf6pxf1tl" path="res://addons/hyh.digression/editor/controls/expressions/OperatorExpression.tscn" id="6_dydr2"]
+[ext_resource type="Texture2D" uid="uid://bta3jvd470c36" path="res://addons/hyh.digression/icons/icon_close.svg" id="7_u5ofd"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1vode"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 3
+border_width_right = 3
+border_color = Color(0, 0, 0, 0.490196)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+
+[node name="SingleValueAnyTypeControl" type="MarginContainer"]
+script = ExtResource("1_u5ofd")
+
+[node name="TypeMenuButton" type="MenuButton" parent="."]
+layout_mode = 2
+icon = ExtResource("1_7kuqh")
+item_count = 4
+popup/item_0/text = "Boolean"
+popup/item_0/icon = ExtResource("2_2lci3")
+popup/item_0/id = 1
+popup/item_1/text = "Integer"
+popup/item_1/icon = ExtResource("3_dydr2")
+popup/item_1/id = 2
+popup/item_2/text = "Float"
+popup/item_2/icon = ExtResource("4_u5ofd")
+popup/item_2/id = 3
+popup/item_3/text = "String"
+popup/item_3/icon = ExtResource("5_1vode")
+popup/item_3/id = 4
+
+[node name="ValueContainer" type="HBoxContainer" parent="."]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ValueContainer"]
+layout_mode = 2
+
+[node name="PC" type="PanelContainer" parent="ValueContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1vode")
+
+[node name="MC" type="MarginContainer" parent="ValueContainer/PC"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 9
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 9
+theme_override_constants/margin_bottom = 3
+
+[node name="ValueExpression" parent="ValueContainer/PC/MC" instance=ExtResource("6_dydr2")]
+layout_mode = 2
+
+[node name="ClearButton" type="Button" parent="ValueContainer"]
+layout_mode = 2
+tooltip_text = "Clear the condition"
+theme_override_colors/icon_normal_color = Color(1, 0, 0, 1)
+icon = ExtResource("7_u5ofd")
+flat = true
+
+[connection signal="modified" from="ValueContainer/PC/MC/ValueExpression" to="." method="_on_value_expression_modified"]
+[connection signal="size_changed" from="ValueContainer/PC/MC/ValueExpression" to="." method="_on_value_expression_size_changed"]
+[connection signal="pressed" from="ValueContainer/ClearButton" to="." method="_on_clear_button_pressed"]

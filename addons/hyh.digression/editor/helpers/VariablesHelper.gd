@@ -6,7 +6,8 @@ const VariableType = preload("../../resources/graph/VariableSetNode.gd").Variabl
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
 
 const _descriptions := {
-	'_last_return_value': "The last value returned from a choice, dialogue, or action."
+	'_last_return_value': "The last value returned from a choice, dialogue, or action.",
+	'_subgraph_exit_value': "The exit value from the last subgraph processed (if any).",
 }
 const BUILT_IN_VARIABLES: Array[Dictionary] = [
 	{
@@ -36,6 +37,34 @@ const BUILT_IN_VARIABLES: Array[Dictionary] = [
 		"type": VariableType.TYPE_STRING,
 		"description": _descriptions['_last_return_value'],
 		"tags": ['builtin', 'last_return_value']
+	},
+	{
+		'name': "_subgraph_exit_value",
+		"scope": VariableScope.SCOPE_TRANSIENT,
+		"type": VariableType.TYPE_BOOL,
+		"description": _descriptions['_subgraph_exit_value'],
+		"tags": ['builtin', 'subgraph_exit_value']
+	},
+	{
+		'name': "_subgraph_exit_value",
+		"scope": VariableScope.SCOPE_TRANSIENT,
+		"type": VariableType.TYPE_FLOAT,
+		"description": _descriptions['_subgraph_exit_value'],
+		"tags": ['builtin', 'subgraph_exit_value']
+	},
+	{
+		'name': "_subgraph_exit_value",
+		"scope": VariableScope.SCOPE_TRANSIENT,
+		"type": VariableType.TYPE_INT,
+		"description": _descriptions['_subgraph_exit_value'],
+		"tags": ['builtin', 'subgraph_exit_value']
+	},
+	{
+		'name': "_subgraph_exit_value",
+		"scope": VariableScope.SCOPE_TRANSIENT,
+		"type": VariableType.TYPE_STRING,
+		"description": _descriptions['_subgraph_exit_value'],
+		"tags": ['builtin', 'subgraph_exit_value']
 	},
 	{
 		'name': "_graph_triggered_count",

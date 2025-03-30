@@ -11,9 +11,9 @@ signal dialogue_graph_started(graph_name, graph_type)
 ## Emitted when a sub-graph has been entered.
 signal sub_graph_entered(graph_name, graph_type)
 ## Emitted when processing of a dialogue graph resumes after a sub-graph completes.
-signal dialogue_graph_resumed(graph_name, graph_type)
+signal dialogue_graph_resumed(graph_name, graph_type, exit_value)
 ## Emitted when processing of a dialogue graph is completed.
-signal dialogue_graph_completed()
+signal dialogue_graph_completed(exit_value)
 ## Emitted when processing of a dialogue graph is cancelled prematurely.
 signal cancelled()
 ## A request to display dialogue.
@@ -76,6 +76,7 @@ const AnchorNode = preload("../resources/graph/AnchorNode.gd")
 const JumpNode = preload("../resources/graph/JumpNode.gd")
 const RoutingNode = preload("../resources/graph/RoutingNode.gd")
 const RepeatNode = preload("../resources/graph/RepeatNode.gd")
+const ExitNode = preload("../resources/graph/ExitNode.gd")
 
 const ExpressionEvaluator = preload("./expressions/ExpressionEvaluator.gd")
 const DialogueProcessingContext = preload("./DialogueProcessingContext.gd")
@@ -217,6 +218,9 @@ func process_dialogue_graph(dialogue_graph, state_store, start_anchor=null):
 		elif _context.current_node is RepeatNode:
 			_internal_notify_repeat_node()
 			_process_repeat_node()
+		elif _context.current_node is ExitNode:
+			_internal_notify_exit_node()
+			_process_exit_node()
 		
 		if _context.graph == null:
 			# Graph processing has been cancelled.
@@ -230,11 +234,14 @@ func process_dialogue_graph(dialogue_graph, state_store, start_anchor=null):
 				_logger.info("Resuming dialogue graph \"%s\"." % _context.graph.name)
 				dialogue_graph_resumed.emit(
 					_context.graph.name,
-					_context.graph.graph_type
+					_context.graph.graph_type,
+					_context.get_last_exit_value(),
 				)
 	
 	_logger.info("Dialogue graph \"%s\" completed." % _context.graph.name)
-	dialogue_graph_completed.emit()
+	dialogue_graph_completed.emit(
+		_context.get_current_exit_value()
+	)
 
 
 ## Stop processing
@@ -599,6 +606,26 @@ func _process_subgraph_node():
 	)
 
 
+func _process_exit_node():
+	_logger.debug("Processing exit node \"%s\"." % _context.current_node)
+	
+	if _context.current_node.value != null:
+		_context.set_exit_value(
+			_expression_evaluator.evaluate(
+				_context.current_node.value.expression
+			)
+		)
+	if _context.current_node.exit_type == ExitNode.ExitType.RETURN_TO_PARENT:
+		# There should be no "next node", so advancing will exit to the parent
+		# or exit completely, whichever is appropriate.
+		_context.advance_to_next_node()
+	else:
+		# We have to stop graph processing completely, ignoring the graph stack.
+		# Notably, this is not the same as cancelling.
+		_context.clear_stack()
+		_context.advance_to_next_node()
+
+
 func _process_random_node():
 	_logger.debug("Processing random node \"%s\"." % _context.current_node)
 	
@@ -935,6 +962,12 @@ func _internal_notify_set_node():
 		)
 	)
 
+
+func _internal_notify_exit_node():
+	if not _is_previewing():
+		return
+	_internal.processed_exit_node.emit()
+
 #endregion
 
 
@@ -997,5 +1030,6 @@ class ControllerInternal:
 	signal processed_jump_node(destination_name)
 	signal processed_anchor_node(anchor_name)
 	signal processed_routing_node()
+	signal processed_exit_node()
 
 #endregion

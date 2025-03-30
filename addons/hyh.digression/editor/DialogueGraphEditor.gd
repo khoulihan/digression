@@ -34,11 +34,12 @@ enum GraphPopupMenuItems {
 	ADD_ANCHOR_NODE,
 	ADD_ROUTING_NODE,
 	ADD_REPEAT_NODE,
+	ADD_EXIT_NODE,
 }
 
 enum GraphPopupMenuBounds {
 	LOWER_BOUND = GraphPopupMenuItems.ADD_TEXT_NODE,
-	UPPER_BOUND = GraphPopupMenuItems.ADD_REPEAT_NODE
+	UPPER_BOUND = GraphPopupMenuItems.ADD_EXIT_NODE
 }
 
 enum ConfirmationActions {
@@ -83,6 +84,7 @@ const AnchorNode = preload("../resources/graph/AnchorNode.gd")
 const RoutingNode = preload("../resources/graph/RoutingNode.gd")
 const RepeatNode = preload("../resources/graph/RepeatNode.gd")
 const EntryPointAnchorNode = preload("../resources/graph/EntryPointAnchorNode.gd")
+const ExitNode = preload("../resources/graph/ExitNode.gd")
 
 # Editor node classes.
 const EditorTextNodeClass = preload("./nodes/EditorTextNode.gd")
@@ -100,6 +102,7 @@ const EditorAnchorNodeClass = preload("./nodes/EditorAnchorNode.gd")
 const EditorRoutingNodeClass = preload("./nodes/EditorRoutingNode.gd")
 const EditorRepeatNodeClass = preload("./nodes/EditorRepeatNode.gd")
 const EditorEntryPointAnchorNodeClass = preload("./nodes/EditorEntryPointAnchorNode.gd")
+const EditorExitNodeClass = preload("./nodes/EditorExitNode.gd")
 
 # Editor node scenes.
 const EditorTextNode = preload("./nodes/EditorTextNode.tscn")
@@ -117,6 +120,7 @@ const EditorAnchorNode = preload("./nodes/EditorAnchorNode.tscn")
 const EditorRoutingNode = preload("./nodes/EditorRoutingNode.tscn")
 const EditorRepeatNode = preload("./nodes/EditorRepeatNode.tscn")
 const EditorEntryPointAnchorNode = preload("./nodes/EditorEntryPointAnchorNode.tscn")
+const EditorExitNode = preload("./nodes/EditorExitNode.tscn")
 
 #endregion
 
@@ -745,6 +749,9 @@ func _create_node_objects(node_type):
 		GraphPopupMenuItems.ADD_REPEAT_NODE:
 			new_editor_node = EditorRepeatNode.instantiate()
 			new_graph_node = RepeatNode.new()
+		GraphPopupMenuItems.ADD_EXIT_NODE:
+			new_editor_node = EditorExitNode.instantiate()
+			new_graph_node = ExitNode.new()
 	return [new_editor_node, new_graph_node]
 
 
@@ -955,6 +962,8 @@ func _instantiate_editor_node_for_graph_node(node):
 		editor_node = EditorEntryPointAnchorNode.instantiate()
 	elif node is AnchorNode:
 		editor_node = EditorAnchorNode.instantiate()
+	elif node is ExitNode:
+		editor_node = EditorExitNode.instantiate()
 	
 	return editor_node
 
@@ -1307,6 +1316,8 @@ func _node_type_for_node(node):
 		return GraphPopupMenuItems.ADD_ROUTING_NODE
 	elif node is EditorRepeatNodeClass:
 		return GraphPopupMenuItems.ADD_REPEAT_NODE
+	elif node is EditorExitNodeClass:
+		return GraphPopupMenuItems.ADD_EXIT_NODE
 	return GraphPopupMenuItems.ADD_TEXT_NODE
 
 #endregion

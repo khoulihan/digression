@@ -178,6 +178,7 @@ func _connect_internal_signals():
 	i.processed_jump_node.connect(_processed_jump_node)
 	i.processed_anchor_node.connect(_processed_anchor_node)
 	i.processed_routing_node.connect(_processed_routing_node)
+	i.processed_exit_node.connect(_processed_exit_node)
 
 
 func _configure_entry_point_options():
@@ -263,6 +264,12 @@ func _processed_set_node(variable, scope, value):
 			value,
 		]
 	)
+
+
+func _processed_exit_node():
+	if not _show_processing:
+		return
+	_add_static_processing_event("Processed exit node...")
 
 
 func _get_scope_description(scope):
@@ -694,12 +701,15 @@ func _on_graph_controller_dialogue_graph_started(graph_name, graph_type):
 	_update_variable_stores_tree()
 
 
-func _on_graph_controller_dialogue_graph_completed():
+func _on_graph_controller_dialogue_graph_completed(exit_value):
 	_logger.debug("Dialogue Graph Completed")
 	_get_context().transient_store = _transient_state.duplicate()
 	var n = FinalStaticInformationalEvent.instantiate()
 	_insert_event(n)
-	n.populate("Dialogue graph complete.")
+	if exit_value == null:
+		n.populate("Dialogue graph complete.")
+	else:
+		n.populate("Dialogue graph complete with exit value \"%s\"." % exit_value)
 	n.back_button_pressed.connect(_on_back_button_pressed)
 	_hide_continue()
 	_update_variable_stores_tree()
@@ -866,7 +876,11 @@ func _on_graph_controller_sub_graph_entered(graph_name, graph_type):
 	_graph_mini_map.display_graph(graph)
 
 
-func _on_graph_controller_dialogue_graph_resumed(graph_name, graph_type):
+func _on_graph_controller_dialogue_graph_resumed(
+	graph_name,
+	graph_type,
+	exit_value,
+):
 	_logger.debug("Graph \"%s\" resumed" % graph_name)
 	_graph_stack.pop_back()
 	var graph = _get_context().graph
@@ -874,7 +888,15 @@ func _on_graph_controller_dialogue_graph_resumed(graph_name, graph_type):
 	_populate_characters(graph.characters)
 	var n = StaticInformationalEvent.instantiate()
 	_insert_event(n)
-	n.populate("Graph \"%s\" resumed..." % graph_name)
+	if exit_value == null:
+		n.populate("Graph \"%s\" resumed..." % graph_name)
+	else:
+		n.populate(
+			"Graph \"%s\" resumed with exit value \"%s\"..." % [
+				graph_name,
+				exit_value,
+			]
+		)
 	_hide_continue()
 	_update_variable_stores_tree()
 	_breadcrumbs.populate(_graph_stack)
