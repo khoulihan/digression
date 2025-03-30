@@ -97,6 +97,7 @@ text = "Entry Point:"
 
 [node name="EntryPointOption" type="OptionButton" parent="MC/VB/HB2"]
 layout_mode = 2
+flat = true
 selected = 0
 item_count = 1
 popup/item_0/text = "entry_point"
