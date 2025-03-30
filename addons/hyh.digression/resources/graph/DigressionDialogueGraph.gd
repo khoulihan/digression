@@ -53,6 +53,7 @@ func _init():
 	# Add a default entry point
 	var entry_point = EntryPointAnchorNode.new()
 	entry_point.id = get_next_id()
+	entry_point.offset = Vector2(60.0, 90.0)
 	self.nodes[entry_point.id] = entry_point
 	self.root_node = entry_point
 
