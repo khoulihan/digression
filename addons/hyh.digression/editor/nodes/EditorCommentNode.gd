@@ -34,10 +34,14 @@ func _init():
 
 func _ready():
 	var titlebar = get_titlebar_hbox()
+	var title_label : Label = titlebar.get_child(0)
 	titlebar.add_child(_text_size_option)
 	# By moving to index 0, the empty title label serves as a spacer.
 	titlebar.move_child(_text_size_option, 0)
 	_text_size_option.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	# This prevents the node size from changing as the size option
+	# is shown and hidden with changes in the nodes focus.
+	title_label.custom_minimum_size.y = _text_size_option.size.y
 	super()
 
 
@@ -120,10 +124,7 @@ func _on_comment_edit_focus_entered() -> void:
 
 
 func _on_comment_edit_focus_exited() -> void:
-	if not _text_size_option.has_focus():
-		_control_focus_changed(false)
-	
-	
+	_control_focus_changed(false)
 
 
 func _on_text_size_option_focus_entered() -> void:
