@@ -172,11 +172,13 @@ var _logger = Logging.new(
 )
 
 # Nodes
-@onready var _graph_edit = $MarginContainer/GraphEdit
+@onready var _graph_edit = $HS/MarginContainer/GraphEdit
 @onready var _graph_popup = $GraphContextMenu
 @onready var _confirmation_dialog = $ConfirmationDialog
 @onready var _error_dialog = $ErrorDialog
 @onready var _breadcrumbs = $TitleBar/GraphBreadcrumbs
+@onready var _anchor_filter := $HS/VBoxContainer/AnchorFilter
+@onready var _anchor_list := $HS/VBoxContainer/MC/AnchorList
 
 #endregion
 
@@ -265,6 +267,8 @@ func clear():
 		)
 	_edited = null
 	_breadcrumbs.populate([])
+	_anchor_list.clear()
+	_anchor_filter.clear()
 	_update_preview_button_state()
 
 
@@ -527,6 +531,16 @@ func _connect_node_signals(node):
 				node
 			)
 		)
+	if node is EditorAnchorNodeClass:
+		node.node_selected.connect(
+			_on_anchor_node_selected.bind(
+				node
+			)
+		)
+
+
+func _on_anchor_node_selected(node):
+	_anchor_list.select_anchor(node.node_resource.name)
 
 
 func _on_node_removing_slot(slot, node_name):
@@ -594,6 +608,30 @@ func _on_jump_node_destination_chosen(destination_id, node):
 	])
 	node.node_resource.next = destination_id
 	_draw_edited_graph(true)
+
+#endregion
+
+
+#region Anchor list
+
+func _on_anchor_filter_text_changed(new_text: String) -> void:
+	_anchor_list.filter(new_text)
+
+
+func _on_anchor_filter_text_submitted(new_text: String) -> void:
+	if _anchor_list.item_count > 0:
+		_anchor_list.grab_focus()
+		_anchor_list.select_first_anchor()
+
+
+func _on_anchor_list_anchor_selected(name: Variant) -> void:
+	var id = _anchors_by_name[name]
+	var node = _get_editor_node_for_graph_node(_get_graph_node_by_id(id))
+	_graph_edit.set_selected(node)
+	var offset_to_node = (node.position_offset * _graph_edit.zoom)
+	var centre_to_node = (_graph_edit.size / 2.0)
+	var centre_node = ((node.size * _graph_edit.zoom) / 2.0)
+	_graph_edit.scroll_offset = offset_to_node - centre_to_node + centre_node
 
 #endregion
 
@@ -1109,6 +1147,7 @@ func _refresh_anchor_maps():
 	var anchor_maps = _edited.graph.get_anchor_maps()
 	_anchors_by_name = anchor_maps[0]
 	_anchor_names_by_id = anchor_maps[1]
+	_anchor_list.populate(_anchors_by_name.keys())
 
 
 func _generate_anchor_name():
