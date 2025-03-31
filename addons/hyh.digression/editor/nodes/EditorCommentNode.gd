@@ -55,3 +55,15 @@ func _on_node_selected():
 func _on_node_deselected():
 	self.show_close = false
 	self.resizable = false
+
+
+func _on_comment_edit_focus_entered() -> void:
+	self.selected = true
+	self.show_close = true
+	self.resizable = true
+
+
+func _on_comment_edit_focus_exited() -> void:
+	self.selected = false
+	self.show_close = false
+	self.resizable = false
