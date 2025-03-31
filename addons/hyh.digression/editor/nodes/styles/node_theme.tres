@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=19 format=3 uid="uid://1cbvg04l0616"]
+[gd_resource type="Theme" load_steps=25 format=3 uid="uid://1cbvg04l0616"]
 
 [ext_resource type="StyleBox" uid="uid://cbblvk1p1p0ya" path="res://addons/hyh.digression/editor/nodes/styles/default_node.tres" id="1_hf5xb"]
 [ext_resource type="StyleBox" uid="uid://bcn0xekidb13s" path="res://addons/hyh.digression/editor/nodes/styles/position_overlay.tres" id="2_ivvps"]
@@ -14,7 +14,18 @@
 [ext_resource type="StyleBox" uid="uid://dnm2yvf0aukig" path="res://addons/hyh.digression/editor/nodes/styles/control_style_read_only.tres" id="9_yprw3"]
 [ext_resource type="StyleBox" uid="uid://cnjncae5md1oh" path="res://addons/hyh.digression/editor/nodes/styles/default_node_titlebar_selected.tres" id="10_d2rr0"]
 [ext_resource type="Texture2D" uid="uid://7sby15rdg417" path="res://addons/hyh.digression/icons/icon_tree_arrow_right_dark.svg" id="13_arjtg"]
+[ext_resource type="StyleBox" uid="uid://cav483j7746ud" path="res://addons/hyh.digression/editor/nodes/styles/action_node.tres" id="13_jwldd"]
 [ext_resource type="Texture2D" uid="uid://brt3bw3yhakpp" path="res://addons/hyh.digression/icons/icon_tree_arrow_left_dark.svg" id="14_yd52u"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r672w"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1656j"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_46v1f"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w4ui7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qqlmq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_44c0d"]
 content_margin_left = 5.0
@@ -55,6 +66,15 @@ Button/styles/focus = ExtResource("5_4e4bm")
 Button/styles/hover = ExtResource("7_m6im3")
 Button/styles/normal = ExtResource("6_0o5wo")
 Button/styles/pressed = ExtResource("8_q58wk")
+CheckBox/colors/font_focus_color = Color(0.141176, 0.141176, 0.141176, 1)
+CheckBox/colors/font_hover_color = Color(0.141176, 0.141176, 0.141176, 0.784314)
+CheckBox/colors/font_hover_pressed_color = Color(0.141176, 0.141176, 0.141176, 0.784314)
+CheckBox/colors/font_pressed_color = Color(0.141176, 0.141176, 0.141176, 1)
+CheckBox/styles/focus = SubResource("StyleBoxEmpty_r672w")
+CheckBox/styles/hover = SubResource("StyleBoxEmpty_1656j")
+CheckBox/styles/hover_pressed = SubResource("StyleBoxEmpty_46v1f")
+CheckBox/styles/normal = SubResource("StyleBoxEmpty_w4ui7")
+CheckBox/styles/pressed = SubResource("StyleBoxEmpty_qqlmq")
 CheckButton/colors/font_color = Color(0.141176, 0.141176, 0.141176, 0.784314)
 CheckButton/colors/font_focus_color = Color(0.137255, 0.137255, 0.137255, 1)
 CheckButton/colors/font_hover_color = Color(0.137255, 0.137255, 0.137255, 1)
@@ -89,6 +109,7 @@ OptionButton/styles/focus = ExtResource("5_4e4bm")
 OptionButton/styles/hover = ExtResource("7_m6im3")
 OptionButton/styles/normal = ExtResource("6_0o5wo")
 OptionButton/styles/pressed = ExtResource("8_q58wk")
+Panel/styles/panel = ExtResource("13_jwldd")
 PopupMenu/colors/font_accelerator_color = Color(0.152941, 0.152941, 0.152941, 0.713726)
 PopupMenu/colors/font_color = Color(0.152941, 0.152941, 0.152941, 1)
 PopupMenu/colors/font_disabled_color = Color(0.152941, 0.152941, 0.152941, 0.498039)
