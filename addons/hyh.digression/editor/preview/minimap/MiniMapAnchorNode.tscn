@@ -1,10 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://bol4htfphl1as"]
 
 [ext_resource type="PackedScene" uid="uid://qghkuf1wo64c" path="res://addons/hyh.digression/editor/preview/minimap/MiniMapNodeBase.tscn" id="1_cxmoh"]
-[ext_resource type="Theme" uid="uid://gnjaygqvbbxn" path="res://addons/hyh.digression/editor/preview/minimap/styles/set_node.tres" id="2_13s55"]
+[ext_resource type="Theme" uid="uid://con3p80mr1tyu" path="res://addons/hyh.digression/editor/preview/minimap/styles/anchor_node.tres" id="2_5sb8p"]
 
 [node name="MiniMapNodeBase" instance=ExtResource("1_cxmoh")]
-theme = ExtResource("2_13s55")
+theme = ExtResource("2_5sb8p")
 slot/0/left_type = 1
 slot/0/left_color = Color(1, 1, 1, 0.498039)
 

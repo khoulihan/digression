@@ -19,6 +19,7 @@ const JumpNode = preload("../../../resources/graph/JumpNode.gd")
 const AnchorNode = preload("../../../resources/graph/AnchorNode.gd")
 const RoutingNode = preload("../../../resources/graph/RoutingNode.gd")
 const RepeatNode = preload("../../../resources/graph/RepeatNode.gd")
+const ExitNode = preload("../../../resources/graph/ExitNode.gd")
 
 # Mini-map nodes
 const MiniMapNodeBase = preload("MiniMapNodeBase.tscn")
@@ -36,6 +37,7 @@ const MiniMapRoutingNode = preload("MiniMapRoutingNode.tscn")
 const MiniMapSetNode = preload("MiniMapSetNode.tscn")
 const MiniMapSubGraphNode = preload("MiniMapSubGraphNode.tscn")
 const MiniMapCommentNode = preload("MiniMapCommentNode.tscn")
+const MiniMapExitNode = preload("MiniMapExitNode.tscn")
 const SCALE = 0.26
 
 var _logger = Logging.new("Digression Dialogue Graph Preview", Logging.DGE_NODES_LOG_LEVEL)
@@ -129,6 +131,8 @@ func _instantiate_mini_map_node(node):
 		n = MiniMapSetNode.instantiate()
 	elif node is SubGraph:
 		n = MiniMapSubGraphNode.instantiate()
+	elif node is ExitNode:
+		n = MiniMapExitNode.instantiate()
 	else:
 		n = MiniMapNodeBase.instantiate()
 	return n
@@ -163,6 +167,8 @@ func _set_tooltip(node, resource):
 		node.tooltip_text = "Set variable \"%s\"" % [resource.variable]
 	elif resource is SubGraph:
 		node.tooltip_text = "Sub-graph \"%s\"" % resource.sub_graph.name
+	elif resource is ExitNode:
+		node.tooltip_text = "Exit node"
 	else:
 		node.tooltip_text = "Unknown node"
 

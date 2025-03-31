@@ -1,0 +1,32 @@
+[gd_resource type="Theme" load_steps=4 format=3 uid="uid://con3p80mr1tyu"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_no70s"]
+bg_color = Color(0.584314, 0.788235, 0.886275, 1)
+border_width_top = 20
+border_color = Color(0.584314, 0.788235, 0.886275, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+expand_margin_bottom = 14.0
+shadow_color = Color(0, 0, 0, 0.835294)
+shadow_size = 1
+shadow_offset = Vector2(4, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1f07p"]
+bg_color = Color(0.584314, 0.788235, 0.886275, 1)
+border_width_top = 20
+border_color = Color(0.584314, 0.788235, 0.886275, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+expand_margin_bottom = 14.0
+shadow_color = Color(0, 0, 0, 0.835294)
+shadow_size = 1
+shadow_offset = Vector2(4, 4)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ae2w8"]
+
+[resource]
+GraphNode/styles/frame = SubResource("StyleBoxFlat_no70s")
+GraphNode/styles/panel = SubResource("StyleBoxFlat_1f07p")
+GraphNode/styles/titlebar = SubResource("StyleBoxEmpty_ae2w8")
