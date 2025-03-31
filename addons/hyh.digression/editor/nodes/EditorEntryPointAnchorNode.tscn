@@ -9,6 +9,7 @@ title = "Entry Point"
 script = ExtResource("2_3gp7a")
 
 [node name="Label" parent="MC/GC" index="0"]
+z_index = 1
 text = "Name: default_entry_point"
 
 [node name="NameLineEdit" parent="MC/GC" index="1"]

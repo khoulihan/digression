@@ -15,6 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://ovo8yq3kwwte" path="res://addons/hyh.digression/icons/icon_save.svg" id="14_3fkq1"]
 
 [node name="EditorSubGraphNode" type="GraphNode"]
+z_index = 1
 offset_right = 532.0
 offset_bottom = 123.0
 theme = ExtResource("1_alste")

@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://bhp62qnb4xqye" path="res://addons/hyh.digression/editor/controls/SingleValueAnyTypeControl.tscn" id="6_tky8b"]
 
 [node name="EditorExitNode" type="GraphNode"]
+z_index = 1
 theme = ExtResource("1_ip1ir")
 theme_override_styles/panel = ExtResource("2_tky8b")
 theme_override_styles/panel_selected = ExtResource("3_lenhd")

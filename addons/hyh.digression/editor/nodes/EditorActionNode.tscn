@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="9_pc82h"]
 
 [node name="EditorActionNode" type="GraphNode"]
+z_index = 1
 offset_right = 416.0
 offset_bottom = 121.0
 theme = ExtResource("1_q2xpx")

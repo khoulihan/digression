@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="8_inhcp"]
 
 [node name="EditorRandomNode" type="GraphNode"]
+z_index = 1
 offset_right = 500.0
 offset_bottom = 164.0
 theme = ExtResource("1_w7up8")
@@ -84,7 +85,6 @@ flat = true
 [node name="DragTargetHSeparator" parent="MarginContainer/VB" instance=ExtResource("8_inhcp")]
 layout_mode = 2
 accepted_classes = Array[int]([4])
-accepted_type_restriction = 0
 
 [node name="RandomValue" parent="." instance=ExtResource("3")]
 layout_mode = 2

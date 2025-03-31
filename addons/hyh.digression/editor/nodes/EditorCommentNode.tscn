@@ -45,8 +45,8 @@ theme_override_constants/margin_bottom = 10
 
 [node name="CommentEdit" type="TextEdit" parent="MC"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0.117647, 0.117647, 0.117647, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 7
 theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("StyleBoxFlat_1u6x7")

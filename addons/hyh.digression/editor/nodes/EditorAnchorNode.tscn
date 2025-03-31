@@ -8,6 +8,7 @@
 [ext_resource type="StyleBox" uid="uid://bem71csdncxqs" path="res://addons/hyh.digression/editor/nodes/styles/anchor_node_titlebar_selected.tres" id="5_84nnd"]
 
 [node name="EditorAnchorNode" type="GraphNode"]
+z_index = 1
 offset_right = 384.0
 offset_bottom = 74.0
 theme = ExtResource("1_2eskj")
