@@ -6,12 +6,20 @@ extends "EditorGraphNodeBase.gd"
 @onready var _comment_edit = $MC/CommentEdit
 
 
+var show_close: bool:
+	set(value):
+		_close_button.visible = value
+	get:
+		return _close_button.visible
+
+
 ## Configure the editor node for the provided resource node.
 func configure_for_node(g, n):
 	super.configure_for_node(g, n)
 	if n.size != Vector2.ZERO:
 		size = n.size
 	self.set_comment(n.comment)
+	self.show_close = false
 
 
 ## Save the state of the editor node to the resource.
