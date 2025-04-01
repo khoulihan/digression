@@ -20,7 +20,11 @@ var _path: NodePath
 func populate(path):
 	_path = path
 	if _path != null and not _path.is_empty():
-		_selection_name.text = path.get_concatenated_names()
+		if _path == NodePath("."):
+			var root = EditorInterface.get_edited_scene_root()
+			_selection_name.text = root.name
+		else:
+			_selection_name.text = path.get_concatenated_names()
 		_validation_warning.clear_warning()
 	else:
 		_selection_name.text = ""

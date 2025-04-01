@@ -122,6 +122,8 @@ var _logger = Logging.new(
 #region Built-in virtual methods
 
 func _ready():
+	_context = DialogueProcessingContext.new()
+	
 	if global_store != null and global_store != NodePath(""):
 		register_global_store(get_node(global_store))
 	else:
@@ -138,8 +140,6 @@ func _ready():
 	_choice_types = ProjectSettings.get_setting(
 		"digression_dialogue_graph_editor/choice_types"
 	)
-	
-	_context = DialogueProcessingContext.new()
 	
 	_expression_evaluator = ExpressionEvaluator.new()
 	_expression_evaluator.context = _context
@@ -166,10 +166,16 @@ func register_local_store(store):
 
 
 ## Process the specified dialogue graph.
-func process_dialogue_graph(dialogue_graph, state_store, start_anchor=null):
+func process_dialogue_graph(
+	dialogue_graph,
+	state_store,
+	scene_root=null,
+	start_anchor=null
+):
 	var entry_name = _context.prepare_for_processing(
 		dialogue_graph,
 		state_store,
+		scene_root,
 		start_anchor,
 	)
 	_logger.info(
@@ -539,9 +545,23 @@ func _process_action_node():
 			ProceedSignalReturnValues.VALUE
 		]
 	else:
-		var action_node = \
-			owner.get_node(_context.current_node.node) \
-			if not _is_previewing() else owner
+		var action_node
+		if not _is_previewing() and _context.scene_root != null:
+			action_node = _context.scene_root.get_node_or_null(_context.current_node.node)
+		elif _is_previewing():
+			# If we are previewing there is a method on the previewer which
+			# handles all actions - and the previewer will be the owner.
+			action_node = owner
+		
+		if action_node == null:
+			_logger.error(
+				"Node specified for action could not be found %s" % [
+					_context.current_node.node
+				]
+			)
+			_context.advance_to_next_node()
+			return
+		
 		print("Node for method call action is %s" % action_node.name)
 		if not _is_previewing() and not action_node.has_method(_context.current_node.action_or_method_name):
 			_logger.error(

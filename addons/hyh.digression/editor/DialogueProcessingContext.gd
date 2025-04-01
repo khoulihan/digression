@@ -37,6 +37,9 @@ var last_choice
 # TODO: Why is this an ID while all the others are the resources themselves?
 var last_choice_node_id
 
+# Root of the scene for resolving node references
+var scene_root
+
 # TODO: Is this the appropriate name??
 var _logger = Logging.new(
 	"Digression Dialogue Processing Context",
@@ -64,7 +67,13 @@ func _init() -> void:
 			_built_in_variable_names.append(v['name'])
 
 
-func prepare_for_processing(dialogue_graph, state_store, start_anchor=null):
+func prepare_for_processing(
+	dialogue_graph,
+	state_store,
+	scene_root=null,
+	start_anchor=null
+):
+	self.scene_root = scene_root
 	_graph_stack = []
 	transient_store = {}
 	dialogue_graph_state_store = state_store

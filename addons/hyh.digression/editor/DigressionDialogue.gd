@@ -93,6 +93,7 @@ func trigger(entry_point=null):
 	_dialogue_controller.process_dialogue_graph(
 		dialogue_graph,
 		_state,
+		self.owner,
 		entry_point
 	)
 
