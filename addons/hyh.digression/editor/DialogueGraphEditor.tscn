@@ -1,7 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://dkdmsbw1ph825"]
+[gd_scene load_steps=8 format=3 uid="uid://dkdmsbw1ph825"]
 
 [ext_resource type="Texture2D" uid="uid://cphlblvt01plb" path="res://addons/hyh.digression/icons/icon_chat.svg" id="2_hackq"]
 [ext_resource type="PackedScene" uid="uid://dhubj3hnf0rxp" path="res://addons/hyh.digression/editor/controls/GraphBreadcrumbs.tscn" id="3_8v60q"]
+[ext_resource type="Script" uid="uid://b1ketkw46ckay" path="res://addons/hyh.digression/editor/controls/GraphList.gd" id="3_dents"]
+[ext_resource type="Texture2D" uid="uid://bf0nmtdddna15" path="res://addons/hyh.digression/icons/icon_back.svg" id="4_dpah6"]
 [ext_resource type="Texture2D" uid="uid://dfvamw687u0qj" path="res://addons/hyh.digression/icons/icon_search.svg" id="4_es86a"]
 [ext_resource type="Script" uid="uid://lymfjlvcrqoc" path="res://addons/hyh.digression/editor/controls/AnchorList.gd" id="5_f01m4"]
 [ext_resource type="Script" uid="uid://b0a8lsbjxe56m" path="res://addons/hyh.digression/editor/DialogueGraphEditor.gd" id="6"]
@@ -15,23 +17,11 @@ size_flags_vertical = 3
 script = ExtResource("6")
 
 [node name="TitleBar" type="HBoxContainer" parent="."]
+visible = false
 layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="TitleBar"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_right = 6
-
-[node name="TextureRect" type="TextureRect" parent="TitleBar/MarginContainer"]
-layout_mode = 2
-size_flags_vertical = 4
-texture = ExtResource("2_hackq")
-
-[node name="GraphBreadcrumbs" parent="TitleBar" instance=ExtResource("3_8v60q")]
-layout_mode = 2
-size_flags_vertical = 4
 
 [node name="MenuBar" type="HBoxContainer" parent="."]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 8
 
@@ -40,36 +30,87 @@ layout_mode = 2
 size_flags_vertical = 3
 split_offset = 200
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HS"]
+[node name="LeftSidebar" type="VSplitContainer" parent="HS"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 
-[node name="AnchorFilter" type="LineEdit" parent="HS/VBoxContainer"]
+[node name="GraphVB" type="VBoxContainer" parent="HS/LeftSidebar"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GraphFilter" type="LineEdit" parent="HS/LeftSidebar/GraphVB"]
+layout_mode = 2
+placeholder_text = "Filter Graphs..."
+right_icon = ExtResource("4_es86a")
+
+[node name="MC" type="MarginContainer" parent="HS/LeftSidebar/GraphVB"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GraphList" type="ItemList" parent="HS/LeftSidebar/GraphVB/MC"]
+layout_mode = 2
+script = ExtResource("3_dents")
+
+[node name="AnchorVB" type="VBoxContainer" parent="HS/LeftSidebar"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="AnchorFilter" type="LineEdit" parent="HS/LeftSidebar/AnchorVB"]
 layout_mode = 2
 placeholder_text = "Filter Anchors..."
 right_icon = ExtResource("4_es86a")
 
-[node name="MC" type="MarginContainer" parent="HS/VBoxContainer"]
+[node name="MC" type="MarginContainer" parent="HS/LeftSidebar/AnchorVB"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="AnchorList" type="ItemList" parent="HS/VBoxContainer/MC"]
-custom_minimum_size = Vector2(60, 0)
+[node name="AnchorList" type="ItemList" parent="HS/LeftSidebar/AnchorVB/MC"]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 allow_reselect = true
 script = ExtResource("5_f01m4")
 
-[node name="MarginContainer" type="MarginContainer" parent="HS"]
-custom_minimum_size = Vector2(0, 200)
+[node name="MC" type="MarginContainer" parent="HS"]
+custom_minimum_size = Vector2(500, 200)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="GraphEdit" type="GraphEdit" parent="HS/MarginContainer"]
+[node name="VB" type="VBoxContainer" parent="HS/MC"]
 layout_mode = 2
+
+[node name="GraphEdit" type="GraphEdit" parent="HS/MC/VB"]
+layout_mode = 2
+size_flags_vertical = 3
+scroll_offset = Vector2(0, -27)
 right_disconnects = true
 zoom_min = 0.25
 zoom_max = 1.0
 show_zoom_label = true
+
+[node name="BottomBar" type="HBoxContainer" parent="HS/MC/VB"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[node name="ToggleSidebarButton" type="Button" parent="HS/MC/VB/BottomBar"]
+layout_mode = 2
+toggle_mode = true
+icon = ExtResource("4_dpah6")
+flat = true
+
+[node name="MarginContainer" type="MarginContainer" parent="HS/MC/VB/BottomBar"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 6
+
+[node name="TextureRect" type="TextureRect" parent="HS/MC/VB/BottomBar/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("2_hackq")
+
+[node name="GraphBreadcrumbs" parent="HS/MC/VB/BottomBar" instance=ExtResource("3_8v60q")]
+layout_mode = 2
+size_flags_vertical = 4
 
 [node name="GraphContextMenu" type="PopupMenu" parent="."]
 size = Vector2i(255, 424)
@@ -119,21 +160,25 @@ item_0/id = -1
 
 [node name="ErrorDialog" type="AcceptDialog" parent="."]
 
-[connection signal="graph_open_requested" from="TitleBar/GraphBreadcrumbs" to="." method="_on_graph_breadcrumbs_graph_open_requested"]
-[connection signal="text_changed" from="HS/VBoxContainer/AnchorFilter" to="." method="_on_anchor_filter_text_changed"]
-[connection signal="text_submitted" from="HS/VBoxContainer/AnchorFilter" to="." method="_on_anchor_filter_text_submitted"]
-[connection signal="anchor_selected" from="HS/VBoxContainer/MC/AnchorList" to="." method="_on_anchor_list_anchor_selected"]
-[connection signal="connection_request" from="HS/MarginContainer/GraphEdit" to="." method="_on_graph_edit_connection_request"]
-[connection signal="connection_to_empty" from="HS/MarginContainer/GraphEdit" to="." method="_on_graph_edit_connection_to_empty"]
-[connection signal="copy_nodes_request" from="HS/MarginContainer/GraphEdit" to="." method="_on_graph_edit_copy_nodes_request"]
-[connection signal="delete_nodes_request" from="HS/MarginContainer/GraphEdit" to="." method="_node_close_request"]
-[connection signal="disconnection_request" from="HS/MarginContainer/GraphEdit" to="." method="_on_graph_edit_disconnection_request"]
-[connection signal="duplicate_nodes_request" from="HS/MarginContainer/GraphEdit" to="." method="_on_graph_edit_duplicate_nodes_request"]
-[connection signal="end_node_move" from="HS/MarginContainer/GraphEdit" to="." method="_on_graph_edit_end_node_move"]
-[connection signal="focus_entered" from="HS/MarginContainer/GraphEdit" to="." method="_on_graph_edit_focus_entered"]
-[connection signal="paste_nodes_request" from="HS/MarginContainer/GraphEdit" to="." method="_on_graph_edit_paste_nodes_request"]
-[connection signal="popup_request" from="HS/MarginContainer/GraphEdit" to="." method="_on_graph_edit_popup_request"]
-[connection signal="scroll_offset_changed" from="HS/MarginContainer/GraphEdit" to="." method="_on_graph_edit_scroll_offset_changed"]
+[connection signal="text_changed" from="HS/LeftSidebar/GraphVB/GraphFilter" to="." method="_on_graph_filter_text_changed"]
+[connection signal="text_submitted" from="HS/LeftSidebar/GraphVB/GraphFilter" to="." method="_on_graph_filter_text_submitted"]
+[connection signal="graph_selected" from="HS/LeftSidebar/GraphVB/MC/GraphList" to="." method="_on_graph_list_graph_selected"]
+[connection signal="text_changed" from="HS/LeftSidebar/AnchorVB/AnchorFilter" to="." method="_on_anchor_filter_text_changed"]
+[connection signal="text_submitted" from="HS/LeftSidebar/AnchorVB/AnchorFilter" to="." method="_on_anchor_filter_text_submitted"]
+[connection signal="anchor_selected" from="HS/LeftSidebar/AnchorVB/MC/AnchorList" to="." method="_on_anchor_list_anchor_selected"]
+[connection signal="connection_request" from="HS/MC/VB/GraphEdit" to="." method="_on_graph_edit_connection_request"]
+[connection signal="connection_to_empty" from="HS/MC/VB/GraphEdit" to="." method="_on_graph_edit_connection_to_empty"]
+[connection signal="copy_nodes_request" from="HS/MC/VB/GraphEdit" to="." method="_on_graph_edit_copy_nodes_request"]
+[connection signal="delete_nodes_request" from="HS/MC/VB/GraphEdit" to="." method="_node_close_request"]
+[connection signal="disconnection_request" from="HS/MC/VB/GraphEdit" to="." method="_on_graph_edit_disconnection_request"]
+[connection signal="duplicate_nodes_request" from="HS/MC/VB/GraphEdit" to="." method="_on_graph_edit_duplicate_nodes_request"]
+[connection signal="end_node_move" from="HS/MC/VB/GraphEdit" to="." method="_on_graph_edit_end_node_move"]
+[connection signal="focus_entered" from="HS/MC/VB/GraphEdit" to="." method="_on_graph_edit_focus_entered"]
+[connection signal="paste_nodes_request" from="HS/MC/VB/GraphEdit" to="." method="_on_graph_edit_paste_nodes_request"]
+[connection signal="popup_request" from="HS/MC/VB/GraphEdit" to="." method="_on_graph_edit_popup_request"]
+[connection signal="scroll_offset_changed" from="HS/MC/VB/GraphEdit" to="." method="_on_graph_edit_scroll_offset_changed"]
+[connection signal="toggled" from="HS/MC/VB/BottomBar/ToggleSidebarButton" to="." method="_on_toggle_sidebar_button_toggled"]
+[connection signal="graph_open_requested" from="HS/MC/VB/BottomBar/GraphBreadcrumbs" to="." method="_on_graph_breadcrumbs_graph_open_requested"]
 [connection signal="index_pressed" from="GraphContextMenu" to="." method="_on_graph_popup_index_pressed"]
 [connection signal="popup_hide" from="GraphContextMenu" to="." method="_on_graph_popup_hide"]
 [connection signal="index_pressed" from="NodePopupMenu" to="." method="_on_node_popup_index_pressed"]

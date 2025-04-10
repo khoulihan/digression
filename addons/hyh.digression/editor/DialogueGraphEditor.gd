@@ -122,11 +122,15 @@ const EditorRepeatNode = preload("./nodes/EditorRepeatNode.tscn")
 const EditorEntryPointAnchorNode = preload("./nodes/EditorEntryPointAnchorNode.tscn")
 const EditorExitNode = preload("./nodes/EditorExitNode.tscn")
 
+# Resources required by UI controls
+const BACK_ARROW_ICON = preload("res://addons/hyh.digression/icons/icon_back.svg")
+const FORWARD_ARROW_ICON = preload("res://addons/hyh.digression/icons/icon_forward.svg")
+
 #endregion
 
 #region Variable declarations
 
-var _open_graphs
+var _open_graphs: Array[OpenGraph]
 var _edited
 # This is for recording a stack of edited subgraphs
 # It is cleared when a graph is edited in the scene tree or filesystem
@@ -172,13 +176,17 @@ var _logger = Logging.new(
 )
 
 # Nodes
-@onready var _graph_edit = $HS/MarginContainer/GraphEdit
+@onready var _graph_edit = $HS/MC/VB/GraphEdit
 @onready var _graph_popup = $GraphContextMenu
 @onready var _confirmation_dialog = $ConfirmationDialog
 @onready var _error_dialog = $ErrorDialog
-@onready var _breadcrumbs = $TitleBar/GraphBreadcrumbs
-@onready var _anchor_filter := $HS/VBoxContainer/AnchorFilter
-@onready var _anchor_list := $HS/VBoxContainer/MC/AnchorList
+@onready var _breadcrumbs = $HS/MC/VB/BottomBar/GraphBreadcrumbs
+@onready var _anchor_filter := $HS/LeftSidebar/AnchorVB/AnchorFilter
+@onready var _anchor_list := $HS/LeftSidebar/AnchorVB/MC/AnchorList
+@onready var _graph_filter := $HS/LeftSidebar/GraphVB/GraphFilter
+@onready var _graph_list := $HS/LeftSidebar/GraphVB/MC/GraphList
+@onready var _left_sidebar := $HS/LeftSidebar
+@onready var _left_sidebar_toggle := $HS/MC/VB/BottomBar/ToggleSidebarButton
 
 #endregion
 
@@ -186,7 +194,7 @@ var _logger = Logging.new(
 #region Built-in virtual methods
 
 func _init():
-	_open_graphs = Array()
+	_open_graphs = []
 	_graph_stack = Array()
 
 
@@ -253,6 +261,7 @@ func edit_graph(object, path):
 		_edited.graph.graph_type
 	)
 	_refresh_anchor_maps()
+	_graph_list.populate(_open_graphs)
 	_draw_edited_graph()
 	_breadcrumbs.populate(_graph_stack)
 	_update_preview_button_state()
@@ -612,7 +621,7 @@ func _on_jump_node_destination_chosen(destination_id, node):
 #endregion
 
 
-#region Anchor list
+#region UI Signals
 
 func _on_anchor_filter_text_changed(new_text: String) -> void:
 	_anchor_list.filter(new_text)
@@ -632,6 +641,25 @@ func _on_anchor_list_anchor_selected(name: Variant) -> void:
 	var centre_to_node = (_graph_edit.size / 2.0)
 	var centre_node = ((node.size * _graph_edit.zoom) / 2.0)
 	_graph_edit.scroll_offset = offset_to_node - centre_to_node + centre_node
+
+
+func _on_graph_filter_text_changed(new_text: String) -> void:
+	_graph_list.filter(new_text)
+
+
+func _on_graph_filter_text_submitted(new_text: String) -> void:
+	if _graph_list.item_count > 0:
+		_graph_list.grab_focus()
+		_graph_list.select_first_graph()
+
+
+func _on_graph_list_graph_selected(graph: Variant) -> void:
+	edit_graph(graph.graph, graph.path)
+
+
+func _on_toggle_sidebar_button_toggled(toggled_on: bool) -> void:
+	_left_sidebar.visible = not toggled_on
+	_left_sidebar_toggle.icon = FORWARD_ARROW_ICON if toggled_on else BACK_ARROW_ICON
 
 #endregion
 
@@ -1404,7 +1432,7 @@ class ResourceClipboard:
 
 
 class OpenGraph:
-	var graph
+	var graph : DigressionDialogueGraph
 	var path
 	var dirty
 	var zoom
