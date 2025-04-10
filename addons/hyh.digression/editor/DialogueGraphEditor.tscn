@@ -66,7 +66,6 @@ size_flags_vertical = 3
 
 [node name="GraphEdit" type="GraphEdit" parent="HS/MarginContainer"]
 layout_mode = 2
-scroll_offset = Vector2(-510, -200)
 right_disconnects = true
 zoom_min = 0.25
 zoom_max = 1.0

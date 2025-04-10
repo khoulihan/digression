@@ -76,9 +76,6 @@ func _exit_tree():
 	remove_custom_type("DigressionDialogueVariableStore")
 	remove_inspector_plugin(_custom_inspector)
 	if editor != null:
-		editor_host.expand_button_toggled.disconnect(
-			_on_editor_expand_button_toggled
-		)
 		editor.save_requested.disconnect(
 			_save_requested
 		)
@@ -89,12 +86,16 @@ func _exit_tree():
 		editor.current_graph_modified.disconnect(
 			_on_editor_current_graph_modified
 		)
-	remove_control_from_bottom_panel(editor_host)
+	EditorInterface.get_editor_main_screen().remove_child(editor_host)
 	menu.id_pressed.disconnect(_on_tool_menu_item_selected)
 	remove_tool_menu_item("Digression Dialogue Graph Editor")
 	if editor_host != null:
-		editor_host.free()
+		editor_host.queue_free()
 		editor = null
+
+
+func _has_main_screen() -> bool:
+	return true
 
 
 func _handles(object: Object) -> bool:
@@ -122,7 +123,7 @@ func _apply_changes():
 
 
 func _get_plugin_name():
-	return "Dialogue Graph Editor"
+	return "Dialogue"
 
 
 func _get_plugin_icon():
@@ -130,8 +131,8 @@ func _get_plugin_icon():
 
 
 func _make_visible(visible):
-	if visible:
-		make_bottom_panel_item_visible(editor_host)
+	if is_instance_valid(editor_host):
+		editor_host.visible = visible
 
 
 func clear():
@@ -146,14 +147,9 @@ func _create_default_project_settings():
 func _create_editor_host():
 	_logger.debug("Creating host...")
 	editor_host = preload("editor/DialogueGraphEditorHost.tscn").instantiate()
-	editor_button = add_control_to_bottom_panel(editor_host, _get_plugin_name())
+	EditorInterface.get_editor_main_screen().add_child(editor_host)
+	editor_host.visible = false
 	_get_editor()
-	
-	# Caution: this method of obtaining the expand button could break at any time
-	var button_parent = editor_button.get_parent().get_parent().get_parent()
-	expand_button = button_parent.get_child(
-		button_parent.get_child_count() - 1
-	)
 
 
 func _get_editor():
@@ -161,9 +157,6 @@ func _get_editor():
 	editor = editor_host.editor
 	editor.save_requested.connect(
 		_save_requested
-	)
-	editor_host.expand_button_toggled.connect(
-		_on_editor_expand_button_toggled
 	)
 	editor.display_filesystem_path_requested.connect(
 		_on_editor_display_filesystem_path_requested
@@ -193,11 +186,6 @@ func _on_editor_current_graph_modified():
 func _on_editor_display_filesystem_path_requested(path):
 	_logger.debug("Navigating to path %s" % path)
 	get_editor_interface().get_file_system_dock().navigate_to_path(path)
-
-
-func _on_editor_expand_button_toggled(button_pressed):
-	get_editor_interface().distraction_free_mode = button_pressed
-	expand_button.set_pressed(button_pressed)
 
 
 func _create_menu():

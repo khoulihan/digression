@@ -1,9 +1,6 @@
 @tool
 extends MarginContainer
 
-
-signal expand_button_toggled(button_pressed)
-
 @onready var editor = $VB/ModeContainer/Editor
 @onready var _preview = $VB/ModeContainer/Preview
 @onready var _edit_button = $VB/HB/ModeSwitch/EditButton
@@ -13,10 +10,6 @@ signal expand_button_toggled(button_pressed)
 func _show_hide(show, hide):
 	show.visible = true
 	hide.visible = false
-
-
-func _on_expand_button_toggled(button_pressed):
-	expand_button_toggled.emit(button_pressed)
 
 
 func _on_preview_starting_preview():
@@ -44,8 +37,10 @@ func _on_edit_button_toggled(button_pressed):
 
 
 func _on_editor_previewable():
-	_preview_button.disabled = false
+	if is_instance_valid(_preview_button):
+		_preview_button.disabled = false
 
 
 func _on_editor_not_previewable():
-	_preview_button.disabled = true
+	if is_instance_valid(_preview_button):
+		_preview_button.disabled = true
