@@ -200,3 +200,11 @@ func _on_remove_button_pressed() -> void:
 
 func _on_drag_target_dropped(arg: Variant, at_position: Variant) -> void:
 	dropped_after.emit(arg)
+
+
+func _on_code_edit_text_changed() -> void:
+	modified.emit()
+
+
+func _on_code_edit_resized() -> void:
+	resized.emit()

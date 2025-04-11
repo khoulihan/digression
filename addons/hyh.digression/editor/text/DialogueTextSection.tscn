@@ -100,6 +100,8 @@ accepted_classes = Array[int]([1])
 [connection signal="pressed" from="VB/Header/RemoveButton" to="." method="_on_remove_button_pressed"]
 [connection signal="item_selected" from="VB/VariantSelectContainer/VariantSelect" to="." method="_on_variant_select_item_selected"]
 [connection signal="pressed" from="VB/VariantSelectContainer/ClearVariantButton" to="." method="_on_clear_variant_button_pressed"]
+[connection signal="resized" from="VB/CodeEdit" to="." method="_on_code_edit_resized"]
+[connection signal="text_changed" from="VB/CodeEdit" to="." method="_on_code_edit_text_changed"]
 [connection signal="text_changed" from="VB/TranslationContainer/TranslationKeyEdit" to="." method="_on_translation_key_edit_text_changed"]
 [connection signal="add_property_requested" from="VB/CustomPropertiesControl" to="." method="_on_custom_properties_control_add_property_requested"]
 [connection signal="modified" from="VB/CustomPropertiesControl" to="." method="_on_custom_properties_control_modified"]

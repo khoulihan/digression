@@ -150,6 +150,10 @@ func select_character(character):
 			_populate_variants(_characters[index].character_variants)
 
 
+func _reset_size(width: float) -> void:
+	self.size = Vector2(width, 0.0)
+
+
 func _configure_for_dialogue_type(dialogue_type, adjust_size):
 	if dialogue_type == null:
 		return
@@ -162,7 +166,7 @@ func _configure_for_dialogue_type(dialogue_type, adjust_size):
 				var character_options_height = _character_options_container.size.y
 				var separator_height = _character_options_separator.size.y
 				var adjustment = character_options_height + separator_height
-				size = Vector2(size.x, size.y + adjustment)
+				_reset_size(self.size.x)
 	else:
 		if _character_options_container.visible:
 			var character_options_height = _character_options_container.size.y
@@ -171,7 +175,7 @@ func _configure_for_dialogue_type(dialogue_type, adjust_size):
 			_character_options_separator.hide()
 			if adjust_size:
 				var adjustment = character_options_height + separator_height
-				size = Vector2(size.x, size.y - adjustment)
+				_reset_size(self.size.x)
 	for section in _sections_container.get_children():
 		section.configure_for_dialogue_type(involves_character, adjust_size)
 
@@ -238,8 +242,8 @@ func _remove_section(section):
 	var size_diff = section.size.y
 	_sections_container.remove_child(section)
 	section.queue_free()
-	self.size = Vector2(self.size.x, self.size.y - size_diff)
 	_configure_text_sections_for_child_count()
+	_reset_size(self.size.x)
 
 
 func _connect_signals_for_section(section):
@@ -253,6 +257,7 @@ func _connect_signals_for_section(section):
 	section.preparing_to_change_parent.connect(
 		_on_section_preparing_to_change_parent.bind(section)
 	)
+	section.resized.connect(_on_section_resized)
 
 
 func _disconnect_signals_for_section(section):
@@ -266,6 +271,7 @@ func _disconnect_signals_for_section(section):
 	section.preparing_to_change_parent.disconnect(
 		_on_section_preparing_to_change_parent
 	)
+	section.resized.disconnect(_on_section_resized)
 
 
 func _show_section_removal_confirmation_dialog(section):
@@ -292,7 +298,7 @@ func _add_section_at_position(section, index):
 	var size_diff = section.size.y
 	_sections_container.add_child(section)
 	_sections_container.move_child(section, index)
-	self.size = Vector2(self.size.x, self.size.y + size_diff)
+	_reset_size(self.size.x)
 	node_resource.sections.insert(
 		index,
 		section.section_resource
@@ -353,7 +359,8 @@ func _on_section_dropped_after(dropped_section, target_section):
 
 
 func _on_resize_request(new_minsize):
-	self.set_size(new_minsize)
+	# Height is managed automatically, so we only accept the x component of the change.
+	set_deferred("size", Vector2(new_minsize.x, 0.0))
 
 
 func _on_translation_key_edit_text_changed(new_text):
@@ -384,8 +391,8 @@ func _on_add_section_button_pressed() -> void:
 		_get_variants_for_selected_character()
 	)
 	_connect_signals_for_section(editor_section)
-	self.size = Vector2(self.size.x, self.size.y + editor_section.size.y)
 	_configure_text_sections_for_child_count()
+	_reset_size(self.size.x)
 
 
 func _action_confirmed(section, dialog):
@@ -412,5 +419,9 @@ func _on_section_preparing_to_change_parent(section):
 			section.section_resource
 		)
 	)
-	self.size = Vector2(self.size.x, self.size.y - size_diff)
+	_reset_size(self.size.x)
 	_configure_text_sections_for_child_count()
+
+
+func _on_section_resized() -> void:
+	_reset_size(self.size.x)
