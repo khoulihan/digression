@@ -58,17 +58,22 @@ layout_mode = 2
 icon = ExtResource("3_vvkil")
 flat = true
 
-[node name="TextEdit" type="TextEdit" parent="VB"]
-custom_minimum_size = Vector2(200, 31)
+[node name="CodeEdit" type="CodeEdit" parent="VB"]
 layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 2.0
-mouse_default_cursor_shape = 0
-theme_override_constants/line_spacing = 8
-placeholder_text = "Enter dialogue text..."
+placeholder_text = "Enter Dialogue Text..."
 wrap_mode = 1
-indent_wrapped_lines = true
 scroll_fit_content_height = true
+gutters_draw_line_numbers = true
+auto_brace_completion_enabled = true
+auto_brace_completion_highlight_matching = true
+auto_brace_completion_pairs = {
+"\"": "\"",
+"'": "'",
+"(": ")",
+"<": ">",
+"[": "]",
+"{": "}"
+}
 
 [node name="TranslationContainer" type="GridContainer" parent="VB"]
 layout_mode = 2
