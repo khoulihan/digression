@@ -15,10 +15,16 @@ const CustomPropertyControl = preload("CustomPropertyControl.tscn")
 
 ## The PropertyUse to restrict the control to.
 @export var use_restriction: PropertyUse
+@export var show_add_button := true
 
 var _populating := false
 
 @onready var _properties_container = $VB/PropertiesContainer
+@onready var _add_button = $VB/AddButton
+
+
+func _ready() -> void:
+	_add_button.visible = show_add_button
 
 
 ## Configure the control for the specified properties.
@@ -66,6 +72,16 @@ func remove_property(property_name: String) -> void:
 			return
 
 
+func request_property_and_add() -> void:
+	var dialog = PropertySelectDialog.instantiate()
+	dialog.use_restriction = self.use_restriction
+	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
+	dialog.cancelled.connect(_on_property_select_dialog_cancelled.bind(dialog))
+	dialog.selected.connect(_on_property_select_dialog_selected.bind(dialog))
+	get_tree().root.add_child(dialog)
+	dialog.popup()
+
+
 func _emit_size_changed(size_before, deferrals_required=2, deferral_count=0):
 	# Some changes to the UI aren't reflected in the controls
 	# size on the next idle frame, so have to defer until they are.
@@ -76,13 +92,7 @@ func _emit_size_changed(size_before, deferrals_required=2, deferral_count=0):
 
 
 func _on_add_button_pressed():
-	var dialog = PropertySelectDialog.instantiate()
-	dialog.use_restriction = self.use_restriction
-	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-	dialog.cancelled.connect(_on_property_select_dialog_cancelled.bind(dialog))
-	dialog.selected.connect(_on_property_select_dialog_selected.bind(dialog))
-	get_tree().root.add_child(dialog)
-	dialog.popup()
+	request_property_and_add()
 
 
 func _on_property_select_dialog_cancelled(dialog) -> void:

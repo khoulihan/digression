@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bi6s5ip3smrd5"]
+[gd_scene load_steps=14 format=3 uid="uid://bi6s5ip3smrd5"]
 
 [ext_resource type="Script" uid="uid://nysssfi62cq0" path="res://addons/hyh.digression/editor/text/DialogueTextSection.gd" id="1_8kado"]
 [ext_resource type="Texture2D" uid="uid://c6ox4e8uvkkds" path="res://addons/hyh.digression/icons/icon_drag.svg" id="2_hnmw7"]
@@ -6,30 +6,23 @@
 [ext_resource type="Script" uid="uid://6d3khtryq2wr" path="res://addons/hyh.digression/editor/controls/drag/DragHandle.gd" id="3_2wp64"]
 [ext_resource type="Texture2D" uid="uid://d65jtbo3b07t" path="res://addons/hyh.digression/icons/icon_clear.svg" id="3_vvkil"]
 [ext_resource type="PackedScene" uid="uid://rg4q2rccwgo5" path="res://addons/hyh.digression/editor/controls/properties/CustomPropertiesControl.tscn" id="4_hgski"]
+[ext_resource type="StyleBox" uid="uid://ci63ijvh8x5cc" path="res://addons/hyh.digression/editor/nodes/styles/control_style_translation_key_parent.tres" id="6_guvya"]
 [ext_resource type="Texture2D" uid="uid://b303bfdrwrt8a" path="res://addons/hyh.digression/icons/icon_translation_dark.svg" id="6_wpajs"]
+[ext_resource type="Texture2D" uid="uid://c5ll5urk64ggp" path="res://addons/hyh.digression/icons/icon_gui_option_arrow.svg" id="7_1jf5n"]
+[ext_resource type="StyleBox" uid="uid://5rc6mmqek4w0" path="res://addons/hyh.digression/editor/nodes/styles/control_style_translation_key.tres" id="7_bflbv"]
 [ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="7_jmx58"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kckjo"]
-bg_color = Color(0.211765, 0.211765, 0.211765, 0.0980392)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_left = 2
+[ext_resource type="Texture2D" uid="uid://d0i22i0anuurm" path="res://addons/hyh.digression/icons/icon_add_dark.svg" id="7_q4adt"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wpajs"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wpajs"]
-bg_color = Color(0.211765, 0.211765, 0.211765, 0.0980392)
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
 [node name="DialogueTextSection" type="MarginContainer"]
 offset_right = 330.0
-offset_bottom = 214.0
+offset_bottom = 172.0
 script = ExtResource("1_8kado")
 
 [node name="VB" type="VBoxContainer" parent="."]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 5
 
 [node name="Header" type="HBoxContainer" parent="VB"]
 layout_mode = 2
@@ -78,7 +71,7 @@ theme_override_constants/separation = 0
 
 [node name="CodeEdit" type="CodeEdit" parent="VB/CodeBlock"]
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_kckjo")
+theme_override_styles/normal = ExtResource("6_guvya")
 placeholder_text = "Enter Dialogue Text..."
 wrap_mode = 1
 scroll_fit_content_height = true
@@ -94,27 +87,30 @@ auto_brace_completion_pairs = {
 "{": "}"
 }
 
-[node name="TranslationContainer" type="GridContainer" parent="VB/CodeBlock"]
+[node name="TranslationContainer" type="HBoxContainer" parent="VB/CodeBlock"]
 layout_mode = 2
-size_flags_horizontal = 8
-theme_override_constants/h_separation = 10
-theme_override_constants/v_separation = 10
-columns = 2
 
-[node name="Label" type="Label" parent="VB/CodeBlock/TranslationContainer"]
-visible = false
+[node name="MenuButton" type="MenuButton" parent="VB/CodeBlock/TranslationContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.14, 0.14, 0.14, 0.596078)
-theme_override_font_sizes/font_size = 12
-text = "Translation Key:"
+icon = ExtResource("7_1jf5n")
+item_count = 3
+popup/item_0/text = "Add Custom Property"
+popup/item_0/icon = ExtResource("7_q4adt")
+popup/item_0/id = 0
+popup/item_1/text = "Regenerate Translation Key"
+popup/item_1/icon = ExtResource("6_wpajs")
+popup/item_1/id = 1
+popup/item_2/text = "Regenerate Translation Key from Text"
+popup/item_2/icon = ExtResource("6_wpajs")
+popup/item_2/id = 2
 
 [node name="TranslationKeyEdit" type="LineEdit" parent="VB/CodeBlock/TranslationContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 10
 theme_override_colors/font_color = Color(0.141176, 0.141176, 0.141176, 0.596078)
 theme_override_styles/focus = SubResource("StyleBoxEmpty_wpajs")
-theme_override_styles/normal = SubResource("StyleBoxFlat_wpajs")
+theme_override_styles/normal = ExtResource("7_bflbv")
 placeholder_text = "Enter Translation Key..."
 expand_to_text_length = true
 right_icon = ExtResource("6_wpajs")
@@ -122,6 +118,7 @@ right_icon = ExtResource("6_wpajs")
 [node name="CustomPropertiesControl" parent="VB" instance=ExtResource("4_hgski")]
 layout_mode = 2
 use_restriction = 4
+show_add_button = false
 
 [node name="DragTargetHSeparator" parent="VB" instance=ExtResource("7_jmx58")]
 layout_mode = 2

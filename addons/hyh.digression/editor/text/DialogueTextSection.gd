@@ -7,6 +7,14 @@ signal removal_requested()
 signal preparing_to_change_parent()
 signal dropped_after(section)
 
+
+enum DialogueMenuItems {
+	ADD_CUSTOM_PROPERTY,
+	REGENERATE_TRANSLATION_KEY,
+	REGENERATE_TRANSLATION_KEY_FROM_TEXT,
+}
+
+
 const DialogueText = preload("res://addons/hyh.digression/resources/graph/DialogueText.gd")
 const HANDLE_ICON = preload("../../icons/icon_drag_light.svg")
 const PREVIEW_LENGTH = 25
@@ -22,6 +30,12 @@ var _variants
 @onready var _translation_key_edit := $VB/CodeBlock/TranslationContainer/TranslationKeyEdit
 @onready var _custom_properties_control = $VB/CustomPropertiesControl
 @onready var _header := $VB/Header
+@onready var _menu_button: MenuButton = $VB/CodeBlock/TranslationContainer/MenuButton
+
+
+func _ready() -> void:
+	var popup := _menu_button.get_popup()
+	popup.id_pressed.connect(_on_menu_id_pressed)
 
 
 # TODO: This might need additional arguments - dialogue type (or if it includes
@@ -208,3 +222,8 @@ func _on_code_edit_text_changed() -> void:
 
 func _on_code_edit_resized() -> void:
 	resized.emit()
+
+
+func _on_menu_id_pressed(id: int) -> void:
+	if id == DialogueMenuItems.ADD_CUSTOM_PROPERTY:
+		_custom_properties_control.request_property_and_add()
