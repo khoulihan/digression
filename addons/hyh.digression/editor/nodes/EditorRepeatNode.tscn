@@ -9,7 +9,6 @@
 [ext_resource type="Texture2D" uid="uid://bilsl8kxjm0kr" path="res://addons/hyh.digression/icons/icon_reload_large.svg" id="5_vtwdq"]
 
 [node name="EditorRepeatNode" type="GraphNode"]
-z_index = 1
 theme = ExtResource("1_8gxdf")
 theme_override_styles/panel = ExtResource("2_8ygrl")
 theme_override_styles/panel_selected = ExtResource("3_ef04y")
@@ -29,10 +28,6 @@ script = ExtResource("1_tvhyi")
 
 [node name="MC" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
 
 [node name="TextureRect" type="TextureRect" parent="MC"]
 layout_mode = 2

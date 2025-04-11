@@ -33,7 +33,7 @@ variation_embolden = 0.3
 
 [node name="EditorChoiceNode" instance=ExtResource("4")]
 offset_right = 511.0
-offset_bottom = 787.0
+offset_bottom = 778.0
 theme_override_constants/separation = 0
 theme_override_styles/panel = ExtResource("2_028dr")
 theme_override_styles/panel_selected = ExtResource("3_pqk3a")
@@ -123,6 +123,7 @@ selected = 0
 fit_to_longest_item = false
 item_count = 3
 popup/item_0/text = "Dialogue"
+popup/item_0/id = 0
 popup/item_1/text = "Narration"
 popup/item_1/id = 1
 popup/item_2/text = "A Really Long Type For Example Purposes"
@@ -193,10 +194,8 @@ use_restriction = 4
 [node name="HeaderContainer" type="MarginContainer" parent="." index="2"]
 layout_mode = 2
 size_flags_stretch_ratio = 0.0
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 5
 
 [node name="VB" type="VBoxContainer" parent="HeaderContainer" index="0"]
 layout_mode = 2
@@ -239,7 +238,6 @@ flat = true
 [node name="DragTargetHSeparator" parent="HeaderContainer/VB" index="1" instance=ExtResource("12_g4p45")]
 layout_mode = 2
 accepted_classes = Array[int]([5])
-hide_until_hover = false
 
 [node name="ChoiceValue" parent="." index="3" instance=ExtResource("3")]
 layout_mode = 2
@@ -249,7 +247,6 @@ layout_mode = 2
 
 [node name="AddChoiceContainer" type="MarginContainer" parent="." index="5"]
 layout_mode = 2
-theme_override_constants/margin_bottom = 5
 
 [node name="AddChoiceButton" type="Button" parent="AddChoiceContainer" index="0"]
 layout_mode = 2

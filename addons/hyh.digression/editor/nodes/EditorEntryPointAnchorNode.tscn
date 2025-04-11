@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://fmahvj3jfdww" path="res://addons/hyh.digression/editor/nodes/EditorEntryPointAnchorNode.gd" id="2_3gp7a"]
 
 [node name="EditorAnchorNode" instance=ExtResource("1_ew82q")]
-offset_right = 218.0
+offset_right = 214.0
 title = "Entry Point"
 script = ExtResource("2_3gp7a")
 

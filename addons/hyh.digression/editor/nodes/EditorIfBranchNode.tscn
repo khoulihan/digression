@@ -11,9 +11,8 @@
 [ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="7_t8s6h"]
 
 [node name="EditorIfBranchNode" type="GraphNode"]
-z_index = 1
-offset_right = 458.0
-offset_bottom = 96.0
+offset_right = 459.0
+offset_bottom = 244.0
 theme = ExtResource("1_3m3eq")
 theme_override_styles/panel = ExtResource("2_ftk5c")
 theme_override_styles/panel_selected = ExtResource("3_ocipx")
@@ -60,9 +59,7 @@ script = ExtResource("6_cvu84")
 
 [node name="DefaultContainer" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
 [node name="VB" type="VBoxContainer" parent="DefaultContainer"]
@@ -87,10 +84,6 @@ layout_mode = 2
 
 [node name="AddBranchContainer" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
 
 [node name="AddBranchButton" type="Button" parent="AddBranchContainer"]
 layout_mode = 2

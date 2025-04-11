@@ -8,9 +8,8 @@
 [ext_resource type="StyleBox" uid="uid://cg1qeowcx5883" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar_selected.tres" id="5_131bv"]
 
 [node name="EditorJumpNode" type="GraphNode"]
-z_index = 1
-offset_right = 384.0
-offset_bottom = 74.0
+offset_right = 357.0
+offset_bottom = 70.0
 theme = ExtResource("1_bs0dt")
 theme_override_styles/panel = ExtResource("2_wpdey")
 theme_override_styles/panel_selected = ExtResource("3_xrusj")
@@ -30,10 +29,6 @@ script = ExtResource("4_823kx")
 
 [node name="MC" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
 
 [node name="DestinationOption" type="OptionButton" parent="MC"]
 layout_mode = 2

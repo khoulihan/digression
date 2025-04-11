@@ -13,8 +13,8 @@
 
 [node name="EditorBranchNode" instance=ExtResource("1_40vcr")]
 offset_top = 1.0
-offset_right = 556.0
-offset_bottom = 250.0
+offset_right = 487.0
+offset_bottom = 231.0
 theme_override_styles/panel = ExtResource("2_rv5vu")
 theme_override_styles/panel_selected = ExtResource("3_likff")
 theme_override_styles/titlebar = ExtResource("4_e0k6l")
@@ -60,10 +60,6 @@ script = ExtResource("6_2lu8v")
 
 [node name="MC" type="MarginContainer" parent="." index="1"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 0
 
 [node name="VB" type="VBoxContainer" parent="MC" index="0"]
 layout_mode = 2
@@ -96,7 +92,6 @@ text = "default"
 [node name="DragTargetHSeparator" parent="MC/VB" index="1" instance=ExtResource("9_7nl6g")]
 layout_mode = 2
 accepted_classes = Array[int]([2])
-accepted_type_restriction = 0
 
 [node name="BranchValue" parent="." index="2" instance=ExtResource("9_ii30g")]
 layout_mode = 2

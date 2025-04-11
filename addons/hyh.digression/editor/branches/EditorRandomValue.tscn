@@ -11,9 +11,7 @@
 [node name="RandomValue" type="MarginContainer"]
 offset_right = 324.0
 offset_bottom = 74.0
-theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 10
 script = ExtResource("1")
 
 [node name="VB" type="VBoxContainer" parent="."]
@@ -54,7 +52,6 @@ flat = true
 [node name="DragTargetHSeparator" parent="VB" instance=ExtResource("6_x812e")]
 layout_mode = 2
 accepted_classes = Array[int]([4])
-accepted_type_restriction = 0
 
 [connection signal="changed" from="VB/HB/VariableContainer/WeightControl" to="." method="_on_weight_control_changed"]
 [connection signal="cleared" from="VB/HB/VariableContainer/WeightControl" to="." method="_on_weight_control_cleared"]

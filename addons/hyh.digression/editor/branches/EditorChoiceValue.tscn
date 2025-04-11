@@ -11,9 +11,7 @@
 [node name="ChoiceValue" type="MarginContainer"]
 offset_right = 306.0
 offset_bottom = 136.0
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_bottom = 5
 script = ExtResource("1_4mgxx")
 
 [node name="HB" type="VBoxContainer" parent="."]
@@ -89,7 +87,6 @@ layout_mode = 2
 [node name="DragTargetHSeparator" parent="HB" instance=ExtResource("5_x38qr")]
 layout_mode = 2
 accepted_classes = Array[int]([5])
-hide_until_hover = false
 
 [connection signal="pressed" from="HB/Header/RemoveButton" to="." method="_on_remove_button_pressed"]
 [connection signal="text_changed" from="HB/VariableContainer/DisplayContainer/DisplayEdit" to="." method="_on_display_edit_text_changed"]

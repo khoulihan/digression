@@ -10,9 +10,7 @@
 [node name="BranchValue" type="MarginContainer"]
 offset_right = 245.0
 offset_bottom = 47.0
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
+theme_override_constants/margin_top = 5
 script = ExtResource("1_jkr88")
 
 [node name="VB" type="VBoxContainer" parent="."]
@@ -53,7 +51,6 @@ flat = true
 [node name="DragTargetHSeparator" parent="VB" instance=ExtResource("6_4lolu")]
 layout_mode = 2
 accepted_classes = Array[int]([2])
-accepted_type_restriction = 0
 
 [connection signal="value_changed" from="VB/HorizontalLayout/GridContainer/ValueEdit" to="." method="_on_value_edit_value_changed"]
 [connection signal="pressed" from="VB/HorizontalLayout/RemoveButton" to="." method="_on_remove_button_pressed"]

@@ -15,9 +15,8 @@
 [ext_resource type="Texture2D" uid="uid://ovo8yq3kwwte" path="res://addons/hyh.digression/icons/icon_save.svg" id="14_3fkq1"]
 
 [node name="EditorSubGraphNode" type="GraphNode"]
-z_index = 1
-offset_right = 532.0
-offset_bottom = 123.0
+offset_right = 503.0
+offset_bottom = 94.0
 theme = ExtResource("1_alste")
 theme_override_styles/panel = ExtResource("2_0600f")
 theme_override_styles/panel_selected = ExtResource("3_uso30")
@@ -37,10 +36,6 @@ script = ExtResource("4")
 
 [node name="MC" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
 
 [node name="VB" type="VBoxContainer" parent="MC"]
 layout_mode = 2

@@ -19,11 +19,9 @@ corner_radius_bottom_left = 9
 
 [node name="EditorIfBranchValue" type="MarginContainer"]
 offset_right = 332.0
-offset_bottom = 31.0
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+offset_bottom = 56.0
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
 script = ExtResource("1_u2dra")
 
 [node name="VB" type="VBoxContainer" parent="."]
@@ -62,6 +60,7 @@ theme_override_constants/margin_bottom = 3
 
 [node name="ConditionExpression" parent="VB/Condition/PC/MC" instance=ExtResource("1_m0gfp")]
 layout_mode = 2
+allow_empty = false
 type = 1
 
 [node name="RemoveButton" type="Button" parent="VB/Condition"]
