@@ -16,10 +16,10 @@ const TEXT_EDIT_MINIMUM_WIDTH = 200.0
 
 var _variants
 
-@onready var _text_edit := $VB/CodeEdit
+@onready var _text_edit := $VB/CodeBlock/CodeEdit
 @onready var _variant_select := $VB/VariantSelectContainer/VariantSelect
 @onready var _variant_select_container := $VB/VariantSelectContainer
-@onready var _translation_key_edit := $VB/TranslationContainer/TranslationKeyEdit
+@onready var _translation_key_edit := $VB/CodeBlock/TranslationContainer/TranslationKeyEdit
 @onready var _custom_properties_control = $VB/CustomPropertiesControl
 @onready var _header := $VB/Header
 
