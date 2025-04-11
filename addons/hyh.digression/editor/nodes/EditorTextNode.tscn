@@ -13,7 +13,7 @@
 
 [node name="EditorTextNode" instance=ExtResource("2")]
 offset_right = 560.0
-offset_bottom = 336.0
+offset_bottom = 293.0
 theme_override_colors/resizer_color = Color(0, 0, 0, 1)
 theme_override_styles/panel = ExtResource("2_slpx5")
 theme_override_styles/panel_selected = ExtResource("3_mjv4r")

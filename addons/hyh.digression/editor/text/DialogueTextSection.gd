@@ -10,6 +10,7 @@ signal dropped_after(section)
 const DialogueText = preload("res://addons/hyh.digression/resources/graph/DialogueText.gd")
 const HANDLE_ICON = preload("../../icons/icon_drag_light.svg")
 const PREVIEW_LENGTH = 25
+const TEXT_EDIT_MINIMUM_WIDTH = 200.0
 
 @export var section_resource: DialogueText
 

@@ -10,7 +10,7 @@
 
 [node name="DialogueTextSection" type="MarginContainer"]
 offset_right = 330.0
-offset_bottom = 237.0
+offset_bottom = 214.0
 script = ExtResource("1_8kado")
 
 [node name="VB" type="VBoxContainer" parent="."]
@@ -65,7 +65,10 @@ size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
 mouse_default_cursor_shape = 0
 theme_override_constants/line_spacing = 8
+placeholder_text = "Enter dialogue text..."
 wrap_mode = 1
+indent_wrapped_lines = true
+scroll_fit_content_height = true
 
 [node name="TranslationContainer" type="GridContainer" parent="VB"]
 layout_mode = 2
