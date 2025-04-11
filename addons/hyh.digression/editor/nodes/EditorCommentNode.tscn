@@ -52,6 +52,7 @@ theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("StyleBoxFlat_1u6x7")
 placeholder_text = "Enter your comment..."
 wrap_mode = 1
+scroll_fit_content_height = true
 
 [connection signal="focus_entered" from="." to="." method="_on_focus_entered"]
 [connection signal="focus_exited" from="." to="." method="_on_focus_exited"]

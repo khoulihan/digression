@@ -91,6 +91,7 @@ func set_comment(comment):
 
 func _set_font_size(s):
 	_comment_edit.add_theme_font_size_override("font_size", FONT_SIZES[s])
+	set_deferred("size", Vector2(size.x, 0.0))
 
 
 func _control_focus_changed(focused):
@@ -99,12 +100,15 @@ func _control_focus_changed(focused):
 	self.show_text_size_option = focused
 	self.resizable = focused
 
+
 func _on_comment_edit_text_changed():
+	set_deferred("size", Vector2(size.x, 0.0))
 	emit_signal("modified")
 
 
 func _on_resize_request(new_minsize):
-	self.set_size(new_minsize)
+	set_deferred("size", Vector2(new_minsize.x, 0.0))
+	#self.set_size(new_minsize)
 
 
 func _on_node_selected():
