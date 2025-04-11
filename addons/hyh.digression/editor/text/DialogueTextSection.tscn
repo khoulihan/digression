@@ -105,7 +105,7 @@ popup/item_2/icon = ExtResource("6_wpajs")
 popup/item_2/id = 2
 
 [node name="TranslationKeyEdit" type="LineEdit" parent="VB/CodeBlock/TranslationContainer"]
-custom_minimum_size = Vector2(100, 0)
+custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_horizontal = 10
 theme_override_colors/font_color = Color(0.141176, 0.141176, 0.141176, 0.596078)
