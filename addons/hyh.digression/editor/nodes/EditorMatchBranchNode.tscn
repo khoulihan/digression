@@ -1,10 +1,6 @@
-[gd_scene load_steps=11 format=3 uid="uid://cs8d2h3ldiamk"]
+[gd_scene load_steps=7 format=3 uid="uid://cs8d2h3ldiamk"]
 
 [ext_resource type="PackedScene" uid="uid://c0pw3rdictm2v" path="res://addons/hyh.digression/editor/nodes/EditorGraphNodeBase.tscn" id="1_40vcr"]
-[ext_resource type="StyleBox" uid="uid://cy2mtyhieui8q" path="res://addons/hyh.digression/editor/nodes/styles/control_node.tres" id="2_rv5vu"]
-[ext_resource type="StyleBox" uid="uid://dt03i76r27rvt" path="res://addons/hyh.digression/editor/nodes/styles/control_node_selected.tres" id="3_likff"]
-[ext_resource type="StyleBox" uid="uid://bfb7qelnfi6bj" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar.tres" id="4_e0k6l"]
-[ext_resource type="StyleBox" uid="uid://cg1qeowcx5883" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar_selected.tres" id="5_0dlts"]
 [ext_resource type="Script" uid="uid://co3hdtsddxlek" path="res://addons/hyh.digression/editor/nodes/EditorMatchBranchNode.gd" id="6_2lu8v"]
 [ext_resource type="PackedScene" uid="uid://c31q0dbk4i25w" path="res://addons/hyh.digression/editor/controls/VariableSelectionControl.tscn" id="7_61d5t"]
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="8_pxhqs"]
@@ -14,11 +10,8 @@
 [node name="EditorBranchNode" instance=ExtResource("1_40vcr")]
 offset_top = 1.0
 offset_right = 487.0
-offset_bottom = 231.0
-theme_override_styles/panel = ExtResource("2_rv5vu")
-theme_override_styles/panel_selected = ExtResource("3_likff")
-theme_override_styles/titlebar = ExtResource("4_e0k6l")
-theme_override_styles/titlebar_selected = ExtResource("5_0dlts")
+offset_bottom = 210.0
+theme_type_variation = &"ControlGraphNode"
 title = "Branch (Match)"
 slot/0/left_enabled = true
 slot/0/left_type = 0
@@ -63,17 +56,14 @@ layout_mode = 2
 
 [node name="VB" type="VBoxContainer" parent="MC" index="0"]
 layout_mode = 2
-theme_override_constants/separation = 10
 
 [node name="HeaderContainer" type="HBoxContainer" parent="MC/VB" index="0"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 10
 
 [node name="GC" type="GridContainer" parent="MC/VB/HeaderContainer" index="0"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/v_separation = 10
 columns = 2
 
 [node name="Label" type="Label" parent="MC/VB/HeaderContainer/GC" index="0"]
@@ -101,9 +91,6 @@ layout_mode = 2
 
 [node name="AddBranchContainer" type="MarginContainer" parent="." index="4"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 10
 
 [node name="AddBranchButton" type="Button" parent="AddBranchContainer" index="0"]
 layout_mode = 2

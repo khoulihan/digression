@@ -1,12 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://oaxce7kcotie"]
+[gd_scene load_steps=6 format=3 uid="uid://oaxce7kcotie"]
 
 [ext_resource type="Script" uid="uid://dfnyor8bebdvv" path="res://addons/hyh.digression/editor/nodes/EditorSetNode.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://c0pw3rdictm2v" path="res://addons/hyh.digression/editor/nodes/EditorGraphNodeBase.tscn" id="2"]
-[ext_resource type="StyleBox" uid="uid://cav483j7746ud" path="res://addons/hyh.digression/editor/nodes/styles/action_node.tres" id="2_xqt80"]
-[ext_resource type="StyleBox" uid="uid://bawhxiixc3r2i" path="res://addons/hyh.digression/editor/nodes/styles/action_node_selected.tres" id="3_t2sq2"]
-[ext_resource type="StyleBox" uid="uid://cohhm3hommye4" path="res://addons/hyh.digression/editor/nodes/styles/action_node_titlebar.tres" id="4_6nqrg"]
 [ext_resource type="PackedScene" uid="uid://c31q0dbk4i25w" path="res://addons/hyh.digression/editor/controls/VariableSelectionControl.tscn" id="5_pyyww"]
-[ext_resource type="StyleBox" uid="uid://tvd8fygqmp6h" path="res://addons/hyh.digression/editor/nodes/styles/action_node_titlebar_selected.tres" id="5_ria80"]
 [ext_resource type="PackedScene" uid="uid://b46vwf6pxf1tl" path="res://addons/hyh.digression/editor/controls/expressions/OperatorExpression.tscn" id="6_bffs7"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_hmss4"]
@@ -15,11 +11,8 @@ font_color = Color(0.384314, 0.384314, 0.384314, 1)
 
 [node name="EditorSetNode" instance=ExtResource("2")]
 offset_right = 467.0
-offset_bottom = 100.0
-theme_override_styles/panel = ExtResource("2_xqt80")
-theme_override_styles/panel_selected = ExtResource("3_t2sq2")
-theme_override_styles/titlebar = ExtResource("4_6nqrg")
-theme_override_styles/titlebar_selected = ExtResource("5_ria80")
+offset_bottom = 94.0
+theme_type_variation = &"ActionGraphNode"
 resizable = true
 title = "Set Variable"
 slot/0/left_enabled = true
@@ -38,8 +31,6 @@ layout_mode = 2
 
 [node name="GC" type="GridContainer" parent="MC" index="0"]
 layout_mode = 2
-theme_override_constants/h_separation = 10
-theme_override_constants/v_separation = 10
 columns = 2
 
 [node name="Label" type="Label" parent="MC/GC" index="0"]

@@ -1,27 +1,16 @@
-[gd_scene load_steps=8 format=3 uid="uid://c6go4vvijagqh"]
+[gd_scene load_steps=3 format=3 uid="uid://c6go4vvijagqh"]
 
 [ext_resource type="Script" uid="uid://ba4qjq7fsnnia" path="res://addons/hyh.digression/editor/nodes/EditorCommentNode.gd" id="1_fx2a8"]
 [ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.digression/editor/nodes/styles/node_theme.tres" id="1_pci51"]
-[ext_resource type="StyleBox" uid="uid://dfb155xg4osr1" path="res://addons/hyh.digression/editor/nodes/styles/comment_node.tres" id="2_fmk4a"]
-[ext_resource type="StyleBox" uid="uid://cbv2w57rihjck" path="res://addons/hyh.digression/editor/nodes/styles/comment_node_focused.tres" id="3_psp64"]
-[ext_resource type="StyleBox" uid="uid://y5iqft10o7mq" path="res://addons/hyh.digression/editor/nodes/styles/comment_node_titlebar.tres" id="4_nk6ya"]
-[ext_resource type="StyleBox" uid="uid://cr1ljgw8mkx5h" path="res://addons/hyh.digression/editor/nodes/styles/default_node_titlebar.tres" id="5_34t5d"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1u6x7"]
-bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [node name="EditorCommentNode" type="GraphNode"]
 custom_minimum_size = Vector2(200, 100)
 offset_right = 698.0
-offset_bottom = 114.0
+offset_bottom = 100.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource("1_pci51")
-theme_override_colors/resizer_color = Color(0.901961, 0.901961, 0.901961, 1)
-theme_override_styles/panel = ExtResource("2_fmk4a")
-theme_override_styles/panel_selected = ExtResource("3_psp64")
-theme_override_styles/titlebar = ExtResource("4_nk6ya")
-theme_override_styles/titlebar_selected = ExtResource("5_34t5d")
+theme_type_variation = &"CommentGraphNode"
 resizable = true
 slot/0/left_enabled = false
 slot/0/left_type = 0
@@ -37,19 +26,10 @@ script = ExtResource("1_fx2a8")
 [node name="MC" type="MarginContainer" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 1
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
 
 [node name="CommentEdit" type="TextEdit" parent="MC"]
 layout_mode = 2
-theme_override_colors/font_outline_color = Color(0.117647, 0.117647, 0.117647, 1)
-theme_override_colors/font_placeholder_color = Color(1, 1, 1, 0.533333)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_constants/outline_size = 7
-theme_override_font_sizes/font_size = 24
-theme_override_styles/normal = SubResource("StyleBoxFlat_1u6x7")
+theme_type_variation = &"CommentEdit"
 placeholder_text = "Enter your comment..."
 wrap_mode = 1
 scroll_fit_content_height = true

@@ -1,21 +1,14 @@
-[gd_scene load_steps=8 format=3 uid="uid://4ydpkwm8ah68"]
+[gd_scene load_steps=4 format=3 uid="uid://4ydpkwm8ah68"]
 
 [ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.digression/editor/nodes/styles/node_theme.tres" id="1_4kyqw"]
 [ext_resource type="Script" uid="uid://b00wd2li8ky5h" path="res://addons/hyh.digression/editor/nodes/EditorRoutingNode.gd" id="1_qblwl"]
-[ext_resource type="StyleBox" uid="uid://cy2mtyhieui8q" path="res://addons/hyh.digression/editor/nodes/styles/control_node.tres" id="2_n7rx5"]
-[ext_resource type="StyleBox" uid="uid://dt03i76r27rvt" path="res://addons/hyh.digression/editor/nodes/styles/control_node_selected.tres" id="3_6t1mp"]
-[ext_resource type="StyleBox" uid="uid://bfb7qelnfi6bj" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar.tres" id="4_o2vcq"]
 [ext_resource type="Texture2D" uid="uid://ljoctu7ofbol" path="res://addons/hyh.digression/icons/icon_square.svg" id="5_1bpki"]
-[ext_resource type="StyleBox" uid="uid://cg1qeowcx5883" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar_selected.tres" id="5_25cah"]
 
 [node name="EditorRoutingNode" type="GraphNode"]
 offset_right = 222.0
-offset_bottom = 80.0
+offset_bottom = 70.0
 theme = ExtResource("1_4kyqw")
-theme_override_styles/panel = ExtResource("2_n7rx5")
-theme_override_styles/panel_selected = ExtResource("3_6t1mp")
-theme_override_styles/titlebar = ExtResource("4_o2vcq")
-theme_override_styles/titlebar_selected = ExtResource("5_25cah")
+theme_type_variation = &"ControlGraphNode"
 slot/0/left_enabled = true
 slot/0/left_type = 0
 slot/0/left_color = Color(0.94902, 0.94902, 0.94902, 0.882353)
@@ -29,7 +22,6 @@ script = ExtResource("1_qblwl")
 
 [node name="MC" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_bottom = 10
 
 [node name="IndicatorContainer" type="HBoxContainer" parent="MC"]
 layout_mode = 2

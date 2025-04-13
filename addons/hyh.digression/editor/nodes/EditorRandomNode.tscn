@@ -1,23 +1,16 @@
-[gd_scene load_steps=10 format=3 uid="uid://bmujw01w7k14k"]
+[gd_scene load_steps=6 format=3 uid="uid://bmujw01w7k14k"]
 
 [ext_resource type="Script" uid="uid://dq0bamfxrn8ap" path="res://addons/hyh.digression/editor/nodes/EditorRandomNode.gd" id="1"]
 [ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.digression/editor/nodes/styles/node_theme.tres" id="1_w7up8"]
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="2"]
-[ext_resource type="StyleBox" uid="uid://cy2mtyhieui8q" path="res://addons/hyh.digression/editor/nodes/styles/control_node.tres" id="2_yl5ej"]
 [ext_resource type="PackedScene" uid="uid://dk0btqqtgur07" path="res://addons/hyh.digression/editor/branches/EditorRandomValue.tscn" id="3"]
-[ext_resource type="StyleBox" uid="uid://dt03i76r27rvt" path="res://addons/hyh.digression/editor/nodes/styles/control_node_selected.tres" id="3_4pbor"]
-[ext_resource type="StyleBox" uid="uid://bfb7qelnfi6bj" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar.tres" id="4_7m3no"]
-[ext_resource type="StyleBox" uid="uid://cg1qeowcx5883" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar_selected.tres" id="5_vtskd"]
 [ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="8_inhcp"]
 
 [node name="EditorRandomNode" type="GraphNode"]
 offset_right = 483.0
-offset_bottom = 269.0
+offset_bottom = 263.0
 theme = ExtResource("1_w7up8")
-theme_override_styles/panel = ExtResource("2_yl5ej")
-theme_override_styles/panel_selected = ExtResource("3_4pbor")
-theme_override_styles/titlebar = ExtResource("4_7m3no")
-theme_override_styles/titlebar_selected = ExtResource("5_vtskd")
+theme_type_variation = &"ControlGraphNode"
 title = "Random"
 slot/0/left_enabled = true
 slot/0/left_type = 0
@@ -59,7 +52,6 @@ script = ExtResource("1")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_right = 10
 
 [node name="VB" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
@@ -71,12 +63,6 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Default"
-
-[node name="AddBranchButtonOld" type="Button" parent="MarginContainer/VB/HBoxContainer"]
-visible = false
-layout_mode = 2
-icon = ExtResource("2")
-flat = true
 
 [node name="DragTargetHSeparator" parent="MarginContainer/VB" instance=ExtResource("8_inhcp")]
 layout_mode = 2
@@ -99,7 +85,6 @@ icon = ExtResource("2")
 flat = true
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
-[connection signal="pressed" from="MarginContainer/VB/HBoxContainer/AddBranchButtonOld" to="." method="_on_add_branch_button_pressed"]
 [connection signal="dropped" from="MarginContainer/VB/DragTargetHSeparator" to="." method="_on_drag_target_dropped"]
 [connection signal="dropped_after" from="RandomValue" to="." method="_on_branch_dropped_after"]
 [connection signal="modified" from="RandomValue" to="." method="_on_branch_modified" binds= [0]]

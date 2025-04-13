@@ -1,21 +1,42 @@
-[gd_resource type="Theme" load_steps=25 format=3 uid="uid://1cbvg04l0616"]
+[gd_resource type="Theme" load_steps=48 format=3 uid="uid://1cbvg04l0616"]
 
 [ext_resource type="StyleBox" uid="uid://cbblvk1p1p0ya" path="res://addons/hyh.digression/editor/nodes/styles/default_node.tres" id="1_hf5xb"]
+[ext_resource type="StyleBox" uid="uid://bawhxiixc3r2i" path="res://addons/hyh.digression/editor/nodes/styles/action_node_selected.tres" id="2_3e507"]
 [ext_resource type="StyleBox" uid="uid://bcn0xekidb13s" path="res://addons/hyh.digression/editor/nodes/styles/position_overlay.tres" id="2_ivvps"]
+[ext_resource type="StyleBox" uid="uid://cohhm3hommye4" path="res://addons/hyh.digression/editor/nodes/styles/action_node_titlebar.tres" id="3_vn1ib"]
 [ext_resource type="StyleBox" uid="uid://bbs8mcq8bqvs7" path="res://addons/hyh.digression/editor/nodes/styles/separator.tres" id="4_m2sej"]
+[ext_resource type="StyleBox" uid="uid://tvd8fygqmp6h" path="res://addons/hyh.digression/editor/nodes/styles/action_node_titlebar_selected.tres" id="4_qt0cd"]
 [ext_resource type="StyleBox" uid="uid://veioyemgo5ud" path="res://addons/hyh.digression/editor/nodes/styles/control_focused_style.tres" id="5_4e4bm"]
+[ext_resource type="StyleBox" uid="uid://dfwm2rp1c8v8x" path="res://addons/hyh.digression/editor/nodes/styles/anchor_node.tres" id="5_jmywd"]
 [ext_resource type="StyleBox" uid="uid://q13kdbxbc8nb" path="res://addons/hyh.digression/editor/nodes/styles/control_style_invisible.tres" id="5_wgyba"]
 [ext_resource type="StyleBox" uid="uid://dk2b3up38f6a7" path="res://addons/hyh.digression/editor/nodes/styles/control_style.tres" id="6_0o5wo"]
+[ext_resource type="StyleBox" uid="uid://bcokegjj2h4g3" path="res://addons/hyh.digression/editor/nodes/styles/dialogue_node.tres" id="6_3ra8y"]
+[ext_resource type="StyleBox" uid="uid://ci63ijvh8x5cc" path="res://addons/hyh.digression/editor/nodes/styles/control_style_translation_key_parent.tres" id="6_1656j"]
+[ext_resource type="StyleBox" uid="uid://bu6qegjhd6f8p" path="res://addons/hyh.digression/editor/nodes/styles/anchor_node_selected.tres" id="6_ttv55"]
 [ext_resource type="StyleBox" uid="uid://ov5lf8ddv44h" path="res://addons/hyh.digression/editor/nodes/styles/default_node_selected.tres" id="7_d0k2o"]
 [ext_resource type="StyleBox" uid="uid://0ig5ym882ulr" path="res://addons/hyh.digression/editor/nodes/styles/control_style_hover.tres" id="7_m6im3"]
+[ext_resource type="StyleBox" uid="uid://chdfnwd6ls43v" path="res://addons/hyh.digression/editor/nodes/styles/dialogue_node_selected.tres" id="7_ms28g"]
+[ext_resource type="StyleBox" uid="uid://mxxrel5ijwch" path="res://addons/hyh.digression/editor/nodes/styles/anchor_node_titlebar.tres" id="7_rwcid"]
+[ext_resource type="StyleBox" uid="uid://bem71csdncxqs" path="res://addons/hyh.digression/editor/nodes/styles/anchor_node_titlebar_selected.tres" id="8_grde0"]
+[ext_resource type="StyleBox" uid="uid://b5ma0bjl3xxjm" path="res://addons/hyh.digression/editor/nodes/styles/dialogue_node_titlebar.tres" id="8_imujm"]
 [ext_resource type="StyleBox" uid="uid://c2xkw3yqjtaqg" path="res://addons/hyh.digression/editor/nodes/styles/control_style_pressed.tres" id="8_q58wk"]
 [ext_resource type="StyleBox" uid="uid://cr1ljgw8mkx5h" path="res://addons/hyh.digression/editor/nodes/styles/default_node_titlebar.tres" id="8_vrxnq"]
+[ext_resource type="StyleBox" uid="uid://nu4578dkhf2b" path="res://addons/hyh.digression/editor/nodes/styles/dialogue_node_titlebar_selected.tres" id="9_k88rk"]
 [ext_resource type="StyleBox" uid="uid://cyop04d3vvwwe" path="res://addons/hyh.digression/editor/nodes/styles/control_style_menu_panel.tres" id="9_mbt7k"]
 [ext_resource type="StyleBox" uid="uid://dnm2yvf0aukig" path="res://addons/hyh.digression/editor/nodes/styles/control_style_read_only.tres" id="9_yprw3"]
 [ext_resource type="StyleBox" uid="uid://cnjncae5md1oh" path="res://addons/hyh.digression/editor/nodes/styles/default_node_titlebar_selected.tres" id="10_d2rr0"]
+[ext_resource type="StyleBox" uid="uid://qmj1frolraa8" path="res://addons/hyh.digression/editor/nodes/styles/dialogue_node_embedded.tres" id="11_ms28g"]
 [ext_resource type="Texture2D" uid="uid://7sby15rdg417" path="res://addons/hyh.digression/icons/icon_tree_arrow_right_dark.svg" id="13_arjtg"]
 [ext_resource type="StyleBox" uid="uid://cav483j7746ud" path="res://addons/hyh.digression/editor/nodes/styles/action_node.tres" id="13_jwldd"]
+[ext_resource type="StyleBox" uid="uid://dfb155xg4osr1" path="res://addons/hyh.digression/editor/nodes/styles/comment_node.tres" id="14_grde0"]
 [ext_resource type="Texture2D" uid="uid://brt3bw3yhakpp" path="res://addons/hyh.digression/icons/icon_tree_arrow_left_dark.svg" id="14_yd52u"]
+[ext_resource type="StyleBox" uid="uid://cbv2w57rihjck" path="res://addons/hyh.digression/editor/nodes/styles/comment_node_focused.tres" id="15_pjf6w"]
+[ext_resource type="StyleBox" uid="uid://y5iqft10o7mq" path="res://addons/hyh.digression/editor/nodes/styles/comment_node_titlebar.tres" id="16_1d32x"]
+[ext_resource type="StyleBox" uid="uid://5rc6mmqek4w0" path="res://addons/hyh.digression/editor/nodes/styles/control_style_translation_key.tres" id="17_r672w"]
+[ext_resource type="StyleBox" uid="uid://cy2mtyhieui8q" path="res://addons/hyh.digression/editor/nodes/styles/control_node.tres" id="18_8xsr5"]
+[ext_resource type="StyleBox" uid="uid://dt03i76r27rvt" path="res://addons/hyh.digression/editor/nodes/styles/control_node_selected.tres" id="19_mjxtn"]
+[ext_resource type="StyleBox" uid="uid://bfb7qelnfi6bj" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar.tres" id="20_hyxb0"]
+[ext_resource type="StyleBox" uid="uid://cg1qeowcx5883" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar_selected.tres" id="21_o3m2w"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r672w"]
 
@@ -26,6 +47,9 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w4ui7"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qqlmq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_grde0"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_44c0d"]
 content_margin_left = 5.0
@@ -54,7 +78,20 @@ corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3ra8y"]
+
 [resource]
+default_font_size = 14
+ActionGraphNode/base_type = &"GraphNode"
+ActionGraphNode/styles/panel = ExtResource("13_jwldd")
+ActionGraphNode/styles/panel_selected = ExtResource("2_3e507")
+ActionGraphNode/styles/titlebar = ExtResource("3_vn1ib")
+ActionGraphNode/styles/titlebar_selected = ExtResource("4_qt0cd")
+AnchorGraphNode/base_type = &"GraphNode"
+AnchorGraphNode/styles/panel = ExtResource("5_jmywd")
+AnchorGraphNode/styles/panel_selected = ExtResource("6_ttv55")
+AnchorGraphNode/styles/titlebar = ExtResource("7_rwcid")
+AnchorGraphNode/styles/titlebar_selected = ExtResource("8_grde0")
 Button/colors/font_color = Color(0.137255, 0.137255, 0.137255, 1)
 Button/colors/icon_disabled_color = Color(0.32549, 0.32549, 0.32549, 0.643137)
 Button/colors/icon_focus_color = Color(0.141176, 0.141176, 0.141176, 1)
@@ -91,8 +128,36 @@ CheckButton/styles/normal = ExtResource("5_wgyba")
 CheckButton/styles/pressed = ExtResource("5_wgyba")
 CodeEdit/colors/line_number_color = Color(0.14, 0.14, 0.14, 0.67451)
 CodeEdit/font_sizes/font_size = 14
+CommentEdit/base_type = &"TextEdit"
+CommentEdit/colors/font_color = Color(1, 1, 1, 1)
+CommentEdit/colors/font_outline_color = Color(0.117647, 0.117647, 0.117647, 1)
+CommentEdit/colors/font_placeholder_color = Color(1, 1, 1, 0.533333)
+CommentEdit/constants/outline_size = 7
+CommentEdit/font_sizes/font_size = 24
+CommentEdit/styles/normal = SubResource("StyleBoxFlat_grde0")
+CommentGraphNode/base_type = &"GraphNode"
+CommentGraphNode/colors/resizer_color = Color(0.901961, 0.901961, 0.901961, 1)
+CommentGraphNode/styles/panel = ExtResource("14_grde0")
+CommentGraphNode/styles/panel_selected = ExtResource("15_pjf6w")
+CommentGraphNode/styles/titlebar = ExtResource("16_1d32x")
+CommentGraphNode/styles/titlebar_selected = ExtResource("8_vrxnq")
+ControlGraphNode/base_type = &"GraphNode"
+ControlGraphNode/styles/panel = ExtResource("18_8xsr5")
+ControlGraphNode/styles/panel_selected = ExtResource("19_mjxtn")
+ControlGraphNode/styles/titlebar = ExtResource("20_hyxb0")
+ControlGraphNode/styles/titlebar_selected = ExtResource("21_o3m2w")
+DialogueGraphNode/base_type = &"GraphNode"
+DialogueGraphNode/styles/panel = ExtResource("6_3ra8y")
+DialogueGraphNode/styles/panel_selected = ExtResource("7_ms28g")
+DialogueGraphNode/styles/titlebar = ExtResource("8_imujm")
+DialogueGraphNode/styles/titlebar_selected = ExtResource("9_k88rk")
+DialogueTextEdit/base_type = &"CodeEdit"
+DialogueTextEdit/styles/normal = ExtResource("6_1656j")
+EmbeddedDialoguePanelContainer/base_type = &"PanelContainer"
+EmbeddedDialoguePanelContainer/styles/panel = ExtResource("11_ms28g")
 FlatButton/font_sizes/font_size = 14
 FlatMenuButton/font_sizes/font_size = 14
+GraphNode/colors/resizer_color = Color(0, 0, 0, 1)
 GraphNode/styles/panel = ExtResource("1_hf5xb")
 GraphNode/styles/panel_selected = ExtResource("7_d0k2o")
 GraphNode/styles/position = ExtResource("2_ivvps")
@@ -151,3 +216,7 @@ TextEdit/font_sizes/font_size = 14
 TextEdit/styles/focus = ExtResource("5_4e4bm")
 TextEdit/styles/normal = ExtResource("6_0o5wo")
 TextEdit/styles/read_only = SubResource("StyleBoxFlat_a0x8g")
+TranslationKeyEdit/base_type = &"LineEdit"
+TranslationKeyEdit/colors/font_color = Color(0.141176, 0.141176, 0.141176, 0.596078)
+TranslationKeyEdit/styles/focus = SubResource("StyleBoxEmpty_3ra8y")
+TranslationKeyEdit/styles/normal = ExtResource("17_r672w")

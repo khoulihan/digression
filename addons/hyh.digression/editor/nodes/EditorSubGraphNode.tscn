@@ -1,11 +1,7 @@
-[gd_scene load_steps=14 format=3 uid="uid://b27r2amkie2lx"]
+[gd_scene load_steps=10 format=3 uid="uid://b27r2amkie2lx"]
 
 [ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.digression/editor/nodes/styles/node_theme.tres" id="1_alste"]
-[ext_resource type="StyleBox" uid="uid://cy2mtyhieui8q" path="res://addons/hyh.digression/editor/nodes/styles/control_node.tres" id="2_0600f"]
-[ext_resource type="StyleBox" uid="uid://dt03i76r27rvt" path="res://addons/hyh.digression/editor/nodes/styles/control_node_selected.tres" id="3_uso30"]
 [ext_resource type="Script" uid="uid://ci1o6ej7q3gf7" path="res://addons/hyh.digression/editor/nodes/EditorSubGraphNode.gd" id="4"]
-[ext_resource type="StyleBox" uid="uid://bfb7qelnfi6bj" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar.tres" id="4_oph77"]
-[ext_resource type="StyleBox" uid="uid://cg1qeowcx5883" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar_selected.tres" id="5_km5q4"]
 [ext_resource type="Texture2D" uid="uid://c5ll5urk64ggp" path="res://addons/hyh.digression/icons/icon_gui_option_arrow.svg" id="8_qm7sb"]
 [ext_resource type="Texture2D" uid="uid://cl0ddfkgw2qmu" path="res://addons/hyh.digression/icons/icon_object.svg" id="9_nopv5"]
 [ext_resource type="Texture2D" uid="uid://g30bydo2d3jj" path="res://addons/hyh.digression/icons/icon_load.svg" id="10_eg1tm"]
@@ -18,10 +14,7 @@
 offset_right = 503.0
 offset_bottom = 94.0
 theme = ExtResource("1_alste")
-theme_override_styles/panel = ExtResource("2_0600f")
-theme_override_styles/panel_selected = ExtResource("3_uso30")
-theme_override_styles/titlebar = ExtResource("4_oph77")
-theme_override_styles/titlebar_selected = ExtResource("5_km5q4")
+theme_type_variation = &"ControlGraphNode"
 title = "Sub-graph"
 slot/0/left_enabled = true
 slot/0/left_type = 0

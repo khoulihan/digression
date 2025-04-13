@@ -1,11 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://ddh2fuxyvnktp"]
+[gd_scene load_steps=7 format=3 uid="uid://ddh2fuxyvnktp"]
 
 [ext_resource type="Script" uid="uid://bsnlv7pw0yws2" path="res://addons/hyh.digression/editor/nodes/EditorTextNode.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://c0pw3rdictm2v" path="res://addons/hyh.digression/editor/nodes/EditorGraphNodeBase.tscn" id="2"]
-[ext_resource type="StyleBox" uid="uid://bcokegjj2h4g3" path="res://addons/hyh.digression/editor/nodes/styles/dialogue_node.tres" id="2_slpx5"]
-[ext_resource type="StyleBox" uid="uid://chdfnwd6ls43v" path="res://addons/hyh.digression/editor/nodes/styles/dialogue_node_selected.tres" id="3_mjv4r"]
-[ext_resource type="StyleBox" uid="uid://b5ma0bjl3xxjm" path="res://addons/hyh.digression/editor/nodes/styles/dialogue_node_titlebar.tres" id="4_2212b"]
-[ext_resource type="StyleBox" uid="uid://nu4578dkhf2b" path="res://addons/hyh.digression/editor/nodes/styles/dialogue_node_titlebar_selected.tres" id="5_cur1i"]
 [ext_resource type="Texture2D" uid="uid://d65jtbo3b07t" path="res://addons/hyh.digression/icons/icon_clear.svg" id="7_13nfv"]
 [ext_resource type="PackedScene" uid="uid://bi6s5ip3smrd5" path="res://addons/hyh.digression/editor/text/DialogueTextSection.tscn" id="8_biiwf"]
 [ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="8_jff3k"]
@@ -14,11 +10,7 @@
 [node name="EditorTextNode" instance=ExtResource("2")]
 offset_right = 560.0
 offset_bottom = 232.0
-theme_override_colors/resizer_color = Color(0, 0, 0, 1)
-theme_override_styles/panel = ExtResource("2_slpx5")
-theme_override_styles/panel_selected = ExtResource("3_mjv4r")
-theme_override_styles/titlebar = ExtResource("4_2212b")
-theme_override_styles/titlebar_selected = ExtResource("5_cur1i")
+theme_type_variation = &"DialogueGraphNode"
 resizable = true
 title = ""
 slot/0/left_enabled = true

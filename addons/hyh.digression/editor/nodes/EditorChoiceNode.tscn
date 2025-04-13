@@ -1,32 +1,14 @@
-[gd_scene load_steps=16 format=3 uid="uid://bygmop6vopi43"]
+[gd_scene load_steps=11 format=3 uid="uid://bygmop6vopi43"]
 
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="1"]
 [ext_resource type="Script" uid="uid://cw3r252toxbwc" path="res://addons/hyh.digression/editor/nodes/EditorChoiceNode.gd" id="2"]
-[ext_resource type="StyleBox" uid="uid://xsgb5pkw0muk" path="res://addons/hyh.digression/editor/nodes/styles/choice_node.tres" id="2_028dr"]
 [ext_resource type="PackedScene" uid="uid://cmr3aolsr6l35" path="res://addons/hyh.digression/editor/branches/EditorChoiceValue.tscn" id="3"]
-[ext_resource type="StyleBox" uid="uid://dr44ikdpnsewh" path="res://addons/hyh.digression/editor/nodes/styles/choice_node_selected.tres" id="3_pqk3a"]
 [ext_resource type="PackedScene" uid="uid://c0pw3rdictm2v" path="res://addons/hyh.digression/editor/nodes/EditorGraphNodeBase.tscn" id="4"]
-[ext_resource type="StyleBox" uid="uid://b5ma0bjl3xxjm" path="res://addons/hyh.digression/editor/nodes/styles/dialogue_node_titlebar.tres" id="4_0jwpv"]
-[ext_resource type="StyleBox" uid="uid://nu4578dkhf2b" path="res://addons/hyh.digression/editor/nodes/styles/dialogue_node_titlebar_selected.tres" id="5_oirud"]
 [ext_resource type="StyleBox" uid="uid://q13kdbxbc8nb" path="res://addons/hyh.digression/editor/nodes/styles/control_style_invisible.tres" id="6_8ilf1"]
 [ext_resource type="Texture2D" uid="uid://cmpxsjfcm0kpq" path="res://addons/hyh.digression/icons/icon_node_info.svg" id="7_k8avd"]
 [ext_resource type="PackedScene" uid="uid://rg4q2rccwgo5" path="res://addons/hyh.digression/editor/controls/properties/CustomPropertiesControl.tscn" id="8_08e3u"]
 [ext_resource type="Texture2D" uid="uid://d65jtbo3b07t" path="res://addons/hyh.digression/icons/icon_clear.svg" id="8_pesv0"]
 [ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="12_g4p45"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kse8j"]
-bg_color = Color(0.388235, 0.905882, 0.796078, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.105882, 0.105882, 0.105882, 0.392157)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_left = 10
-shadow_color = Color(0, 0, 0, 0.490196)
-shadow_size = 1
-shadow_offset = Vector2(2, 2)
 
 [sub_resource type="FontVariation" id="FontVariation_ldvhs"]
 variation_embolden = 0.3
@@ -34,11 +16,7 @@ variation_embolden = 0.3
 [node name="EditorChoiceNode" instance=ExtResource("4")]
 offset_right = 511.0
 offset_bottom = 778.0
-theme_override_constants/separation = 0
-theme_override_styles/panel = ExtResource("2_028dr")
-theme_override_styles/panel_selected = ExtResource("3_pqk3a")
-theme_override_styles/titlebar = ExtResource("4_0jwpv")
-theme_override_styles/titlebar_selected = ExtResource("5_oirud")
+theme_type_variation = &"DialogueGraphNode"
 resizable = true
 title = ""
 slot/0/left_enabled = true
@@ -95,7 +73,7 @@ size_flags_vertical = 3
 [node name="Dialogue" type="PanelContainer" parent="DialogueMarginContainer" index="0"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_kse8j")
+theme_type_variation = &"EmbeddedDialoguePanelContainer"
 
 [node name="DialogueContainer" type="MarginContainer" parent="DialogueMarginContainer/Dialogue" index="0"]
 layout_mode = 2
@@ -107,7 +85,6 @@ theme_override_constants/margin_bottom = 10
 [node name="VerticalLayout" type="VBoxContainer" parent="DialogueMarginContainer/Dialogue/DialogueContainer" index="0"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 10
 
 [node name="DialogueTypeOption" type="OptionButton" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout" index="0"]
 layout_mode = 2
@@ -131,8 +108,6 @@ popup/item_2/id = 2
 
 [node name="CharacterOptionsContainer" type="GridContainer" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout" index="1"]
 layout_mode = 2
-theme_override_constants/h_separation = 3
-theme_override_constants/v_separation = 10
 columns = 3
 
 [node name="Label" type="Label" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CharacterOptionsContainer" index="0"]
@@ -175,8 +150,6 @@ wrap_mode = 1
 
 [node name="TranslationContainer" type="GridContainer" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout" index="3"]
 layout_mode = 2
-theme_override_constants/h_separation = 10
-theme_override_constants/v_separation = 10
 columns = 2
 
 [node name="Label" type="Label" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/TranslationContainer" index="0"]
@@ -190,20 +163,18 @@ size_flags_horizontal = 3
 [node name="CustomPropertiesControl" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout" index="4" instance=ExtResource("8_08e3u")]
 layout_mode = 2
 use_restriction = 4
+show_add_button = true
 
 [node name="HeaderContainer" type="MarginContainer" parent="." index="2"]
 layout_mode = 2
 size_flags_stretch_ratio = 0.0
 theme_override_constants/margin_top = 10
-theme_override_constants/margin_bottom = 5
 
 [node name="VB" type="VBoxContainer" parent="HeaderContainer" index="0"]
 layout_mode = 2
-theme_override_constants/separation = 10
 
 [node name="HorizontalLayout" type="HBoxContainer" parent="HeaderContainer/VB" index="0"]
 layout_mode = 2
-theme_override_constants/separation = 10
 
 [node name="Label" type="Label" parent="HeaderContainer/VB/HorizontalLayout" index="0"]
 layout_mode = 2

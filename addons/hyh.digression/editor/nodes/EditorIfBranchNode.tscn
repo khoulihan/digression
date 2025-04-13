@@ -1,10 +1,6 @@
-[gd_scene load_steps=10 format=3 uid="uid://dr2ery2ai70gm"]
+[gd_scene load_steps=6 format=3 uid="uid://dr2ery2ai70gm"]
 
 [ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.digression/editor/nodes/styles/node_theme.tres" id="1_3m3eq"]
-[ext_resource type="StyleBox" uid="uid://cy2mtyhieui8q" path="res://addons/hyh.digression/editor/nodes/styles/control_node.tres" id="2_ftk5c"]
-[ext_resource type="StyleBox" uid="uid://dt03i76r27rvt" path="res://addons/hyh.digression/editor/nodes/styles/control_node_selected.tres" id="3_ocipx"]
-[ext_resource type="StyleBox" uid="uid://bfb7qelnfi6bj" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar.tres" id="4_1ouyh"]
-[ext_resource type="StyleBox" uid="uid://cg1qeowcx5883" path="res://addons/hyh.digression/editor/nodes/styles/control_node_titlebar_selected.tres" id="5_2f5ef"]
 [ext_resource type="Script" uid="uid://c2fdpt32s5lre" path="res://addons/hyh.digression/editor/nodes/EditorIfBranchNode.gd" id="6_cvu84"]
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="6_obc87"]
 [ext_resource type="PackedScene" uid="uid://cj3nuku0ns6o0" path="res://addons/hyh.digression/editor/branches/EditorIfBranchValue.tscn" id="7_7trmo"]
@@ -12,12 +8,9 @@
 
 [node name="EditorIfBranchNode" type="GraphNode"]
 offset_right = 459.0
-offset_bottom = 244.0
+offset_bottom = 209.0
 theme = ExtResource("1_3m3eq")
-theme_override_styles/panel = ExtResource("2_ftk5c")
-theme_override_styles/panel_selected = ExtResource("3_ocipx")
-theme_override_styles/titlebar = ExtResource("4_1ouyh")
-theme_override_styles/titlebar_selected = ExtResource("5_2f5ef")
+theme_type_variation = &"ControlGraphNode"
 title = "Branch (If)"
 slot/0/left_enabled = true
 slot/0/left_type = 0
@@ -59,8 +52,6 @@ script = ExtResource("6_cvu84")
 
 [node name="DefaultContainer" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_bottom = 10
 
 [node name="VB" type="VBoxContainer" parent="DefaultContainer"]
 layout_mode = 2
