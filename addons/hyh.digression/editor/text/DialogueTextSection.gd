@@ -10,11 +10,11 @@ signal dropped_after(section)
 
 enum DialogueMenuItems {
 	ADD_CUSTOM_PROPERTY,
-	REGENERATE_TRANSLATION_KEY,
 	REGENERATE_TRANSLATION_KEY_FROM_TEXT,
 }
 
 
+const TranslationKey = preload("../../utility/TranslationKey.gd")
 const DialogueText = preload("res://addons/hyh.digression/resources/graph/DialogueText.gd")
 const HANDLE_ICON = preload("../../icons/icon_drag_light.svg")
 const PREVIEW_LENGTH = 25
@@ -227,3 +227,8 @@ func _on_code_edit_resized() -> void:
 func _on_menu_id_pressed(id: int) -> void:
 	if id == DialogueMenuItems.ADD_CUSTOM_PROPERTY:
 		_custom_properties_control.request_property_and_add()
+	elif id == DialogueMenuItems.REGENERATE_TRANSLATION_KEY_FROM_TEXT:
+		section_resource.text_translation_key = TranslationKey.generate_from_text(
+			section_resource.text,
+		)
+		_translation_key_edit.text = section_resource.text_translation_key

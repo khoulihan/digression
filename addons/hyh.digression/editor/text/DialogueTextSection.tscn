@@ -93,16 +93,13 @@ layout_mode = 2
 [node name="MenuButton" type="MenuButton" parent="VB/CodeBlock/TranslationContainer"]
 layout_mode = 2
 icon = ExtResource("7_1jf5n")
-item_count = 3
+item_count = 2
 popup/item_0/text = "Add Custom Property"
 popup/item_0/icon = ExtResource("7_q4adt")
 popup/item_0/id = 0
-popup/item_1/text = "Regenerate Translation Key"
+popup/item_1/text = "Regenerate Translation Key from Text"
 popup/item_1/icon = ExtResource("6_wpajs")
 popup/item_1/id = 1
-popup/item_2/text = "Regenerate Translation Key from Text"
-popup/item_2/icon = ExtResource("6_wpajs")
-popup/item_2/id = 2
 
 [node name="TranslationKeyEdit" type="LineEdit" parent="VB/CodeBlock/TranslationContainer"]
 custom_minimum_size = Vector2(250, 0)
