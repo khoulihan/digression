@@ -9,6 +9,10 @@ const Logging = preload("../../utility/Logging.gd")
 const Highlighting = preload("../../utility/Highlighting.gd")
 const ExpressionResource = preload("../../resources/graph/expressions/ExpressionResource.gd")
 
+
+@export var show_set_button := true
+
+
 ## The condition to manage.
 var condition_resource:
 	get:
@@ -27,8 +31,16 @@ var _logger = Logging.new(
 @onready var _condition := $Condition
 
 
+func _ready() -> void:
+	_set_condition_button.visible = show_set_button
+
+
+func configure_for_new_condition() -> void:
+	_on_set_condition_button_pressed()
+
+
 func _configure_for_condition(condition):
-	_set_condition_button.visible = condition == null
+	_set_condition_button.visible = show_set_button and condition == null
 	_condition.visible = condition != null
 	if condition == null:
 		return
@@ -72,7 +84,7 @@ func _on_clear_confirmed(confirm):
 	self.condition_resource = null
 	var size_before = self.size.y
 	_condition.visible = false
-	_set_condition_button.visible = true
+	_set_condition_button.visible = show_set_button
 	call_deferred("_emit_size_changed", size_before)
 
 

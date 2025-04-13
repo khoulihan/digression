@@ -9,8 +9,17 @@ signal preparing_to_change_parent()
 signal dropped_after(section)
 signal size_changed(size_change)
 
+
+enum ChoiceMenuItems {
+	SET_CONDITION,
+	ADD_CUSTOM_PROPERTY,
+	REGENERATE_TRANSLATION_KEY_FROM_TEXT,
+}
+
+
 const Logging = preload("../../utility/Logging.gd")
 const ChoiceBranch = preload("../../resources/graph/branches/ChoiceBranch.gd")
+const TranslationKey = preload("../../utility/TranslationKey.gd")
 const HANDLE_ICON = preload("../../icons/icon_drag_light.svg")
 const PREVIEW_LENGTH = 25
 
@@ -22,12 +31,15 @@ var _logger := Logging.new(
 )
 
 @onready var _display_edit = $HB/VariableContainer/DisplayContainer/DisplayEdit
-@onready var _translation_key_edit = $HB/VariableContainer/DisplayContainer/TranslationKeyEdit
+@onready var _translation_key_edit = $HB/VariableContainer/TranslationContainer/TranslationKeyEdit
 @onready var _condition_control = $HB/ConditionControl
 @onready var _custom_properties_control = $HB/CustomPropertiesControl
+@onready var _menu_button: MenuButton = $HB/VariableContainer/TranslationContainer/MenuButton
 
 
 func _ready() -> void:
+	var popup := _menu_button.get_popup()
+	popup.id_pressed.connect(_on_menu_id_pressed)
 	if choice_resource != null:
 		set_choice(choice_resource)
 
@@ -128,3 +140,24 @@ func _on_custom_properties_control_size_changed(size_change) -> void:
 
 func _on_drag_target_dropped(arg: Variant, at_position: Variant) -> void:
 	dropped_after.emit(arg)
+
+
+func _on_menu_id_pressed(id: int) -> void:
+	if id == ChoiceMenuItems.ADD_CUSTOM_PROPERTY:
+		_custom_properties_control.request_property_and_add()
+	elif id == ChoiceMenuItems.REGENERATE_TRANSLATION_KEY_FROM_TEXT:
+		choice_resource.display_translation_key = TranslationKey.generate_from_text(
+			choice_resource.display,
+		)
+		_translation_key_edit.text = choice_resource.display_translation_key
+	elif id == ChoiceMenuItems.SET_CONDITION:
+		if _condition_control.condition_resource == null:
+			_condition_control.configure_for_new_condition()
+
+
+func _on_menu_button_about_to_popup() -> void:
+	var popup := _menu_button.get_popup()
+	popup.set_item_disabled(
+		ChoiceMenuItems.SET_CONDITION,
+		_condition_control.condition_resource != null
+	)

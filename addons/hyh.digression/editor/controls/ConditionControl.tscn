@@ -15,8 +15,8 @@ corner_radius_bottom_right = 9
 corner_radius_bottom_left = 9
 
 [node name="ConditionControl" type="MarginContainer"]
-theme_override_constants/margin_right = 20
 script = ExtResource("1_elv8o")
+show_set_button = null
 
 [node name="SetConditionButton" type="LinkButton" parent="."]
 layout_mode = 2
@@ -46,6 +46,7 @@ theme_override_constants/margin_bottom = 3
 
 [node name="ConditionExpression" parent="Condition/PC/MC" instance=ExtResource("3_slwmy")]
 layout_mode = 2
+allow_empty = false
 type = 1
 
 [node name="ClearButton" type="Button" parent="Condition"]

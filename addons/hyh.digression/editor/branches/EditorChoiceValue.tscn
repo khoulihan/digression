@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cmr3aolsr6l35"]
+[gd_scene load_steps=12 format=3 uid="uid://cmr3aolsr6l35"]
 
 [ext_resource type="Script" uid="uid://g36t1vxc36e1" path="res://addons/hyh.digression/editor/branches/EditorChoiceValue.gd" id="1_4mgxx"]
 [ext_resource type="Texture2D" uid="uid://c6ox4e8uvkkds" path="res://addons/hyh.digression/icons/icon_drag.svg" id="2_pxiie"]
@@ -6,18 +6,21 @@
 [ext_resource type="PackedScene" uid="uid://rg4q2rccwgo5" path="res://addons/hyh.digression/editor/controls/properties/CustomPropertiesControl.tscn" id="3_2wt8e"]
 [ext_resource type="Script" uid="uid://6d3khtryq2wr" path="res://addons/hyh.digression/editor/controls/drag/DragHandle.gd" id="3_dtavu"]
 [ext_resource type="PackedScene" uid="uid://mvafher5yr07" path="res://addons/hyh.digression/editor/controls/ConditionControl.tscn" id="3_u0o5g"]
+[ext_resource type="Texture2D" uid="uid://c5ll5urk64ggp" path="res://addons/hyh.digression/icons/icon_gui_option_arrow.svg" id="5_5ymr3"]
 [ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="5_x38qr"]
+[ext_resource type="Texture2D" uid="uid://d0i22i0anuurm" path="res://addons/hyh.digression/icons/icon_add_dark.svg" id="6_46d70"]
+[ext_resource type="Texture2D" uid="uid://c3kvtyvnpubei" path="res://addons/hyh.digression/icons/icon_type_bool.svg" id="6_u7nkx"]
+[ext_resource type="Texture2D" uid="uid://b303bfdrwrt8a" path="res://addons/hyh.digression/icons/icon_translation_dark.svg" id="7_u7nkx"]
 
 [node name="ChoiceValue" type="MarginContainer"]
-offset_right = 306.0
-offset_bottom = 136.0
+offset_right = 414.0
+offset_bottom = 122.0
 theme_override_constants/margin_bottom = 5
 script = ExtResource("1_4mgxx")
 
 [node name="HB" type="VBoxContainer" parent="."]
 layout_mode = 2
 size_flags_stretch_ratio = 0.0
-theme_override_constants/separation = 10
 
 [node name="Header" type="HBoxContainer" parent="HB"]
 layout_mode = 2
@@ -43,17 +46,14 @@ size_flags_vertical = 0
 icon = ExtResource("2_svn0u")
 flat = true
 
-[node name="VariableContainer" type="HBoxContainer" parent="HB"]
+[node name="VariableContainer" type="VBoxContainer" parent="HB"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 10
+theme_type_variation = &"DialogueWithTranslationBlock"
 
-[node name="DisplayContainer" type="GridContainer" parent="HB/VariableContainer"]
+[node name="DisplayContainer" type="HBoxContainer" parent="HB/VariableContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/h_separation = 10
-theme_override_constants/v_separation = 10
-columns = 2
 
 [node name="Label" type="Label" parent="HB/VariableContainer/DisplayContainer"]
 layout_mode = 2
@@ -62,27 +62,42 @@ text = "Display:"
 [node name="DisplayEdit" type="LineEdit" parent="HB/VariableContainer/DisplayContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_type_variation = &"ChoiceTextEdit"
 
-[node name="Label2" type="Label" parent="HB/VariableContainer/DisplayContainer"]
-layout_mode = 2
-text = "Translation Key:"
-
-[node name="TranslationKeyEdit" type="LineEdit" parent="HB/VariableContainer/DisplayContainer"]
+[node name="TranslationContainer" type="HBoxContainer" parent="HB/VariableContainer"]
 layout_mode = 2
 
-[node name="RemoveButton" type="Button" parent="HB/VariableContainer"]
-visible = false
+[node name="MenuButton" type="MenuButton" parent="HB/VariableContainer/TranslationContainer"]
 layout_mode = 2
-size_flags_vertical = 0
-icon = ExtResource("2_svn0u")
-flat = true
+icon = ExtResource("5_5ymr3")
+item_count = 3
+popup/item_0/text = "Set Condition"
+popup/item_0/icon = ExtResource("6_u7nkx")
+popup/item_0/id = 0
+popup/item_1/text = "Add Custom Property"
+popup/item_1/icon = ExtResource("6_46d70")
+popup/item_1/id = 1
+popup/item_2/text = "Regenerate Translation Key from Text"
+popup/item_2/icon = ExtResource("7_u7nkx")
+popup/item_2/id = 2
+
+[node name="TranslationKeyEdit" type="LineEdit" parent="HB/VariableContainer/TranslationContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+theme_type_variation = &"TranslationKeyEdit"
+placeholder_text = "Enter Translation Key..."
+expand_to_text_length = true
+right_icon = ExtResource("7_u7nkx")
 
 [node name="CustomPropertiesControl" parent="HB" instance=ExtResource("3_2wt8e")]
 layout_mode = 2
 use_restriction = 3
+show_add_button = false
 
 [node name="ConditionControl" parent="HB" instance=ExtResource("3_u0o5g")]
 layout_mode = 2
+show_set_button = false
 
 [node name="DragTargetHSeparator" parent="HB" instance=ExtResource("5_x38qr")]
 layout_mode = 2
@@ -90,8 +105,8 @@ accepted_classes = Array[int]([5])
 
 [connection signal="pressed" from="HB/Header/RemoveButton" to="." method="_on_remove_button_pressed"]
 [connection signal="text_changed" from="HB/VariableContainer/DisplayContainer/DisplayEdit" to="." method="_on_display_edit_text_changed"]
-[connection signal="text_changed" from="HB/VariableContainer/DisplayContainer/TranslationKeyEdit" to="." method="_on_translation_key_edit_text_changed"]
-[connection signal="pressed" from="HB/VariableContainer/RemoveButton" to="." method="_on_remove_button_pressed"]
+[connection signal="about_to_popup" from="HB/VariableContainer/TranslationContainer/MenuButton" to="." method="_on_menu_button_about_to_popup"]
+[connection signal="text_changed" from="HB/VariableContainer/TranslationContainer/TranslationKeyEdit" to="." method="_on_translation_key_edit_text_changed"]
 [connection signal="add_property_requested" from="HB/CustomPropertiesControl" to="." method="_on_custom_properties_control_add_property_requested"]
 [connection signal="modified" from="HB/CustomPropertiesControl" to="." method="_on_custom_properties_control_modified"]
 [connection signal="remove_property_requested" from="HB/CustomPropertiesControl" to="." method="_on_custom_properties_control_remove_property_requested"]
