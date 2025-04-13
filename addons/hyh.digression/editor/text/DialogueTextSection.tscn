@@ -63,7 +63,7 @@ flat = true
 
 [node name="CodeBlock" type="VBoxContainer" parent="VB"]
 layout_mode = 2
-theme_override_constants/separation = 0
+theme_type_variation = &"DialogueWithTranslationBlock"
 
 [node name="CodeEdit" type="CodeEdit" parent="VB/CodeBlock"]
 layout_mode = 2

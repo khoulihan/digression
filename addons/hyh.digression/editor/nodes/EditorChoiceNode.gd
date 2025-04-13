@@ -8,6 +8,7 @@ const TranslationKey = preload("../../utility/TranslationKey.gd")
 const ChoiceBranch = preload("../../resources/graph/branches/ChoiceBranch.gd")
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
+const DialogueMenuItems = preload("../text/DialogueTextSection.gd").DialogueMenuItems
 
 var _choice_type_option: OptionButton
 var _choice_value_scene = preload("../branches/EditorChoiceValue.tscn")
@@ -20,12 +21,13 @@ var _dialogue_types_by_id
 @onready var _dialogue := $DialogueMarginContainer/Dialogue
 @onready var _character_options_container := $DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CharacterOptionsContainer
 @onready var _dialogue_type_option := $DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/DialogueTypeOption
-@onready var _dialogue_text_edit := $DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/DialogueTextEdit
+@onready var _dialogue_text_edit := $DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/DialogueWithTranslationBlock/DialogueTextEdit
 @onready var _character_select := $DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CharacterOptionsContainer/CharacterSelect
 @onready var _variant_select := $DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CharacterOptionsContainer/VariantSelect
 @onready var _show_dialogue_for_default_button := $HeaderContainer/VB/HorizontalLayout/ShowDialogueForDefaultButton
-@onready var _translation_key_edit := $DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/TranslationContainer/TranslationKeyEdit
+@onready var _translation_key_edit := $DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/DialogueWithTranslationBlock/TranslationContainer/TranslationKeyEdit
 @onready var _custom_properties_control := $DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CustomPropertiesControl
+@onready var _dialogue_menu_button: MenuButton = $DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/DialogueWithTranslationBlock/TranslationContainer/DialogueMenuButton
 
 
 func _init():
@@ -44,6 +46,8 @@ func _ready():
 	# By moving to index 0, the empty title label serves as a spacer.
 	titlebar.move_child(_choice_type_option, 0)
 	_choice_type_option.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	var popup := _dialogue_menu_button.get_popup()
+	popup.id_pressed.connect(_on_dialogue_menu_id_pressed)
 	super()
 
 
@@ -387,6 +391,10 @@ func clear_node_relationships():
 		choice.next = -1
 
 
+func _reset_size(width: float) -> void:
+	self.size = Vector2(width, 0.0)
+
+
 func _reconnect_removal_signals():
 	if get_child_count() > 2:
 		for index in range(2, get_child_count() - 1):
@@ -591,7 +599,7 @@ func _on_branch_modified(index):
 
 func _on_branch_size_changed(change, index):
 	_logger.debug("Choice line %s size changed by %s" % [index, change])
-	self.size = Vector2(self.size.x, self.size.y + change)
+	_reset_size(self.size.x)
 
 
 func _on_gui_input(ev):
@@ -599,11 +607,8 @@ func _on_gui_input(ev):
 
 
 func _on_resize_request(new_minsize):
-	var showing_dialogue = _dialogue.visible
-	if showing_dialogue:
-		self.set_size(new_minsize)
-		return
-	self.set_size(Vector2(new_minsize.x, 0))
+	# Height is managed automatically, so we only accept the x component of the change.
+	set_deferred("size", Vector2(new_minsize.x, 0.0))
 
 
 func _on_character_select_item_selected(index):
@@ -656,14 +661,14 @@ func _on_custom_properties_control_modified():
 
 
 func _on_custom_properties_control_remove_property_requested(property_name):
-	if not property_name in node_resource.dialogue.custom_properties:
+	if not property_name in node_resource.dialogue.sections[0].custom_properties:
 		return
-	node_resource.dialogue.remove_custom_property(property_name)
+	node_resource.dialogue.sections[0].remove_custom_property(property_name)
 	_custom_properties_control.remove_property(property_name)
 
 
 func _on_custom_properties_control_size_changed(size_change):
-	self.size = Vector2(self.size.x, self.size.y + size_change)
+	_reset_size(self.size.x)
 
 
 func _on_clear_character_button_pressed():
@@ -693,3 +698,18 @@ func _on_drag_target_dropped(arg, at_position) -> void:
 		arg,
 		2
 	)
+
+
+func _on_dialogue_menu_id_pressed(id: int) -> void:
+	if id == DialogueMenuItems.ADD_CUSTOM_PROPERTY:
+		_custom_properties_control.request_property_and_add()
+	elif id == DialogueMenuItems.REGENERATE_TRANSLATION_KEY_FROM_TEXT:
+		node_resource.dialogue.sections[0].text_translation_key = TranslationKey.generate_from_text(
+			_dialogue_text_edit.text,
+		)
+		_translation_key_edit.text = node_resource.dialogue.sections[0].text_translation_key
+
+
+func _on_dialogue_text_edit_resized() -> void:
+	_reset_size(self.size.x)
+	resized.emit()

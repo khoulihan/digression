@@ -1,10 +1,13 @@
-[gd_scene load_steps=11 format=3 uid="uid://bygmop6vopi43"]
+[gd_scene load_steps=14 format=3 uid="uid://bygmop6vopi43"]
 
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="1"]
 [ext_resource type="Script" uid="uid://cw3r252toxbwc" path="res://addons/hyh.digression/editor/nodes/EditorChoiceNode.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://cmr3aolsr6l35" path="res://addons/hyh.digression/editor/branches/EditorChoiceValue.tscn" id="3"]
 [ext_resource type="PackedScene" uid="uid://c0pw3rdictm2v" path="res://addons/hyh.digression/editor/nodes/EditorGraphNodeBase.tscn" id="4"]
+[ext_resource type="Texture2D" uid="uid://b303bfdrwrt8a" path="res://addons/hyh.digression/icons/icon_translation_dark.svg" id="5_fjq3k"]
+[ext_resource type="Texture2D" uid="uid://c5ll5urk64ggp" path="res://addons/hyh.digression/icons/icon_gui_option_arrow.svg" id="5_rruv8"]
 [ext_resource type="StyleBox" uid="uid://q13kdbxbc8nb" path="res://addons/hyh.digression/editor/nodes/styles/control_style_invisible.tres" id="6_8ilf1"]
+[ext_resource type="Texture2D" uid="uid://d0i22i0anuurm" path="res://addons/hyh.digression/icons/icon_add_dark.svg" id="6_phjop"]
 [ext_resource type="Texture2D" uid="uid://cmpxsjfcm0kpq" path="res://addons/hyh.digression/icons/icon_node_info.svg" id="7_k8avd"]
 [ext_resource type="PackedScene" uid="uid://rg4q2rccwgo5" path="res://addons/hyh.digression/editor/controls/properties/CustomPropertiesControl.tscn" id="8_08e3u"]
 [ext_resource type="Texture2D" uid="uid://d65jtbo3b07t" path="res://addons/hyh.digression/icons/icon_clear.svg" id="8_pesv0"]
@@ -15,7 +18,7 @@ variation_embolden = 0.3
 
 [node name="EditorChoiceNode" instance=ExtResource("4")]
 offset_right = 511.0
-offset_bottom = 778.0
+offset_bottom = 631.0
 theme_type_variation = &"DialogueGraphNode"
 resizable = true
 title = ""
@@ -68,23 +71,17 @@ script = ExtResource("2")
 
 [node name="DialogueMarginContainer" type="MarginContainer" parent="." index="1"]
 layout_mode = 2
-size_flags_vertical = 3
 
 [node name="Dialogue" type="PanelContainer" parent="DialogueMarginContainer" index="0"]
 layout_mode = 2
-size_flags_vertical = 3
 theme_type_variation = &"EmbeddedDialoguePanelContainer"
 
 [node name="DialogueContainer" type="MarginContainer" parent="DialogueMarginContainer/Dialogue" index="0"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_type_variation = &"EmbeddedDialogueMarginContainer"
 
 [node name="VerticalLayout" type="VBoxContainer" parent="DialogueMarginContainer/Dialogue/DialogueContainer" index="0"]
 layout_mode = 2
-size_flags_vertical = 3
 
 [node name="DialogueTypeOption" type="OptionButton" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout" index="0"]
 layout_mode = 2
@@ -138,32 +135,56 @@ layout_mode = 2
 icon = ExtResource("8_pesv0")
 flat = true
 
-[node name="DialogueTextEdit" type="TextEdit" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout" index="2"]
-custom_minimum_size = Vector2(0, 60)
+[node name="DialogueWithTranslationBlock" type="VBoxContainer" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout" index="2"]
 layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 2.0
+theme_type_variation = &"DialogueWithTranslationBlock"
+
+[node name="DialogueTextEdit" type="CodeEdit" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/DialogueWithTranslationBlock" index="0"]
+layout_mode = 2
 mouse_default_cursor_shape = 0
+theme_type_variation = &"DialogueTextEdit"
 theme_override_constants/line_spacing = 8
 placeholder_text = "Enter Dialogue Text..."
 wrap_mode = 1
+scroll_fit_content_height = true
+gutters_draw_line_numbers = true
+auto_brace_completion_enabled = true
+auto_brace_completion_highlight_matching = true
+auto_brace_completion_pairs = {
+"\"": "\"",
+"'": "'",
+"(": ")",
+"<": ">",
+"[": "]",
+"{": "}"
+}
 
-[node name="TranslationContainer" type="GridContainer" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout" index="3"]
+[node name="TranslationContainer" type="HBoxContainer" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/DialogueWithTranslationBlock" index="1"]
 layout_mode = 2
-columns = 2
 
-[node name="Label" type="Label" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/TranslationContainer" index="0"]
+[node name="DialogueMenuButton" type="MenuButton" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/DialogueWithTranslationBlock/TranslationContainer" index="0"]
 layout_mode = 2
-text = "Translation Key:"
+icon = ExtResource("5_rruv8")
+item_count = 2
+popup/item_0/text = "Add Custom Property"
+popup/item_0/icon = ExtResource("6_phjop")
+popup/item_0/id = 0
+popup/item_1/text = "Regenerate Translation Key from Text"
+popup/item_1/icon = ExtResource("5_fjq3k")
+popup/item_1/id = 1
 
-[node name="TranslationKeyEdit" type="LineEdit" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/TranslationContainer" index="1"]
+[node name="TranslationKeyEdit" type="LineEdit" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/DialogueWithTranslationBlock/TranslationContainer" index="1"]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 10
+theme_type_variation = &"TranslationKeyEdit"
+placeholder_text = "Enter Translation Key..."
+expand_to_text_length = true
+right_icon = ExtResource("5_fjq3k")
 
-[node name="CustomPropertiesControl" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout" index="4" instance=ExtResource("8_08e3u")]
+[node name="CustomPropertiesControl" parent="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout" index="3" instance=ExtResource("8_08e3u")]
 layout_mode = 2
 use_restriction = 4
-show_add_button = true
+show_add_button = false
 
 [node name="HeaderContainer" type="MarginContainer" parent="." index="2"]
 layout_mode = 2
@@ -233,8 +254,9 @@ flat = true
 [connection signal="pressed" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CharacterOptionsContainer/ClearCharacterButton" to="." method="_on_clear_character_button_pressed"]
 [connection signal="item_selected" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CharacterOptionsContainer/VariantSelect" to="." method="_on_variant_select_item_selected"]
 [connection signal="pressed" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CharacterOptionsContainer/ClearVariantButton" to="." method="_on_clear_variant_button_pressed"]
-[connection signal="text_changed" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/DialogueTextEdit" to="." method="_on_text_edit_text_changed"]
-[connection signal="text_changed" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/TranslationContainer/TranslationKeyEdit" to="." method="_on_translation_key_edit_text_changed"]
+[connection signal="resized" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/DialogueWithTranslationBlock/DialogueTextEdit" to="." method="_on_dialogue_text_edit_resized"]
+[connection signal="text_changed" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/DialogueWithTranslationBlock/DialogueTextEdit" to="." method="_on_text_edit_text_changed"]
+[connection signal="text_changed" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/DialogueWithTranslationBlock/TranslationContainer/TranslationKeyEdit" to="." method="_on_translation_key_edit_text_changed"]
 [connection signal="add_property_requested" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_add_property_requested"]
 [connection signal="modified" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_modified"]
 [connection signal="remove_property_requested" from="DialogueMarginContainer/Dialogue/DialogueContainer/VerticalLayout/CustomPropertiesControl" to="." method="_on_custom_properties_control_remove_property_requested"]
