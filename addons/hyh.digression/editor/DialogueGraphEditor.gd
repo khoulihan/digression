@@ -216,6 +216,11 @@ func _ready():
 
 #region Public interface
 
+## Sets the theme for the editor.
+func set_theme(selected_theme: Theme) -> void:
+	_graph_edit.theme = selected_theme
+
+
 ## Returns the currently edited graph resource.
 func get_edited_graph():
 	if _edited == null:
@@ -818,6 +823,7 @@ func _create_node_objects(node_type):
 		GraphPopupMenuItems.ADD_EXIT_NODE:
 			new_editor_node = EditorExitNode.instantiate()
 			new_graph_node = ExitNode.new()
+	new_editor_node.theme = null
 	return [new_editor_node, new_graph_node]
 
 
@@ -840,6 +846,7 @@ func _configure_editor_node_state(
 	new_editor_node,
 	new_graph_node
 ):
+	new_editor_node.theme = null
 	if _graph_edit.get_child_count() == 1:
 		new_editor_node.is_root = true
 	_populate_dependencies(new_editor_node)

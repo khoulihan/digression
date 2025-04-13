@@ -1,11 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://g6g6kp3pyivi"]
+[gd_scene load_steps=3 format=3 uid="uid://g6g6kp3pyivi"]
 
-[ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.digression/editor/nodes/styles/node_theme.tres" id="1_8gxdf"]
 [ext_resource type="Script" uid="uid://dspqw7uy7o4j5" path="res://addons/hyh.digression/editor/nodes/EditorRepeatNode.gd" id="1_tvhyi"]
 [ext_resource type="Texture2D" uid="uid://bilsl8kxjm0kr" path="res://addons/hyh.digression/icons/icon_reload_large.svg" id="5_vtwdq"]
 
 [node name="EditorRepeatNode" type="GraphNode"]
-theme = ExtResource("1_8gxdf")
 theme_type_variation = &"ControlGraphNode"
 title = "Repeat Last Choice"
 slot/0/left_enabled = true

@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://c6go4vvijagqh"]
+[gd_scene load_steps=2 format=3 uid="uid://c6go4vvijagqh"]
 
 [ext_resource type="Script" uid="uid://ba4qjq7fsnnia" path="res://addons/hyh.digression/editor/nodes/EditorCommentNode.gd" id="1_fx2a8"]
-[ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.digression/editor/nodes/styles/node_theme.tres" id="1_pci51"]
 
 [node name="EditorCommentNode" type="GraphNode"]
 custom_minimum_size = Vector2(200, 100)
@@ -9,7 +8,6 @@ offset_right = 698.0
 offset_bottom = 100.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme = ExtResource("1_pci51")
 theme_type_variation = &"CommentGraphNode"
 resizable = true
 slot/0/left_enabled = false

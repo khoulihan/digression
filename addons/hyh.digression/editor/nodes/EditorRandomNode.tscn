@@ -1,7 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://bmujw01w7k14k"]
+[gd_scene load_steps=5 format=3 uid="uid://bmujw01w7k14k"]
 
 [ext_resource type="Script" uid="uid://dq0bamfxrn8ap" path="res://addons/hyh.digression/editor/nodes/EditorRandomNode.gd" id="1"]
-[ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.digression/editor/nodes/styles/node_theme.tres" id="1_w7up8"]
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="2"]
 [ext_resource type="PackedScene" uid="uid://dk0btqqtgur07" path="res://addons/hyh.digression/editor/branches/EditorRandomValue.tscn" id="3"]
 [ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="8_inhcp"]
@@ -9,7 +8,6 @@
 [node name="EditorRandomNode" type="GraphNode"]
 offset_right = 483.0
 offset_bottom = 263.0
-theme = ExtResource("1_w7up8")
 theme_type_variation = &"ControlGraphNode"
 title = "Random"
 slot/0/left_enabled = true

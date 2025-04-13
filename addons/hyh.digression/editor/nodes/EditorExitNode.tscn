@@ -1,11 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://648tyusl034c"]
+[gd_scene load_steps=3 format=3 uid="uid://648tyusl034c"]
 
-[ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.digression/editor/nodes/styles/node_theme.tres" id="1_ip1ir"]
 [ext_resource type="Script" uid="uid://cpd7vmdtm15ks" path="res://addons/hyh.digression/editor/nodes/EditorExitNode.gd" id="6_lenhd"]
 [ext_resource type="PackedScene" uid="uid://bhp62qnb4xqye" path="res://addons/hyh.digression/editor/controls/SingleValueAnyTypeControl.tscn" id="6_tky8b"]
 
 [node name="EditorExitNode" type="GraphNode"]
-theme = ExtResource("1_ip1ir")
 theme_type_variation = &"ControlGraphNode"
 title = "Exit"
 slot/0/left_enabled = true

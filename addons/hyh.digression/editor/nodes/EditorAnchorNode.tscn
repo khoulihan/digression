@@ -1,12 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://bsdivdkongt4j"]
+[gd_scene load_steps=2 format=3 uid="uid://bsdivdkongt4j"]
 
-[ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.digression/editor/nodes/styles/node_theme.tres" id="1_2eskj"]
 [ext_resource type="Script" uid="uid://dh3x60paaws04" path="res://addons/hyh.digression/editor/nodes/EditorAnchorNode.gd" id="4_wb78j"]
 
 [node name="EditorAnchorNode" type="GraphNode"]
 offset_right = 324.0
 offset_bottom = 70.0
-theme = ExtResource("1_2eskj")
 theme_type_variation = &"AnchorGraphNode"
 title = "Anchor"
 slot/0/left_enabled = true

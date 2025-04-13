@@ -1,12 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://bgn7vrh6tbdo0"]
+[gd_scene load_steps=2 format=3 uid="uid://bgn7vrh6tbdo0"]
 
-[ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.digression/editor/nodes/styles/node_theme.tres" id="1_bs0dt"]
 [ext_resource type="Script" uid="uid://bb7lj20bh6te6" path="res://addons/hyh.digression/editor/nodes/EditorJumpNode.gd" id="4_823kx"]
 
 [node name="EditorJumpNode" type="GraphNode"]
 offset_right = 357.0
 offset_bottom = 70.0
-theme = ExtResource("1_bs0dt")
 theme_type_variation = &"ControlGraphNode"
 title = "Jump To..."
 slot/0/left_enabled = true

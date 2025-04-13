@@ -3,7 +3,7 @@ extends "EditorGraphNodeBase.gd"
 ## A non-functional, non-connectable node for displaying comments in the editor.
 
 
-const TITLE_FONT = preload("styles/TitleOptionFont.tres")
+const TITLE_FONT = preload("res://addons/hyh.digression/editor/themes/default/TitleOptionFont.tres")
 const FONT_SIZES = [
 	16,
 	24,

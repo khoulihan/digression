@@ -3,7 +3,7 @@ extends "EditorGraphNodeBase.gd"
 ## Editor node for Dialogue resource node.
 
 
-const TITLE_FONT = preload("styles/TitleOptionFont.tres")
+const TITLE_FONT = preload("res://addons/hyh.digression/editor/themes/default/TitleOptionFont.tres")
 const DialogueTextSection = preload("res://addons/hyh.digression/editor/text/DialogueTextSection.tscn")
 
 var _characters

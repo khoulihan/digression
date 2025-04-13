@@ -82,7 +82,6 @@ layout_mode = 2
 [node name="GraphEdit" type="GraphEdit" parent="HS/MC/VB"]
 layout_mode = 2
 size_flags_vertical = 3
-scroll_offset = Vector2(0, -27)
 right_disconnects = true
 zoom_min = 0.25
 zoom_max = 1.0

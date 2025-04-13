@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://c0pw3rdictm2v" path="res://addons/hyh.digression/editor/nodes/EditorGraphNodeBase.tscn" id="4"]
 [ext_resource type="Texture2D" uid="uid://b303bfdrwrt8a" path="res://addons/hyh.digression/icons/icon_translation_dark.svg" id="5_fjq3k"]
 [ext_resource type="Texture2D" uid="uid://c5ll5urk64ggp" path="res://addons/hyh.digression/icons/icon_gui_option_arrow.svg" id="5_rruv8"]
-[ext_resource type="StyleBox" uid="uid://q13kdbxbc8nb" path="res://addons/hyh.digression/editor/nodes/styles/control_style_invisible.tres" id="6_8ilf1"]
+[ext_resource type="StyleBox" uid="uid://q13kdbxbc8nb" path="res://addons/hyh.digression/editor/themes/default/control_style_invisible.tres" id="6_8ilf1"]
 [ext_resource type="Texture2D" uid="uid://d0i22i0anuurm" path="res://addons/hyh.digression/icons/icon_add_dark.svg" id="6_phjop"]
 [ext_resource type="Texture2D" uid="uid://cmpxsjfcm0kpq" path="res://addons/hyh.digression/icons/icon_node_info.svg" id="7_k8avd"]
 [ext_resource type="PackedScene" uid="uid://rg4q2rccwgo5" path="res://addons/hyh.digression/editor/controls/properties/CustomPropertiesControl.tscn" id="8_08e3u"]
@@ -18,7 +18,8 @@ variation_embolden = 0.3
 
 [node name="EditorChoiceNode" instance=ExtResource("4")]
 offset_right = 511.0
-offset_bottom = 631.0
+offset_bottom = 556.0
+theme = null
 theme_type_variation = &"DialogueGraphNode"
 resizable = true
 title = ""

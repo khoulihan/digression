@@ -1,7 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://cbist3rdatmmi"]
+[gd_scene load_steps=6 format=3 uid="uid://cbist3rdatmmi"]
 
 [ext_resource type="Script" uid="uid://clbjlrw0x5w7w" path="res://addons/hyh.digression/editor/nodes/EditorActionNode.gd" id="1"]
-[ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.digression/editor/nodes/styles/node_theme.tres" id="1_q2xpx"]
 [ext_resource type="PackedScene" uid="uid://buyggyfeoik2l" path="res://addons/hyh.digression/editor/controls/NodeSelectionControl.tscn" id="7_d61r0"]
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="7_t8f01"]
 [ext_resource type="PackedScene" uid="uid://c31q0dbk4i25w" path="res://addons/hyh.digression/editor/controls/VariableSelectionControl.tscn" id="8_1o0k2"]
@@ -10,7 +9,6 @@
 [node name="EditorActionNode" type="GraphNode"]
 offset_right = 416.0
 offset_bottom = 145.0
-theme = ExtResource("1_q2xpx")
 theme_type_variation = &"ActionGraphNode"
 slot/0/left_enabled = true
 slot/0/left_type = 0

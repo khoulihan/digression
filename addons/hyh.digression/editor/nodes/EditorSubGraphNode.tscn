@@ -1,6 +1,5 @@
-[gd_scene load_steps=10 format=3 uid="uid://b27r2amkie2lx"]
+[gd_scene load_steps=9 format=3 uid="uid://b27r2amkie2lx"]
 
-[ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.digression/editor/nodes/styles/node_theme.tres" id="1_alste"]
 [ext_resource type="Script" uid="uid://ci1o6ej7q3gf7" path="res://addons/hyh.digression/editor/nodes/EditorSubGraphNode.gd" id="4"]
 [ext_resource type="Texture2D" uid="uid://c5ll5urk64ggp" path="res://addons/hyh.digression/icons/icon_gui_option_arrow.svg" id="8_qm7sb"]
 [ext_resource type="Texture2D" uid="uid://cl0ddfkgw2qmu" path="res://addons/hyh.digression/icons/icon_object.svg" id="9_nopv5"]
@@ -13,7 +12,6 @@
 [node name="EditorSubGraphNode" type="GraphNode"]
 offset_right = 503.0
 offset_bottom = 94.0
-theme = ExtResource("1_alste")
 theme_type_variation = &"ControlGraphNode"
 title = "Sub-graph"
 slot/0/left_enabled = true

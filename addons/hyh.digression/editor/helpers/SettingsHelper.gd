@@ -2,30 +2,74 @@
 extends RefCounted
 ## Helper class for dealing with project settings.
 
-const SETTINGS_SECTION = "digression_dialogue_graph_editor"
+
+enum BuiltinTheme {
+	NONE,
+	DEFAULT,
+	HIGH_CONTRAST,
+}
+
+
+const SETTINGS_APPLICATION = "digression_dialogue_graph_editor"
+const SETTINGS_SCHEMA_SECTION = "schema"
+const SETTINGS_THEME_SECTION = "theme"
 
 
 static func get_graph_types_key() -> String:
-	return "%s/graph_types" % SETTINGS_SECTION
+	return "%s/%s/graph_types" % [SETTINGS_APPLICATION, SETTINGS_SCHEMA_SECTION]
 
 
 static func get_dialogue_types_key() -> String:
-	return "%s/dialogue_types" % SETTINGS_SECTION
+	return "%s/%s/dialogue_types" % [SETTINGS_APPLICATION, SETTINGS_SCHEMA_SECTION]
 
 
 static func get_choice_types_key() -> String:
-	return "%s/choice_types" % SETTINGS_SECTION
+	return "%s/%s/choice_types" % [SETTINGS_APPLICATION, SETTINGS_SCHEMA_SECTION]
 
 
 static func get_property_definitions_key() -> String:
-	return "%s/property_definitions" % SETTINGS_SECTION
+	return "%s/%s/property_definitions" % [SETTINGS_APPLICATION, SETTINGS_SCHEMA_SECTION]
 
 
 static func get_variables_key() -> String:
-	return "%s/variables" % SETTINGS_SECTION
+	return "%s/%s/variables" % [SETTINGS_APPLICATION, SETTINGS_SCHEMA_SECTION]
+
+
+static func get_theme_key() -> String:
+	return "%s/%s/theme" % [SETTINGS_APPLICATION, SETTINGS_THEME_SECTION]
+
+
+static func get_custom_theme_key() -> String:
+	return "%s/%s/custom_theme" % [SETTINGS_APPLICATION, SETTINGS_THEME_SECTION]
 
 
 static func create_default_project_settings() -> void:
+	if not ProjectSettings.has_setting(get_theme_key()):
+		ProjectSettings.set_setting(
+			get_theme_key(),
+			BuiltinTheme.DEFAULT
+		)
+		ProjectSettings.add_property_info(
+			{
+				"name": get_theme_key(),
+				"type": TYPE_INT,
+				"hint": PROPERTY_HINT_ENUM,
+				"hint_string": "None,Default,High Contrast",
+			}
+		)
+	if not ProjectSettings.has_setting(get_custom_theme_key()):
+		ProjectSettings.set_setting(
+			get_custom_theme_key(),
+			""
+		)
+		ProjectSettings.add_property_info(
+			{
+				"name": get_custom_theme_key(),
+				"type": TYPE_STRING,
+				"hint": PROPERTY_HINT_FILE,
+				"hint_string": "*.tres"
+			}
+		)
 	if not ProjectSettings.has_setting(get_graph_types_key()):
 		ProjectSettings.set_setting(
 			get_graph_types_key(),
@@ -149,6 +193,20 @@ static func get_choice_types() -> Array:
 static func get_property_definitions() -> Array:
 	return get_collection_setting(
 		get_property_definitions_key()
+	)
+
+
+static func get_built_in_theme() -> BuiltinTheme:
+	return get_setting(
+		get_theme_key(),
+		BuiltinTheme.DEFAULT,
+	)
+
+
+static func get_custom_theme() -> String:
+	return get_setting(
+		get_custom_theme_key(),
+		"",
 	)
 
 

@@ -17,7 +17,8 @@ enum ActionAddArgumentMenuId {
 	DATA_STORE_GLOBAL,
 }
 
-const TITLE_FONT = preload("styles/TitleOptionFont.tres")
+# TODO: What is this? It should be associated with the theme, no?
+const TITLE_FONT = preload("../themes/default/TitleOptionFont.tres")
 
 const ExpressionArgument = preload("../controls/arguments/ExpressionArgument.tscn")
 const CharacterArgument = preload("../controls/arguments/CharacterArgument.tscn")
