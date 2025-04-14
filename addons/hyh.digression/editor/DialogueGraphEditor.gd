@@ -68,6 +68,7 @@ enum ConnectionTypes {
 const SettingsHelper = preload("helpers/SettingsHelper.gd")
 const Logging = preload("../utility/Logging.gd")
 const TranslationKey = preload("../utility/TranslationKey.gd")
+const ThemeHelper = preload("./helpers/ThemeHelper.gd")
 
 # Resource graph nodes.
 const DialogueTextNode = preload("../resources/graph/DialogueTextNode.gd")
@@ -823,7 +824,8 @@ func _create_node_objects(node_type):
 		GraphPopupMenuItems.ADD_EXIT_NODE:
 			new_editor_node = EditorExitNode.instantiate()
 			new_graph_node = ExitNode.new()
-	new_editor_node.theme = null
+	
+	new_editor_node.theme = ThemeHelper.get_theme()
 	return [new_editor_node, new_graph_node]
 
 
@@ -846,7 +848,7 @@ func _configure_editor_node_state(
 	new_editor_node,
 	new_graph_node
 ):
-	new_editor_node.theme = null
+	new_editor_node.theme = ThemeHelper.get_theme()
 	if _graph_edit.get_child_count() == 1:
 		new_editor_node.is_root = true
 	_populate_dependencies(new_editor_node)
@@ -1038,6 +1040,7 @@ func _instantiate_editor_node_for_graph_node(node):
 	elif node is ExitNode:
 		editor_node = EditorExitNode.instantiate()
 	
+	editor_node.theme = ThemeHelper.get_theme()
 	return editor_node
 
 

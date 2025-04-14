@@ -49,27 +49,27 @@ static func create_default_project_settings() -> void:
 			get_theme_key(),
 			BuiltinTheme.DEFAULT
 		)
-		ProjectSettings.add_property_info(
-			{
-				"name": get_theme_key(),
-				"type": TYPE_INT,
-				"hint": PROPERTY_HINT_ENUM,
-				"hint_string": "None,Default,High Contrast",
-			}
-		)
+	ProjectSettings.add_property_info(
+		{
+			"name": get_theme_key(),
+			"type": TYPE_INT,
+			"hint": PROPERTY_HINT_ENUM,
+			"hint_string": "None,Default,High Contrast",
+		}
+	)
 	if not ProjectSettings.has_setting(get_custom_theme_key()):
 		ProjectSettings.set_setting(
 			get_custom_theme_key(),
 			""
 		)
-		ProjectSettings.add_property_info(
-			{
-				"name": get_custom_theme_key(),
-				"type": TYPE_STRING,
-				"hint": PROPERTY_HINT_FILE,
-				"hint_string": "*.tres"
-			}
-		)
+	ProjectSettings.add_property_info(
+		{
+			"name": get_custom_theme_key(),
+			"type": TYPE_STRING,
+			"hint": PROPERTY_HINT_FILE,
+			"hint_string": "*.tres"
+		}
+	)
 	if not ProjectSettings.has_setting(get_graph_types_key()):
 		ProjectSettings.set_setting(
 			get_graph_types_key(),

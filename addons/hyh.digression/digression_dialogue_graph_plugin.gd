@@ -167,30 +167,7 @@ func _get_editor():
 	editor.current_graph_modified.connect(
 		_on_editor_current_graph_modified
 	)
-	_set_editor_theme(editor)
 	return editor
-
-
-func _set_editor_theme(editor) -> void:
-	var custom_theme_path := SettingsHelper.get_custom_theme()
-	if not custom_theme_path.is_empty():
-		editor.set_theme(load(custom_theme_path))
-		return
-	match SettingsHelper.get_built_in_theme():
-		SettingsHelper.BuiltinTheme.NONE:
-			_logger.info("Using Godot theme")
-			editor.set_theme(null)
-		SettingsHelper.BuiltinTheme.DEFAULT:
-			_logger.info("Using default built-in theme")
-			editor.set_theme(
-				load("res://addons/hyh.digression/editor/themes/default/node_theme.tres")
-			)
-		SettingsHelper.BuiltinTheme.HIGH_CONTRAST:
-			_logger.info("Using built-in \"High-Contrast\" theme")
-			editor.set_theme(
-				load("editor/themes/high_contrast/high_contrast_node_theme.tres")
-			)
-			
 
 
 func _on_editor_graph_edited(graph):
