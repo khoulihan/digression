@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=48 format=3 uid="uid://1cbvg04l0616"]
+[gd_resource type="Theme" load_steps=49 format=3 uid="uid://1cbvg04l0616"]
 
 [ext_resource type="StyleBox" uid="uid://cbblvk1p1p0ya" path="res://addons/hyh.digression/editor/themes/default/default_node.tres" id="1_hf5xb"]
 [ext_resource type="StyleBox" uid="uid://bawhxiixc3r2i" path="res://addons/hyh.digression/editor/themes/default/action_node_selected.tres" id="2_3e507"]
@@ -37,6 +37,7 @@
 [ext_resource type="StyleBox" uid="uid://dt03i76r27rvt" path="res://addons/hyh.digression/editor/themes/default/control_node_selected.tres" id="19_mjxtn"]
 [ext_resource type="StyleBox" uid="uid://bfb7qelnfi6bj" path="res://addons/hyh.digression/editor/themes/default/control_node_titlebar.tres" id="20_hyxb0"]
 [ext_resource type="StyleBox" uid="uid://cg1qeowcx5883" path="res://addons/hyh.digression/editor/themes/default/control_node_titlebar_selected.tres" id="21_o3m2w"]
+[ext_resource type="FontVariation" uid="uid://78210eby508f" path="res://addons/hyh.digression/editor/themes/default/TitleOptionFont.tres" id="32_7x7yi"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r672w"]
 
@@ -87,6 +88,7 @@ ActionGraphNode/styles/panel = ExtResource("13_jwldd")
 ActionGraphNode/styles/panel_selected = ExtResource("2_3e507")
 ActionGraphNode/styles/titlebar = ExtResource("3_vn1ib")
 ActionGraphNode/styles/titlebar_selected = ExtResource("4_qt0cd")
+ActionNodeTitlebarOption/base_type = &"GraphNodeTitlebarOption"
 AnchorGraphNode/base_type = &"GraphNode"
 AnchorGraphNode/styles/panel = ExtResource("5_jmywd")
 AnchorGraphNode/styles/panel_selected = ExtResource("6_ttv55")
@@ -131,6 +133,7 @@ CheckButton/styles/hover = ExtResource("5_wgyba")
 CheckButton/styles/hover_pressed = ExtResource("5_wgyba")
 CheckButton/styles/normal = ExtResource("5_wgyba")
 CheckButton/styles/pressed = ExtResource("5_wgyba")
+ChoiceNodeTitlebarOption/base_type = &"GraphNodeTitlebarOption"
 ChoiceTextEdit/base_type = &"LineEdit"
 ChoiceTextEdit/styles/normal = ExtResource("6_1656j")
 CodeEdit/colors/line_number_color = Color(0.14, 0.14, 0.14, 0.67451)
@@ -148,6 +151,7 @@ CommentGraphNode/styles/panel = ExtResource("14_grde0")
 CommentGraphNode/styles/panel_selected = ExtResource("15_pjf6w")
 CommentGraphNode/styles/titlebar = ExtResource("16_1d32x")
 CommentGraphNode/styles/titlebar_selected = ExtResource("8_vrxnq")
+CommentNodeTitlebarOption/base_type = &"GraphNodeTitlebarOption"
 ControlGraphNode/base_type = &"GraphNode"
 ControlGraphNode/styles/panel = ExtResource("18_8xsr5")
 ControlGraphNode/styles/panel_selected = ExtResource("19_mjxtn")
@@ -158,6 +162,7 @@ DialogueGraphNode/styles/panel = ExtResource("6_3ra8y")
 DialogueGraphNode/styles/panel_selected = ExtResource("7_ms28g")
 DialogueGraphNode/styles/titlebar = ExtResource("8_imujm")
 DialogueGraphNode/styles/titlebar_selected = ExtResource("9_k88rk")
+DialogueNodeTitlebarOption/base_type = &"GraphNodeTitlebarOption"
 DialogueTextEdit/base_type = &"CodeEdit"
 DialogueTextEdit/styles/normal = ExtResource("6_1656j")
 DialogueWithTranslationBlock/base_type = &"VBoxContainer"
@@ -175,6 +180,12 @@ GraphNode/styles/panel_selected = ExtResource("7_d0k2o")
 GraphNode/styles/position = ExtResource("2_ivvps")
 GraphNode/styles/titlebar = ExtResource("8_vrxnq")
 GraphNode/styles/titlebar_selected = ExtResource("10_d2rr0")
+GraphNodeTitleLabel/constants/shadow_offset_x = 0
+GraphNodeTitleLabel/constants/shadow_offset_y = 0
+GraphNodeTitleLabel/constants/shadow_outline_size = 0
+GraphNodeTitleLabel/fonts/font = ExtResource("32_7x7yi")
+GraphNodeTitlebarOption/base_type = &"OptionButton"
+GraphNodeTitlebarOption/fonts/font = ExtResource("32_7x7yi")
 HSeparator/styles/separator = ExtResource("4_m2sej")
 Label/colors/font_color = Color(0.141176, 0.141176, 0.141176, 1)
 Label/font_sizes/font_size = 14

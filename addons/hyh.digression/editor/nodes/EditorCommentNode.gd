@@ -3,7 +3,6 @@ extends "EditorGraphNodeBase.gd"
 ## A non-functional, non-connectable node for displaying comments in the editor.
 
 
-const TITLE_FONT = preload("res://addons/hyh.digression/editor/themes/default/TitleOptionFont.tres")
 const FONT_SIZES = [
 	16,
 	24,
@@ -25,7 +24,7 @@ func _init():
 	_text_size_option.focus_exited.connect(_on_text_size_option_focus_exited)
 	_text_size_option.flat = true
 	_text_size_option.fit_to_longest_item = true
-	_text_size_option.add_theme_font_override("font", TITLE_FONT)
+	_text_size_option.theme_type_variation = "CommentNodeTitlebarOption"
 	_text_size_option.add_item("Small", 0)
 	_text_size_option.add_item("Normal", 1)
 	_text_size_option.add_item("Large", 2)

@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=42 format=3 uid="uid://ds2c3le31wicb"]
+[gd_resource type="Theme" load_steps=43 format=3 uid="uid://ds2c3le31wicb"]
 
 [ext_resource type="StyleBox" uid="uid://ccimybdikw83" path="res://addons/hyh.digression/editor/themes/high_contrast/default_node.tres" id="1_58hqi"]
 [ext_resource type="StyleBox" uid="uid://bnc57sxcj67cn" path="res://addons/hyh.digression/editor/themes/high_contrast/default_node_selected.tres" id="2_cbref"]
@@ -16,13 +16,14 @@
 [ext_resource type="StyleBox" uid="uid://b0nrprr7wsijm" path="res://addons/hyh.digression/editor/themes/high_contrast/control_style_read_only.tres" id="15_5sxgd"]
 [ext_resource type="StyleBox" uid="uid://f8if6icw0awp" path="res://addons/hyh.digression/editor/themes/high_contrast/comment_node.tres" id="15_xqav4"]
 [ext_resource type="StyleBox" uid="uid://15ti4ffisob" path="res://addons/hyh.digression/editor/themes/high_contrast/comment_node_focused.tres" id="16_8njvx"]
+[ext_resource type="StyleBox" uid="uid://cij85ifkfypqm" path="res://addons/hyh.digression/editor/themes/high_contrast/default_node_titlebar.tres" id="17_cbref"]
 [ext_resource type="StyleBox" uid="uid://s05qe2f1sk2k" path="res://addons/hyh.digression/editor/themes/high_contrast/comment_node_titlebar.tres" id="17_pkkt4"]
-[ext_resource type="StyleBox" uid="uid://crhu1khjblv51" path="res://addons/hyh.digression/editor/themes/high_contrast/default_node_titlebar_selected.tres" id="18_7dmr0"]
 [ext_resource type="StyleBox" uid="uid://6li3mlf63nol" path="res://addons/hyh.digression/editor/themes/high_contrast/control_node_titlebar.tres" id="21_wacjj"]
 [ext_resource type="StyleBox" uid="uid://cykiluka30e6e" path="res://addons/hyh.digression/editor/themes/high_contrast/control_node_titlebar_selected.tres" id="22_yr5yo"]
 [ext_resource type="StyleBox" uid="uid://dceb6x8ffxmxs" path="res://addons/hyh.digression/editor/themes/high_contrast/dialogue_node_titlebar.tres" id="25_jdnxd"]
 [ext_resource type="StyleBox" uid="uid://m7utcbf8oq6v" path="res://addons/hyh.digression/editor/themes/high_contrast/dialogue_node_titlebar_selected.tres" id="26_73dlh"]
 [ext_resource type="StyleBox" uid="uid://cgt3p407dhu85" path="res://addons/hyh.digression/editor/themes/high_contrast/dialogue_node_embedded.tres" id="27_xy82c"]
+[ext_resource type="FontVariation" uid="uid://bdwb3u0ky8mpp" path="res://addons/hyh.digression/editor/themes/high_contrast/TitleOptionFont.tres" id="28_cbref"]
 [ext_resource type="StyleBox" uid="uid://cbblvk1p1p0ya" path="res://addons/hyh.digression/editor/themes/default/default_node.tres" id="28_it8nd"]
 [ext_resource type="StyleBox" uid="uid://ov5lf8ddv44h" path="res://addons/hyh.digression/editor/themes/default/default_node_selected.tres" id="29_bvrt3"]
 [ext_resource type="StyleBox" uid="uid://bcn0xekidb13s" path="res://addons/hyh.digression/editor/themes/default/position_overlay.tres" id="30_o0oq7"]
@@ -73,6 +74,7 @@ ActionGraphNode/styles/panel = ExtResource("1_58hqi")
 ActionGraphNode/styles/panel_selected = ExtResource("2_cbref")
 ActionGraphNode/styles/titlebar = ExtResource("3_ytry2")
 ActionGraphNode/styles/titlebar_selected = ExtResource("4_a7o80")
+ActionNodeTitlebarOption/base_type = &"GraphNodeTitlebarOption"
 AnchorGraphNode/base_type = &"GraphNode"
 AnchorGraphNode/styles/panel = ExtResource("1_58hqi")
 AnchorGraphNode/styles/panel_selected = ExtResource("2_cbref")
@@ -114,6 +116,7 @@ CheckButton/styles/hover = ExtResource("13_pa0sq")
 CheckButton/styles/hover_pressed = ExtResource("13_pa0sq")
 CheckButton/styles/normal = ExtResource("13_pa0sq")
 CheckButton/styles/pressed = ExtResource("13_pa0sq")
+ChoiceNodeTitlebarOption/base_type = &"GraphNodeTitlebarOption"
 ChoiceTextEdit/base_type = &"LineEdit"
 ChoiceTextEdit/styles/normal = ExtResource("14_6d230")
 CodeEdit/colors/background_color = Color(0.95158, 0.95158, 0.95158, 0)
@@ -134,7 +137,8 @@ CommentGraphNode/colors/resizer_color = Color(0.901961, 0.901961, 0.901961, 1)
 CommentGraphNode/styles/panel = ExtResource("15_xqav4")
 CommentGraphNode/styles/panel_selected = ExtResource("16_8njvx")
 CommentGraphNode/styles/titlebar = ExtResource("17_pkkt4")
-CommentGraphNode/styles/titlebar_selected = ExtResource("18_7dmr0")
+CommentGraphNode/styles/titlebar_selected = ExtResource("17_cbref")
+CommentNodeTitlebarOption/base_type = &"GraphNodeTitlebarOption"
 ControlGraphNode/base_type = &"GraphNode"
 ControlGraphNode/styles/panel = ExtResource("1_58hqi")
 ControlGraphNode/styles/panel_selected = ExtResource("2_cbref")
@@ -145,6 +149,7 @@ DialogueGraphNode/styles/panel = ExtResource("1_58hqi")
 DialogueGraphNode/styles/panel_selected = ExtResource("2_cbref")
 DialogueGraphNode/styles/titlebar = ExtResource("25_jdnxd")
 DialogueGraphNode/styles/titlebar_selected = ExtResource("26_73dlh")
+DialogueNodeTitlebarOption/base_type = &"GraphNodeTitlebarOption"
 DialogueTextEdit/base_type = &"CodeEdit"
 DialogueWithTranslationBlock/base_type = &"VBoxContainer"
 DialogueWithTranslationBlock/constants/separation = 6
@@ -164,6 +169,10 @@ GraphNode/styles/titlebar_selected = ExtResource("32_eys10")
 GraphNodeTitleLabel/colors/font_color = Color(0, 0, 0, 1)
 GraphNodeTitleLabel/constants/shadow_outline_size = 0
 GraphNodeTitleLabel/font_sizes/font_size = 16
+GraphNodeTitlebarOption/base_type = &"OptionButton"
+GraphNodeTitlebarOption/colors/font_color = Color(0, 0, 0, 1)
+GraphNodeTitlebarOption/font_sizes/font_size = 16
+GraphNodeTitlebarOption/fonts/font = ExtResource("28_cbref")
 HSeparator/styles/separator = ExtResource("33_ipw1h")
 Label/colors/font_color = Color(0, 0, 0, 1)
 LineEdit/colors/caret_color = Color(0.137255, 0.137255, 0.137255, 1)

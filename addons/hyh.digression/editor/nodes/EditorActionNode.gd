@@ -17,8 +17,6 @@ enum ActionAddArgumentMenuId {
 	DATA_STORE_GLOBAL,
 }
 
-# TODO: What is this? It should be associated with the theme, no?
-const TITLE_FONT = preload("../themes/default/TitleOptionFont.tres")
 
 const ExpressionArgument = preload("../controls/arguments/ExpressionArgument.tscn")
 const CharacterArgument = preload("../controls/arguments/CharacterArgument.tscn")
@@ -54,7 +52,7 @@ func _init():
 	_action_mechanism_option.item_selected.connect(_on_action_mechanism_option_item_selected)
 	_action_mechanism_option.flat = true
 	_action_mechanism_option.fit_to_longest_item = true
-	_action_mechanism_option.add_theme_font_override("font", TITLE_FONT)
+	_action_mechanism_option.theme_type_variation = "ActionNodeTitlebarOption"
 	_action_mechanism_option.add_item("Action (signal)", ActionMechanism.SIGNAL)
 	_action_mechanism_option.add_item("Action (method call)", ActionMechanism.METHOD)
 

@@ -3,7 +3,6 @@ extends "EditorGraphNodeBase.gd"
 ## Editor node for managing Choice resources.
 
 
-const TITLE_FONT = preload("res://addons/hyh.digression/editor/themes/default/TitleOptionFont.tres")
 const TranslationKey = preload("../../utility/TranslationKey.gd")
 const ChoiceBranch = preload("../../resources/graph/branches/ChoiceBranch.gd")
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
@@ -37,7 +36,7 @@ func _init():
 	)
 	_choice_type_option.flat = true
 	_choice_type_option.fit_to_longest_item = true
-	_choice_type_option.add_theme_font_override("font", TITLE_FONT)
+	_choice_type_option.theme_type_variation = "ChoiceNodeTitlebarOption"
 
 
 func _ready():

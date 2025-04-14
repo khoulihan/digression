@@ -19,7 +19,6 @@ variation_embolden = 0.3
 [node name="EditorChoiceNode" instance=ExtResource("4")]
 offset_right = 511.0
 offset_bottom = 556.0
-theme = null
 theme_type_variation = &"DialogueGraphNode"
 resizable = true
 title = ""

@@ -3,7 +3,6 @@ extends "EditorGraphNodeBase.gd"
 ## Editor node for Dialogue resource node.
 
 
-const TITLE_FONT = preload("res://addons/hyh.digression/editor/themes/default/TitleOptionFont.tres")
 const DialogueTextSection = preload("res://addons/hyh.digression/editor/text/DialogueTextSection.tscn")
 
 var _characters
@@ -25,7 +24,7 @@ func _init():
 	_dialogue_type_option.item_selected.connect(_on_dialogue_type_option_item_selected)
 	_dialogue_type_option.flat = true
 	_dialogue_type_option.fit_to_longest_item = true
-	_dialogue_type_option.add_theme_font_override("font", TITLE_FONT)
+	_dialogue_type_option.theme_type_variation = "DialogueNodeTitlebarOption"
 
 
 func _ready():
