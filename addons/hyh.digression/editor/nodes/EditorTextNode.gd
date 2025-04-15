@@ -4,6 +4,7 @@ extends "EditorGraphNodeBase.gd"
 
 
 const DialogueTextSection = preload("res://addons/hyh.digression/editor/text/DialogueTextSection.tscn")
+const SettingsHelper = preload("../helpers/SettingsHelper.gd")
 
 var _characters
 var _dialogue_types
@@ -33,6 +34,7 @@ func _ready():
 	# By moving to index 0, the empty title label serves as a spacer.
 	titlebar.move_child(_dialogue_type_option, 0)
 	_dialogue_type_option.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	self.size.x = SettingsHelper.get_dialogue_node_initial_width()
 	super()
 
 

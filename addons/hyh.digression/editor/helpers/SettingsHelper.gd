@@ -15,6 +15,8 @@ const SETTINGS_SCHEMA_SECTION = "schema"
 const SETTINGS_THEME_SECTION = "theme"
 const SETTINGS_EDITOR_SECTION = "editor"
 
+const _NODE_DEFAULT_INITIAL_WIDTH = 600.0
+
 
 static func get_graph_types_key() -> String:
 	return "%s/%s/graph_types" % [SETTINGS_APPLICATION, SETTINGS_SCHEMA_SECTION]
@@ -44,8 +46,22 @@ static func get_custom_theme_key() -> String:
 	return "%s/%s/custom_theme" % [SETTINGS_APPLICATION, SETTINGS_THEME_SECTION]
 
 
-static func get_editor_dialogue_line_length_guidelines() -> String:
+static func get_editor_dialogue_line_length_guidelines_key() -> String:
 	return "%s/%s/dialogue_line_length_guidelines" % [
+		SETTINGS_APPLICATION,
+		SETTINGS_EDITOR_SECTION
+	]
+
+
+static func get_editor_dialogue_node_initial_width_key() -> String:
+	return "%s/%s/dialogue_node_initial_width" % [
+		SETTINGS_APPLICATION,
+		SETTINGS_EDITOR_SECTION
+	]
+
+
+static func get_editor_choice_node_initial_width_key() -> String:
+	return "%s/%s/choice_node_initial_width" % [
 		SETTINGS_APPLICATION,
 		SETTINGS_EDITOR_SECTION
 	]
@@ -152,19 +168,35 @@ static func create_default_project_settings() -> void:
 				},
 			]
 		)
-	if not ProjectSettings.has_setting(get_editor_dialogue_line_length_guidelines()):
+	if not ProjectSettings.has_setting(
+		get_editor_dialogue_line_length_guidelines_key()
+	):
 		ProjectSettings.set_setting(
-			get_editor_dialogue_line_length_guidelines(),
+			get_editor_dialogue_line_length_guidelines_key(),
 			[80]
 		)
 	ProjectSettings.add_property_info(
 		{
-			"name": get_editor_dialogue_line_length_guidelines(),
+			"name": get_editor_dialogue_line_length_guidelines_key(),
 			"type": TYPE_ARRAY,
 			"hint": PROPERTY_HINT_ARRAY_TYPE,
 			"hint_string": "int",
 		}
 	)
+	if not ProjectSettings.has_setting(
+		get_editor_dialogue_node_initial_width_key()
+	):
+		ProjectSettings.set_setting(
+			get_editor_dialogue_node_initial_width_key(),
+			_NODE_DEFAULT_INITIAL_WIDTH
+		)
+	if not ProjectSettings.has_setting(
+		get_editor_choice_node_initial_width_key()
+	):
+		ProjectSettings.set_setting(
+			get_editor_choice_node_initial_width_key(),
+			_NODE_DEFAULT_INITIAL_WIDTH
+		)
 	ProjectSettings.save()
 
 
@@ -233,8 +265,22 @@ static func get_custom_theme() -> String:
 
 static func get_dialogue_line_length_guidelines() -> Array:
 	return get_setting(
-		get_editor_dialogue_line_length_guidelines(),
+		get_editor_dialogue_line_length_guidelines_key(),
 		[],
+	)
+
+
+static func get_dialogue_node_initial_width() -> float:
+	return get_setting(
+		get_editor_dialogue_node_initial_width_key(),
+		_NODE_DEFAULT_INITIAL_WIDTH,
+	)
+
+
+static func get_choice_node_initial_width() -> float:
+	return get_setting(
+		get_editor_choice_node_initial_width_key(),
+		_NODE_DEFAULT_INITIAL_WIDTH,
 	)
 
 

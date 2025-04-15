@@ -56,6 +56,8 @@ func _ready():
 	var guidelines := SettingsHelper.get_dialogue_line_length_guidelines()
 	_dialogue_text_edit.line_length_guidelines.clear()
 	_dialogue_text_edit.line_length_guidelines.append_array(guidelines)
+	
+	self.size.x = SettingsHelper.get_choice_node_initial_width()
 	super()
 
 
