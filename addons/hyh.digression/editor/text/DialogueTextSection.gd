@@ -14,6 +14,7 @@ enum DialogueMenuItems {
 }
 
 
+const SettingsHelper = preload("../helpers/SettingsHelper.gd")
 const TranslationKey = preload("../../utility/TranslationKey.gd")
 const DialogueText = preload("res://addons/hyh.digression/resources/graph/DialogueText.gd")
 const HANDLE_ICON = preload("../../icons/icon_drag_light.svg")
@@ -24,7 +25,7 @@ const TEXT_EDIT_MINIMUM_WIDTH = 200.0
 
 var _variants
 
-@onready var _text_edit := $VB/CodeBlock/CodeEdit
+@onready var _text_edit: CodeEdit = $VB/CodeBlock/CodeEdit
 @onready var _variant_select := $VB/VariantSelectContainer/VariantSelect
 @onready var _variant_select_container := $VB/VariantSelectContainer
 @onready var _translation_key_edit := $VB/CodeBlock/TranslationContainer/TranslationKeyEdit
@@ -34,8 +35,14 @@ var _variants
 
 
 func _ready() -> void:
+	# Hook up the signal handler for the menu.
 	var popup := _menu_button.get_popup()
 	popup.id_pressed.connect(_on_menu_id_pressed)
+	
+	# Guidelines for the dialogue text.
+	var guidelines := SettingsHelper.get_dialogue_line_length_guidelines()
+	_text_edit.line_length_guidelines.clear()
+	_text_edit.line_length_guidelines.append_array(guidelines)
 
 
 # TODO: This might need additional arguments - dialogue type (or if it includes

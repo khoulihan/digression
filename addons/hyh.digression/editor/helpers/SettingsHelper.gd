@@ -13,6 +13,7 @@ enum BuiltinTheme {
 const SETTINGS_APPLICATION = "digression_dialogue_graph_editor"
 const SETTINGS_SCHEMA_SECTION = "schema"
 const SETTINGS_THEME_SECTION = "theme"
+const SETTINGS_EDITOR_SECTION = "editor"
 
 
 static func get_graph_types_key() -> String:
@@ -41,6 +42,13 @@ static func get_theme_key() -> String:
 
 static func get_custom_theme_key() -> String:
 	return "%s/%s/custom_theme" % [SETTINGS_APPLICATION, SETTINGS_THEME_SECTION]
+
+
+static func get_editor_dialogue_line_length_guidelines() -> String:
+	return "%s/%s/dialogue_line_length_guidelines" % [
+		SETTINGS_APPLICATION,
+		SETTINGS_EDITOR_SECTION
+	]
 
 
 static func create_default_project_settings() -> void:
@@ -144,6 +152,19 @@ static func create_default_project_settings() -> void:
 				},
 			]
 		)
+	if not ProjectSettings.has_setting(get_editor_dialogue_line_length_guidelines()):
+		ProjectSettings.set_setting(
+			get_editor_dialogue_line_length_guidelines(),
+			[80]
+		)
+	ProjectSettings.add_property_info(
+		{
+			"name": get_editor_dialogue_line_length_guidelines(),
+			"type": TYPE_ARRAY,
+			"hint": PROPERTY_HINT_ARRAY_TYPE,
+			"hint_string": "int",
+		}
+	)
 	ProjectSettings.save()
 
 
@@ -207,6 +228,13 @@ static func get_custom_theme() -> String:
 	return get_setting(
 		get_custom_theme_key(),
 		"",
+	)
+
+
+static func get_dialogue_line_length_guidelines() -> Array:
+	return get_setting(
+		get_editor_dialogue_line_length_guidelines(),
+		[],
 	)
 
 

@@ -3,6 +3,7 @@ extends "EditorGraphNodeBase.gd"
 ## Editor node for managing Choice resources.
 
 
+const SettingsHelper = preload("../helpers/SettingsHelper.gd")
 const TranslationKey = preload("../../utility/TranslationKey.gd")
 const ChoiceBranch = preload("../../resources/graph/branches/ChoiceBranch.gd")
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
@@ -40,13 +41,21 @@ func _init():
 
 
 func _ready():
+	# Choice type in the titlebar
 	var titlebar = get_titlebar_hbox()
 	titlebar.add_child(_choice_type_option)
 	# By moving to index 0, the empty title label serves as a spacer.
 	titlebar.move_child(_choice_type_option, 0)
 	_choice_type_option.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	
+	# Hook up the dialogue type option.
 	var popup := _dialogue_menu_button.get_popup()
 	popup.id_pressed.connect(_on_dialogue_menu_id_pressed)
+	
+	# Guidelines for the dialogue text.
+	var guidelines := SettingsHelper.get_dialogue_line_length_guidelines()
+	_dialogue_text_edit.line_length_guidelines.clear()
+	_dialogue_text_edit.line_length_guidelines.append_array(guidelines)
 	super()
 
 
