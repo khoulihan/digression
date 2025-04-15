@@ -177,7 +177,8 @@ var _logger = Logging.new(
 )
 
 # Nodes
-@onready var _graph_edit = $HS/MC/VB/GraphEdit
+@onready var _graph_edit = $HS/MC/VB/MC/GraphEdit
+@onready var _maximised_node_editor = $HS/MC/VB/MC/MaximisedNodeEditor
 @onready var _graph_popup = $GraphContextMenu
 @onready var _confirmation_dialog = $ConfirmationDialog
 @onready var _error_dialog = $ErrorDialog
@@ -440,6 +441,13 @@ func _on_graph_edit_focus_entered():
 
 #endregion
 
+#region Maximised node editor signal handlers
+
+func _on_maximised_node_editor_restore_requested() -> void:
+	_maximised_node_editor.visible = false
+	_graph_edit.visible = true
+
+#endregion
 
 #region Context menu signal handlers
 
@@ -531,6 +539,9 @@ func _connect_node_signals(node):
 			node.name
 		)
 	)
+	node.maximise_requested.connect(
+		_on_node_maximise_requested.bind(node)
+	)
 	if node is EditorSubGraphNodeClass:
 		node.sub_graph_open_requested.connect(
 			_on_sub_graph_node_open_requested.bind(
@@ -606,6 +617,12 @@ func _on_node_modified(node_name):
 		_clear_connections_for_node(res)
 		_create_connections_for_node(res)
 	perform_save()
+
+
+func _on_node_maximise_requested(node) -> void:
+	_maximised_node_editor.visible = true
+	_graph_edit.visible = false
+	# TODO: Pass the resource to be edited to the maximised node editor.
 
 
 func _on_sub_graph_node_open_requested(graph, editor_node):

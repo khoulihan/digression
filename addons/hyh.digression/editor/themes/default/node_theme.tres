@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=49 format=3 uid="uid://1cbvg04l0616"]
+[gd_resource type="Theme" load_steps=50 format=3 uid="uid://1cbvg04l0616"]
 
 [ext_resource type="StyleBox" uid="uid://cbblvk1p1p0ya" path="res://addons/hyh.digression/editor/themes/default/default_node.tres" id="1_hf5xb"]
 [ext_resource type="StyleBox" uid="uid://bawhxiixc3r2i" path="res://addons/hyh.digression/editor/themes/default/action_node_selected.tres" id="2_3e507"]
@@ -38,6 +38,7 @@
 [ext_resource type="StyleBox" uid="uid://bfb7qelnfi6bj" path="res://addons/hyh.digression/editor/themes/default/control_node_titlebar.tres" id="20_hyxb0"]
 [ext_resource type="StyleBox" uid="uid://cg1qeowcx5883" path="res://addons/hyh.digression/editor/themes/default/control_node_titlebar_selected.tres" id="21_o3m2w"]
 [ext_resource type="FontVariation" uid="uid://78210eby508f" path="res://addons/hyh.digression/editor/themes/default/TitleOptionFont.tres" id="32_7x7yi"]
+[ext_resource type="StyleBox" uid="uid://dkbb0jpbx0bt6" path="res://addons/hyh.digression/editor/themes/default/maximised_dialogue_node.tres" id="35_s52ax"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r672w"]
 
@@ -198,6 +199,8 @@ LineEdit/styles/focus = ExtResource("5_4e4bm")
 LineEdit/styles/normal = ExtResource("6_0o5wo")
 LineEdit/styles/read_only = ExtResource("9_yprw3")
 LinkButton/font_sizes/font_size = 14
+MaximisedNodePanel/base_type = &"Panel"
+MaximisedNodePanel/styles/panel = ExtResource("35_s52ax")
 MenuButton/font_sizes/font_size = 14
 OptionButton/colors/font_color = Color(0.152941, 0.152941, 0.152941, 1)
 OptionButton/colors/font_focus_color = Color(0.141176, 0.141176, 0.141176, 1)

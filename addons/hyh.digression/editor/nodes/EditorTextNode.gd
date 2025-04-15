@@ -10,6 +10,7 @@ var _characters
 var _dialogue_types
 var _dialogue_types_by_id
 var _dialogue_type_option: OptionButton
+var _maximise_button: Button
 
 # TODO: May not need this.
 var _original_size: Vector2
@@ -26,6 +27,10 @@ func _init():
 	_dialogue_type_option.flat = true
 	_dialogue_type_option.fit_to_longest_item = true
 	_dialogue_type_option.theme_type_variation = "DialogueNodeTitlebarOption"
+	_maximise_button = Button.new()
+	_maximise_button.flat = true
+	_maximise_button.icon = preload("res://addons/hyh.digression/icons/icon_expand.svg")
+	_maximise_button.pressed.connect(_on_maximise_button_pressed)
 
 
 func _ready():
@@ -34,6 +39,8 @@ func _ready():
 	# By moving to index 0, the empty title label serves as a spacer.
 	titlebar.move_child(_dialogue_type_option, 0)
 	_dialogue_type_option.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	titlebar.add_child(_maximise_button)
+	_maximise_button.size_flags_horizontal = Control.SIZE_SHRINK_END
 	self.size.x = SettingsHelper.get_dialogue_node_initial_width()
 	super()
 
@@ -426,3 +433,7 @@ func _on_section_preparing_to_change_parent(section):
 
 func _on_section_resized() -> void:
 	_reset_size(self.size.x)
+
+
+func _on_maximise_button_pressed() -> void:
+	maximise_requested.emit()

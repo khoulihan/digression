@@ -8,8 +8,8 @@
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="9_rnbxw"]
 
 [node name="EditorTextNode" instance=ExtResource("2")]
-offset_right = 560.0
-offset_bottom = 232.0
+offset_right = 600.0
+offset_bottom = 282.0
 theme_type_variation = &"DialogueGraphNode"
 resizable = true
 title = ""

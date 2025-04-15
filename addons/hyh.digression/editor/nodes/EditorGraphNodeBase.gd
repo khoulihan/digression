@@ -8,6 +8,7 @@ signal popup_request(p_position)
 signal modified()
 signal connected_to_node(port_index, node_id)
 signal disconnected(port_index)
+signal maximise_requested()
 
 const Logging = preload("../../utility/Logging.gd")
 const CLOSE_ICON = preload("../../icons/icon_close.svg")

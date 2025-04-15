@@ -1,0 +1,65 @@
+[gd_scene load_steps=5 format=3 uid="uid://p71pge6v4nok"]
+
+[ext_resource type="Script" uid="uid://bhdtgguuk8qhu" path="res://addons/hyh.digression/editor/maximised/MaximisedNodeEditor.gd" id="1_1aol0"]
+[ext_resource type="Texture2D" uid="uid://2hw2ojtmrrsm" path="res://addons/hyh.digression/icons/icon_expand.svg" id="2_1aol0"]
+[ext_resource type="Texture2D" uid="uid://bta3jvd470c36" path="res://addons/hyh.digression/icons/icon_close.svg" id="2_sub88"]
+[ext_resource type="PackedScene" uid="uid://ddfuesfbx7gun" path="res://addons/hyh.digression/editor/maximised/MaximisedDialogueNode.tscn" id="4_1aol0"]
+
+[node name="MaximisedNodeEditor" type="MarginContainer"]
+offset_right = 394.0
+offset_bottom = 306.0
+script = ExtResource("1_1aol0")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 2
+theme_type_variation = &"MaximisedNodePanel"
+
+[node name="VB" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HeaderContainer" type="MarginContainer" parent="VB"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="Header" type="HBoxContainer" parent="VB/HeaderContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VB/HeaderContainer/Header"]
+layout_mode = 2
+text = "Node Title"
+
+[node name="RestoreButton" type="Button" parent="VB/HeaderContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 10
+toggle_mode = true
+button_pressed = true
+icon = ExtResource("2_1aol0")
+flat = true
+
+[node name="CloseButton" type="Button" parent="VB/HeaderContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 8
+icon = ExtResource("2_sub88")
+flat = true
+
+[node name="BodyContainer" type="ScrollContainer" parent="VB"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MC" type="MarginContainer" parent="VB/BodyContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="MaximisedDialogueNode" parent="VB/BodyContainer/MC" instance=ExtResource("4_1aol0")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[connection signal="pressed" from="VB/HeaderContainer/Header/RestoreButton" to="." method="_on_restore_button_pressed"]
