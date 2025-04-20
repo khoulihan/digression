@@ -68,12 +68,10 @@ func configure_for_sibling_count(count):
 
 func configure_for_dialogue_type(involves_character, adjust_size):
 	_variant_select_container.visible = involves_character
-	# TODO: Handle size adjustment (or not).
 
 
 ## Persist changes from the editor controls into the graph section's properties
 func persist_changes_to_resource():
-	section_resource.size = self.size
 	section_resource.text = get_text()
 	section_resource.text_translation_key = get_translation_key()
 	
@@ -205,6 +203,7 @@ func _on_custom_properties_control_modified():
 
 func _on_clear_variant_button_pressed():
 	select_variant(null)
+	modified.emit()
 
 
 func _on_variant_select_item_selected(ID):

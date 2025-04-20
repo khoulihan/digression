@@ -1,9 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://ddfuesfbx7gun"]
+[gd_scene load_steps=5 format=3 uid="uid://ddfuesfbx7gun"]
 
 [ext_resource type="Texture2D" uid="uid://d65jtbo3b07t" path="res://addons/hyh.digression/icons/icon_clear.svg" id="1_ceq0j"]
 [ext_resource type="Script" uid="uid://bff7rxa642mpi" path="res://addons/hyh.digression/editor/maximised/MaximisedDialogueNode.gd" id="1_p0kw4"]
 [ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="2_p0kw4"]
-[ext_resource type="PackedScene" uid="uid://bi6s5ip3smrd5" path="res://addons/hyh.digression/editor/text/DialogueTextSection.tscn" id="3_yv50g"]
 [ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="4_l61x8"]
 
 [node name="MaximisedDialogueNode" type="VBoxContainer"]
@@ -38,37 +37,14 @@ accepted_classes = Array[int]([1])
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="DialogueTextSection" parent="SectionsContainer" instance=ExtResource("3_yv50g")]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="DialogueTextSection2" parent="SectionsContainer" instance=ExtResource("3_yv50g")]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="DialogueTextSection3" parent="SectionsContainer" instance=ExtResource("3_yv50g")]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="DialogueTextSection4" parent="SectionsContainer" instance=ExtResource("3_yv50g")]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="DialogueTextSection5" parent="SectionsContainer" instance=ExtResource("3_yv50g")]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="DialogueTextSection6" parent="SectionsContainer" instance=ExtResource("3_yv50g")]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="DialogueTextSection7" parent="SectionsContainer" instance=ExtResource("3_yv50g")]
-layout_mode = 2
-size_flags_vertical = 3
-
 [node name="AddSectionButton" type="Button" parent="."]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Add Section"
 icon = ExtResource("4_l61x8")
 flat = true
+
+[connection signal="item_selected" from="CharacterOptionsContainer/CharacterSelect" to="." method="_on_character_select_item_selected"]
+[connection signal="pressed" from="CharacterOptionsContainer/ClearCharacterButton" to="." method="_on_clear_character_button_pressed"]
+[connection signal="dropped" from="DragTargetHSeparator" to="." method="_on_character_options_separator_dropped"]
+[connection signal="pressed" from="AddSectionButton" to="." method="_on_add_section_button_pressed"]

@@ -45,11 +45,11 @@ size_flags_horizontal = 8
 icon = ExtResource("2_sub88")
 flat = true
 
-[node name="BodyContainer" type="ScrollContainer" parent="VB"]
+[node name="BodyScrollContainer" type="ScrollContainer" parent="VB"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MC" type="MarginContainer" parent="VB/BodyContainer"]
+[node name="BodyContainer" type="MarginContainer" parent="VB/BodyScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 10
@@ -57,9 +57,10 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="MaximisedDialogueNode" parent="VB/BodyContainer/MC" instance=ExtResource("4_1aol0")]
+[node name="MaximisedDialogueNode" parent="VB/BodyScrollContainer/BodyContainer" instance=ExtResource("4_1aol0")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [connection signal="pressed" from="VB/HeaderContainer/Header/RestoreButton" to="." method="_on_restore_button_pressed"]
+[connection signal="pressed" from="VB/HeaderContainer/Header/CloseButton" to="." method="_on_close_button_pressed"]

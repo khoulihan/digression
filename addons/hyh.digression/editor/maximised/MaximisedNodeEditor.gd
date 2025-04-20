@@ -3,7 +3,87 @@ extends MarginContainer
 
 
 signal restore_requested()
+signal modified(resource_node: GraphNodeBase)
+signal delete_request(resource_node: GraphNodeBase)
+
+
+const GraphNodeBase = preload("res://addons/hyh.digression/resources/graph/GraphNodeBase.gd")
+const DialogueTextNode = preload("res://addons/hyh.digression/resources/graph/DialogueTextNode.gd")
+const MaximisedDialogueNode = preload("./MaximisedDialogueNode.gd")
+const MaximisedDialogueNodeScene = preload("./MaximisedDialogueNode.tscn")
+
+
+@onready var _header: HBoxContainer = $VB/HeaderContainer/Header
+@onready var _body_container: MarginContainer = $VB/BodyScrollContainer/BodyContainer
+
+
+var _hosted_editor: Control
+var _edited_node: GraphNodeBase
+
+
+func configure_for_node(
+	graph: DigressionDialogueGraph,
+	resource_node: GraphNodeBase
+) -> void:
+	_edited_node = resource_node
+	if resource_node is DialogueTextNode:
+		_instantiate_and_configure_dialogue_node(
+			graph,
+			resource_node as DialogueTextNode
+		)
+
+
+func _instantiate_and_configure_dialogue_node(
+	graph: DigressionDialogueGraph,
+	resource_node: DialogueTextNode
+) -> void:
+	var node_editor: MaximisedDialogueNode = MaximisedDialogueNodeScene.instantiate()
+	_hosted_editor = node_editor
+	if _body_container.get_child_count() > 0:
+		var previous := _body_container.get_child(0)
+		_body_container.remove_child(previous)
+		previous.queue_free()
+	_body_container.add_child(node_editor)
+	node_editor.configure_titlebar(_header)
+	node_editor.configure_for_node(graph, resource_node)
+	node_editor.modified.connect(_on_node_editor_modified.bind(resource_node))
+
+
+func _show_delete_confirmation_dialog():
+	var confirm = ConfirmationDialog.new()
+	confirm.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
+	confirm.title = "Please confirm"
+	confirm.dialog_text = "Are you sure you want to remove this node? This action cannot be undone."
+	confirm.canceled.connect(_on_delete_cancelled.bind(confirm))
+	confirm.confirmed.connect(_on_delete_confirmed.bind(confirm))
+	get_tree().root.add_child(confirm)
+	confirm.show()
+
+
+func _cleanup() -> void:
+	if _hosted_editor.has_method("cleanup"):
+		_hosted_editor.cleanup()
+	_body_container.remove_child(_hosted_editor)
+	_hosted_editor.queue_free()
 
 
 func _on_restore_button_pressed() -> void:
+	_cleanup()
 	restore_requested.emit()
+
+
+func _on_node_editor_modified(resource_node: GraphNodeBase) -> void:
+	modified.emit(resource_node)
+
+
+func _on_close_button_pressed() -> void:
+	_show_delete_confirmation_dialog()
+
+
+func _on_delete_cancelled(dialog) -> void:
+	get_tree().root.remove_child(dialog)
+
+
+func _on_delete_confirmed(dialog) -> void:
+	get_tree().root.remove_child(dialog)
+	delete_request.emit(_edited_node)

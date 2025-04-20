@@ -26,7 +26,6 @@ layout_mode = 2
 [node name="DragHandle" type="TextureRect" parent="VB/Header" node_paths=PackedStringArray("target")]
 modulate = Color(0.137255, 0.137255, 0.137255, 1)
 layout_mode = 2
-size_flags_horizontal = 3
 size_flags_vertical = 4
 tooltip_text = "Drag to rearrange expressions."
 mouse_filter = 0
@@ -39,7 +38,7 @@ drag_class = 1
 
 [node name="RemoveButton" type="Button" parent="VB/Header"]
 layout_mode = 2
-size_flags_horizontal = 8
+size_flags_horizontal = 10
 size_flags_vertical = 0
 icon = ExtResource("2_xjpqh")
 flat = true
@@ -71,6 +70,7 @@ theme_type_variation = &"DialogueTextEdit"
 placeholder_text = "Enter Dialogue Text..."
 wrap_mode = 1
 scroll_fit_content_height = true
+line_length_guidelines = Array[int]([80, 120])
 gutters_draw_line_numbers = true
 auto_brace_completion_enabled = true
 auto_brace_completion_highlight_matching = true

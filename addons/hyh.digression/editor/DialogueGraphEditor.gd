@@ -71,6 +71,7 @@ const TranslationKey = preload("../utility/TranslationKey.gd")
 const ThemeHelper = preload("./helpers/ThemeHelper.gd")
 
 # Resource graph nodes.
+const GraphNodeBase = preload("../resources/graph/GraphNodeBase.gd")
 const DialogueTextNode = preload("../resources/graph/DialogueTextNode.gd")
 const MatchBranchNode = preload("../resources/graph/MatchBranchNode.gd")
 const IfBranchNode = preload("../resources/graph/IfBranchNode.gd")
@@ -444,8 +445,31 @@ func _on_graph_edit_focus_entered():
 #region Maximised node editor signal handlers
 
 func _on_maximised_node_editor_restore_requested() -> void:
+	_restore_maximised_node()
+
+
+func _on_maximised_node_editor_modified(resource_node: GraphNodeBase) -> void:
+	# TODO: Find the editor node corresponding to the provided resource node
+	# and update it. May need to add a new method for this. Then, do the same
+	# stuff as if the change had been made in the graph editor.
+	var editor_node = _get_editor_node_for_graph_node(resource_node)
+	editor_node.configure_for_node(_edited.graph, resource_node)
+
+
+func _on_maximised_node_editor_delete_request(resource_node: Resource) -> void:
+	# TODO: Bit janky the way this works. The original node removal handling
+	# could probably be improved.
+	var editor_node = _get_editor_node_for_graph_node(resource_node)
+	_confirmation_action = ConfirmationActions.REMOVE_NODE
+	_node_to_remove = [editor_node.name]
+	_remove_nodes()
+	_restore_maximised_node()
+
+
+func _restore_maximised_node() -> void:
 	_maximised_node_editor.visible = false
 	_graph_edit.visible = true
+	_draw_edited_graph(true)
 
 #endregion
 
@@ -622,7 +646,10 @@ func _on_node_modified(node_name):
 func _on_node_maximise_requested(node) -> void:
 	_maximised_node_editor.visible = true
 	_graph_edit.visible = false
-	# TODO: Pass the resource to be edited to the maximised node editor.
+	_maximised_node_editor.configure_for_node(
+		_edited.graph as DigressionDialogueGraph,
+		node.node_resource
+	)
 
 
 func _on_sub_graph_node_open_requested(graph, editor_node):
