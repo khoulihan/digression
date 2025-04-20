@@ -1,20 +1,20 @@
 [gd_scene load_steps=11 format=3 uid="uid://bi6s5ip3smrd5"]
 
-[ext_resource type="Script" uid="uid://nysssfi62cq0" path="res://addons/hyh.digression/editor/text/DialogueTextSection.gd" id="1_8kado"]
-[ext_resource type="Texture2D" uid="uid://c6ox4e8uvkkds" path="res://addons/hyh.digression/icons/icon_drag.svg" id="2_hnmw7"]
-[ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.digression/icons/icon_remove.svg" id="2_xjpqh"]
-[ext_resource type="Script" uid="uid://6d3khtryq2wr" path="res://addons/hyh.digression/editor/controls/drag/DragHandle.gd" id="3_2wp64"]
-[ext_resource type="Texture2D" uid="uid://d65jtbo3b07t" path="res://addons/hyh.digression/icons/icon_clear.svg" id="3_vvkil"]
-[ext_resource type="PackedScene" uid="uid://rg4q2rccwgo5" path="res://addons/hyh.digression/editor/controls/properties/CustomPropertiesControl.tscn" id="4_hgski"]
-[ext_resource type="Texture2D" uid="uid://b303bfdrwrt8a" path="res://addons/hyh.digression/icons/icon_translation_dark.svg" id="6_wpajs"]
-[ext_resource type="Texture2D" uid="uid://c5ll5urk64ggp" path="res://addons/hyh.digression/icons/icon_gui_option_arrow.svg" id="7_1jf5n"]
-[ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="7_jmx58"]
-[ext_resource type="Texture2D" uid="uid://d0i22i0anuurm" path="res://addons/hyh.digression/icons/icon_add_dark.svg" id="7_q4adt"]
+[ext_resource type="Script" uid="uid://nysssfi62cq0" path="res://addons/hyh.digression/editor/text/EditorDialogueSection.gd" id="1_mq4en"]
+[ext_resource type="Texture2D" uid="uid://c6ox4e8uvkkds" path="res://addons/hyh.digression/icons/icon_drag.svg" id="2_xngw3"]
+[ext_resource type="Script" uid="uid://6d3khtryq2wr" path="res://addons/hyh.digression/editor/controls/drag/DragHandle.gd" id="3_6v06i"]
+[ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.digression/icons/icon_remove.svg" id="4_uabud"]
+[ext_resource type="Texture2D" uid="uid://d65jtbo3b07t" path="res://addons/hyh.digression/icons/icon_clear.svg" id="5_s4xqi"]
+[ext_resource type="Texture2D" uid="uid://c5ll5urk64ggp" path="res://addons/hyh.digression/icons/icon_gui_option_arrow.svg" id="6_h3t78"]
+[ext_resource type="Texture2D" uid="uid://d0i22i0anuurm" path="res://addons/hyh.digression/icons/icon_add_dark.svg" id="7_4mbfk"]
+[ext_resource type="Texture2D" uid="uid://b303bfdrwrt8a" path="res://addons/hyh.digression/icons/icon_translation_dark.svg" id="8_71c3j"]
+[ext_resource type="PackedScene" uid="uid://rg4q2rccwgo5" path="res://addons/hyh.digression/editor/controls/properties/CustomPropertiesControl.tscn" id="9_icnr8"]
+[ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="10_r7wia"]
 
-[node name="DialogueTextSection" type="MarginContainer"]
+[node name="EditorDialogueSection" type="MarginContainer"]
 offset_right = 330.0
 offset_bottom = 172.0
-script = ExtResource("1_8kado")
+script = ExtResource("1_mq4en")
 
 [node name="VB" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -30,9 +30,9 @@ size_flags_vertical = 4
 tooltip_text = "Drag to rearrange expressions."
 mouse_filter = 0
 mouse_default_cursor_shape = 13
-texture = ExtResource("2_hnmw7")
+texture = ExtResource("2_xngw3")
 stretch_mode = 2
-script = ExtResource("3_2wp64")
+script = ExtResource("3_6v06i")
 target = NodePath("../../..")
 drag_class = 1
 
@@ -40,7 +40,7 @@ drag_class = 1
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 0
-icon = ExtResource("2_xjpqh")
+icon = ExtResource("4_uabud")
 flat = true
 
 [node name="VariantSelectContainer" type="HBoxContainer" parent="VB"]
@@ -57,7 +57,7 @@ toggle_mode = false
 
 [node name="ClearVariantButton" type="Button" parent="VB/VariantSelectContainer"]
 layout_mode = 2
-icon = ExtResource("3_vvkil")
+icon = ExtResource("5_s4xqi")
 flat = true
 
 [node name="CodeBlock" type="VBoxContainer" parent="VB"]
@@ -88,13 +88,13 @@ layout_mode = 2
 
 [node name="MenuButton" type="MenuButton" parent="VB/CodeBlock/TranslationContainer"]
 layout_mode = 2
-icon = ExtResource("7_1jf5n")
+icon = ExtResource("6_h3t78")
 item_count = 2
 popup/item_0/text = "Add Custom Property"
-popup/item_0/icon = ExtResource("7_q4adt")
+popup/item_0/icon = ExtResource("7_4mbfk")
 popup/item_0/id = 0
 popup/item_1/text = "Regenerate Translation Key from Text"
-popup/item_1/icon = ExtResource("6_wpajs")
+popup/item_1/icon = ExtResource("8_71c3j")
 popup/item_1/id = 1
 
 [node name="TranslationKeyEdit" type="LineEdit" parent="VB/CodeBlock/TranslationContainer"]
@@ -104,14 +104,14 @@ size_flags_horizontal = 10
 theme_type_variation = &"TranslationKeyEdit"
 placeholder_text = "Enter Translation Key..."
 expand_to_text_length = true
-right_icon = ExtResource("6_wpajs")
+right_icon = ExtResource("8_71c3j")
 
-[node name="CustomPropertiesControl" parent="VB" instance=ExtResource("4_hgski")]
+[node name="CustomPropertiesControl" parent="VB" instance=ExtResource("9_icnr8")]
 layout_mode = 2
 use_restriction = 4
 show_add_button = false
 
-[node name="DragTargetHSeparator" parent="VB" instance=ExtResource("7_jmx58")]
+[node name="DragTargetHSeparator" parent="VB" instance=ExtResource("10_r7wia")]
 layout_mode = 2
 accepted_classes = Array[int]([1])
 

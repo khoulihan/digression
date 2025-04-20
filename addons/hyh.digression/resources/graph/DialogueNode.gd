@@ -3,7 +3,7 @@ extends "GraphNodeBase.gd"
 ## A node for grouping related dialogue texts.
 
 
-const DialogueText = preload("DialogueText.gd")
+const DialogueSection = preload("DialogueSection.gd")
 
 ## The user-defined type of the dialogue.
 @export var dialogue_type: String
@@ -12,24 +12,24 @@ const DialogueText = preload("DialogueText.gd")
 @export var character: Character
 
 ## The child text resources.
-@export var sections: Array[DialogueText]
+@export var sections: Array[DialogueSection]
 
 # This is used only for recreating the node state in the editor
 @export var size: Vector2
 
 
 func _init():
-	self.sections = [DialogueText.new()]
+	self.sections = [DialogueSection.new()]
 
 
-func add_section() -> DialogueText:
-	var section := DialogueText.new()
+func add_section() -> DialogueSection:
+	var section := DialogueSection.new()
 	section.text_translation_key = _derive_translation_key()
 	self.sections.append(section)
 	return section
 
 
-func remove_section(section: DialogueText) -> void:
+func remove_section(section: DialogueSection) -> void:
 	self.sections.remove_at(
 		self.sections.find(section)
 	)
@@ -68,7 +68,7 @@ func _derive_translation_key() -> String:
 	return "{0}_{1}".format([key_root, max_inc + 1])
 
 
-func _incrementable_for_root(section: DialogueText, root: String) -> int:
+func _incrementable_for_root(section: DialogueSection, root: String) -> int:
 	var key := section.text_translation_key
 	if not key.begins_with(root):
 		return -1

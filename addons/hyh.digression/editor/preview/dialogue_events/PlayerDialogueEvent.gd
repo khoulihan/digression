@@ -1,5 +1,5 @@
 @tool
-extends "DialogueTextEvent.gd"
+extends "DialogueEvent.gd"
 ## Displays player dialogue in the graph previewer.
 
 

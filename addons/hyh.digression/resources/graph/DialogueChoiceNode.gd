@@ -3,14 +3,14 @@ extends "GraphNodeBase.gd"
 
 
 const ChoiceBranch = preload("branches/ChoiceBranch.gd")
-const DialogueTextNode = preload("DialogueTextNode.gd")
+const DialogueNode = preload("DialogueNode.gd")
 const VariableType = preload("VariableSetNode.gd").VariableType
 
 
 @export var choice_type: String
 # This array no longer needs to allow nulls
 @export var choices: Array[ChoiceBranch]
-@export var dialogue: DialogueTextNode
+@export var dialogue: DialogueNode
 @export var show_dialogue_for_default: bool = false
 
 # This is used only for recreating the node state in the editor
@@ -18,7 +18,7 @@ const VariableType = preload("VariableSetNode.gd").VariableType
 
 
 func _init():
-	self.dialogue = DialogueTextNode.new()
+	self.dialogue = DialogueNode.new()
 
 
 ## Return an array of all outgoing connections.

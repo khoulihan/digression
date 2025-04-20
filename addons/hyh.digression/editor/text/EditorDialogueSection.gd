@@ -16,12 +16,12 @@ enum DialogueMenuItems {
 
 const SettingsHelper = preload("../helpers/SettingsHelper.gd")
 const TranslationKey = preload("../../utility/TranslationKey.gd")
-const DialogueText = preload("res://addons/hyh.digression/resources/graph/DialogueText.gd")
+const DialogueSection = preload("res://addons/hyh.digression/resources/graph/DialogueSection.gd")
 const HANDLE_ICON = preload("../../icons/icon_drag_light.svg")
 const PREVIEW_LENGTH = 25
 const TEXT_EDIT_MINIMUM_WIDTH = 200.0
 
-@export var section_resource: DialogueText
+@export var section_resource: DialogueSection
 
 var _variants
 

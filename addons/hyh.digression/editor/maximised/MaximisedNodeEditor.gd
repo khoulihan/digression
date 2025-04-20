@@ -8,7 +8,7 @@ signal delete_request(resource_node: GraphNodeBase)
 
 
 const GraphNodeBase = preload("res://addons/hyh.digression/resources/graph/GraphNodeBase.gd")
-const DialogueTextNode = preload("res://addons/hyh.digression/resources/graph/DialogueTextNode.gd")
+const DialogueNode = preload("res://addons/hyh.digression/resources/graph/DialogueNode.gd")
 const MaximisedDialogueNode = preload("./MaximisedDialogueNode.gd")
 const MaximisedDialogueNodeScene = preload("./MaximisedDialogueNode.tscn")
 
@@ -26,16 +26,16 @@ func configure_for_node(
 	resource_node: GraphNodeBase
 ) -> void:
 	_edited_node = resource_node
-	if resource_node is DialogueTextNode:
+	if resource_node is DialogueNode:
 		_instantiate_and_configure_dialogue_node(
 			graph,
-			resource_node as DialogueTextNode
+			resource_node as DialogueNode
 		)
 
 
 func _instantiate_and_configure_dialogue_node(
 	graph: DigressionDialogueGraph,
-	resource_node: DialogueTextNode
+	resource_node: DialogueNode
 ) -> void:
 	var node_editor: MaximisedDialogueNode = MaximisedDialogueNodeScene.instantiate()
 	_hosted_editor = node_editor

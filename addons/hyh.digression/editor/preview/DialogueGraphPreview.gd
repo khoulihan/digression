@@ -43,8 +43,8 @@ const INVISIBLE_ICON = preload("../../icons/icon_invisible.svg")
 const NOTIFICATION_ICON = preload("../../icons/icon_notification.svg")
 const NOTIFICATION_DISABLED_ICON = preload("../../icons/icon_notification_disabled.svg")
 
-const DialogueTextEvent = preload("dialogue_events/DialogueTextEvent.tscn")
-const PlayerDialogueTextEvent = preload("dialogue_events/PlayerDialogueTextEvent.tscn")
+const DialogueEvent = preload("dialogue_events/DialogueEvent.tscn")
+const PlayerDialogueEvent = preload("dialogue_events/PlayerDialogueEvent.tscn")
 const StaticInformationalEvent = preload("dialogue_events/StaticInformationalEvent.tscn")
 const FinalStaticInformationalEvent = preload("dialogue_events/FinalStaticInformationalEvent.tscn")
 const ChoiceEvent = preload("dialogue_events/ChoiceEvent.tscn")
@@ -796,11 +796,11 @@ func _on_graph_controller_dialogue_display_requested(
 		var colour = _character_colours[character]
 		colour_resources = _dialogue_colour_resources[colour]
 	if character != null and character.is_player:
-		n = PlayerDialogueTextEvent.instantiate()
+		n = PlayerDialogueEvent.instantiate()
 		panel = colour_resources[DialogueColourResourceIndex.RIGHT_PANEL]
 		indicator = colour_resources[DialogueColourResourceIndex.RIGHT_INDICATOR]
 	else:
-		n = DialogueTextEvent.instantiate()
+		n = DialogueEvent.instantiate()
 		if colour_resources != null:
 			panel = colour_resources[DialogueColourResourceIndex.LEFT_PANEL]
 			indicator = colour_resources[DialogueColourResourceIndex.LEFT_INDICATOR]

@@ -72,7 +72,7 @@ const ThemeHelper = preload("./helpers/ThemeHelper.gd")
 
 # Resource graph nodes.
 const GraphNodeBase = preload("../resources/graph/GraphNodeBase.gd")
-const DialogueTextNode = preload("../resources/graph/DialogueTextNode.gd")
+const DialogueNode = preload("../resources/graph/DialogueNode.gd")
 const MatchBranchNode = preload("../resources/graph/MatchBranchNode.gd")
 const IfBranchNode = preload("../resources/graph/IfBranchNode.gd")
 const DialogueChoiceNode = preload("../resources/graph/DialogueChoiceNode.gd")
@@ -89,7 +89,7 @@ const EntryPointAnchorNode = preload("../resources/graph/EntryPointAnchorNode.gd
 const ExitNode = preload("../resources/graph/ExitNode.gd")
 
 # Editor node classes.
-const EditorTextNodeClass = preload("./nodes/EditorTextNode.gd")
+const EditorDialogueNodeClass = preload("./nodes/EditorDialogueNode.gd")
 const EditorMatchBranchNodeClass = preload("./nodes/EditorMatchBranchNode.gd")
 const EditorIfBranchNodeClass = preload("./nodes/EditorIfBranchNode.gd")
 const EditorChoiceNodeClass = preload("./nodes/EditorChoiceNode.gd")
@@ -107,7 +107,7 @@ const EditorEntryPointAnchorNodeClass = preload("./nodes/EditorEntryPointAnchorN
 const EditorExitNodeClass = preload("./nodes/EditorExitNode.gd")
 
 # Editor node scenes.
-const EditorTextNode = preload("./nodes/EditorTextNode.tscn")
+const EditorDialogueNode = preload("./nodes/EditorDialogueNode.tscn")
 const EditorMatchBranchNode = preload("./nodes/EditorMatchBranchNode.tscn")
 const EditorIfBranchNode = preload("./nodes/EditorIfBranchNode.tscn")
 const EditorChoiceNode = preload("./nodes/EditorChoiceNode.tscn")
@@ -811,8 +811,8 @@ func _create_node_objects(node_type):
 	
 	match node_type:
 		GraphPopupMenuItems.ADD_TEXT_NODE:
-			new_editor_node = EditorTextNode.instantiate()
-			new_graph_node = DialogueTextNode.new()
+			new_editor_node = EditorDialogueNode.instantiate()
+			new_graph_node = DialogueNode.new()
 			_set_default_dialogue_type_for_node(new_graph_node)
 			new_graph_node.set_initial_translation_key(
 				TranslationKey.generate(
@@ -1053,8 +1053,8 @@ func _draw_edited_graph(retain_selection=false):
 func _instantiate_editor_node_for_graph_node(node):
 	var editor_node
 	
-	if node is DialogueTextNode:
-		editor_node = EditorTextNode.instantiate()
+	if node is DialogueNode:
+		editor_node = EditorDialogueNode.instantiate()
 	elif node is MatchBranchNode:
 		editor_node = EditorMatchBranchNode.instantiate()
 	elif node is IfBranchNode:
@@ -1417,7 +1417,7 @@ func _node_type_for_node(node):
 		return GraphPopupMenuItems.ADD_MATCH_BRANCH_NODE
 	elif node is EditorIfBranchNodeClass:
 		return GraphPopupMenuItems.ADD_IF_BRANCH_NODE
-	elif node is EditorTextNodeClass:
+	elif node is EditorDialogueNodeClass:
 		return GraphPopupMenuItems.ADD_TEXT_NODE
 	elif node is EditorSetNodeClass:
 		return GraphPopupMenuItems.ADD_SET_NODE

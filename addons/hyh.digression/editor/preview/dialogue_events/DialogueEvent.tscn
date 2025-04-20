@@ -1,15 +1,15 @@
 [gd_scene load_steps=4 format=3 uid="uid://bvml3e7w05dn2"]
 
-[ext_resource type="Theme" uid="uid://ca8rtymjhdhox" path="res://addons/hyh.digression/editor/preview/dialogue_events/styles/dialogue_events_theme.tres" id="1_v3xti"]
-[ext_resource type="Script" uid="uid://c48raiiqjacct" path="res://addons/hyh.digression/editor/preview/dialogue_events/DialogueTextEvent.gd" id="1_vi4cx"]
-[ext_resource type="StyleBox" uid="uid://bxmk2fvuxr1pr" path="res://addons/hyh.digression/editor/preview/dialogue_events/styles/dialogue_box_indicator_green_left.tres" id="2_pghiv"]
+[ext_resource type="Script" uid="uid://c48raiiqjacct" path="res://addons/hyh.digression/editor/preview/dialogue_events/DialogueEvent.gd" id="1_tshsb"]
+[ext_resource type="StyleBox" uid="uid://bxmk2fvuxr1pr" path="res://addons/hyh.digression/editor/preview/dialogue_events/styles/dialogue_box_indicator_green_left.tres" id="2_2kmi1"]
+[ext_resource type="Theme" uid="uid://ca8rtymjhdhox" path="res://addons/hyh.digression/editor/preview/dialogue_events/styles/dialogue_events_theme.tres" id="3_hpqdm"]
 
 [node name="DialogueTextEvent" type="MarginContainer"]
 offset_right = 616.0
 offset_bottom = 155.0
 size_flags_horizontal = 3
 theme_override_constants/margin_right = 200
-script = ExtResource("1_vi4cx")
+script = ExtResource("1_tshsb")
 
 [node name="VB" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -43,7 +43,7 @@ custom_minimum_size = Vector2(10, 10)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-theme_override_styles/panel = ExtResource("2_pghiv")
+theme_override_styles/panel = ExtResource("2_2kmi1")
 
 [node name="HB" type="HBoxContainer" parent="VB/VB/HB"]
 layout_mode = 2
@@ -53,7 +53,7 @@ theme_override_constants/separation = 14
 [node name="DialogueContainer" type="PanelContainer" parent="VB/VB/HB/HB"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme = ExtResource("1_v3xti")
+theme = ExtResource("3_hpqdm")
 
 [node name="DialogueLabel" type="Label" parent="VB/VB/HB/HB/DialogueContainer"]
 custom_minimum_size = Vector2(50, 0)

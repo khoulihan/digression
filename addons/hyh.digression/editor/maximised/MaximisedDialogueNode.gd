@@ -5,14 +5,14 @@ extends VBoxContainer
 signal modified()
 
 
-const DialogueTextNode = preload("res://addons/hyh.digression/resources/graph/DialogueTextNode.gd")
-const DialogueText = preload("res://addons/hyh.digression/resources/graph/DialogueText.gd")
-const DialogueTextSection = preload("res://addons/hyh.digression/editor/text/DialogueTextSection.gd")
-const DialogueTextSectionScene = preload("res://addons/hyh.digression/editor/text/DialogueTextSection.tscn")
+const DialogueNode = preload("res://addons/hyh.digression/resources/graph/DialogueNode.gd")
+const DialogueSection = preload("res://addons/hyh.digression/resources/graph/DialogueSection.gd")
+const EditorDialogueSection = preload("res://addons/hyh.digression/editor/text/EditorDialogueSection.gd")
+const EditorDialogueSectionScene = preload("res://addons/hyh.digression/editor/text/EditorDialogueSection.tscn")
 const SettingsHelper = preload("res://addons/hyh.digression/editor/helpers/SettingsHelper.gd")
 
 
-var node_resource: DialogueTextNode
+var node_resource: DialogueNode
 
 
 @onready var _character_select := $CharacterOptionsContainer/CharacterSelect
@@ -54,7 +54,7 @@ func _ready() -> void:
 
 func configure_for_node(
 	graph: DigressionDialogueGraph,
-	resource_node: DialogueTextNode
+	resource_node: DialogueNode
 ) -> void:
 	_characters = graph.characters
 	node_resource = resource_node
@@ -152,7 +152,7 @@ func _configure_text_sections_for_node(g, n):
 		_sections_container.remove_child(c)
 	# Repopulate
 	for section in n.sections:
-		var control := DialogueTextSectionScene.instantiate()
+		var control := EditorDialogueSectionScene.instantiate()
 		_sections_container.add_child(control)
 		control.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		control.configure_for_section(
@@ -391,7 +391,7 @@ func _on_translation_key_edit_text_changed(new_text):
 
 
 func _on_add_section_button_pressed() -> void:
-	var editor_section := DialogueTextSectionScene.instantiate()
+	var editor_section := EditorDialogueSectionScene.instantiate()
 	var section = node_resource.add_section()
 	_sections_container.add_child(editor_section)
 	editor_section.size_flags_vertical = Control.SIZE_EXPAND_FILL

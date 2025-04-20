@@ -1,15 +1,15 @@
 [gd_scene load_steps=7 format=3 uid="uid://ddh2fuxyvnktp"]
 
-[ext_resource type="Script" uid="uid://bsnlv7pw0yws2" path="res://addons/hyh.digression/editor/nodes/EditorTextNode.gd" id="1"]
-[ext_resource type="PackedScene" uid="uid://c0pw3rdictm2v" path="res://addons/hyh.digression/editor/nodes/EditorGraphNodeBase.tscn" id="2"]
-[ext_resource type="Texture2D" uid="uid://d65jtbo3b07t" path="res://addons/hyh.digression/icons/icon_clear.svg" id="7_13nfv"]
-[ext_resource type="PackedScene" uid="uid://bi6s5ip3smrd5" path="res://addons/hyh.digression/editor/text/DialogueTextSection.tscn" id="8_biiwf"]
-[ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="8_jff3k"]
-[ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="9_rnbxw"]
+[ext_resource type="PackedScene" uid="uid://c0pw3rdictm2v" path="res://addons/hyh.digression/editor/nodes/EditorGraphNodeBase.tscn" id="1_jbyvr"]
+[ext_resource type="Script" uid="uid://bsnlv7pw0yws2" path="res://addons/hyh.digression/editor/nodes/EditorDialogueNode.gd" id="2_ft28w"]
+[ext_resource type="Texture2D" uid="uid://d65jtbo3b07t" path="res://addons/hyh.digression/icons/icon_clear.svg" id="3_7mrnv"]
+[ext_resource type="PackedScene" uid="uid://co4le7crf047l" path="res://addons/hyh.digression/editor/controls/drag/DragTargetHSeparator.tscn" id="4_uk2fu"]
+[ext_resource type="PackedScene" uid="uid://bi6s5ip3smrd5" path="res://addons/hyh.digression/editor/text/EditorDialogueSection.tscn" id="5_nuwl2"]
+[ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="6_3sewk"]
 
-[node name="EditorTextNode" instance=ExtResource("2")]
+[node name="EditorDialogueNode" instance=ExtResource("1_jbyvr")]
 offset_right = 600.0
-offset_bottom = 282.0
+offset_bottom = 283.0
 theme_type_variation = &"DialogueGraphNode"
 resizable = true
 title = ""
@@ -22,7 +22,7 @@ slot/0/right_type = 0
 slot/0/right_color = Color(0.94902, 0.94902, 0.94902, 0.882353)
 slot/0/right_icon = null
 slot/0/draw_stylebox = true
-script = ExtResource("1")
+script = ExtResource("2_ft28w")
 
 [node name="RootContainer" type="MarginContainer" parent="." index="1"]
 layout_mode = 2
@@ -49,10 +49,10 @@ toggle_mode = false
 
 [node name="ClearCharacterButton" type="Button" parent="RootContainer/VerticalLayout/CharacterOptionsContainer" index="2"]
 layout_mode = 2
-icon = ExtResource("7_13nfv")
+icon = ExtResource("3_7mrnv")
 flat = true
 
-[node name="DragTargetHSeparator" parent="RootContainer/VerticalLayout" index="1" instance=ExtResource("8_jff3k")]
+[node name="DragTargetHSeparator" parent="RootContainer/VerticalLayout" index="1" instance=ExtResource("4_uk2fu")]
 layout_mode = 2
 accepted_classes = Array[int]([1])
 
@@ -60,7 +60,7 @@ accepted_classes = Array[int]([1])
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="DialogueTextSection" parent="RootContainer/VerticalLayout/SectionsContainer" index="0" instance=ExtResource("8_biiwf")]
+[node name="DialogueTextSection" parent="RootContainer/VerticalLayout/SectionsContainer" index="0" instance=ExtResource("5_nuwl2")]
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -68,7 +68,7 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Add Section"
-icon = ExtResource("9_rnbxw")
+icon = ExtResource("6_3sewk")
 flat = true
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]

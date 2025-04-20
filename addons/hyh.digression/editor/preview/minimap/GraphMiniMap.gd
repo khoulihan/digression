@@ -6,7 +6,7 @@ extends GraphEdit
 const Logging = preload("../../../utility/Logging.gd")
 
 # Resource graph nodes.
-const DialogueTextNode = preload("../../../resources/graph/DialogueTextNode.gd")
+const DialogueNode = preload("../../../resources/graph/DialogueNode.gd")
 const MatchBranchNode = preload("../../../resources/graph/MatchBranchNode.gd")
 const IfBranchNode = preload("../../../resources/graph/IfBranchNode.gd")
 const DialogueChoiceNode = preload("../../../resources/graph/DialogueChoiceNode.gd")
@@ -117,7 +117,7 @@ func _instantiate_mini_map_node(node):
 		n = MiniMapCommentNode.instantiate()
 	elif node is DialogueChoiceNode:
 		n = MiniMapChoiceNode.instantiate()
-	elif node is DialogueTextNode:
+	elif node is DialogueNode:
 		n = MiniMapDialogueNode.instantiate()
 	elif node is JumpNode:
 		n = MiniMapJumpNode.instantiate()
@@ -149,7 +149,7 @@ func _set_tooltip(node, resource):
 		node.tooltip_text = "Branch (If)"
 	elif resource is DialogueChoiceNode:
 		node.tooltip_text = "Choice"
-	elif resource is DialogueTextNode:
+	elif resource is DialogueNode:
 		node.tooltip_text = "Dialogue"
 	elif resource is JumpNode:
 		if resource.next == -1:

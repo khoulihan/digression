@@ -64,7 +64,7 @@ enum ProceedSignalReturnValues {
 
 const Logging = preload("../utility/Logging.gd")
 
-const DialogueTextNode = preload("../resources/graph/DialogueTextNode.gd")
+const DialogueNode = preload("../resources/graph/DialogueNode.gd")
 const MatchBranchNode = preload("../resources/graph/MatchBranchNode.gd")
 const IfBranchNode = preload("../resources/graph/IfBranchNode.gd")
 const DialogueChoiceNode = preload("../resources/graph/DialogueChoiceNode.gd")
@@ -195,7 +195,7 @@ func process_dialogue_graph(
 	while _context.current_node != null:
 		_context.increment_current_node_visit_count()
 		
-		if _context.current_node is DialogueTextNode:
+		if _context.current_node is DialogueNode:
 			await _process_dialogue_node()
 		elif _context.current_node is MatchBranchNode:
 			_process_match_branch_node()

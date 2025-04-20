@@ -3,7 +3,7 @@ extends "EditorGraphNodeBase.gd"
 ## Editor node for Dialogue resource node.
 
 
-const DialogueTextSection = preload("res://addons/hyh.digression/editor/text/DialogueTextSection.tscn")
+const EditorDialogueSection = preload("res://addons/hyh.digression/editor/text/EditorDialogueSection.tscn")
 const SettingsHelper = preload("../helpers/SettingsHelper.gd")
 
 var _characters
@@ -194,7 +194,7 @@ func _configure_text_sections_for_node(g, n):
 		_sections_container.remove_child(c)
 	# Repopulate
 	for section in n.sections:
-		var control := DialogueTextSection.instantiate()
+		var control := EditorDialogueSection.instantiate()
 		_sections_container.add_child(control)
 		control.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		control.configure_for_section(
@@ -388,7 +388,7 @@ func _on_clear_character_button_pressed():
 
 
 func _on_add_section_button_pressed() -> void:
-	var editor_section := DialogueTextSection.instantiate()
+	var editor_section := EditorDialogueSection.instantiate()
 	var section = node_resource.add_section()
 	_sections_container.add_child(editor_section)
 	editor_section.size_flags_vertical = Control.SIZE_EXPAND_FILL

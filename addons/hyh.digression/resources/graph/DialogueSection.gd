@@ -1,6 +1,6 @@
 @tool
 extends Resource
-## A resource for dialogue text within a DialogueTextGroupNode.
+## A resource for dialogue text within a DialogueNode.
 
 
 const VariableType = preload("VariableSetNode.gd").VariableType

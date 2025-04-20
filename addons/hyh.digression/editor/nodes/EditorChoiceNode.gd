@@ -8,7 +8,7 @@ const TranslationKey = preload("../../utility/TranslationKey.gd")
 const ChoiceBranch = preload("../../resources/graph/branches/ChoiceBranch.gd")
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
-const DialogueMenuItems = preload("../text/DialogueTextSection.gd").DialogueMenuItems
+const DialogueMenuItems = preload("../text/EditorDialogueSection.gd").DialogueMenuItems
 
 var _choice_type_option: OptionButton
 var _choice_value_scene = preload("../branches/EditorChoiceValue.tscn")
