@@ -13,6 +13,7 @@ enum MatchesTreeColumns {
 	TAGS,
 }
 
+const Dialogs = preload("../../dialogs/Dialogs.gd")
 const DigressionSettings = preload("../../settings/DigressionSettings.gd")
 const VariablesHelper = preload("../../helpers/VariablesHelper.gd")
 const Logging = preload("../../../utility/Logging.gd")
@@ -412,13 +413,10 @@ func _on_select_button_pressed():
 	var selection = _matches_tree.get_selected()
 	
 	if selection == null:
-		var alert = AcceptDialog.new()
-		alert.get_label().text = "No variable is selected."
-		get_tree().root.add_child(alert)
-		alert.popup_centered()
-		await alert.confirmed
-		get_tree().root.remove_child(alert)
-		alert.queue_free()
+		Dialogs.show_error(
+			"No variable is selected.",
+			self,
+		)
 		return
 	
 	var variable_name = selection.get_meta('name')

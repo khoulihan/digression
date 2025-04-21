@@ -15,6 +15,7 @@ enum PropertyDefinitionEditPopupMenuItem {
 	REMOVE,
 }
 
+const Dialogs = preload("../../dialogs/Dialogs.gd")
 const DigressionSettings = preload("../../settings/DigressionSettings.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const WARNING_ICON = preload("../../../icons/icon_node_warning.svg")
@@ -344,30 +345,12 @@ func _on_save_button_pressed():
 		_perform_save()
 		closing.emit()
 	else:
-		var dialog = AcceptDialog.new()
-		dialog.title = "Validation Failed"
-		dialog.dialog_text = """There are invalid property definitions.\n
-			Please correct the values and try again."""
-		self.add_child(dialog)
-		dialog.popup_on_parent(
-			Rect2i(
-				self.position + Vector2(60, 60),
-				Vector2i(200, 150)
-			)
+		Dialogs.show_error(
+			"""There are invalid property definitions.
+			Please correct the values and try again.""",
+			self,
+			Dialogs.VALIDATION_FAILED_DIALOG_TITLE
 		)
-		dialog.confirmed.connect(
-			_on_validation_failed_dialog_closed.bind(dialog)
-		)
-		dialog.close_requested.connect(
-			_on_validation_failed_dialog_closed.bind(dialog)
-		)
-
-
-func _on_validation_failed_dialog_closed(dialog):
-	_logger.debug("Validation failed dialog closed.")
-	dialog.confirmed.disconnect(_on_validation_failed_dialog_closed)
-	dialog.close_requested.disconnect(_on_validation_failed_dialog_closed)
-	dialog.queue_free()
 
 
 func _on_popup_menu_id_pressed(id):

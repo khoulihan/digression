@@ -7,6 +7,7 @@ signal tag_added()
 signal cancelled()
 signal created(variable)
 
+const Dialogs = preload("../../dialogs/Dialogs.gd")
 const DigressionSettings = preload("../../settings/DigressionSettings.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
@@ -237,32 +238,14 @@ func _on_type_option_item_selected(index):
 
 func _on_create_button_pressed():
 	if not _validate():
-		var dialog = AcceptDialog.new()
-		dialog.title = "Validation Failed"
-		dialog.dialog_text = """There are graph items with duplicate names.\n
-			Please correct the values and try again."""
-		self.add_child(dialog)
-		dialog.popup_on_parent(
-			Rect2i(
-				self.position + Vector2(60, 60),
-				Vector2i(200, 150)
-			)
-		)
-		dialog.confirmed.connect(
-			_on_validation_failed_dialog_closed.bind(dialog)
-		)
-		dialog.close_requested.connect(
-			_on_validation_failed_dialog_closed.bind(dialog)
+		Dialogs.show_error(
+			"""Some of the data entered is invalid.
+			Please correct the values and try again.""",
+			self,
+			Dialogs.VALIDATION_FAILED_DIALOG_TITLE
 		)
 	else:
 		created.emit(_perform_save())
-
-
-func _on_validation_failed_dialog_closed(dialog):
-	_logger.debug("Validation failed dialog closed.")
-	dialog.confirmed.disconnect(_on_validation_failed_dialog_closed)
-	dialog.close_requested.disconnect(_on_validation_failed_dialog_closed)
-	dialog.queue_free()
 
 
 func _on_cancel_button_pressed():

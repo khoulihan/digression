@@ -36,6 +36,7 @@ enum DialogueColourResourceIndex {
 	RIGHT_INDICATOR
 }
 
+const Dialogs = preload("../dialogs/Dialogs.gd")
 const Logging = preload("../../utility/Logging.gd")
 
 const VISIBLE_ICON = preload("../../icons/icon_visible.svg")
@@ -964,13 +965,9 @@ func _on_store_save_file_selected(path, dialog):
 	if file == null:
 		var err = FileAccess.get_open_error()
 		_logger.error("Error opening file for saving preview variable stores: %s" % err)
-		var error_dialog = AcceptDialog.new()
-		error_dialog.dialog_text = "File open failed: %s" % err
-		error_dialog.title = "Error"
-		error_dialog.confirmed.connect(_on_dialog_cancelled.bind(error_dialog))
-		error_dialog.canceled.connect(_on_dialog_cancelled.bind(error_dialog))
-		get_tree().root.add_child(error_dialog)
-		error_dialog.popup_centered()
+		Dialogs.show_error(
+			"File open failed: %s" % err
+		)
 		return
 	file.store_string(JSON.stringify(data, "  ", false))
 	file.close()
@@ -984,13 +981,9 @@ func _on_store_load_file_selected(path, replace, dialog):
 	if file == null:
 		var err = FileAccess.get_open_error()
 		_logger.error("Error opening file for saving preview variable stores: %s" % err)
-		var error_dialog = AcceptDialog.new()
-		error_dialog.dialog_text = "File open failed: %s" % err
-		error_dialog.title = "Error"
-		error_dialog.confirmed.connect(_on_dialog_cancelled.bind(error_dialog))
-		error_dialog.canceled.connect(_on_dialog_cancelled.bind(error_dialog))
-		get_tree().root.add_child(error_dialog)
-		error_dialog.popup_centered()
+		Dialogs.show_error(
+			"File open failed: %s" % err
+		)
 		return
 	
 	var data_str = file.get_as_text()

@@ -21,6 +21,7 @@ enum SubGraphMenuItems {
 	PASTE
 }
 
+const Dialogs = preload("../dialogs/Dialogs.gd")
 const ResourceHelper = preload("../../utility/ResourceHelper.gd")
 const DIALOGUE_GRAPH_ICON = preload("../../icons/icon_chat.svg")
 const EditorEntryPointAnchorNode = preload("../../editor/nodes/EditorEntryPointAnchorNode.gd")
@@ -83,13 +84,7 @@ func _create_file_dialog(title, file_mode):
 
 
 func _display_error_dialog(message):
-	var error_dialog = AcceptDialog.new()
-	error_dialog.dialog_text = message
-	get_tree().root.add_child(error_dialog)
-	error_dialog.confirmed.connect(
-		_on_error_dialog_confirmed.bind(error_dialog)
-	)
-	error_dialog.popup_centered()
+	Dialogs.show_error(message)
 
 
 func _clear():
@@ -312,10 +307,6 @@ func _on_sub_graph_file_selected_for_saving(path, dialog):
 
 func _on_sub_graph_dialog_cancelled(dialog):
 	get_tree().root.remove_child(dialog)
-
-
-func _on_error_dialog_confirmed(d):
-	get_tree().root.remove_child(d)
 
 
 func _on_entry_point_option_item_selected(index: int) -> void:

@@ -21,6 +21,7 @@ enum ChoiceTypesPopupMenuItem {
 	REMOVE,
 }
 
+const Dialogs = preload("../../dialogs/Dialogs.gd")
 const DigressionSettings = preload("../../settings/DigressionSettings.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const DEFAULT_ICON = preload("../../../icons/icon_favourites.svg")
@@ -347,30 +348,12 @@ func _on_save_button_pressed():
 		_perform_save()
 		closing.emit()
 	else:
-		var dialog = AcceptDialog.new()
-		dialog.title = "Validation Failed"
-		dialog.dialog_text = """There are choice types with invalid names.\n
-			Please correct the values and try again."""
-		self.add_child(dialog)
-		dialog.popup_on_parent(
-			Rect2i(
-				self.position + Vector2(60, 60),
-				Vector2i(200, 150)
-			)
+		Dialogs.show_error(
+			"""There are choice types with invalid names.
+			Please correct the values and try again.""",
+			self,
+			Dialogs.VALIDATION_FAILED_DIALOG_TITLE
 		)
-		dialog.confirmed.connect(
-			_validation_failed_dialog_closed.bind(dialog)
-		)
-		dialog.close_requested.connect(
-			_validation_failed_dialog_closed.bind(dialog)
-		)
-
-
-func _validation_failed_dialog_closed(dialog):
-	_logger.debug("Validation failed dialog closed.")
-	dialog.confirmed.disconnect(_validation_failed_dialog_closed)
-	dialog.close_requested.disconnect(_validation_failed_dialog_closed)
-	dialog.queue_free()
 
 
 func _on_popup_menu_id_pressed(id):

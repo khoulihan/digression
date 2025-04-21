@@ -12,6 +12,7 @@ enum MatchesTreeColumns {
 	DESCRIPTION,
 }
 
+const Dialogs = preload("../../dialogs/Dialogs.gd")
 const DigressionSettings = preload("../../settings/DigressionSettings.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const BOOL_ICON = preload("../../../icons/icon_type_bool.svg")
@@ -326,13 +327,10 @@ func _on_select_button_pressed():
 	var selection = _matches_tree.get_selected()
 	
 	if selection == null:
-		var alert = AcceptDialog.new()
-		alert.get_label().text = "No property is selected."
-		get_tree().root.add_child(alert)
-		alert.popup_centered()
-		await alert.confirmed
-		get_tree().root.remove_child(alert)
-		alert.queue_free()
+		Dialogs.show_error(
+			"No property is selected.",
+			self,
+		)
 		return
 	
 	var property_name = selection.get_text(MatchesTreeColumns.NAME)
