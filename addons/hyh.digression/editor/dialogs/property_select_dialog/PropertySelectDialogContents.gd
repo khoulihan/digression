@@ -12,7 +12,7 @@ enum MatchesTreeColumns {
 	DESCRIPTION,
 }
 
-const SettingsHelper = preload("../../helpers/SettingsHelper.gd")
+const DigressionSettings = preload("../../settings/DigressionSettings.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const BOOL_ICON = preload("../../../icons/icon_type_bool.svg")
 const INT_ICON = preload("../../../icons/icon_type_int.svg")
@@ -36,7 +36,7 @@ var _properties_for_search := []
 func _ready() -> void:
 	_use_restriction = get_parent().use_restriction
 	_all_properties = _filter_by_use_restriction(
-		SettingsHelper.get_property_definitions()
+		DigressionSettings.get_property_definitions()
 	)
 	_perform_search()
 	_matches_tree.set_column_expand(MatchesTreeColumns.TYPE, false)

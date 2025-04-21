@@ -13,7 +13,7 @@ enum MatchesTreeColumns {
 	TAGS,
 }
 
-const SettingsHelper = preload("../../helpers/SettingsHelper.gd")
+const DigressionSettings = preload("../../settings/DigressionSettings.gd")
 const VariablesHelper = preload("../../helpers/VariablesHelper.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const BOOL_ICON = preload("../../../icons/icon_type_bool.svg")
@@ -66,7 +66,7 @@ func _ready():
 
 
 func _get_all_variables() -> Array[Dictionary]:
-	var variables := SettingsHelper.get_variables().duplicate()
+	var variables := DigressionSettings.get_variables().duplicate()
 	for bi in VariablesHelper.BUILT_IN_VARIABLES:
 		variables.append(bi.duplicate(true))
 	return variables

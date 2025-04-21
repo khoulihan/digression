@@ -4,7 +4,7 @@ extends "EditorGraphNodeBase.gd"
 
 
 const EditorDialogueSection = preload("res://addons/hyh.digression/editor/text/EditorDialogueSection.tscn")
-const SettingsHelper = preload("../helpers/SettingsHelper.gd")
+const DigressionSettings = preload("../settings/DigressionSettings.gd")
 
 var _characters
 var _dialogue_types
@@ -41,7 +41,7 @@ func _ready():
 	_dialogue_type_option.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	titlebar.add_child(_maximise_button)
 	_maximise_button.size_flags_horizontal = Control.SIZE_SHRINK_END
-	self.size.x = SettingsHelper.get_dialogue_node_initial_width()
+	self.size.x = DigressionSettings.get_dialogue_node_initial_width()
 	super()
 
 

@@ -8,7 +8,7 @@ const PropertyUse = preload("../../editor/dialogs/property_select_dialog/Propert
 const VariableType = preload("VariableSetNode.gd").VariableType
 
 # Utility classes.
-const SettingsHelper = preload("../../editor/helpers/SettingsHelper.gd")
+const DigressionSettings = preload("../../editor/settings/DigressionSettings.gd")
 const ResourceHelper = preload("../../utility/ResourceHelper.gd")
 
 const AnchorNode = preload("AnchorNode.gd")
@@ -43,7 +43,7 @@ var custom_properties: Dictionary = {}
 func _init():
 	self.nodes = {}
 	self.characters = []
-	var graph_types = SettingsHelper.get_graph_types()
+	var graph_types = DigressionSettings.get_graph_types()
 	var default_graph_type = ""
 	for gt in graph_types:
 		if gt["default"]:
@@ -74,7 +74,7 @@ func _get_property_list():
 		"usage": PROPERTY_USAGE_STORAGE,
 	})
 	
-	var graph_types = SettingsHelper.get_graph_types()
+	var graph_types = DigressionSettings.get_graph_types()
 	var graph_type_names = []
 	for gt in graph_types:
 		graph_type_names.append(gt["name"])

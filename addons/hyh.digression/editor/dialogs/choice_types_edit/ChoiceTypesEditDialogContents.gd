@@ -21,7 +21,7 @@ enum ChoiceTypesPopupMenuItem {
 	REMOVE,
 }
 
-const SettingsHelper = preload("../../helpers/SettingsHelper.gd")
+const DigressionSettings = preload("../../settings/DigressionSettings.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const DEFAULT_ICON = preload("../../../icons/icon_favourites.svg")
 const WARNING_ICON = preload("../../../icons/icon_node_warning.svg")
@@ -39,7 +39,7 @@ var _graph_types_per_choice_type = {}
 
 
 func _ready() -> void:
-	_graph_types = SettingsHelper.get_graph_types()
+	_graph_types = DigressionSettings.get_graph_types()
 	
 	var graph_types_root = _graph_types_tree.create_item()
 	_graph_types_tree.set_column_title(
@@ -95,7 +95,7 @@ func _ready() -> void:
 		ChoiceTypesTreeColumns.SKIP_FOR_REPEAT,
 		false
 	)
-	var types = SettingsHelper.get_choice_types()
+	var types = DigressionSettings.get_choice_types()
 	for t in types:
 		var item: TreeItem = _choice_types_tree.create_item(choice_types_root)
 		_populate_item_for_type(item, t)
@@ -216,7 +216,7 @@ func _perform_save():
 					t["default_in_graph_types"].append(gt)
 		
 		choice_types.append(t)
-	SettingsHelper.save_choice_types(choice_types)
+	DigressionSettings.save_choice_types(choice_types)
 
 
 func _remove_selected():

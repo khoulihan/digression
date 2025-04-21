@@ -10,7 +10,7 @@ enum ToolMenuItems {
 	EDIT_PROPERTY_DEFINITIONS,
 }
 
-const SettingsHelper = preload("editor/helpers/SettingsHelper.gd")
+const DigressionSettings = preload("editor/settings/DigressionSettings.gd")
 const Logging = preload("utility/Logging.gd")
 const DialogueGraphEditor = preload("editor/DialogueGraphEditor.tscn")
 const DigressionDialogue = preload("editor/DigressionDialogue.gd")
@@ -141,7 +141,7 @@ func clear():
 
 
 func _create_default_project_settings():
-	SettingsHelper.create_default_project_settings()
+	DigressionSettings.create_default_project_settings()
 
 
 func _create_editor_host():

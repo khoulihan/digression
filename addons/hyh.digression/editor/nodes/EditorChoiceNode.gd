@@ -3,7 +3,7 @@ extends "EditorGraphNodeBase.gd"
 ## Editor node for managing Choice resources.
 
 
-const SettingsHelper = preload("../helpers/SettingsHelper.gd")
+const DigressionSettings = preload("../settings/DigressionSettings.gd")
 const TranslationKey = preload("../../utility/TranslationKey.gd")
 const ChoiceBranch = preload("../../resources/graph/branches/ChoiceBranch.gd")
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
@@ -53,11 +53,11 @@ func _ready():
 	popup.id_pressed.connect(_on_dialogue_menu_id_pressed)
 	
 	# Guidelines for the dialogue text.
-	var guidelines := SettingsHelper.get_dialogue_line_length_guidelines()
+	var guidelines := DigressionSettings.get_dialogue_line_length_guidelines()
 	_dialogue_text_edit.line_length_guidelines.clear()
 	_dialogue_text_edit.line_length_guidelines.append_array(guidelines)
 	
-	self.size.x = SettingsHelper.get_choice_node_initial_width()
+	self.size.x = DigressionSettings.get_choice_node_initial_width()
 	super()
 
 

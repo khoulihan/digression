@@ -65,10 +65,10 @@ enum ConnectionTypes {
 #region Constants
 
 # Utility classes.
-const SettingsHelper = preload("helpers/SettingsHelper.gd")
+const DigressionSettings = preload("settings/DigressionSettings.gd")
 const Logging = preload("../utility/Logging.gd")
 const TranslationKey = preload("../utility/TranslationKey.gd")
-const ThemeHelper = preload("./helpers/ThemeHelper.gd")
+const DigressionTheme = preload("./themes/DigressionTheme.gd")
 
 # Resource graph nodes.
 const GraphNodeBase = preload("../resources/graph/GraphNodeBase.gd")
@@ -717,7 +717,7 @@ func _on_toggle_sidebar_button_toggled(toggled_on: bool) -> void:
 #region Dialogue and choice types
 
 func _get_dialogue_types_for_graph_type(graph_type):
-	var all_types = SettingsHelper.get_dialogue_types()
+	var all_types = DigressionSettings.get_dialogue_types()
 	var allowed_types = []
 	for dt in all_types:
 		if graph_type in dt['allowed_in_graph_types']:
@@ -726,7 +726,7 @@ func _get_dialogue_types_for_graph_type(graph_type):
 
 
 func _get_choice_types_for_graph_type(graph_type):
-	var all_types = SettingsHelper.get_choice_types()
+	var all_types = DigressionSettings.get_choice_types()
 	var allowed_types = []
 	for ct in all_types:
 		if graph_type in ct['allowed_in_graph_types']:
@@ -869,7 +869,7 @@ func _create_node_objects(node_type):
 			new_editor_node = EditorExitNode.instantiate()
 			new_graph_node = ExitNode.new()
 	
-	new_editor_node.theme = ThemeHelper.get_theme()
+	new_editor_node.theme = DigressionTheme.get_theme()
 	return [new_editor_node, new_graph_node]
 
 
@@ -892,7 +892,7 @@ func _configure_editor_node_state(
 	new_editor_node,
 	new_graph_node
 ):
-	new_editor_node.theme = ThemeHelper.get_theme()
+	new_editor_node.theme = DigressionTheme.get_theme()
 	if _graph_edit.get_child_count() == 1:
 		new_editor_node.is_root = true
 	_populate_dependencies(new_editor_node)
@@ -1084,7 +1084,7 @@ func _instantiate_editor_node_for_graph_node(node):
 	elif node is ExitNode:
 		editor_node = EditorExitNode.instantiate()
 	
-	editor_node.theme = ThemeHelper.get_theme()
+	editor_node.theme = DigressionTheme.get_theme()
 	return editor_node
 
 

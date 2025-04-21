@@ -7,7 +7,7 @@ signal tag_added()
 signal cancelled()
 signal created(variable)
 
-const SettingsHelper = preload("../../helpers/SettingsHelper.gd")
+const DigressionSettings = preload("../../settings/DigressionSettings.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
 const TagControlScene = preload("../../controls/TagControl.tscn")
@@ -42,7 +42,7 @@ func _ready():
 	_clear_tag_container()
 	_validate()
 	var default: Array[Dictionary] = []
-	_variables = SettingsHelper.get_variables()
+	_variables = DigressionSettings.get_variables()
 	_all_tags = _get_all_tags(_variables)
 	_all_names = _get_all_names(_variables)
 
@@ -140,7 +140,7 @@ func _perform_save():
 		"tags": _get_tags()
 	}
 	_variables.append(new_variable)
-	SettingsHelper.save_variables(_variables)
+	DigressionSettings.save_variables(_variables)
 	
 	return new_variable
 

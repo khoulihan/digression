@@ -17,7 +17,7 @@ enum GraphTypePopupMenuItem {
 	REMOVE,
 }
 
-const SettingsHelper = preload("../../helpers/SettingsHelper.gd")
+const DigressionSettings = preload("../../settings/DigressionSettings.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const DEFAULT_ICON = preload("../../../icons/icon_favourites.svg")
 const WARNING_ICON = preload("../../../icons/icon_node_warning.svg")
@@ -31,7 +31,7 @@ var _logger = Logging.new(Logging.DGE_EDITOR_LOG_NAME, Logging.DGE_EDITOR_LOG_LE
 
 
 func _ready() -> void:
-	var types = SettingsHelper.get_graph_types()
+	var types = DigressionSettings.get_graph_types()
 	var root = _type_tree.create_item()
 	_type_tree.set_column_title(
 		GraphTypeTreeColumns.IS_DEFAULT,
@@ -105,7 +105,7 @@ func _perform_save():
 		t["split_dialogue"] = gt.is_checked(GraphTypeTreeColumns.SPLIT_DIALOGUE)
 		t["default"] = gt.get_icon(GraphTypeTreeColumns.IS_DEFAULT) != null
 		graph_types.append(t)
-	SettingsHelper.save_graph_types(graph_types)
+	DigressionSettings.save_graph_types(graph_types)
 
 
 func _set_selected_as_default():

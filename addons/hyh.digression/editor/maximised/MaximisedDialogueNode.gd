@@ -9,7 +9,7 @@ const DialogueNode = preload("res://addons/hyh.digression/resources/graph/Dialog
 const DialogueSection = preload("res://addons/hyh.digression/resources/graph/DialogueSection.gd")
 const EditorDialogueSection = preload("res://addons/hyh.digression/editor/text/EditorDialogueSection.gd")
 const EditorDialogueSectionScene = preload("res://addons/hyh.digression/editor/text/EditorDialogueSection.tscn")
-const SettingsHelper = preload("res://addons/hyh.digression/editor/helpers/SettingsHelper.gd")
+const DigressionSettings = preload("res://addons/hyh.digression/editor/settings/DigressionSettings.gd")
 
 
 var node_resource: DialogueNode
@@ -34,7 +34,7 @@ func _init():
 	_dialogue_type_option.flat = true
 	_dialogue_type_option.fit_to_longest_item = true
 	_dialogue_type_option.theme_type_variation = "DialogueNodeTitlebarOption"
-	_dialogue_types = SettingsHelper.get_dialogue_types()
+	_dialogue_types = DigressionSettings.get_dialogue_types()
 	_dialogue_types_by_id = {}
 	_dialogue_type_option.clear()
 	_dialogue_type_option.add_item("Select Type...", 0)

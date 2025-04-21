@@ -15,7 +15,7 @@ enum PropertyDefinitionEditPopupMenuItem {
 	REMOVE,
 }
 
-const SettingsHelper = preload("../../helpers/SettingsHelper.gd")
+const DigressionSettings = preload("../../settings/DigressionSettings.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const WARNING_ICON = preload("../../../icons/icon_node_warning.svg")
 const NEW_PROPERTY_NAME = "new_property"
@@ -42,7 +42,7 @@ var _logger = Logging.new(Logging.DGE_EDITOR_LOG_NAME, Logging.DGE_EDITOR_LOG_LE
 
 
 func _ready() -> void:
-	_definitions = SettingsHelper.get_property_definitions().duplicate(true)
+	_definitions = DigressionSettings.get_property_definitions().duplicate(true)
 	
 	var property_definitions_root = _property_definitions_tree.create_item()
 	_property_definitions_tree.set_column_title(
@@ -162,7 +162,7 @@ func _hide_detail_pane() -> void:
 
 func _perform_save():
 	var root = _property_definitions_tree.get_root()
-	SettingsHelper.save_property_definitions(_definitions)
+	DigressionSettings.save_property_definitions(_definitions)
 
 
 func _clear_validation_warnings() -> void:

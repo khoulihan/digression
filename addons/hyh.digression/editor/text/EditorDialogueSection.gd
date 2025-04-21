@@ -14,7 +14,7 @@ enum DialogueMenuItems {
 }
 
 
-const SettingsHelper = preload("../helpers/SettingsHelper.gd")
+const DigressionSettings = preload("../settings/DigressionSettings.gd")
 const TranslationKey = preload("../../utility/TranslationKey.gd")
 const DialogueSection = preload("res://addons/hyh.digression/resources/graph/DialogueSection.gd")
 const HANDLE_ICON = preload("../../icons/icon_drag_light.svg")
@@ -40,7 +40,7 @@ func _ready() -> void:
 	popup.id_pressed.connect(_on_menu_id_pressed)
 	
 	# Guidelines for the dialogue text.
-	var guidelines := SettingsHelper.get_dialogue_line_length_guidelines()
+	var guidelines := DigressionSettings.get_dialogue_line_length_guidelines()
 	_text_edit.line_length_guidelines.clear()
 	_text_edit.line_length_guidelines.append_array(guidelines)
 
