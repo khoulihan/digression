@@ -159,16 +159,12 @@ item_14/id = 13
 item_15/text = "Add Exit Node"
 item_15/id = 15
 
-[node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
-
 [node name="NodePopupMenu" type="PopupMenu" parent="."]
 size = Vector2i(111, 44)
 theme_override_constants/v_separation = 10
 item_count = 1
 item_0/text = "Set as root"
 item_0/id = -1
-
-[node name="ErrorDialog" type="AcceptDialog" parent="."]
 
 [connection signal="text_changed" from="HS/LeftSidebar/GraphVB/GraphFilter" to="." method="_on_graph_filter_text_changed"]
 [connection signal="text_submitted" from="HS/LeftSidebar/GraphVB/GraphFilter" to="." method="_on_graph_filter_text_submitted"]

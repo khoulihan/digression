@@ -6,6 +6,7 @@ extends MarginContainer
 signal size_changed(size_change)
 
 
+const Dialogs = preload("../dialogs/Dialogs.gd")
 const Logging = preload("../../utility/Logging.gd")
 const ExpressionResource = preload("../../resources/graph/expressions/ExpressionResource.gd")
 
@@ -73,27 +74,18 @@ func _on_type_menu_id_pressed(id):
 
 
 func _on_clear_button_pressed() -> void:
-	var confirm = ConfirmationDialog.new()
-	confirm.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-	confirm.title = "Please confirm"
-	confirm.dialog_text = "Are you sure you want to remove this value? This action cannot be undone."
-	confirm.canceled.connect(_on_clear_cancelled.bind(confirm))
-	confirm.confirmed.connect(_on_clear_confirmed.bind(confirm))
-	get_tree().root.add_child(confirm)
-	confirm.show()
+	if await Dialogs.request_confirmation(
+		"Are you sure you want to remove this value? This action cannot be undone."
+	):
+		_perform_clear()
 
 
-func _on_clear_confirmed(confirm):
-	get_tree().root.remove_child(confirm)
+func _perform_clear():
 	self.value_resource = null
 	var size_before = self.size.y
 	_value_container.visible = false
 	_type_menu.visible = true
 	call_deferred("_emit_size_changed", size_before)
-
-
-func _on_clear_cancelled(confirm):
-	get_tree().root.remove_child(confirm)
 
 
 func _on_value_expression_size_changed(amount: Variant) -> void:

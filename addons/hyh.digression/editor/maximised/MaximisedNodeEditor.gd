@@ -6,6 +6,7 @@ signal restore_requested()
 signal modified(resource_node: GraphNodeBase)
 signal delete_request(resource_node: GraphNodeBase)
 
+const Dialogs = preload("../dialogs/Dialogs.gd")
 
 const GraphNodeBase = preload("res://addons/hyh.digression/resources/graph/GraphNodeBase.gd")
 const DialogueNode = preload("res://addons/hyh.digression/resources/graph/DialogueNode.gd")
@@ -50,14 +51,10 @@ func _instantiate_and_configure_dialogue_node(
 
 
 func _show_delete_confirmation_dialog():
-	var confirm = ConfirmationDialog.new()
-	confirm.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-	confirm.title = "Please confirm"
-	confirm.dialog_text = "Are you sure you want to remove this node? This action cannot be undone."
-	confirm.canceled.connect(_on_delete_cancelled.bind(confirm))
-	confirm.confirmed.connect(_on_delete_confirmed.bind(confirm))
-	get_tree().root.add_child(confirm)
-	confirm.show()
+	if await Dialogs.request_confirmation(
+		"Are you sure you want to remove this node? This action cannot be undone."
+	):
+		delete_request.emit(_edited_node)
 
 
 func _cleanup() -> void:
@@ -78,12 +75,3 @@ func _on_node_editor_modified(resource_node: GraphNodeBase) -> void:
 
 func _on_close_button_pressed() -> void:
 	_show_delete_confirmation_dialog()
-
-
-func _on_delete_cancelled(dialog) -> void:
-	get_tree().root.remove_child(dialog)
-
-
-func _on_delete_confirmed(dialog) -> void:
-	get_tree().root.remove_child(dialog)
-	delete_request.emit(_edited_node)

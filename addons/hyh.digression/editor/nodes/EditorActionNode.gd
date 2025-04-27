@@ -18,6 +18,8 @@ enum ActionAddArgumentMenuId {
 }
 
 
+const Dialogs = preload("../dialogs/Dialogs.gd")
+
 const ExpressionArgument = preload("../controls/arguments/ExpressionArgument.tscn")
 const CharacterArgument = preload("../controls/arguments/CharacterArgument.tscn")
 const DataStoreArgument = preload("../controls/arguments/DataStoreArgument.tscn")
@@ -233,14 +235,10 @@ func _argument_modified():
 
 
 func _argument_remove_requested(ordinal, argument):
-	var confirm = ConfirmationDialog.new()
-	confirm.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-	confirm.title = "Please confirm"
-	confirm.dialog_text = "Are you sure you want to remove this argument? This action cannot be undone."
-	confirm.canceled.connect(_on_argument_remove_cancelled.bind(confirm))
-	confirm.confirmed.connect(_on_argument_remove_confirmed.bind(argument, confirm))
-	get_tree().root.add_child(confirm)
-	confirm.show()
+	if await Dialogs.request_confirmation(
+		"Are you sure you want to remove this argument? This action cannot be undone."
+	):
+		_remove_argument(argument)
 
 
 func _argument_remove_immediately(ordinal, argument):
@@ -433,16 +431,7 @@ func _disconnect_signals_for_argument(arg):
 	)
 
 
-func _on_action_mechanism_option_item_selected(index):
-	var id = _action_mechanism_option.get_item_id(index)
-	_configure_for_action_mechanism(
-		id
-	)
-	modified.emit()
-
-
-func _on_argument_remove_confirmed(argument, confirm):
-	get_tree().root.remove_child(confirm)
+func _remove_argument(argument):
 	_disconnect_signals_for_argument(argument)
 	_arguments_list_container.remove_child(argument)
 	_recalculate_ordinals()
@@ -450,8 +439,12 @@ func _on_argument_remove_confirmed(argument, confirm):
 	modified.emit()
 
 
-func _on_argument_remove_cancelled(confirm):
-	get_tree().root.remove_child(confirm)
+func _on_action_mechanism_option_item_selected(index):
+	var id = _action_mechanism_option.get_item_id(index)
+	_configure_for_action_mechanism(
+		id
+	)
+	modified.emit()
 
 
 func _on_gui_input(ev):

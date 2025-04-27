@@ -3,6 +3,7 @@ extends "EditorGraphNodeBase.gd"
 ## Editor node for Dialogue resource node.
 
 
+const Dialogs = preload("../dialogs/Dialogs.gd")
 const EditorDialogueSection = preload("res://addons/hyh.digression/editor/text/EditorDialogueSection.tscn")
 const DigressionSettings = preload("../settings/DigressionSettings.gd")
 
@@ -283,14 +284,8 @@ func _disconnect_signals_for_section(section):
 
 
 func _show_section_removal_confirmation_dialog(section):
-	var confirm = ConfirmationDialog.new()
-	confirm.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-	confirm.title = "Please confirm"
-	confirm.dialog_text = "Are you sure you want to remove this section? This action cannot be undone."
-	confirm.canceled.connect(_action_cancelled.bind(confirm))
-	confirm.confirmed.connect(_action_confirmed.bind(section, confirm))
-	get_tree().root.add_child(confirm)
-	confirm.show()
+	if await Dialogs.request_confirmation("Are you sure you want to remove this section? This action cannot be undone."):
+		_remove_section(section)
 
 
 func _move_section_to_position(section, index):
@@ -401,15 +396,6 @@ func _on_add_section_button_pressed() -> void:
 	_connect_signals_for_section(editor_section)
 	_configure_text_sections_for_child_count()
 	_reset_size(self.size.x)
-
-
-func _action_confirmed(section, dialog):
-	get_tree().root.remove_child(dialog)
-	_remove_section(section)
-
-
-func _action_cancelled(dialog):
-	get_tree().root.remove_child(dialog)
 
 
 func _on_character_options_separator_dropped(arg: Variant, at_position: Variant) -> void:

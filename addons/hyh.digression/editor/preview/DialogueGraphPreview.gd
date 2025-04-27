@@ -635,13 +635,10 @@ func _show_add_variable_dialog():
 
 func _confirm_clear_all_stores():
 	_logger.debug("Confirming variable store clear")
-	var d = ConfirmationDialog.new()
-	get_tree().root.add_child(d)
-	d.title = "Confirm"
-	d.dialog_text = "Are you sure you want to clear all variable stores? This action cannot be undone."
-	d.confirmed.connect(_on_clear_all_stores.bind(d))
-	d.canceled.connect(_on_dialog_cancelled.bind(d))
-	d.popup_centered()
+	if await Dialogs.request_confirmation(
+		"Are you sure you want to clear all variable stores? This action cannot be undone."
+	):
+		_clear_all_stores()
 
 
 func _get_default_value_for_type(t):
@@ -679,6 +676,12 @@ func _set_play_audio_button_state(show):
 
 func _use_characterwise():
 	return _characterwise_display and not _fast_forward
+
+
+func _clear_all_stores():
+	_logger.debug("Clearing all stores")
+	clear_variable_stores()
+	_update_variable_stores_tree()
 
 
 func _on_stop_button_pressed():
@@ -999,14 +1002,6 @@ func _on_store_load_file_selected(path, replace, dialog):
 		_get_context().local_store.store_data.merge(data['local'], true)
 	if data.has('global'):
 		_get_context().global_store.store_data.merge(data['global'], true)
-	_update_variable_stores_tree()
-
-
-func _on_clear_all_stores(dialog):
-	_logger.debug("Clearing all stores")
-	get_tree().root.remove_child(dialog)
-	dialog.queue_free()
-	clear_variable_stores()
 	_update_variable_stores_tree()
 
 

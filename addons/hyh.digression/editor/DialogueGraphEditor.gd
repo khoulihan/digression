@@ -42,12 +42,6 @@ enum GraphPopupMenuBounds {
 	UPPER_BOUND = GraphPopupMenuItems.ADD_EXIT_NODE
 }
 
-enum ConfirmationActions {
-	REMOVE_NODE,
-	REMOVE_CHARACTER,
-	CLOSE_GRAPH
-}
-
 enum NodeCreationMode {
 	NORMAL,
 	CONNECTED,
@@ -65,6 +59,7 @@ enum ConnectionTypes {
 #region Constants
 
 # Utility classes.
+const Dialogs = preload("dialogs/Dialogs.gd")
 const DigressionSettings = preload("settings/DigressionSettings.gd")
 const Logging = preload("../utility/Logging.gd")
 const TranslationKey = preload("../utility/TranslationKey.gd")
@@ -151,8 +146,6 @@ var _last_popup_position
 var _pending_connection_from
 var _pending_connection_from_port
 var _node_creation_mode
-var _confirmation_action
-var _node_to_remove
 var _node_for_popup
 var _sub_graph_editor_node_for_assignment
 var _sub_graph_edit_requested
@@ -181,8 +174,6 @@ var _logger = Logging.new(
 @onready var _graph_edit = $HS/MC/VB/MC/GraphEdit
 @onready var _maximised_node_editor = $HS/MC/VB/MC/MaximisedNodeEditor
 @onready var _graph_popup = $GraphContextMenu
-@onready var _confirmation_dialog = $ConfirmationDialog
-@onready var _error_dialog = $ErrorDialog
 @onready var _breadcrumbs = $HS/MC/VB/BottomBar/GraphBreadcrumbs
 @onready var _anchor_filter := $HS/LeftSidebar/AnchorVB/AnchorFilter
 @onready var _anchor_list := $HS/LeftSidebar/AnchorVB/MC/AnchorList
@@ -208,11 +199,6 @@ func _ready():
 	
 	# Create clipboard
 	_resource_clipboard = ResourceClipboard.new()
-
-	# Confirmation dialog
-	_confirmation_dialog.confirmed.connect(
-		_action_confirmed
-	)
 
 #endregion
 
@@ -457,12 +443,8 @@ func _on_maximised_node_editor_modified(resource_node: GraphNodeBase) -> void:
 
 
 func _on_maximised_node_editor_delete_request(resource_node: Resource) -> void:
-	# TODO: Bit janky the way this works. The original node removal handling
-	# could probably be improved.
 	var editor_node = _get_editor_node_for_graph_node(resource_node)
-	_confirmation_action = ConfirmationActions.REMOVE_NODE
-	_node_to_remove = [editor_node.name]
-	_remove_nodes()
+	_remove_nodes([editor_node.name])
 	_restore_maximised_node()
 
 
@@ -534,17 +516,6 @@ func _set_all_graph_popup_disabled(state):
 
 #endregion
 
-
-#region Dialog signal handlers
-
-func _action_confirmed():
-	match _confirmation_action:
-		ConfirmationActions.REMOVE_NODE:
-			_remove_nodes()
-
-#endregion
-
-
 #region Node signals
 
 func _connect_node_signals(node):
@@ -606,19 +577,20 @@ func _on_node_removing_slot(slot, node_name):
 
 
 func _on_node_delete_request(node_name):
-	_confirmation_action = ConfirmationActions.REMOVE_NODE
-	_node_to_remove = node_name
-	if not _node_to_remove is Array:
-		_node_to_remove = [_node_to_remove]
-	if _any_node_is_entry_point(_node_to_remove):
-		_error_dialog.dialog_text = "The entry point node cannot be removed."
-		_error_dialog.popup_centered()
+	var nodes_to_remove := []
+	if not node_name is Array:
+		nodes_to_remove.append(node_name)
+	else:
+		nodes_to_remove.append_array(node_name)
+	if _any_node_is_entry_point(nodes_to_remove):
+		await Dialogs.show_error("The entry point node cannot be removed.")
 		return
 	var nodes_text = "this node"
-	if len(_node_to_remove) > 1:
+	if len(nodes_to_remove) > 1:
 		nodes_text = "these nodes"
-	_confirmation_dialog.dialog_text = "Are you sure you want to remove %s? This action cannot be undone." % nodes_text
-	_confirmation_dialog.popup_centered()
+	var dialog_text = "Are you sure you want to remove %s? This action cannot be undone." % nodes_text
+	if await Dialogs.request_confirmation(dialog_text):
+		_remove_nodes(nodes_to_remove)
 
 
 func _any_node_is_entry_point(nodes) -> bool:
@@ -952,14 +924,14 @@ func _process_connection_for_slot_removal(
 		)
 
 
-func _remove_nodes():
+func _remove_nodes(nodes):
 	_logger.debug(
 		"Removal of node(s) {nodes} confirmed.".format({
-			"nodes": _node_to_remove
+			"nodes": nodes
 		})
 	)
 	var connections = _graph_edit.get_connection_list()
-	for n in _node_to_remove:
+	for n in nodes:
 		_remove_node(n, connections)
 	_ensure_graph_has_root()
 	_set_dirty(true)

@@ -5,6 +5,7 @@ extends MarginContainer
 
 signal size_changed(size_change)
 
+const Dialogs = preload("../dialogs/Dialogs.gd")
 const Logging = preload("../../utility/Logging.gd")
 const Highlighting = preload("../../utility/Highlighting.gd")
 const ExpressionResource = preload("../../resources/graph/expressions/ExpressionResource.gd")
@@ -69,27 +70,18 @@ func _on_set_condition_button_pressed():
 
 
 func _on_clear_button_pressed():
-	var confirm = ConfirmationDialog.new()
-	confirm.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-	confirm.title = "Please confirm"
-	confirm.dialog_text = "Are you sure you want to remove this condition? This action cannot be undone."
-	confirm.canceled.connect(_on_clear_cancelled.bind(confirm))
-	confirm.confirmed.connect(_on_clear_confirmed.bind(confirm))
-	get_tree().root.add_child(confirm)
-	confirm.show()
+	if await Dialogs.request_confirmation(
+		"Are you sure you want to remove this condition? This action cannot be undone."
+	):
+		_perform_clear()
 
 
-func _on_clear_confirmed(confirm):
-	get_tree().root.remove_child(confirm)
+func _perform_clear():
 	self.condition_resource = null
 	var size_before = self.size.y
 	_condition.visible = false
 	_set_condition_button.visible = show_set_button
 	call_deferred("_emit_size_changed", size_before)
-
-
-func _on_clear_cancelled(confirm):
-	get_tree().root.remove_child(confirm)
 
 
 func _on_condition_expression_modified():

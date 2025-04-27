@@ -5,6 +5,8 @@ extends VBoxContainer
 signal modified()
 
 
+const Dialogs = preload("../dialogs/Dialogs.gd")
+
 const DialogueNode = preload("res://addons/hyh.digression/resources/graph/DialogueNode.gd")
 const DialogueSection = preload("res://addons/hyh.digression/resources/graph/DialogueSection.gd")
 const EditorDialogueSection = preload("res://addons/hyh.digression/editor/text/EditorDialogueSection.gd")
@@ -317,25 +319,16 @@ func _disconnect_signals_for_section(section):
 
 
 func _show_section_removal_confirmation_dialog(section):
-	var confirm = ConfirmationDialog.new()
-	confirm.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-	confirm.title = "Please confirm"
-	confirm.dialog_text = "Are you sure you want to remove this section? This action cannot be undone."
-	confirm.canceled.connect(_on_action_cancelled.bind(confirm))
-	confirm.confirmed.connect(_on_action_confirmed.bind(section, confirm))
-	get_tree().root.add_child(confirm)
-	confirm.show()
+	if await Dialogs.request_confirmation(
+		"Are you sure you want to remove this section? This action cannot be undone."
+	):
+		_perform_remove_section(section)
 
 
-func _on_action_confirmed(section, dialog):
-	get_tree().root.remove_child(dialog)
+func _perform_remove_section(section):
 	_remove_section(section)
 	_persist_changes_to_node()
 	modified.emit()
-
-
-func _on_action_cancelled(dialog):
-	get_tree().root.remove_child(dialog)
 
 
 func _on_dialogue_type_option_item_selected(index: int) -> void:

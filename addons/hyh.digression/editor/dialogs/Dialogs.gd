@@ -13,6 +13,7 @@ const VariableSelect: PackedScene = preload("./variable_select_dialog/VariableSe
 
 
 const DEFAULT_ERROR_DIALOG_TITLE = "Error"
+const DEFAULT_CONFIRMATION_DIALOG_TITLE = "Please Confirm"
 const VALIDATION_FAILED_DIALOG_TITLE = "Validation Failed"
 
 
@@ -24,7 +25,7 @@ static func show_error(
 	var alert := AcceptDialog.new()
 	alert.exclusive = true
 	alert.unresizable = true
-	alert.title = _title_or_default(title)
+	alert.title = _error_title_or_default(title)
 	alert.dialog_text = text
 	alert.set_unparent_when_invisible(true)
 	if parent_from_node:
@@ -35,7 +36,55 @@ static func show_error(
 	alert.queue_free()
 
 
-static func _title_or_default(title: String) -> String:
+static func request_confirmation(
+	text: String,
+	parent_from_node: Node = null,
+	title: String = "",
+) -> bool:
+	var confirm = ConfirmationDialog.new()
+	confirm.exclusive = true
+	confirm.unresizable = true
+	#confirm.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
+	confirm.title = _confirmation_title_or_default(title)
+	confirm.dialog_text = text
+	confirm.set_unparent_when_invisible(true)
+	var promise = ConfirmationPromise.new(confirm)
+	if parent_from_node:
+		confirm.popup_exclusive_centered(parent_from_node)
+	else:
+		confirm.popup_exclusive_centered(EditorInterface.get_base_control())
+	await promise.completed
+	confirm.queue_free()
+	return promise.confirmed
+
+
+static func _error_title_or_default(title: String) -> String:
 	if title.is_empty():
 		return DEFAULT_ERROR_DIALOG_TITLE
 	return title
+
+
+static func _confirmation_title_or_default(title: String) -> String:
+	if title.is_empty():
+		return DEFAULT_CONFIRMATION_DIALOG_TITLE
+	return title
+
+
+class ConfirmationPromise:
+	
+	signal completed(confirmed: bool)
+	
+	var confirmed: bool
+	
+	func _init(dialog: ConfirmationDialog):
+		confirmed = false
+		dialog.confirmed.connect(_confirmed)
+		dialog.canceled.connect(_canceled)
+	
+	func _confirmed() -> void:
+		confirmed = true
+		completed.emit(confirmed)
+	
+	func _canceled() -> void:
+		confirmed = false
+		completed.emit(confirmed)

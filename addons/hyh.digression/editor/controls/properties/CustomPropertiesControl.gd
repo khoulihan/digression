@@ -8,6 +8,7 @@ signal modified()
 signal add_property_requested(property)
 signal remove_property_requested(property_name)
 
+const Dialogs = preload("../../dialogs/Dialogs.gd")
 const PropertySelectDialog = preload("../../dialogs/property_select_dialog/PropertySelectDialog.tscn")
 const PropertySelectDialogClass = preload("../../dialogs/property_select_dialog/PropertySelectDialog.gd")
 const PropertyUse = PropertySelectDialogClass.PropertyUse
@@ -107,25 +108,10 @@ func _on_property_select_dialog_selected(property, dialog) -> void:
 
 
 func _on_property_remove_requested(property_name) -> void:
-	var dialog: ConfirmationDialog = ConfirmationDialog.new()
-	dialog.title = "Please Confirm"
-	dialog.dialog_text = "Are you sure you want to remove this property? This action cannot be undone."
-	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-	dialog.canceled.connect(_on_property_remove_canceled.bind(dialog))
-	dialog.confirmed.connect(_on_property_remove_confirmed.bind(property_name, dialog))
-	get_tree().root.add_child(dialog)
-	dialog.popup()
-
-
-func _on_property_remove_canceled(dialog) -> void:
-	get_tree().root.remove_child(dialog)
-	dialog.queue_free()
-
-
-func _on_property_remove_confirmed(property_name, dialog) -> void:
-	get_tree().root.remove_child(dialog)
-	dialog.queue_free()
-	remove_property_requested.emit(property_name)
+	if await Dialogs.request_confirmation(
+		"Are you sure you want to remove this property? This action cannot be undone."
+	):
+		remove_property_requested.emit(property_name)
 
 
 func _on_property_modified() -> void:

@@ -4,6 +4,7 @@ extends EditorInspectorPlugin
 ## Characters, and CharacterVariants.
 
 
+const Dialogs = preload("../../dialogs/Dialogs.gd")
 const PropertyUse = preload("../../dialogs/property_select_dialog/PropertySelectDialog.gd").PropertyUse
 const PropertySelectDialog = preload("../../dialogs/property_select_dialog/PropertySelectDialog.tscn")
 const CustomEditorProperty = preload("CustomEditorProperty.gd")
@@ -88,21 +89,7 @@ func _on_property_select_dialog_selected(property, object, dialog):
 
 
 func _on_property_remove_requested(object, name) -> void:
-	var dialog = ConfirmationDialog.new()
-	dialog.title = "Please Confirm"
-	dialog.dialog_text = "Are you sure you want to remove this property? This action cannot be undone."
-	dialog.canceled.connect(_on_removal_cancelled.bind(dialog))
-	dialog.confirmed.connect(_on_removal_confirmed.bind(object, name, dialog))
-	EditorInterface.get_base_control().add_child(dialog)
-	dialog.popup_centered()
-
-
-func _on_removal_cancelled(dialog) -> void:
-	EditorInterface.get_base_control().remove_child(dialog)
-	dialog.queue_free()
-
-
-func _on_removal_confirmed(object, name, dialog) -> void:
-	EditorInterface.get_base_control().remove_child(dialog)
-	dialog.queue_free()
-	object.remove_custom_property(name)
+	if await Dialogs.request_confirmation(
+		"Are you sure you want to remove this property? This action cannot be undone."
+	):
+		object.remove_custom_property(name)

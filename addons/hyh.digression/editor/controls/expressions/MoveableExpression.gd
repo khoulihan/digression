@@ -5,6 +5,8 @@ extends "Expression.gd"
 
 signal remove_requested()
 
+const Dialogs = preload("../../dialogs/Dialogs.gd")
+
 const BOOL_ICON = preload("../../../icons/icon_type_bool.svg")
 const INT_ICON = preload("../../../icons/icon_type_int.svg")
 const FLOAT_ICON = preload("../../../icons/icon_type_float.svg")
@@ -57,23 +59,10 @@ func get_drag_preview():
 
 
 func _on_remove_button_pressed():
-	var confirm = ConfirmationDialog.new()
-	confirm.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-	confirm.title = "Please confirm"
-	confirm.dialog_text = "Are you sure you want to remove this expression? This action cannot be undone."
-	confirm.canceled.connect(_on_remove_cancelled.bind(confirm))
-	confirm.confirmed.connect(_on_remove_confirmed.bind(confirm))
-	get_tree().root.add_child(confirm)
-	confirm.show()
-
-
-func _on_remove_confirmed(confirm):
-	get_tree().root.remove_child(confirm)
-	remove_requested.emit()
-
-
-func _on_remove_cancelled(confirm):
-	get_tree().root.remove_child(confirm)
+	if await Dialogs.request_confirmation(
+		"Are you sure you want to remove this expression? This action cannot be undone."
+	):
+		remove_requested.emit()
 
 
 func _get_type_icon(t):
