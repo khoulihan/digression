@@ -9,7 +9,7 @@ signal add_property_requested(property)
 signal remove_property_requested(property_name)
 
 const Dialogs = preload("../../dialogs/Dialogs.gd")
-const PropertySelectDialog = preload("../../dialogs/property_select_dialog/PropertySelectDialog.tscn")
+# TODO: Not great that we need to load this dialog just to get the enum we need...
 const PropertySelectDialogClass = preload("../../dialogs/property_select_dialog/PropertySelectDialog.gd")
 const PropertyUse = PropertySelectDialogClass.PropertyUse
 const CustomPropertyControl = preload("CustomPropertyControl.tscn")
@@ -74,13 +74,9 @@ func remove_property(property_name: String) -> void:
 
 
 func request_property_and_add() -> void:
-	var dialog = PropertySelectDialog.instantiate()
-	dialog.use_restriction = self.use_restriction
-	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-	dialog.cancelled.connect(_on_property_select_dialog_cancelled.bind(dialog))
-	dialog.selected.connect(_on_property_select_dialog_selected.bind(dialog))
-	get_tree().root.add_child(dialog)
-	dialog.popup()
+	var selected := await Dialogs.select_property(self.use_restriction, self)
+	if not selected.is_empty():
+		add_property_requested.emit(selected)
 
 
 func _emit_size_changed(size_before, deferrals_required=2, deferral_count=0):
@@ -94,17 +90,6 @@ func _emit_size_changed(size_before, deferrals_required=2, deferral_count=0):
 
 func _on_add_button_pressed():
 	request_property_and_add()
-
-
-func _on_property_select_dialog_cancelled(dialog) -> void:
-	get_tree().root.remove_child(dialog)
-	dialog.queue_free()
-
-
-func _on_property_select_dialog_selected(property, dialog) -> void:
-	get_tree().root.remove_child(dialog)
-	dialog.queue_free()
-	add_property_requested.emit(property)
 
 
 func _on_property_remove_requested(property_name) -> void:

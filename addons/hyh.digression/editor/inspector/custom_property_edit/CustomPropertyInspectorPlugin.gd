@@ -6,7 +6,6 @@ extends EditorInspectorPlugin
 
 const Dialogs = preload("../../dialogs/Dialogs.gd")
 const PropertyUse = preload("../../dialogs/property_select_dialog/PropertySelectDialog.gd").PropertyUse
-const PropertySelectDialog = preload("../../dialogs/property_select_dialog/PropertySelectDialog.tscn")
 const CustomEditorProperty = preload("CustomEditorProperty.gd")
 
 var _add_property_button: Button
@@ -55,37 +54,22 @@ func _is_graph(object) -> bool:
 
 
 func _on_add_property_button_pressed(object) -> void:
-	var dialog := PropertySelectDialog.instantiate()
+	var restriction: PropertyUse
 	if _is_variant(object):
-		dialog.use_restriction = PropertyUse.VARIANTS
+		restriction = PropertyUse.VARIANTS
 	if _is_graph(object):
-		dialog.use_restriction = PropertyUse.DIALOGUE_GRAPHS
+		restriction = PropertyUse.DIALOGUE_GRAPHS
 	else:
-		dialog.use_restriction = PropertyUse.CHARACTERS
-	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-	dialog.cancelled.connect(
-		_on_property_select_dialog_cancelled.bind(dialog)
-	)
-	dialog.selected.connect(
-		_on_property_select_dialog_selected.bind(object, dialog)
-	)
-	EditorInterface.get_base_control().add_child(dialog)
-	dialog.popup()
+		restriction = PropertyUse.CHARACTERS
 
+	var selected := await Dialogs.select_property(restriction)
+	if not selected.is_empty():
+		if not selected['name'] in object.custom_properties:
+			object.add_custom_property(
+				selected['name'],
+				selected['type'],
+			)
 
-func _on_property_select_dialog_cancelled(dialog):
-	EditorInterface.get_base_control().remove_child(dialog)
-	dialog.queue_free()
-
-
-func _on_property_select_dialog_selected(property, object, dialog):
-	EditorInterface.get_base_control().remove_child(dialog)
-	dialog.queue_free()
-	if not property['name'] in object.custom_properties:
-		object.add_custom_property(
-			property['name'],
-			property['type'],
-		)
 
 
 func _on_property_remove_requested(object, name) -> void:

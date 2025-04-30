@@ -5,7 +5,7 @@
 
 [node name="PropertySelectDialog" type="Window"]
 title = "Select Property"
-position = Vector2i(0, 36)
+initial_position = 2
 size = Vector2i(1200, 600)
 transient = true
 exclusive = true
@@ -29,5 +29,5 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]
-[connection signal="cancelled" from="PropertySelectDialogContents" to="." method="_on_property_select_dialog_contents_cancelled"]
+[connection signal="canceled" from="PropertySelectDialogContents" to="." method="_on_property_select_dialog_contents_canceled"]
 [connection signal="selected" from="PropertySelectDialogContents" to="." method="_on_property_select_dialog_contents_selected"]

@@ -4,7 +4,7 @@ extends Window
 
 
 signal selected(property)
-signal cancelled()
+signal canceled()
 
 ## The use cases for custom properties.
 enum PropertyUse {
@@ -30,8 +30,8 @@ func _on_property_select_dialog_contents_selected(property):
 
 
 func _on_close_requested():
-	cancelled.emit()
+	canceled.emit()
 
 
-func _on_property_select_dialog_contents_cancelled():
-	cancelled.emit()
+func _on_property_select_dialog_contents_canceled():
+	canceled.emit()

@@ -4,7 +4,7 @@ extends MarginContainer
 
 
 signal selected(property)
-signal cancelled()
+signal canceled()
 
 enum MatchesTreeColumns {
 	TYPE,
@@ -320,7 +320,7 @@ func _on_matches_tree_nothing_selected():
 
 
 func _on_cancel_button_pressed():
-	cancelled.emit()
+	canceled.emit()
 
 
 func _on_select_button_pressed():

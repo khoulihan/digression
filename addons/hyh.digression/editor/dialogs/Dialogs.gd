@@ -12,6 +12,7 @@ const VariableCreate: PackedScene = preload("./variable_create_dialog/VariableCr
 const VariableSelect: PackedScene = preload("./variable_select_dialog/VariableSelectDialog.tscn")
 
 const NodeSelectClass := preload("./node_select_dialog/NodeSelectDialog.gd")
+const PropertySelectDialog := preload("./property_select_dialog/PropertySelectDialog.gd")
 
 
 const DEFAULT_ERROR_DIALOG_TITLE = "Error"
@@ -74,6 +75,25 @@ static func select_node(parent_from_node: Node = null) -> NodePath:
 	return promise.path
 
 
+static func select_property(
+	use_restriction: PropertySelectDialog.PropertyUse,
+	parent_from_node: Node = null,
+) -> Dictionary:
+	var dialog := PropertySelect.instantiate()
+	dialog.use_restriction = use_restriction
+	dialog.set_unparent_when_invisible(true)
+	var promise := PropertySelectPromise.new(dialog)
+	# The "centered" part of these calls seemed to be ignored... Have set an
+	# initial position on the window instead.
+	if parent_from_node:
+		dialog.popup_exclusive(parent_from_node)
+	else:
+		dialog.popup_exclusive(EditorInterface.get_base_control())
+	await promise.completed
+	dialog.queue_free()
+	return promise.property
+
+
 static func _error_title_or_default(title: String) -> String:
 	if title.is_empty():
 		return DEFAULT_ERROR_DIALOG_TITLE
@@ -122,6 +142,29 @@ class NodeSelectPromise:
 	func _selected(path: NodePath) -> void:
 		selected = true
 		self.path = path
+		completed.emit(selected)
+	
+	func _canceled() -> void:
+		selected = false
+		completed.emit(selected)
+
+
+class PropertySelectPromise:
+	
+	signal completed(selected: bool)
+	
+	var selected: bool
+	var property: Dictionary
+	
+	func _init(dialog: PropertySelectDialog):
+		selected = false
+		property = {}
+		dialog.selected.connect(_selected)
+		dialog.canceled.connect(_canceled)
+	
+	func _selected(property: Dictionary) -> void:
+		selected = true
+		self.property = property
 		completed.emit(selected)
 	
 	func _canceled() -> void:
