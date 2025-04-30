@@ -6,7 +6,7 @@ extends HBoxContainer
 signal node_selected(path)
 signal node_cleared()
 
-const NodeSelectDialog = preload("../dialogs/node_select_dialog/NodeSelectDialog.tscn")
+const Dialogs = preload("../dialogs/Dialogs.gd")
 
 @export var required = true
 
@@ -38,24 +38,10 @@ func get_selected_path():
 
 
 func _on_search_button_pressed():
-	var dialog = NodeSelectDialog.instantiate()
-	dialog.cancelled.connect(_on_node_selection_cancelled.bind(dialog))
-	dialog.selected.connect(_on_node_selected.bind(dialog))
-	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-	get_tree().root.add_child(dialog)
-	dialog.popup()
-
-
-func _on_node_selected(path, dialog):
-	get_tree().root.remove_child(dialog)
-	dialog.queue_free()
-	populate(path)
-	node_selected.emit(_path)
-
-
-func _on_node_selection_cancelled(dialog):
-	get_tree().root.remove_child(dialog)
-	dialog.queue_free()
+	var selected := await Dialogs.select_node(self)
+	if not selected.is_empty():
+		populate(selected)
+		node_selected.emit(_path)
 
 
 func _on_clear_button_pressed():

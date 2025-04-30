@@ -5,6 +5,7 @@
 
 [node name="NodeSelectDialog" type="Window"]
 title = "Pick a node"
+initial_position = 2
 size = Vector2i(250, 300)
 transient = true
 exclusive = true

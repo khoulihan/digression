@@ -2,7 +2,7 @@
 extends Window
 
 
-signal cancelled()
+signal canceled()
 signal selected(node)
 
 
@@ -14,7 +14,7 @@ func _ready() -> void:
 
 
 func _on_node_select_dialog_contents_cancelled():
-	cancelled.emit()
+	canceled.emit()
 
 
 func _on_node_select_dialog_contents_selected(node):
@@ -22,4 +22,4 @@ func _on_node_select_dialog_contents_selected(node):
 
 
 func _on_close_requested():
-	cancelled.emit()
+	canceled.emit()

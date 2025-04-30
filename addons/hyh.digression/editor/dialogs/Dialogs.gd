@@ -11,6 +11,8 @@ const PropertySelect: PackedScene = preload("./property_select_dialog/PropertySe
 const VariableCreate: PackedScene = preload("./variable_create_dialog/VariableCreateDialog.tscn")
 const VariableSelect: PackedScene = preload("./variable_select_dialog/VariableSelectDialog.tscn")
 
+const NodeSelectClass := preload("./node_select_dialog/NodeSelectDialog.gd")
+
 
 const DEFAULT_ERROR_DIALOG_TITLE = "Error"
 const DEFAULT_CONFIRMATION_DIALOG_TITLE = "Please Confirm"
@@ -44,7 +46,6 @@ static func request_confirmation(
 	var confirm = ConfirmationDialog.new()
 	confirm.exclusive = true
 	confirm.unresizable = true
-	#confirm.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
 	confirm.title = _confirmation_title_or_default(title)
 	confirm.dialog_text = text
 	confirm.set_unparent_when_invisible(true)
@@ -56,6 +57,21 @@ static func request_confirmation(
 	await promise.completed
 	confirm.queue_free()
 	return promise.confirmed
+
+
+static func select_node(parent_from_node: Node = null) -> NodePath:
+	var dialog := NodeSelect.instantiate()
+	dialog.set_unparent_when_invisible(true)
+	var promise := NodeSelectPromise.new(dialog)
+	# The "centered" part of these calls seemed to be ignored... Have set an
+	# initial position on the window instead.
+	if parent_from_node:
+		dialog.popup_exclusive(parent_from_node)
+	else:
+		dialog.popup_exclusive(EditorInterface.get_base_control())
+	await promise.completed
+	dialog.queue_free()
+	return promise.path
 
 
 static func _error_title_or_default(title: String) -> String:
@@ -88,3 +104,26 @@ class ConfirmationPromise:
 	func _canceled() -> void:
 		confirmed = false
 		completed.emit(confirmed)
+
+
+class NodeSelectPromise:
+	
+	signal completed(selected: bool)
+	
+	var selected: bool
+	var path: NodePath
+	
+	func _init(dialog: NodeSelectClass):
+		selected = false
+		path = NodePath()
+		dialog.selected.connect(_selected)
+		dialog.canceled.connect(_canceled)
+	
+	func _selected(path: NodePath) -> void:
+		selected = true
+		self.path = path
+		completed.emit(selected)
+	
+	func _canceled() -> void:
+		selected = false
+		completed.emit(selected)
