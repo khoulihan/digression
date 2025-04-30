@@ -4,7 +4,7 @@ extends MarginContainer
 
 
 signal selected(variable)
-signal cancelled()
+signal canceled()
 
 enum MatchesTreeColumns {
 	SCOPE,
@@ -66,7 +66,7 @@ func _ready():
 	_load_favourites_and_recent()
 
 
-func _get_all_variables() -> Array[Dictionary]:
+func _get_all_variables() -> Array:
 	var variables := DigressionSettings.get_variables().duplicate()
 	for bi in VariablesHelper.BUILT_IN_VARIABLES:
 		variables.append(bi.duplicate(true))
@@ -406,7 +406,7 @@ func _on_matches_tree_item_activated():
 
 
 func _on_cancel_button_pressed():
-	cancelled.emit()
+	canceled.emit()
 
 
 func _on_select_button_pressed():

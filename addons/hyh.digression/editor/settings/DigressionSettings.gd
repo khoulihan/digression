@@ -219,7 +219,7 @@ static func save_setting(key: String, value: Variant) -> void:
 	ProjectSettings.save()
 
 
-static func get_variables() -> Array[Dictionary]:
+static func get_variables() -> Array:
 	return get_collection_setting(
 		get_variables_key()
 	)

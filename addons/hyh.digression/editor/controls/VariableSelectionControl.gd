@@ -21,10 +21,10 @@ const DIALOGUE_GRAPH_SCOPE_ICON = preload("../../icons/icon_scope_dialogue_graph
 const LOCAL_ICON = preload("../../icons/icon_scope_local.svg")
 const GLOBAL_ICON = preload("../../icons/icon_scope_global.svg")
 
+const Dialogs = preload("../dialogs/Dialogs.gd")
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
 const VariablesHelper = preload("../helpers/VariablesHelper.gd")
-const VariableSelectDialog = preload("../dialogs/variable_select_dialog/VariableSelectDialog.tscn")
 const VariableCreateDialog = preload("../dialogs/variable_create_dialog/VariableCreateDialog.tscn")
 
 var _popup: PopupMenu
@@ -129,13 +129,15 @@ func _convert_position(pos):
 
 
 func _show_selection_dialog():
-	var dialog = VariableSelectDialog.instantiate()
-	dialog.type_restriction = _type_restriction
-	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-	dialog.selected.connect(_on_select_dialog_variable_selected.bind(dialog))
-	dialog.cancelled.connect(_on_select_dialog_cancelled.bind(dialog))
-	get_tree().root.add_child(dialog)
-	dialog.popup()
+	var selected := await Dialogs.select_variable(_type_restriction)
+	if not selected.is_empty():
+		_variable = selected
+		configure_for_variable(
+			VariablesHelper.create_display_name(_variable['name']),
+			_variable['scope'],
+			_variable['type'],
+		)
+		variable_selected.emit(_variable)
 
 
 func _on_selection_name_gui_input(event):
@@ -157,23 +159,6 @@ func _on_scope_margin_container_gui_input(event):
 
 func _on_type_margin_container_gui_input(event):
 	_on_control_gui_input(_type_margin_container, event)
-
-
-func _on_select_dialog_variable_selected(variable, dialog):
-	get_tree().root.remove_child(dialog)
-	dialog.queue_free()
-	_variable = variable
-	configure_for_variable(
-		VariablesHelper.create_display_name(variable['name']),
-		variable['scope'],
-		variable['type'],
-	)
-	variable_selected.emit(variable)
-
-
-func _on_select_dialog_cancelled(dialog):
-	get_tree().root.remove_child(dialog)
-	dialog.queue_free()
 
 
 func _show_create_dialog():

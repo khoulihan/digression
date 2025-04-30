@@ -4,7 +4,7 @@ extends Window
 
 
 signal selected(variable)
-signal cancelled()
+signal canceled()
 
 const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
 
@@ -18,8 +18,8 @@ func _ready() -> void:
 	_background_panel.color = get_theme_color("base_color", "Editor")
 
 
-func _on_variable_select_dialog_contents_cancelled():
-	cancelled.emit()
+func _on_variable_select_dialog_contents_canceled():
+	canceled.emit()
 
 
 func _on_variable_select_dialog_contents_selected(variable):
@@ -27,4 +27,4 @@ func _on_variable_select_dialog_contents_selected(variable):
 
 
 func _on_close_requested():
-	cancelled.emit()
+	canceled.emit()

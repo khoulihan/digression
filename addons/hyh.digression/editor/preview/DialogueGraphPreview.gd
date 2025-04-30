@@ -49,7 +49,6 @@ const PlayerDialogueEvent = preload("dialogue_events/PlayerDialogueEvent.tscn")
 const StaticInformationalEvent = preload("dialogue_events/StaticInformationalEvent.tscn")
 const FinalStaticInformationalEvent = preload("dialogue_events/FinalStaticInformationalEvent.tscn")
 const ChoiceEvent = preload("dialogue_events/ChoiceEvent.tscn")
-const VariableSelectDialog = preload("../dialogs/variable_select_dialog/VariableSelectDialog.tscn")
 
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
@@ -624,13 +623,28 @@ func clear_variable_stores():
 
 
 func _show_add_variable_dialog():
-	var dialog = VariableSelectDialog.instantiate()
-	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_ABSOLUTE
-	dialog.position = get_tree().root.position + Vector2i(200, 200)
-	dialog.selected.connect(_on_variable_selected.bind(dialog))
-	dialog.cancelled.connect(_on_dialog_cancelled.bind(dialog))
-	get_tree().root.add_child(dialog)
-	dialog.popup()
+	var selected := await Dialogs.select_variable(null, self)
+	if not selected.is_empty():
+		_add_variable(selected)
+
+
+func _add_variable(variable: Dictionary) -> void:
+	var val = _get_default_value_for_type(variable['type'])
+	var name = variable['name']
+	var store
+	match variable['scope']:
+		VariableScope.SCOPE_TRANSIENT:
+			store = _get_context().transient_store
+		VariableScope.SCOPE_DIALOGUE_GRAPH:
+			store = _get_context().dialogue_graph_state_store
+		VariableScope.SCOPE_LOCAL:
+			store = _get_context().local_store.store_data
+		VariableScope.SCOPE_GLOBAL:
+			store = _get_context().global_store.store_data
+	if store.has(name):
+		return
+	store[name] = val
+	_update_variable_stores_tree()
 
 
 func _confirm_clear_all_stores():
@@ -1002,28 +1016,6 @@ func _on_store_load_file_selected(path, replace, dialog):
 		_get_context().local_store.store_data.merge(data['local'], true)
 	if data.has('global'):
 		_get_context().global_store.store_data.merge(data['global'], true)
-	_update_variable_stores_tree()
-
-
-func _on_variable_selected(variable, dialog):
-	get_tree().root.remove_child(dialog)
-	dialog.queue_free()
-	
-	var val = _get_default_value_for_type(variable['type'])
-	var name = variable['name']
-	var store
-	match variable['scope']:
-		VariableScope.SCOPE_TRANSIENT:
-			store = _get_context().transient_store
-		VariableScope.SCOPE_DIALOGUE_GRAPH:
-			store = _get_context().dialogue_graph_state_store
-		VariableScope.SCOPE_LOCAL:
-			store = _get_context().local_store.store_data
-		VariableScope.SCOPE_GLOBAL:
-			store = _get_context().global_store.store_data
-	if store.has(name):
-		return
-	store[name] = val
 	_update_variable_stores_tree()
 
 
