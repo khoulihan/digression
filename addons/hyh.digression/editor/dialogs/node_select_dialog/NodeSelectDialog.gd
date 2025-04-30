@@ -13,7 +13,7 @@ func _ready() -> void:
 	BackgroundPanel.color = get_theme_color("base_color", "Editor")
 
 
-func _on_node_select_dialog_contents_cancelled():
+func _on_node_select_dialog_contents_canceled():
 	canceled.emit()
 
 

@@ -7,7 +7,7 @@ extends MarginContainer
 @onready var OkButton = $VB/MC/HB/OkButton
 
 
-signal cancelled()
+signal canceled()
 signal selected(node)
 
 
@@ -49,7 +49,7 @@ func _on_filter_text_changed(new_text):
 
 
 func _on_cancel_button_pressed():
-	cancelled.emit()
+	canceled.emit()
 
 
 func _on_ok_button_pressed():
