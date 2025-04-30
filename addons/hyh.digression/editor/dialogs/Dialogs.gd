@@ -11,7 +11,7 @@ const PropertySelect: PackedScene = preload("./property_select_dialog/PropertySe
 const VariableCreate: PackedScene = preload("./variable_create_dialog/VariableCreateDialog.tscn")
 const VariableSelect: PackedScene = preload("./variable_select_dialog/VariableSelectDialog.tscn")
 
-const NodeSelectClass := preload("./node_select_dialog/NodeSelectDialog.gd")
+const NodeSelectDialog := preload("./node_select_dialog/NodeSelectDialog.gd")
 const PropertySelectDialog := preload("./property_select_dialog/PropertySelectDialog.gd")
 
 
@@ -133,7 +133,7 @@ class NodeSelectPromise:
 	var selected: bool
 	var path: NodePath
 	
-	func _init(dialog: NodeSelectClass):
+	func _init(dialog: NodeSelectDialog):
 		selected = false
 		path = NodePath()
 		dialog.selected.connect(_selected)
