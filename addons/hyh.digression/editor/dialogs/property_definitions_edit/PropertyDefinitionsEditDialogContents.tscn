@@ -1,13 +1,13 @@
 [gd_scene load_steps=9 format=3 uid="uid://cvfmxv64m03ti"]
 
-[ext_resource type="Script" uid="uid://di05g2qwvda8d" path="res://addons/hyh.digression/editor/dialogs/property_definition_edit/PropertyDefinitionEditDialogContents.gd" id="1_yc1ng"]
-[ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="2_n5s1n"]
-[ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.digression/icons/icon_remove.svg" id="3_xu0r6"]
-[ext_resource type="Texture2D" uid="uid://cmpxsjfcm0kpq" path="res://addons/hyh.digression/icons/icon_node_info.svg" id="4_j6fru"]
-[ext_resource type="Texture2D" uid="uid://c3kvtyvnpubei" path="res://addons/hyh.digression/icons/icon_type_bool.svg" id="5_t3wwj"]
-[ext_resource type="Texture2D" uid="uid://dhxdv15boo0xg" path="res://addons/hyh.digression/icons/icon_type_float.svg" id="6_w5vk3"]
-[ext_resource type="Texture2D" uid="uid://dgqyr3ih37my0" path="res://addons/hyh.digression/icons/icon_type_int.svg" id="7_swfln"]
-[ext_resource type="Texture2D" uid="uid://dpd5q8k0oueoh" path="res://addons/hyh.digression/icons/icon_type_string.svg" id="8_03mxv"]
+[ext_resource type="Script" uid="uid://di05g2qwvda8d" path="res://addons/hyh.digression/editor/dialogs/property_definitions_edit/PropertyDefinitionsEditDialogContents.gd" id="1_c0q3f"]
+[ext_resource type="Texture2D" uid="uid://ddkdwrnkby3ww" path="res://addons/hyh.digression/icons/icon_add.svg" id="2_8dbgp"]
+[ext_resource type="Texture2D" uid="uid://c4l5p4t0wt4i8" path="res://addons/hyh.digression/icons/icon_remove.svg" id="3_ygojs"]
+[ext_resource type="Texture2D" uid="uid://cmpxsjfcm0kpq" path="res://addons/hyh.digression/icons/icon_node_info.svg" id="4_xojkd"]
+[ext_resource type="Texture2D" uid="uid://c3kvtyvnpubei" path="res://addons/hyh.digression/icons/icon_type_bool.svg" id="5_anfd4"]
+[ext_resource type="Texture2D" uid="uid://dhxdv15boo0xg" path="res://addons/hyh.digression/icons/icon_type_float.svg" id="6_2gkbn"]
+[ext_resource type="Texture2D" uid="uid://dgqyr3ih37my0" path="res://addons/hyh.digression/icons/icon_type_int.svg" id="7_l6qk1"]
+[ext_resource type="Texture2D" uid="uid://dpd5q8k0oueoh" path="res://addons/hyh.digression/icons/icon_type_string.svg" id="8_j5jog"]
 
 [node name="PropertyDefinitionEditDialogContents" type="MarginContainer"]
 offset_right = 960.0
@@ -16,7 +16,7 @@ theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
-script = ExtResource("1_yc1ng")
+script = ExtResource("1_c0q3f")
 
 [node name="VB" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -39,13 +39,13 @@ layout_mode = 2
 [node name="AddButton" type="Button" parent="VB/HS/PropertyDefinitionsPane/VB/HeaderButtonsContainer"]
 layout_mode = 2
 tooltip_text = "Add a type"
-icon = ExtResource("2_n5s1n")
+icon = ExtResource("2_8dbgp")
 flat = true
 
 [node name="RemoveButton" type="Button" parent="VB/HS/PropertyDefinitionsPane/VB/HeaderButtonsContainer"]
 layout_mode = 2
 tooltip_text = "Remove the selected type"
-icon = ExtResource("3_xu0r6")
+icon = ExtResource("3_ygojs")
 flat = true
 
 [node name="Help" type="TextureRect" parent="VB/HS/PropertyDefinitionsPane/VB/HeaderButtonsContainer"]
@@ -53,7 +53,7 @@ layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
 tooltip_text = "Here you can define \"properties\" that can be attached to certain resources and nodes."
-texture = ExtResource("4_j6fru")
+texture = ExtResource("4_xojkd")
 stretch_mode = 2
 
 [node name="PropertyDefinitionsTree" type="Tree" parent="VB/HS/PropertyDefinitionsPane/VB"]
@@ -90,7 +90,7 @@ size_flags_vertical = 4
 tooltip_text = "Here you can set which graph types the selected dialogue type
 is available for. You can also set it as the default for one or more
 graph types."
-texture = ExtResource("4_j6fru")
+texture = ExtResource("4_xojkd")
 stretch_mode = 2
 
 [node name="DetailPaneContainer" type="MarginContainer" parent="VB/HS/DetailPane/DetailPaneContents"]
@@ -120,19 +120,19 @@ text = "Type:"
 
 [node name="TypeOption" type="OptionButton" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC"]
 layout_mode = 2
-item_count = 4
 selected = 0
+item_count = 4
 popup/item_0/text = "Boolean"
-popup/item_0/icon = ExtResource("5_t3wwj")
+popup/item_0/icon = ExtResource("5_anfd4")
 popup/item_0/id = 1
 popup/item_1/text = "Float"
-popup/item_1/icon = ExtResource("6_w5vk3")
+popup/item_1/icon = ExtResource("6_2gkbn")
 popup/item_1/id = 3
 popup/item_2/text = "Integer"
-popup/item_2/icon = ExtResource("7_swfln")
+popup/item_2/icon = ExtResource("7_l6qk1")
 popup/item_2/id = 2
 popup/item_3/text = "String"
-popup/item_3/icon = ExtResource("8_03mxv")
+popup/item_3/icon = ExtResource("8_j5jog")
 popup/item_3/id = 4
 
 [node name="Label3" type="Label" parent="VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer/VB/GC"]
@@ -193,7 +193,7 @@ text = "Save"
 size = Vector2i(151, 35)
 item_count = 1
 item_0/text = "Remove"
-item_0/icon = ExtResource("3_xu0r6")
+item_0/icon = ExtResource("3_ygojs")
 item_0/id = 0
 
 [connection signal="pressed" from="VB/HS/PropertyDefinitionsPane/VB/HeaderButtonsContainer/AddButton" to="." method="_on_add_button_pressed"]
