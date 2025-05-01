@@ -13,6 +13,7 @@ const VariableSelect: PackedScene = preload("./variable_select_dialog/VariableSe
 
 const NodeSelectDialog := preload("./node_select_dialog/NodeSelectDialog.gd")
 const PropertySelectDialog := preload("./property_select_dialog/PropertySelectDialog.gd")
+const VariableCreateDialog := preload("./variable_create_dialog/VariableCreateDialog.gd")
 const VariableSelectDialog := preload("./variable_select_dialog/VariableSelectDialog.gd")
 
 
@@ -103,6 +104,25 @@ static func select_variable(
 	dialog.type_restriction = type_restriction
 	dialog.set_unparent_when_invisible(true)
 	var promise := VariableSelectPromise.new(dialog)
+	# The "centered" part of these calls seemed to be ignored... Have set an
+	# initial position on the window instead.
+	if parent_from_node:
+		dialog.popup_exclusive(parent_from_node)
+	else:
+		dialog.popup_exclusive(EditorInterface.get_base_control())
+	await promise.completed
+	dialog.queue_free()
+	return promise.variable
+
+
+static func create_variable(
+	type_restriction: Variant = null,
+	parent_from_node: Node = null,
+) -> Dictionary:
+	var dialog := VariableCreate.instantiate()
+	dialog.type_restriction = type_restriction
+	dialog.set_unparent_when_invisible(true)
+	var promise := VariableCreatePromise.new(dialog)
 	# The "centered" part of these calls seemed to be ignored... Have set an
 	# initial position on the window instead.
 	if parent_from_node:
@@ -213,3 +233,26 @@ class VariableSelectPromise:
 	func _canceled() -> void:
 		selected = false
 		completed.emit(selected)
+
+
+class VariableCreatePromise:
+	
+	signal completed(created: bool)
+	
+	var created: bool
+	var variable: Dictionary
+	
+	func _init(dialog: VariableCreateDialog):
+		created = false
+		variable = {}
+		dialog.created.connect(_created)
+		dialog.canceled.connect(_canceled)
+	
+	func _created(variable: Dictionary) -> void:
+		created = true
+		self.variable = variable
+		completed.emit(created)
+	
+	func _canceled() -> void:
+		created = false
+		completed.emit(created)

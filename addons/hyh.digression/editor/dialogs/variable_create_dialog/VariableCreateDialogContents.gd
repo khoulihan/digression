@@ -4,7 +4,7 @@ extends MarginContainer
 
 
 signal tag_added()
-signal cancelled()
+signal canceled()
 signal created(variable)
 
 const Dialogs = preload("../../dialogs/Dialogs.gd")
@@ -249,7 +249,7 @@ func _on_create_button_pressed():
 
 
 func _on_cancel_button_pressed():
-	cancelled.emit()
+	canceled.emit()
 
 
 func _on_tag_suggestion_pressed(button):

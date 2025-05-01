@@ -25,7 +25,6 @@ const Dialogs = preload("../dialogs/Dialogs.gd")
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
 const VariablesHelper = preload("../helpers/VariablesHelper.gd")
-const VariableCreateDialog = preload("../dialogs/variable_create_dialog/VariableCreateDialog.tscn")
 
 var _popup: PopupMenu
 var _type_restriction = null
@@ -162,18 +161,15 @@ func _on_type_margin_container_gui_input(event):
 
 
 func _show_create_dialog():
-	var dialog = VariableCreateDialog.instantiate()
-	dialog.type_restriction = _type_restriction
-	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-	dialog.created.connect(_on_variable_created.bind(dialog))
-	dialog.cancelled.connect(_on_create_dialog_cancelled.bind(dialog))
-	get_tree().root.add_child(dialog)
-	dialog.popup()
+	var created := await Dialogs.create_variable(
+		_type_restriction,
+		self,
+	)
+	if not created.is_empty():
+		_variable_created(created)
 
 
-func _on_variable_created(variable, dialog):
-	get_tree().root.remove_child(dialog)
-	dialog.queue_free()
+func _variable_created(variable):
 	_variable = variable
 	configure_for_variable(
 		VariablesHelper.create_display_name(variable['name']),
@@ -181,11 +177,6 @@ func _on_variable_created(variable, dialog):
 		variable['type'],
 	)
 	variable_selected.emit(variable)
-
-
-func _on_create_dialog_cancelled(dialog):
-	get_tree().root.remove_child(dialog)
-	dialog.queue_free()
 
 
 func _on_popup_index_pressed(index):

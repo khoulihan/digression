@@ -29,8 +29,7 @@ columns = 3
 
 [node name="Label2" type="Label" parent="VB/GC"]
 layout_mode = 2
-text = "Scope:
-"
+text = "Scope:"
 
 [node name="ScopeOption" type="OptionButton" parent="VB/GC"]
 layout_mode = 2

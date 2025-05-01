@@ -3,7 +3,7 @@ extends Window
 ## Dialog for creating a variable definition.
 
 
-signal cancelled()
+signal canceled()
 signal created(variable)
 
 const Logging = preload("../../../utility/Logging.gd")
@@ -28,18 +28,19 @@ func _ready() -> void:
 
 func _on_variable_create_dialog_contents_resized():
 	_logger.debug("Resized signal")
-	if _contents != null:
-		self.size = _contents.size
+	if not Engine.is_embedded_in_editor():
+		if _contents != null:
+			self.size = _contents.size
 
 
 func _on_close_requested():
 	_logger.debug("Variable create dialog closed")
-	cancelled.emit()
+	canceled.emit()
 
 
-func _on_variable_create_dialog_contents_cancelled():
-	_logger.debug("Variable create dialog cancelled")
-	cancelled.emit()
+func _on_variable_create_dialog_contents_canceled():
+	_logger.debug("Variable create dialog canceled")
+	canceled.emit()
 
 
 func _on_variable_create_dialog_contents_created(variable):
