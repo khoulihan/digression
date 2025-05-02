@@ -14,14 +14,13 @@ const DigressionSettings = preload("editor/settings/DigressionSettings.gd")
 const Logging = preload("utility/Logging.gd")
 const DialogueGraphEditor = preload("editor/DialogueGraphEditor.tscn")
 const DigressionDialogue = preload("editor/DigressionDialogue.gd")
+const Dialogs = preload("editor/dialogs/Dialogs.gd")
 const GraphTypeEditDialog = preload("editor/dialogs/graph_types_edit/GraphTypeEditDialog.tscn")
 const GraphTypeEditDialogClass = preload("editor/dialogs/graph_types_edit/GraphTypeEditDialog.gd")
 const DialogueTypesEditDialog = preload("editor/dialogs/dialogue_types_edit/DialogueTypesEditDialog.tscn")
 const DialogueTypesEditDialogClass = preload("editor/dialogs/dialogue_types_edit/DialogueTypesEditDialog.gd")
 const ChoiceTypesEditDialog = preload("editor/dialogs/choice_types_edit/ChoiceTypesEditDialog.tscn")
 const ChoiceTypesEditDialogClass = preload("editor/dialogs/choice_types_edit/ChoiceTypesEditDialog.gd")
-const PropertyDefinitionsEditDialog = preload("editor/dialogs/property_definitions_edit/PropertyDefinitionsEditDialog.tscn")
-const PropertyDefinitionsEditDialogClass = preload("editor/dialogs/property_definitions_edit/PropertyDefinitionsEditDialog.gd")
 const CustomPropertyInspectorPlugin = preload("editor/inspector/custom_property_edit/CustomPropertyInspectorPlugin.gd")
 
 var editor_host
@@ -242,13 +241,7 @@ func _show_edit_choice_types_dialog():
 
 
 func _show_edit_property_definitions_dialog():
-	var dialog = PropertyDefinitionsEditDialog.instantiate()
-	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-	self.add_child(dialog)
-	dialog.popup()
-	await (dialog as PropertyDefinitionsEditDialogClass).closing
-	dialog.hide()
-	dialog.queue_free()
+	await Dialogs.edit_property_definitions()
 
 
 func _save_requested(object, path):

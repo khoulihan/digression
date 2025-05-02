@@ -144,6 +144,19 @@ static func create_variable(
 	return promise.value
 
 
+static func edit_property_definitions(parent_from_node: Node = null) -> void:
+	var dialog := PropertyDefinitionsEdit.instantiate()
+	dialog.set_unparent_when_invisible(true)
+	# The "centered" part of these calls seemed to be ignored... Have set an
+	# initial position on the window instead.
+	if parent_from_node:
+		dialog.popup_exclusive(parent_from_node)
+	else:
+		dialog.popup_exclusive(EditorInterface.get_base_control())
+	await dialog.closing
+	dialog.queue_free()
+
+
 static func _error_title_or_default(title: String) -> String:
 	if title.is_empty():
 		return DEFAULT_ERROR_DIALOG_TITLE
