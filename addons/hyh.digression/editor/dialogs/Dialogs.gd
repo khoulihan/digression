@@ -35,10 +35,7 @@ static func show_error(
 	alert.title = _error_title_or_default(title)
 	alert.dialog_text = text
 	alert.set_unparent_when_invisible(true)
-	if parent_from_node:
-		alert.popup_exclusive_centered(parent_from_node)
-	else:
-		alert.popup_exclusive_centered(EditorInterface.get_base_control())
+	_popup_exclusive_centred(alert, parent_from_node)
 	await alert.confirmed
 	alert.queue_free()
 
@@ -55,10 +52,7 @@ static func request_confirmation(
 	confirm.dialog_text = text
 	confirm.set_unparent_when_invisible(true)
 	var promise = ConfirmationPromise.new(confirm)
-	if parent_from_node:
-		confirm.popup_exclusive_centered(parent_from_node)
-	else:
-		confirm.popup_exclusive_centered(EditorInterface.get_base_control())
+	_popup_exclusive_centred(confirm, parent_from_node)
 	await promise.completed
 	confirm.queue_free()
 	return promise.value
@@ -68,12 +62,7 @@ static func select_node(parent_from_node: Node = null) -> NodePath:
 	var dialog := NodeSelect.instantiate()
 	dialog.set_unparent_when_invisible(true)
 	var promise := NodeSelectPromise.new(dialog)
-	# The "centered" part of these calls seemed to be ignored... Have set an
-	# initial position on the window instead.
-	if parent_from_node:
-		dialog.popup_exclusive(parent_from_node)
-	else:
-		dialog.popup_exclusive(EditorInterface.get_base_control())
+	_popup_exclusive(dialog, parent_from_node)
 	await promise.completed
 	dialog.queue_free()
 	if promise.state == Promise.PromiseState.REJECTED:
@@ -89,12 +78,7 @@ static func select_property(
 	dialog.use_restriction = use_restriction
 	dialog.set_unparent_when_invisible(true)
 	var promise := PropertySelectPromise.new(dialog)
-	# The "centered" part of these calls seemed to be ignored... Have set an
-	# initial position on the window instead.
-	if parent_from_node:
-		dialog.popup_exclusive(parent_from_node)
-	else:
-		dialog.popup_exclusive(EditorInterface.get_base_control())
+	_popup_exclusive(dialog, parent_from_node)
 	await promise.completed
 	dialog.queue_free()
 	if promise.state == Promise.PromiseState.REJECTED:
@@ -110,12 +94,7 @@ static func select_variable(
 	dialog.type_restriction = type_restriction
 	dialog.set_unparent_when_invisible(true)
 	var promise := VariableSelectPromise.new(dialog)
-	# The "centered" part of these calls seemed to be ignored... Have set an
-	# initial position on the window instead.
-	if parent_from_node:
-		dialog.popup_exclusive(parent_from_node)
-	else:
-		dialog.popup_exclusive(EditorInterface.get_base_control())
+	_popup_exclusive(dialog, parent_from_node)
 	await promise.completed
 	dialog.queue_free()
 	if promise.state == Promise.PromiseState.REJECTED:
@@ -131,12 +110,7 @@ static func create_variable(
 	dialog.type_restriction = type_restriction
 	dialog.set_unparent_when_invisible(true)
 	var promise := VariableCreatePromise.new(dialog)
-	# The "centered" part of these calls seemed to be ignored... Have set an
-	# initial position on the window instead.
-	if parent_from_node:
-		dialog.popup_exclusive(parent_from_node)
-	else:
-		dialog.popup_exclusive(EditorInterface.get_base_control())
+	_popup_exclusive(dialog, parent_from_node)
 	await promise.completed
 	dialog.queue_free()
 	if promise.state == Promise.PromiseState.REJECTED:
@@ -177,14 +151,31 @@ static func _show_non_result_dialog(
 	parent_from_node: Node = null
 ) -> void:
 	dialog.set_unparent_when_invisible(true)
-	# The "centered" part of these calls seemed to be ignored... Have set an
-	# initial position on the window instead.
+	_popup_exclusive(dialog, parent_from_node)
+	await dialog.closing
+	dialog.queue_free()
+
+
+static func _popup_exclusive_centred(
+	dialog: Window,
+	parent_from_node: Node = null
+) -> void:
+	if parent_from_node:
+		dialog.popup_exclusive_centered(parent_from_node)
+	else:
+		dialog.popup_exclusive_centered(EditorInterface.get_base_control())
+
+
+static func _popup_exclusive(
+	dialog: Window,
+	parent_from_node: Node = null
+) -> void:
+	# The "centered" part of these calls seemed to be ignored for our own dialogs...
+	# Have set initial positions on the windows instead.
 	if parent_from_node:
 		dialog.popup_exclusive(parent_from_node)
 	else:
 		dialog.popup_exclusive(EditorInterface.get_base_control())
-	await dialog.closing
-	dialog.queue_free()
 
 
 static func _error_title_or_default(title: String) -> String:
