@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://dgqyr3ih37my0" path="res://addons/hyh.digression/icons/icon_type_int.svg" id="7_l6qk1"]
 [ext_resource type="Texture2D" uid="uid://dpd5q8k0oueoh" path="res://addons/hyh.digression/icons/icon_type_string.svg" id="8_j5jog"]
 
-[node name="PropertyDefinitionEditDialogContents" type="MarginContainer"]
+[node name="PropertyDefinitionsEditDialogContents" type="MarginContainer"]
 offset_right = 960.0
 offset_bottom = 420.0
 theme_override_constants/margin_left = 10
