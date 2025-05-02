@@ -145,20 +145,37 @@ static func create_variable(
 
 
 static func edit_property_definitions(parent_from_node: Node = null) -> void:
-	var dialog := PropertyDefinitionsEdit.instantiate()
-	dialog.set_unparent_when_invisible(true)
-	# The "centered" part of these calls seemed to be ignored... Have set an
-	# initial position on the window instead.
-	if parent_from_node:
-		dialog.popup_exclusive(parent_from_node)
-	else:
-		dialog.popup_exclusive(EditorInterface.get_base_control())
-	await dialog.closing
-	dialog.queue_free()
+	_show_non_result_dialog(
+		PropertyDefinitionsEdit.instantiate(),
+		parent_from_node
+	)
 
 
 static func edit_graph_types(parent_from_node: Node = null) -> void:
-	var dialog := GraphTypesEdit.instantiate()
+	_show_non_result_dialog(
+		GraphTypesEdit.instantiate(),
+		parent_from_node
+	)
+
+
+static func edit_dialogue_types(parent_from_node: Node = null) -> void:
+	_show_non_result_dialog(
+		DialogueTypesEdit.instantiate(),
+		parent_from_node
+	)
+
+
+static func edit_choice_types(parent_from_node: Node = null) -> void:
+	_show_non_result_dialog(
+		ChoiceTypesEdit.instantiate(),
+		parent_from_node
+	)
+
+
+static func _show_non_result_dialog(
+	dialog: Window,
+	parent_from_node: Node = null
+) -> void:
 	dialog.set_unparent_when_invisible(true)
 	# The "centered" part of these calls seemed to be ignored... Have set an
 	# initial position on the window instead.

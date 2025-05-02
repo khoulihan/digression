@@ -213,23 +213,11 @@ func _show_edit_graph_types_dialog():
 
 
 func _show_edit_dialogue_types_dialog():
-	var dialog = DialogueTypesEditDialog.instantiate()
-	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-	self.add_child(dialog)
-	dialog.popup()
-	await (dialog as DialogueTypesEditDialogClass).closing
-	dialog.hide()
-	dialog.queue_free()
+	await Dialogs.edit_dialogue_types()
 
 
 func _show_edit_choice_types_dialog():
-	var dialog = ChoiceTypesEditDialog.instantiate()
-	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-	self.add_child(dialog)
-	dialog.popup()
-	await (dialog as ChoiceTypesEditDialogClass).closing
-	dialog.hide()
-	dialog.queue_free()
+	await Dialogs.edit_choice_types()
 
 
 func _show_edit_property_definitions_dialog():
