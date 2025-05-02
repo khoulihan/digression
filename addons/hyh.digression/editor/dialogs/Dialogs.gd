@@ -2,6 +2,8 @@
 extends RefCounted
 
 
+const Promise = preload("../promises/Promise.gd")
+
 const ChoiceTypesEdit: PackedScene = preload("./choice_types_edit/ChoiceTypesEditDialog.tscn")
 const DialogueTypesEdit: PackedScene = preload("./dialogue_types_edit/DialogueTypesEditDialog.tscn")
 const GraphTypesEdit: PackedScene = preload("./graph_types_edit/GraphTypeEditDialog.tscn")
@@ -59,7 +61,7 @@ static func request_confirmation(
 		confirm.popup_exclusive_centered(EditorInterface.get_base_control())
 	await promise.completed
 	confirm.queue_free()
-	return promise.confirmed
+	return promise.value
 
 
 static func select_node(parent_from_node: Node = null) -> NodePath:
@@ -74,7 +76,9 @@ static func select_node(parent_from_node: Node = null) -> NodePath:
 		dialog.popup_exclusive(EditorInterface.get_base_control())
 	await promise.completed
 	dialog.queue_free()
-	return promise.path
+	if promise.state == Promise.PromiseState.REJECTED:
+		return NodePath()
+	return promise.value
 
 
 static func select_property(
@@ -93,7 +97,9 @@ static func select_property(
 		dialog.popup_exclusive(EditorInterface.get_base_control())
 	await promise.completed
 	dialog.queue_free()
-	return promise.property
+	if promise.state == Promise.PromiseState.REJECTED:
+		return Dictionary()
+	return promise.value
 
 
 static func select_variable(
@@ -112,7 +118,9 @@ static func select_variable(
 		dialog.popup_exclusive(EditorInterface.get_base_control())
 	await promise.completed
 	dialog.queue_free()
-	return promise.variable
+	if promise.state == Promise.PromiseState.REJECTED:
+		return Dictionary()
+	return promise.value
 
 
 static func create_variable(
@@ -131,7 +139,9 @@ static func create_variable(
 		dialog.popup_exclusive(EditorInterface.get_base_control())
 	await promise.completed
 	dialog.queue_free()
-	return promise.variable
+	if promise.state == Promise.PromiseState.REJECTED:
+		return Dictionary()
+	return promise.value
 
 
 static func _error_title_or_default(title: String) -> String:
@@ -146,113 +156,37 @@ static func _confirmation_title_or_default(title: String) -> String:
 	return title
 
 
-class ConfirmationPromise:
-	
-	signal completed(confirmed: bool)
-	
-	var confirmed: bool
-	
+
+class ConfirmationPromise extends Promise:
 	func _init(dialog: ConfirmationDialog):
-		confirmed = false
-		dialog.confirmed.connect(_confirmed)
-		dialog.canceled.connect(_canceled)
-	
-	func _confirmed() -> void:
-		confirmed = true
-		completed.emit(confirmed)
-	
-	func _canceled() -> void:
-		confirmed = false
-		completed.emit(confirmed)
+		super()
+		dialog.confirmed.connect(_resolved.bind(true))
+		dialog.canceled.connect(_rejected.bind(false))
 
 
-class NodeSelectPromise:
-	
-	signal completed(selected: bool)
-	
-	var selected: bool
-	var path: NodePath
-	
+class NodeSelectPromise extends Promise:
 	func _init(dialog: NodeSelectDialog):
-		selected = false
-		path = NodePath()
-		dialog.selected.connect(_selected)
-		dialog.canceled.connect(_canceled)
-	
-	func _selected(path: NodePath) -> void:
-		selected = true
-		self.path = path
-		completed.emit(selected)
-	
-	func _canceled() -> void:
-		selected = false
-		completed.emit(selected)
+		super()
+		dialog.selected.connect(_resolved)
+		dialog.canceled.connect(_rejected)
 
 
-class PropertySelectPromise:
-	
-	signal completed(selected: bool)
-	
-	var selected: bool
-	var property: Dictionary
-	
+class PropertySelectPromise extends Promise:
 	func _init(dialog: PropertySelectDialog):
-		selected = false
-		property = {}
-		dialog.selected.connect(_selected)
-		dialog.canceled.connect(_canceled)
-	
-	func _selected(property: Dictionary) -> void:
-		selected = true
-		self.property = property
-		completed.emit(selected)
-	
-	func _canceled() -> void:
-		selected = false
-		completed.emit(selected)
+		super()
+		dialog.selected.connect(_resolved)
+		dialog.canceled.connect(_rejected)
 
 
-class VariableSelectPromise:
-	
-	signal completed(selected: bool)
-	
-	var selected: bool
-	var variable: Dictionary
-	
+class VariableSelectPromise extends Promise:
 	func _init(dialog: VariableSelectDialog):
-		selected = false
-		variable = {}
-		dialog.selected.connect(_selected)
-		dialog.canceled.connect(_canceled)
-	
-	func _selected(variable: Dictionary) -> void:
-		selected = true
-		self.variable = variable
-		completed.emit(selected)
-	
-	func _canceled() -> void:
-		selected = false
-		completed.emit(selected)
+		super()
+		dialog.selected.connect(_resolved)
+		dialog.canceled.connect(_rejected)
 
 
-class VariableCreatePromise:
-	
-	signal completed(created: bool)
-	
-	var created: bool
-	var variable: Dictionary
-	
+class VariableCreatePromise extends Promise:
 	func _init(dialog: VariableCreateDialog):
-		created = false
-		variable = {}
-		dialog.created.connect(_created)
-		dialog.canceled.connect(_canceled)
-	
-	func _created(variable: Dictionary) -> void:
-		created = true
-		self.variable = variable
-		completed.emit(created)
-	
-	func _canceled() -> void:
-		created = false
-		completed.emit(created)
+		super()
+		dialog.created.connect(_resolved)
+		dialog.canceled.connect(_rejected)
