@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://brfcb852ys1jp" path="res://addons/hyh.digression/editor/dialogs/property_definitions_edit/PropertyDefinitionsEditDialog.gd" id="1_t7yc8"]
 [ext_resource type="PackedScene" uid="uid://cvfmxv64m03ti" path="res://addons/hyh.digression/editor/dialogs/property_definitions_edit/PropertyDefinitionsEditDialogContents.tscn" id="2_tayfr"]
 
-[node name="PropertyDefinitionEditDialog" type="Window"]
+[node name="PropertyDefinitionsEditDialog" type="Window"]
 title = "Property Definitions"
 initial_position = 2
 size = Vector2i(960, 420)
@@ -18,7 +18,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-[node name="PropertyDefinitionEditDialogContents" parent="." instance=ExtResource("2_tayfr")]
+[node name="PropertyDefinitionsEditDialogContents" parent="." instance=ExtResource("2_tayfr")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -28,4 +28,4 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]
-[connection signal="closing" from="PropertyDefinitionEditDialogContents" to="." method="_on_property_definition_edit_dialog_contents_closing"]
+[connection signal="closing" from="PropertyDefinitionsEditDialogContents" to="." method="_on_property_definition_edit_dialog_contents_closing"]

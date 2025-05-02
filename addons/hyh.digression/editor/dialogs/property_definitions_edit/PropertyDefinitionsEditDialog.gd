@@ -14,7 +14,7 @@ func _ready() -> void:
 
 ## Prepare the dialog for display.
 func configure() -> void:
-	$PropertyDefinitionEditDialogContents.configure()
+	$PropertyDefinitionsEditDialogContents.configure()
 
 
 func _on_close_requested():
