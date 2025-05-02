@@ -15,10 +15,6 @@ const Logging = preload("utility/Logging.gd")
 const DialogueGraphEditor = preload("editor/DialogueGraphEditor.tscn")
 const DigressionDialogue = preload("editor/DigressionDialogue.gd")
 const Dialogs = preload("editor/dialogs/Dialogs.gd")
-const DialogueTypesEditDialog = preload("editor/dialogs/dialogue_types_edit/DialogueTypesEditDialog.tscn")
-const DialogueTypesEditDialogClass = preload("editor/dialogs/dialogue_types_edit/DialogueTypesEditDialog.gd")
-const ChoiceTypesEditDialog = preload("editor/dialogs/choice_types_edit/ChoiceTypesEditDialog.tscn")
-const ChoiceTypesEditDialogClass = preload("editor/dialogs/choice_types_edit/ChoiceTypesEditDialog.gd")
 const CustomPropertyInspectorPlugin = preload("editor/inspector/custom_property_edit/CustomPropertyInspectorPlugin.gd")
 
 var editor_host
