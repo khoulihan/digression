@@ -6,7 +6,7 @@ const Promise = preload("../promises/Promise.gd")
 
 const ChoiceTypesEdit: PackedScene = preload("./choice_types_edit/ChoiceTypesEditDialog.tscn")
 const DialogueTypesEdit: PackedScene = preload("./dialogue_types_edit/DialogueTypesEditDialog.tscn")
-const GraphTypesEdit: PackedScene = preload("./graph_types_edit/GraphTypeEditDialog.tscn")
+const GraphTypesEdit: PackedScene = preload("./graph_types_edit/GraphTypesEditDialog.tscn")
 const NodeSelect: PackedScene = preload("./node_select_dialog/NodeSelectDialog.tscn")
 const PropertyDefinitionsEdit: PackedScene = preload("./property_definitions_edit/PropertyDefinitionsEditDialog.tscn")
 const PropertySelect: PackedScene = preload("./property_select_dialog/PropertySelectDialog.tscn")
@@ -146,6 +146,19 @@ static func create_variable(
 
 static func edit_property_definitions(parent_from_node: Node = null) -> void:
 	var dialog := PropertyDefinitionsEdit.instantiate()
+	dialog.set_unparent_when_invisible(true)
+	# The "centered" part of these calls seemed to be ignored... Have set an
+	# initial position on the window instead.
+	if parent_from_node:
+		dialog.popup_exclusive(parent_from_node)
+	else:
+		dialog.popup_exclusive(EditorInterface.get_base_control())
+	await dialog.closing
+	dialog.queue_free()
+
+
+static func edit_graph_types(parent_from_node: Node = null) -> void:
+	var dialog := GraphTypesEdit.instantiate()
 	dialog.set_unparent_when_invisible(true)
 	# The "centered" part of these calls seemed to be ignored... Have set an
 	# initial position on the window instead.

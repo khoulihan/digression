@@ -15,8 +15,6 @@ const Logging = preload("utility/Logging.gd")
 const DialogueGraphEditor = preload("editor/DialogueGraphEditor.tscn")
 const DigressionDialogue = preload("editor/DigressionDialogue.gd")
 const Dialogs = preload("editor/dialogs/Dialogs.gd")
-const GraphTypeEditDialog = preload("editor/dialogs/graph_types_edit/GraphTypeEditDialog.tscn")
-const GraphTypeEditDialogClass = preload("editor/dialogs/graph_types_edit/GraphTypeEditDialog.gd")
 const DialogueTypesEditDialog = preload("editor/dialogs/dialogue_types_edit/DialogueTypesEditDialog.tscn")
 const DialogueTypesEditDialogClass = preload("editor/dialogs/dialogue_types_edit/DialogueTypesEditDialog.gd")
 const ChoiceTypesEditDialog = preload("editor/dialogs/choice_types_edit/ChoiceTypesEditDialog.tscn")
@@ -211,13 +209,7 @@ func _on_tool_menu_item_selected(id):
 
 
 func _show_edit_graph_types_dialog():
-	var dialog = GraphTypeEditDialog.instantiate()
-	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-	self.add_child(dialog)
-	dialog.popup()
-	await (dialog as GraphTypeEditDialogClass).closing
-	dialog.hide()
-	dialog.queue_free()
+	await Dialogs.edit_graph_types()
 
 
 func _show_edit_dialogue_types_dialog():

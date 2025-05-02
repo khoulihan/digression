@@ -15,7 +15,7 @@ func _ready() -> void:
 
 ## Prepare the dialog for display.
 func configure() -> void:
-	$GraphTypeEditDialogContents.configure()
+	$GraphTypesEditDialogContents.configure()
 
 
 func _on_graph_type_edit_dialog_contents_closing():
