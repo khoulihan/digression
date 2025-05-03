@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dkdmsbw1ph825"]
+[gd_scene load_steps=12 format=3 uid="uid://dkdmsbw1ph825"]
 
 [ext_resource type="Texture2D" uid="uid://cphlblvt01plb" path="res://addons/hyh.digression/icons/icon_chat.svg" id="2_hackq"]
 [ext_resource type="PackedScene" uid="uid://dhubj3hnf0rxp" path="res://addons/hyh.digression/editor/controls/GraphBreadcrumbs.tscn" id="3_8v60q"]
@@ -9,6 +9,15 @@
 [ext_resource type="PackedScene" uid="uid://p71pge6v4nok" path="res://addons/hyh.digression/editor/maximised/MaximisedNodeEditor.tscn" id="5_iuupq"]
 [ext_resource type="Script" uid="uid://b0a8lsbjxe56m" path="res://addons/hyh.digression/editor/DialogueGraphEditor.gd" id="6"]
 [ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.digression/editor/themes/default/node_theme.tres" id="6_7kerl"]
+
+[sub_resource type="InputEventKey" id="InputEventKey_7kerl"]
+device = -1
+ctrl_pressed = true
+keycode = 92
+unicode = 92
+
+[sub_resource type="Shortcut" id="Shortcut_hre3t"]
+events = [SubResource("InputEventKey_7kerl")]
 
 [node name="DialogueGraphEditor" type="VBoxContainer"]
 anchors_preset = 15
@@ -104,7 +113,9 @@ layout_mode = 2
 
 [node name="ToggleSidebarButton" type="Button" parent="HS/MC/VB/BottomBar"]
 layout_mode = 2
+tooltip_text = "Toggle Graphs Panel"
 toggle_mode = true
+shortcut = SubResource("Shortcut_hre3t")
 icon = ExtResource("4_dpah6")
 flat = true
 
