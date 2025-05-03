@@ -73,16 +73,6 @@ func _sub_graph_selected(sub_graph):
 	modified.emit()
 
 
-func _create_file_dialog(title, file_mode):
-	var file_dialog = EditorFileDialog.new()
-	file_dialog.title = title
-	file_dialog.add_filter("*.tres")
-	file_dialog.access = EditorFileDialog.ACCESS_RESOURCES
-	file_dialog.file_mode = file_mode
-	
-	return file_dialog
-
-
 func _display_error_dialog(message):
 	Dialogs.show_error(message)
 
@@ -184,33 +174,41 @@ func _make_unique():
 
 
 func _save_to_disk():
-	var dialog = _create_file_dialog(
-		"Save Dialogue Graph",
-		EditorFileDialog.FILE_MODE_SAVE_FILE
+	var path := await Dialogs.select_file_for_save(
+		["*.tres", "Digression Graph Resource Files"],
+		self,
+		"Save Dialogue Graph Resource",
+		EditorFileDialog.ACCESS_RESOURCES,
 	)
-	dialog.file_selected.connect(
-		_on_sub_graph_file_selected_for_saving.bind(dialog)
-	)
-	dialog.canceled.connect(
-		_on_sub_graph_dialog_cancelled.bind(dialog)
-	)
-	get_tree().root.add_child(dialog)
-	dialog.popup_centered_clamped(Vector2(800, 700))
+	if not path.is_empty():
+		_save_graph_to_file(path)
+
+
+func _save_graph_to_file(path):
+	ResourceSaver.save(node_resource.sub_graph, path)
+	# Does the reource also need to "take over" the path?
+	node_resource.sub_graph.take_over_path(path)
+	modified.emit()
+	_display_sub_graph_on_button()
 
 
 func _display_load_dialog():
-	var dialog = _create_file_dialog(
-		"Load Dialogue Graph",
-		EditorFileDialog.FILE_MODE_OPEN_FILE
+	var path := await Dialogs.select_file_for_open(
+		["*.tres", "Digression Graph Resource Files"],
+		self,
+		"Load Dialogue Graph Resource",
+		EditorFileDialog.ACCESS_RESOURCES,
 	)
-	dialog.file_selected.connect(
-		_on_sub_graph_file_selected_for_opening.bind(dialog)
-	)
-	dialog.canceled.connect(
-		_on_sub_graph_dialog_cancelled.bind(dialog)
-	)
-	get_tree().root.add_child(dialog)
-	dialog.popup_centered_clamped(Vector2(800, 700))
+	if not path.is_empty():
+		_load_graph_from_file(path)
+
+
+func _load_graph_from_file(path):
+	var res = load(path)
+	if not res is DigressionDialogueGraph:
+		_display_error_dialog("The selected resource is not a DigressionDialogueGraph.")
+		return
+	_sub_graph_selected(res)
 
 
 func _display_sub_graph_on_button():
@@ -285,28 +283,6 @@ func _on_popup_index_pressed(index):
 
 func _on_resource_menu_button_about_to_popup():
 	_configure_popup()
-
-
-func _on_sub_graph_file_selected_for_opening(path, dialog):
-	get_tree().root.remove_child(dialog)
-	var res = load(path)
-	if not res is DigressionDialogueGraph:
-		_display_error_dialog("The selected resource is not a DigressionDialogueGraph.")
-		return
-	_sub_graph_selected(res)
-
-
-func _on_sub_graph_file_selected_for_saving(path, dialog):
-	get_tree().root.remove_child(dialog)
-	ResourceSaver.save(node_resource.sub_graph, path)
-	# Does the reource also need to "take over" the path?
-	node_resource.sub_graph.take_over_path(path)
-	modified.emit()
-	_display_sub_graph_on_button()
-
-
-func _on_sub_graph_dialog_cancelled(dialog):
-	get_tree().root.remove_child(dialog)
 
 
 func _on_entry_point_option_item_selected(index: int) -> void:

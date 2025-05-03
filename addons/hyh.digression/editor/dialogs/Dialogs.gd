@@ -2,6 +2,7 @@
 extends RefCounted
 
 
+const Logging = preload("../../utility/Logging.gd")
 const Promise = preload("../promises/Promise.gd")
 
 const ChoiceTypesEdit: PackedScene = preload("./choice_types_edit/ChoiceTypesEditDialog.tscn")
@@ -22,6 +23,12 @@ const VariableSelectDialog := preload("./variable_select_dialog/VariableSelectDi
 const DEFAULT_ERROR_DIALOG_TITLE = "Error"
 const DEFAULT_CONFIRMATION_DIALOG_TITLE = "Please Confirm"
 const VALIDATION_FAILED_DIALOG_TITLE = "Validation Failed"
+
+
+static var _logger = Logging.new(
+	Logging.DGE_EDITOR_LOG_NAME,
+	Logging.DGE_NODES_LOG_LEVEL
+)
 
 
 static func show_error(
@@ -56,6 +63,36 @@ static func request_confirmation(
 	await promise.completed
 	confirm.queue_free()
 	return promise.value
+
+
+static func select_file_for_save(
+	filter: Array,
+	parent_from_node: Node = null,
+	title: String = "",
+	access: EditorFileDialog.Access = EditorFileDialog.ACCESS_FILESYSTEM,
+) -> String:
+	return await _select_file_with_mode(
+		EditorFileDialog.FILE_MODE_SAVE_FILE,
+		filter,
+		parent_from_node,
+		title,
+		access,
+	)
+
+
+static func select_file_for_open(
+	filter: Array,
+	parent_from_node: Node = null,
+	title: String = "",
+	access: EditorFileDialog.Access = EditorFileDialog.ACCESS_FILESYSTEM,
+) -> String:
+	return await _select_file_with_mode(
+		EditorFileDialog.FILE_MODE_OPEN_FILE,
+		filter,
+		parent_from_node,
+		title,
+		access,
+	)
 
 
 static func select_node(parent_from_node: Node = null) -> NodePath:
@@ -146,6 +183,30 @@ static func edit_choice_types(parent_from_node: Node = null) -> void:
 	)
 
 
+static func _select_file_with_mode(
+	mode: EditorFileDialog.FileMode,
+	filter: Array,
+	parent_from_node: Node = null,
+	title: String = "",
+	access: EditorFileDialog.Access = EditorFileDialog.ACCESS_FILESYSTEM,
+) -> String:
+	var dialog = EditorFileDialog.new()
+	dialog.set_unparent_when_invisible(true)
+	dialog.file_mode = mode
+	dialog.access = access
+	if not title.is_empty():
+		dialog.title = title
+	if filter:
+		for i in range(1, len(filter), 2):
+			dialog.add_filter(filter[i-1], filter[i])
+	var promise := FileDialogPromise.new(dialog)
+	_popup_exclusive_centred(dialog, parent_from_node, Vector2i(800, 700))
+	await promise.completed	
+	if promise.state == Promise.PromiseState.REJECTED:
+		return ""
+	return promise.value
+
+
 static func _show_non_result_dialog(
 	dialog: Window,
 	parent_from_node: Node = null
@@ -158,12 +219,16 @@ static func _show_non_result_dialog(
 
 static func _popup_exclusive_centred(
 	dialog: Window,
-	parent_from_node: Node = null
+	parent_from_node: Node = null,
+	min_size: Vector2i = Vector2i.ZERO,
 ) -> void:
 	if parent_from_node:
-		dialog.popup_exclusive_centered(parent_from_node)
+		dialog.popup_exclusive_centered(parent_from_node, min_size)
 	else:
-		dialog.popup_exclusive_centered(EditorInterface.get_base_control())
+		dialog.popup_exclusive_centered(
+			EditorInterface.get_base_control(),
+			min_size
+		)
 
 
 static func _popup_exclusive(
@@ -189,6 +254,13 @@ static func _confirmation_title_or_default(title: String) -> String:
 		return DEFAULT_CONFIRMATION_DIALOG_TITLE
 	return title
 
+
+class FileDialogPromise extends Promise:
+	func _init(dialog: EditorFileDialog):
+		super()
+		dialog.file_selected.connect(_resolved)
+		dialog.files_selected.connect(_resolved)
+		dialog.canceled.connect(_rejected)
 
 
 class ConfirmationPromise extends Promise:

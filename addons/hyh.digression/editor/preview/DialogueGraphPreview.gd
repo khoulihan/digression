@@ -592,23 +592,71 @@ func _set_show_processing_checkbox_state(show):
 
 
 func _save_stores():
-	var dialog = EditorFileDialog.new()
-	get_tree().root.add_child(dialog)
-	dialog.file_mode = EditorFileDialog.FILE_MODE_SAVE_FILE
-	dialog.add_filter("*.json", "JSON Files")
-	dialog.canceled.connect(_on_dialog_cancelled.bind(dialog))
-	dialog.file_selected.connect(_on_store_save_file_selected.bind(dialog))
-	dialog.popup_centered(Vector2i(800, 600))
+	var path := await Dialogs.select_file_for_save(
+		["*.json", "JSON Files"],
+		self,
+		"Save Stores State",
+	)
+	if not path.is_empty():
+		_logger.debug("path not empty")
+		_save_store_file(path)
 
 
-func _load_stores(replace):
-	var dialog = EditorFileDialog.new()
-	get_tree().root.add_child(dialog)
-	dialog.file_mode = EditorFileDialog.FILE_MODE_OPEN_FILE
-	dialog.add_filter("*.json", "JSON Files")
-	dialog.canceled.connect(_on_dialog_cancelled.bind(dialog))
-	dialog.file_selected.connect(_on_store_load_file_selected.bind(replace, dialog))
-	dialog.popup_centered(Vector2i(800, 600))
+func _save_store_file(path: String) -> void:
+	# Create a dictionary with the contents of the data stores
+	var data = {
+		'transient': _get_context().transient_store.duplicate(),
+		'dialogue_graph': _get_context().dialogue_graph_state_store.duplicate(),
+		'local': _get_context().local_store.store_data.duplicate(),
+		'global': _get_context().global_store.store_data.duplicate(),
+	}
+	
+	var file = FileAccess.open(path, FileAccess.WRITE)
+	if file == null:
+		var err = FileAccess.get_open_error()
+		_logger.error("Error opening file for saving preview variable stores: %s" % err)
+		Dialogs.show_error(
+			"File open failed: %s" % err
+		)
+		return
+	file.store_string(JSON.stringify(data, "  ", false))
+	file.close()
+
+
+func _load_stores(replace: bool) -> void:
+	var path := await Dialogs.select_file_for_open(
+		["*.json", "JSON Files"],
+		self,
+		"Load Stores State",
+	)
+	if not path.is_empty():
+		_load_store_file(path, replace)
+
+
+func _load_store_file(path, replace):
+	var file = FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		var err = FileAccess.get_open_error()
+		_logger.error("Error opening file for saving preview variable stores: %s" % err)
+		Dialogs.show_error(
+			"File open failed: %s" % err
+		)
+		return
+	
+	var data_str = file.get_as_text()
+	file.close()
+	var data = JSON.parse_string(data_str)
+	if replace:
+		clear_variable_stores()
+	if data.has('transient'):
+		_get_context().transient_store.merge(data['transient'], true)
+	if data.has('dialogue_graph'):
+		_get_context().dialogue_graph_state_store.merge(data['dialogue_graph'], true)
+	if data.has('local'):
+		_get_context().local_store.store_data.merge(data['local'], true)
+	if data.has('global'):
+		_get_context().global_store.store_data.merge(data['global'], true)
+	_update_variable_stores_tree()
 
 
 func _get_context():
@@ -964,64 +1012,6 @@ func _on_stores_menu_id_pressed(id):
 			_save_stores()
 		StoresMenuItemId.CLEAR_ALL:
 			_confirm_clear_all_stores()
-
-
-func _on_store_save_file_selected(path, dialog):
-	get_tree().root.remove_child(dialog)
-	dialog.queue_free()
-	
-	# Create a dictionary with the contents of the data stores
-	var data = {
-		'transient': _get_context().transient_store.duplicate(),
-		'dialogue_graph': _get_context().dialogue_graph_state_store.duplicate(),
-		'local': _get_context().local_store.store_data.duplicate(),
-		'global': _get_context().global_store.store_data.duplicate(),
-	}
-	
-	var file = FileAccess.open(path, FileAccess.WRITE)
-	if file == null:
-		var err = FileAccess.get_open_error()
-		_logger.error("Error opening file for saving preview variable stores: %s" % err)
-		Dialogs.show_error(
-			"File open failed: %s" % err
-		)
-		return
-	file.store_string(JSON.stringify(data, "  ", false))
-	file.close()
-
-
-func _on_store_load_file_selected(path, replace, dialog):
-	get_tree().root.remove_child(dialog)
-	dialog.queue_free()
-	
-	var file = FileAccess.open(path, FileAccess.READ)
-	if file == null:
-		var err = FileAccess.get_open_error()
-		_logger.error("Error opening file for saving preview variable stores: %s" % err)
-		Dialogs.show_error(
-			"File open failed: %s" % err
-		)
-		return
-	
-	var data_str = file.get_as_text()
-	file.close()
-	var data = JSON.parse_string(data_str)
-	if replace:
-		clear_variable_stores()
-	if data.has('transient'):
-		_get_context().transient_store.merge(data['transient'], true)
-	if data.has('dialogue_graph'):
-		_get_context().dialogue_graph_state_store.merge(data['dialogue_graph'], true)
-	if data.has('local'):
-		_get_context().local_store.store_data.merge(data['local'], true)
-	if data.has('global'):
-		_get_context().global_store.store_data.merge(data['global'], true)
-	_update_variable_stores_tree()
-
-
-func _on_dialog_cancelled(dialog):
-	get_tree().root.remove_child(dialog)
-	dialog.queue_free()
 
 
 func _on_variable_stores_tree_item_edited():
