@@ -15,10 +15,7 @@ const ExpressionResource = preload("../../resources/graph/expressions/Expression
 @export var value_label_text: String
 
 
-var _logger = Logging.new(
-	Logging.DGE_EDITOR_LOG_NAME,
-	Logging.DGE_EDITOR_LOG_LEVEL
-)
+var _logger := Logging.get_editor_logger()
 
 
 @onready var _type_menu := $TypeMenuButton

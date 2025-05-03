@@ -63,6 +63,7 @@ enum ProceedSignalReturnValues {
 #region Constants
 
 const Logging = preload("../utility/Logging.gd")
+const DigressionSettings = preload("../editor/settings/DigressionSettings.gd")
 
 const DialogueNode = preload("../resources/graph/DialogueNode.gd")
 const MatchBranchNode = preload("../resources/graph/MatchBranchNode.gd")
@@ -102,19 +103,16 @@ const LAST_RETURN_VALUE_KEY = "_last_return_value"
 
 var _context : DialogueProcessingContext
 
-var _dialogue_types
-var _choice_types
-var _split_dialogue
+var _dialogue_types : Array
+var _choice_types : Array
+var _split_dialogue : bool
 
 var _internal: ControllerInternal
 var _currently_awaiting: ProceedSignal
 
 var _expression_evaluator: ExpressionEvaluator
 
-var _logger = Logging.new(
-	"Digression Dialogue Graph Controller",
-	Logging.DGE_NODES_LOG_LEVEL
-)
+var _logger := Logging.get_runtime_logger()
 
 #endregion
 
@@ -134,12 +132,8 @@ func _ready():
 	else:
 		_logger.warn("Scene store not set.")
 	
-	_dialogue_types = ProjectSettings.get_setting(
-		"digression_dialogue_graph_editor/dialogue_types"
-	)
-	_choice_types = ProjectSettings.get_setting(
-		"digression_dialogue_graph_editor/choice_types"
-	)
+	_dialogue_types = DigressionSettings.get_dialogue_types()
+	_choice_types = DigressionSettings.get_choice_types()
 	
 	_expression_evaluator = ExpressionEvaluator.new()
 	_expression_evaluator.context = _context
@@ -797,14 +791,12 @@ func _cancel_processing():
 
 #region Dialogue and choice types
 
-func _get_split_dialogue_from_graph_type(graph_type):
+func _get_split_dialogue_from_graph_type(graph_type) -> bool:
 	if graph_type == null or graph_type == '':
 		return true
 
-	var graph_types = ProjectSettings.get_setting(
-		"digression_dialogue_graph_editor/graph_types",
-		[]
-	)
+	var graph_types := DigressionSettings.get_graph_types()
+
 	for gt in graph_types:
 		if gt['name'] == _context.graph.graph_type:
 			return gt['split_dialogue']

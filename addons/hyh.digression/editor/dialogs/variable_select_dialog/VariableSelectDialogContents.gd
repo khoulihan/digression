@@ -28,7 +28,7 @@ const GLOBAL_ICON = preload("../../../icons/icon_scope_global_light.svg")
 const VariableScope = preload("../../../resources/graph/VariableSetNode.gd").VariableScope
 const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
 
-var _logger = Logging.new(Logging.DGE_EDITOR_LOG_NAME, Logging.DGE_EDITOR_LOG_LEVEL)
+var _logger := Logging.get_editor_logger()
 var _type_restriction : Variant
 var _all_variables = []
 var _variables_for_scope = []

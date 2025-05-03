@@ -28,7 +28,7 @@ const DEFAULT_ICON = preload("../../../icons/icon_favourites.svg")
 const WARNING_ICON = preload("../../../icons/icon_node_warning.svg")
 const NEW_TYPE_NAME = "new_choice_type"
 
-var _logger = Logging.new(Logging.DGE_EDITOR_LOG_NAME, Logging.DGE_EDITOR_LOG_LEVEL)
+var _logger := Logging.get_editor_logger()
 var _graph_types
 var _graph_types_per_choice_type = {}
 

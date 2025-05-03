@@ -25,10 +25,7 @@ var menu
 
 var _custom_inspector : CustomPropertyInspectorPlugin
 var _current_graph_is_in_scene
-var _logger = Logging.new(
-	Logging.DGE_EDITOR_LOG_NAME,
-	Logging.DGE_EDITOR_LOG_LEVEL
-)
+var _logger := Logging.get_editor_logger()
 
 
 func _enter_tree():

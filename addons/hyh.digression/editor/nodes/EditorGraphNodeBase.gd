@@ -23,7 +23,7 @@ var graph
 var _is_root: bool
 var _root_indicator: TextureRect
 var _close_button: Button
-var _logger = Logging.new(Logging.DGE_EDITOR_LOG_NAME, Logging.DGE_EDITOR_LOG_LEVEL)
+var _logger := Logging.get_editor_logger()
 
 
 func _ready() -> void:

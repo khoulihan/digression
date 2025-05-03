@@ -25,10 +25,7 @@ const PREVIEW_LENGTH = 25
 
 var choice_resource: ChoiceBranch
 
-var _logger := Logging.new(
-	Logging.DGE_EDITOR_LOG_NAME,
-	Logging.DGE_EDITOR_LOG_LEVEL
-)
+var _logger := Logging.get_editor_logger()
 
 @onready var _display_edit = $HB/VariableContainer/DisplayContainer/DisplayEdit
 @onready var _translation_key_edit = $HB/VariableContainer/TranslationContainer/TranslationKeyEdit

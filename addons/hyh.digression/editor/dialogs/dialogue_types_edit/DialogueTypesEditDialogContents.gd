@@ -30,7 +30,7 @@ const NEW_TYPE_NAME = "new_dialogue_type"
 
 var _graph_types: Array
 var _graph_types_per_dialogue_type = {}
-var _logger = Logging.new(Logging.DGE_EDITOR_LOG_NAME, Logging.DGE_EDITOR_LOG_LEVEL)
+var _logger := Logging.get_editor_logger()
 
 @onready var _dialogue_types_tree: Tree = $VB/HSplitContainer/DialogueTypesPane/VB/DialogueTypesTree
 @onready var _graph_types_tree: Tree = $VB/HSplitContainer/GraphTypesPane/VB/GraphTypesTree

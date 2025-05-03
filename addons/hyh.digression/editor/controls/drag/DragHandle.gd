@@ -29,7 +29,7 @@ const HANDLE_ICON = preload("../../../icons/icon_drag_vertical_light.svg")
 @export var drag_class : DragClass
 @export var type_restriction : DragVariableTypeRestriction
 
-var _logger = Logging.new(Logging.DGE_EDITOR_LOG_NAME, Logging.DGE_EDITOR_LOG_LEVEL)
+var _logger := Logging.get_editor_logger()
 
 
 func _get_drag_data(at_position):

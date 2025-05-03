@@ -40,11 +40,7 @@ var last_choice_node_id
 # Root of the scene for resolving node references
 var scene_root
 
-# TODO: Is this the appropriate name??
-var _logger = Logging.new(
-	"Digression Dialogue Processing Context",
-	Logging.DGE_NODES_LOG_LEVEL
-)
+var _logger := Logging.get_runtime_logger()
 var _variable_regex: RegEx
 var _graph_stack
 var _built_in_variable_names: Array[String]

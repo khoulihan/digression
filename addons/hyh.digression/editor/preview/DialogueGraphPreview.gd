@@ -105,7 +105,7 @@ var _transient_store_root: TreeItem
 var _dialogue_graph_store_root: TreeItem
 var _local_store_root: TreeItem
 var _global_store_root: TreeItem
-var _logger = Logging.new("Digression Dialogue Graph Preview", Logging.DGE_NODES_LOG_LEVEL)
+var _logger := Logging.get_preview_logger()
 
 @onready var _show_processing_checkbox = $HSplitContainer/HSplitContainer/VB/PanelContainer/MC/BeginContainer/VB/ShowProcessingCheckBox
 @onready var _entry_point_option = $HSplitContainer/HSplitContainer/VB/PanelContainer/MC/BeginContainer/VB/EntryPointContainer/EntryPointOption

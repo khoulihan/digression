@@ -22,10 +22,7 @@ var condition_resource:
 		condition_resource = val
 		_configure_for_condition(condition_resource)
 
-var _logger = Logging.new(
-	Logging.DGE_EDITOR_LOG_NAME,
-	Logging.DGE_EDITOR_LOG_LEVEL
-)
+var _logger := Logging.get_editor_logger()
 
 @onready var _condition_expression := $Condition/PC/MC/ConditionExpression
 @onready var _set_condition_button := $SetConditionButton

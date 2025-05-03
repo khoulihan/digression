@@ -37,7 +37,7 @@ var triggered_count: int:
 
 var _dialogue_controller
 var _state: Dictionary
-var _logger = Logging.new("Digression Dialogue", Logging.DGE_NODES_LOG_LEVEL)
+var _logger := Logging.get_runtime_logger()
 
 
 func _ready():

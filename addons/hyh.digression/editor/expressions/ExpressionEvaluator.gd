@@ -17,7 +17,7 @@ const DialogueProcessingContext = preload("../DialogueProcessingContext.gd")
 
 var context : DialogueProcessingContext
 
-var _logger = Logging.new("Digression Expression Evaluator", Logging.DGE_NODES_LOG_LEVEL)
+var _logger := Logging.get_runtime_logger()
 
 
 ## Evaluate the provided expression.

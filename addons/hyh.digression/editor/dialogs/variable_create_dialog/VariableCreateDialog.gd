@@ -12,10 +12,7 @@ const VariableType = preload("../../../resources/graph/VariableSetNode.gd").Vari
 ## The type to restrict the search to, if any.
 var type_restriction : Variant
 
-var _logger = Logging.new(
-	Logging.DGE_EDITOR_LOG_NAME,
-	Logging.DGE_EDITOR_LOG_LEVEL
-)
+var _logger := Logging.get_editor_logger()
 
 @onready var _contents = $VariableCreateDialogContents
 @onready var _background_panel = $BackgroundPanel

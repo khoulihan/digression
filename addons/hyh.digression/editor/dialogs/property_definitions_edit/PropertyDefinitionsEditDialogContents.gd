@@ -27,7 +27,7 @@ var _edited_item
 var _edited_definition
 var _populating := false
 var _default_name_regex: RegEx
-var _logger = Logging.new(Logging.DGE_EDITOR_LOG_NAME, Logging.DGE_EDITOR_LOG_LEVEL)
+var _logger := Logging.get_editor_logger()
 
 @onready var _property_definitions_tree := $VB/HS/PropertyDefinitionsPane/VB/PropertyDefinitionsTree
 @onready var _detail_pane_container := $VB/HS/DetailPane/DetailPaneContents/DetailPaneContainer

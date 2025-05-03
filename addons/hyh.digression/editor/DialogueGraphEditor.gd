@@ -165,10 +165,7 @@ var _choice_types
 var _copied_nodes
 var _scroll_on_copy
 
-var _logger = Logging.new(
-	Logging.DGE_EDITOR_LOG_NAME,
-	Logging.DGE_EDITOR_LOG_LEVEL
-)
+var _logger := Logging.get_editor_logger()
 
 # Nodes
 @onready var _graph_edit = $HS/MC/VB/MC/GraphEdit

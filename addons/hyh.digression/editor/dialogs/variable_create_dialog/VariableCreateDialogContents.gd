@@ -14,7 +14,7 @@ const VariableType = preload("../../../resources/graph/VariableSetNode.gd").Vari
 const TagControlScene = preload("../../controls/TagControl.tscn")
 const WARNING_ICON = preload("../../../icons/icon_node_warning.svg")
 
-var _logger = Logging.new(Logging.DGE_EDITOR_LOG_NAME, Logging.DGE_EDITOR_LOG_LEVEL)
+var _logger := Logging.get_editor_logger()
 var _type_restriction : Variant
 var _variables: Array[Dictionary]
 var _all_tags: Array[String]

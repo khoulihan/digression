@@ -15,10 +15,7 @@ const MatchBranch = preload("../../resources/graph/branches/MatchBranch.gd")
 const DragHandle = preload("../controls/drag/DragHandle.gd")
 const DragVariableTypeRestriction = DragHandle.DragVariableTypeRestriction
 
-var _logger := Logging.new(
-	Logging.DGE_EDITOR_LOG_NAME,
-	Logging.DGE_EDITOR_LOG_LEVEL
-)
+var _logger := Logging.get_editor_logger()
 var _type: VariableType
 var _branch_resource: MatchBranch
 

@@ -25,10 +25,7 @@ const DEFAULT_CONFIRMATION_DIALOG_TITLE = "Please Confirm"
 const VALIDATION_FAILED_DIALOG_TITLE = "Validation Failed"
 
 
-static var _logger = Logging.new(
-	Logging.DGE_EDITOR_LOG_NAME,
-	Logging.DGE_NODES_LOG_LEVEL
-)
+static var _logger := Logging.get_editor_logger()
 
 
 static func show_error(

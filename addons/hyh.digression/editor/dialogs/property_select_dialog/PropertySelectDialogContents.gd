@@ -22,7 +22,7 @@ const STRING_ICON = preload("../../../icons/icon_type_string.svg")
 const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
 const PropertyUse = preload("./PropertySelectDialog.gd").PropertyUse
 
-var _logger = Logging.new(Logging.DGE_EDITOR_LOG_NAME, Logging.DGE_EDITOR_LOG_LEVEL)
+var _logger := Logging.get_editor_logger()
 var _use_restriction: PropertyUse
 var _all_properties := []
 var _properties_for_search := []

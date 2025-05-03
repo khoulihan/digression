@@ -40,7 +40,7 @@ const MiniMapCommentNode = preload("MiniMapCommentNode.tscn")
 const MiniMapExitNode = preload("MiniMapExitNode.tscn")
 const SCALE = 0.26
 
-var _logger = Logging.new("Digression Dialogue Graph Preview", Logging.DGE_NODES_LOG_LEVEL)
+var _logger := Logging.get_preview_logger()
 var _graph
 
 
