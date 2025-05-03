@@ -161,8 +161,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="HSplitContainer/VariableStoresContainer/HB"]
 layout_mode = 2
-text = "Variable Stores
-"
+text = "Variable Stores"
 
 [node name="StoresMenuButton" type="MenuButton" parent="HSplitContainer/VariableStoresContainer/HB"]
 layout_mode = 2
