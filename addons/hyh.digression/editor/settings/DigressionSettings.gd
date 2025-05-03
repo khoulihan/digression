@@ -14,6 +14,7 @@ const SETTINGS_APPLICATION = "digression_dialogue_graph_editor"
 const SETTINGS_SCHEMA_SECTION = "schema"
 const SETTINGS_THEME_SECTION = "theme"
 const SETTINGS_EDITOR_SECTION = "editor"
+const SETTINGS_LOGGING_SECTION = "logging"
 
 const _NODE_DEFAULT_INITIAL_WIDTH = 600.0
 
@@ -64,6 +65,27 @@ static func get_editor_choice_node_initial_width_key() -> String:
 	return "%s/%s/choice_node_initial_width" % [
 		SETTINGS_APPLICATION,
 		SETTINGS_EDITOR_SECTION
+	]
+
+
+static func get_editor_log_level_key() -> String:
+	return "%s/%s/editor_log_level" % [
+		SETTINGS_APPLICATION,
+		SETTINGS_LOGGING_SECTION
+	]
+
+
+static func get_previewer_log_level_key() -> String:
+	return "%s/%s/previewer_log_level" % [
+		SETTINGS_APPLICATION,
+		SETTINGS_LOGGING_SECTION
+	]
+
+
+static func get_runtime_log_level_key() -> String:
+	return "%s/%s/runtime_log_level" % [
+		SETTINGS_APPLICATION,
+		SETTINGS_LOGGING_SECTION
 	]
 
 
@@ -197,6 +219,51 @@ static func create_default_project_settings() -> void:
 			get_editor_choice_node_initial_width_key(),
 			_NODE_DEFAULT_INITIAL_WIDTH
 		)
+	if not ProjectSettings.has_setting(
+		get_editor_log_level_key()
+	):
+		ProjectSettings.set_setting(
+			get_editor_log_level_key(),
+			1
+		)
+	ProjectSettings.add_property_info(
+		{
+			"name": get_editor_log_level_key(),
+			"type": TYPE_INT,
+			"hint": PROPERTY_HINT_ENUM,
+			"hint_string": "Trace,Debug,Info,Warn,Error,Fatal",
+		}
+	)
+	if not ProjectSettings.has_setting(
+		get_previewer_log_level_key()
+	):
+		ProjectSettings.set_setting(
+			get_previewer_log_level_key(),
+			1
+		)
+	ProjectSettings.add_property_info(
+		{
+			"name": get_previewer_log_level_key(),
+			"type": TYPE_INT,
+			"hint": PROPERTY_HINT_ENUM,
+			"hint_string": "Trace,Debug,Info,Warn,Error,Fatal",
+		}
+	)
+	if not ProjectSettings.has_setting(
+		get_runtime_log_level_key()
+	):
+		ProjectSettings.set_setting(
+			get_runtime_log_level_key(),
+			1
+		)
+	ProjectSettings.add_property_info(
+		{
+			"name": get_runtime_log_level_key(),
+			"type": TYPE_INT,
+			"hint": PROPERTY_HINT_ENUM,
+			"hint_string": "Trace,Debug,Info,Warn,Error,Fatal",
+		}
+	)
 	ProjectSettings.save()
 
 
@@ -281,6 +348,27 @@ static func get_choice_node_initial_width() -> float:
 	return get_setting(
 		get_editor_choice_node_initial_width_key(),
 		_NODE_DEFAULT_INITIAL_WIDTH,
+	)
+
+
+static func get_editor_log_level() -> int:
+	return get_setting(
+		get_editor_log_level_key(),
+		1,
+	)
+
+
+static func get_previewer_log_level() -> int:
+	return get_setting(
+		get_previewer_log_level_key(),
+		1,
+	)
+
+
+static func get_runtime_log_level() -> int:
+	return get_setting(
+		get_runtime_log_level_key(),
+		1,
 	)
 
 

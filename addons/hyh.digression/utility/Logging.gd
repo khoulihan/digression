@@ -1,7 +1,8 @@
+@tool
 extends RefCounted
 ## Logging for the dialogue graph editor components.
-## To customise the output, set DGE_EDITOR_LOG_LEVEL and DGE_RUNTIME_LOG_LEVEL to
-## the desired minimum log level for the editor and runtime nodes respectively.
+## Three instances are exposed for the editor, previewer and runtime parts of the
+## plugin. The minimum levels for each of these can be set in the project settings.
 
 
 enum DGELogLevel {
@@ -14,11 +15,11 @@ enum DGELogLevel {
 }
 
 const DGE_EDITOR_LOG_NAME = "Digression Dialogue Graph Editor"
-const DGE_EDITOR_LOG_LEVEL = DGELogLevel.DEBUG
 const DGE_PREVIEW_LOG_NAME = "Digression Dialogue Graph Previewer"
-const DGE_PREVIEW_LOG_LEVEL = DGELogLevel.DEBUG
 const DGE_RUNTIME_LOG_NAME = "Digression Dialogue Graph Runtime"
-const DGE_RUNTIME_LOG_LEVEL = DGELogLevel.DEBUG
+
+
+const DigressionSettings := preload("../editor/settings/DigressionSettings.gd")
 
 
 static var _editor_logger: Logger
@@ -26,33 +27,64 @@ static var _preview_logger: Logger
 static var _runtime_logger: Logger
 
 
+static func _static_init() -> void:
+	ProjectSettings.settings_changed.connect(_on_settings_changed)
+
+
+## Get the Logger instance for editor classes.
 static func get_editor_logger() -> Logger:
 	if _editor_logger == null:
-		_editor_logger = Logger.new(DGE_EDITOR_LOG_NAME, DGE_EDITOR_LOG_LEVEL)
+		_editor_logger = Logger.new(
+			DGE_EDITOR_LOG_NAME,
+			DigressionSettings.get_editor_log_level()
+		)
 	return _editor_logger
 
 
+## Get the Logger instance for the graph previewer.
 static func get_preview_logger() -> Logger:
 	if _preview_logger == null:
-		_preview_logger = Logger.new(DGE_PREVIEW_LOG_NAME, DGE_PREVIEW_LOG_LEVEL)
+		_preview_logger = Logger.new(
+			DGE_PREVIEW_LOG_NAME,
+			DigressionSettings.get_previewer_log_level()
+		)
 	return _preview_logger
 
 
+## Get the Logger instance for the runtime classes (nodes and controller).
 static func get_runtime_logger() -> Logger:
 	if _runtime_logger == null:
-		_runtime_logger = Logger.new(DGE_RUNTIME_LOG_NAME, DGE_RUNTIME_LOG_LEVEL)
+		_runtime_logger = Logger.new(
+			DGE_RUNTIME_LOG_NAME,
+			DigressionSettings.get_runtime_log_level()
+		)
 	return _runtime_logger
 
 
+static func _on_settings_changed() -> void:
+	# The minimum log levels may have changed, so update them.
+	if _editor_logger != null:
+		_editor_logger.min_level = DigressionSettings.get_editor_log_level()
+	if _preview_logger != null:
+		_preview_logger.min_level = DigressionSettings.get_previewer_log_level()
+	if _runtime_logger != null:
+		_runtime_logger.min_level = DigressionSettings.get_runtime_log_level()
+
+
+## Logging class for Digression.
 class Logger:
 	
 	var _log_name: String = DGE_EDITOR_LOG_NAME
-	var _log_level: DGELogLevel = DGELogLevel.INFO
+	
+	## The minimum level that this instance will log at. Anything below this
+	## level will be ignored.
+	var min_level: DGELogLevel
 
 	func _init(log_name: String, log_level: DGELogLevel):
 		if not log_name == "":
 			_log_name = log_name
-		_log_level = log_level
+		min_level = log_level
+	
 	
 	## Create a log at the default level (INFO).
 	func log(text: String) -> void:
@@ -107,7 +139,7 @@ class Logger:
 
 
 	func _log(text: String, level: DGELogLevel) -> void:
-		if level >= _log_level:
+		if level >= min_level:
 			var final_text := "%s - %s: %s" % [_log_name, _get_level_name(level), text]
 			if level == DGELogLevel.WARN:
 				push_warning(final_text)
