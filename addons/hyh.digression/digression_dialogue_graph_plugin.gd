@@ -11,6 +11,7 @@ enum ToolMenuItems {
 }
 
 const DigressionSettings = preload("editor/settings/DigressionSettings.gd")
+const DigressionTheme = preload("editor/themes/DigressionTheme.gd")
 const Logging = preload("utility/Logging.gd")
 const DialogueGraphEditor = preload("editor/DialogueGraphEditor.tscn")
 const DigressionDialogue = preload("editor/DigressionDialogue.gd")
@@ -53,8 +54,11 @@ func _enter_tree():
 	_custom_inspector = CustomPropertyInspectorPlugin.new()
 	add_inspector_plugin(_custom_inspector)
 	
-	# Check if the settings exist, and create some defaults if necessary
-	_create_default_project_settings()
+	# Configure settings defaults, flags and properties.
+	DigressionSettings.configure_settings()
+	
+	# Make sure the theme is loaded
+	DigressionTheme.load_theme()
 	
 	_create_editor_host()
 	_create_menu()
@@ -128,10 +132,6 @@ func _make_visible(visible):
 func clear():
 	if editor != null:
 		_request_clear()
-
-
-func _create_default_project_settings():
-	DigressionSettings.create_default_project_settings()
 
 
 func _create_editor_host():

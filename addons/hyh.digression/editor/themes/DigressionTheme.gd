@@ -9,18 +9,14 @@ static var _last_custom_theme_path: Variant
 static var _last_builtin_theme: DigressionSettings.BuiltinTheme
 
 
-static func _static_init() -> void:
-	_load_editor_theme()
-
-
 ## Return the current node theme.
 static func get_theme() -> Theme:
-	if theme_changed():
-		_load_editor_theme()
+	if has_theme_changed():
+		load_theme()
 	return _loaded_theme
 
 
-static func _load_editor_theme() -> void:
+static func load_theme() -> void:
 	var custom_theme_path := DigressionSettings.get_custom_theme()
 	_last_custom_theme_path = custom_theme_path
 	if not custom_theme_path.is_empty():
@@ -37,7 +33,7 @@ static func _load_editor_theme() -> void:
 			_loaded_theme = load("res://addons/hyh.digression/editor/themes/high_contrast/high_contrast_node_theme.tres")
 
 
-static func theme_changed() -> bool:
+static func has_theme_changed() -> bool:
 	var custom_theme_path := DigressionSettings.get_custom_theme()
 	if _last_custom_theme_path != custom_theme_path:
 		return true

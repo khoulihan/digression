@@ -16,7 +16,83 @@ const SETTINGS_THEME_SECTION = "theme"
 const SETTINGS_EDITOR_SECTION = "editor"
 const SETTINGS_LOGGING_SECTION = "logging"
 
+const _DEFAULT_THEME = BuiltinTheme.DEFAULT
+const _DEFAULT_CUSTOM_THEME = ""
+const _DEFAULT_GRAPH_TYPES = [
+	{
+		"name": "dialogue",
+		"split_dialogue": true,
+		"default": true
+	},
+	{
+		"name": "cutscene",
+		"split_dialogue": true,
+		"default": false
+	}
+]
+const _DEFAULT_DIALOGUE_TYPES = [
+	{
+		"name": "dialogue",
+		"split_dialogue": null,
+		"involves_character": true,
+		"allowed_in_graph_types": [
+			"dialogue",
+			"cutscene",
+		],
+		"default_in_graph_types": [
+			"dialogue",
+			"cutscene",
+		],
+	},
+	{
+		"name": "narration",
+		"split_dialogue": null,
+		"involves_character": false,
+		"allowed_in_graph_types": [
+			"dialogue",
+			"cutscene",
+		],
+		"default_in_graph_types": [],
+	},
+]
+const _DEFAULT_CHOICE_TYPES = [
+	{
+		"name": "choice",
+		"include_dialogue": false,
+		"skip_for_repeat": false,
+		"allowed_in_graph_types": [
+			"dialogue",
+			"cutscene",
+		],
+		"default_in_graph_types": [],
+	},
+	{
+		"name": "choice_with_dialogue",
+		"include_dialogue": true,
+		"skip_for_repeat": false,
+		"allowed_in_graph_types": [
+			"dialogue",
+			"cutscene",
+		],
+		"default_in_graph_types": [
+			"dialogue",
+			"cutscene",
+		],
+	},
+]
+const _DEFAULT_LINE_LENGTH_GUIDELINES = []
+const _DEFAULT_EDITOR_LOG_LEVEL = 1
+const _DEFAULT_PREVIEWER_LOG_LEVEL = 1
+const _DEFAULT_RUNTIME_LOG_LEVEL = 1
+const _DEFAULT_PROPERTY_DEFINITIONS = []
+const _DEFAULT_VARIABLES = []
 const _NODE_DEFAULT_INITIAL_WIDTH = 600.0
+const _SCHEMA_INTERNAL = false
+
+
+#static func _static_init() -> void:
+#	print("RUNNING SETTINGS STATIC INIT")
+#	_configure_settings()
 
 
 static func get_graph_types_key() -> String:
@@ -87,184 +163,6 @@ static func get_runtime_log_level_key() -> String:
 		SETTINGS_APPLICATION,
 		SETTINGS_LOGGING_SECTION
 	]
-
-
-static func create_default_project_settings() -> void:
-	if not ProjectSettings.has_setting(get_theme_key()):
-		ProjectSettings.set_setting(
-			get_theme_key(),
-			BuiltinTheme.DEFAULT
-		)
-	ProjectSettings.add_property_info(
-		{
-			"name": get_theme_key(),
-			"type": TYPE_INT,
-			"hint": PROPERTY_HINT_ENUM,
-			"hint_string": "None,Default,High Contrast",
-		}
-	)
-	if not ProjectSettings.has_setting(get_custom_theme_key()):
-		ProjectSettings.set_setting(
-			get_custom_theme_key(),
-			""
-		)
-	ProjectSettings.add_property_info(
-		{
-			"name": get_custom_theme_key(),
-			"type": TYPE_STRING,
-			"hint": PROPERTY_HINT_FILE,
-			"hint_string": "*.tres"
-		}
-	)
-	if not ProjectSettings.has_setting(get_graph_types_key()):
-		ProjectSettings.set_setting(
-			get_graph_types_key(),
-			[
-				{
-					"name": "dialogue",
-					"split_dialogue": true,
-					"default": true
-				},
-				{
-					"name": "cutscene",
-					"split_dialogue": true,
-					"default": false
-				}
-			]
-		)
-	if not ProjectSettings.has_setting(get_dialogue_types_key()):
-		ProjectSettings.set_setting(
-			get_dialogue_types_key(),
-			[
-				{
-					"name": "dialogue",
-					"split_dialogue": null,
-					"involves_character": true,
-					"allowed_in_graph_types": [
-						"dialogue",
-						"cutscene",
-					],
-					"default_in_graph_types": [
-						"dialogue",
-						"cutscene",
-					],
-				},
-				{
-					"name": "narration",
-					"split_dialogue": null,
-					"involves_character": false,
-					"allowed_in_graph_types": [
-						"dialogue",
-						"cutscene",
-					],
-					"default_in_graph_types": [],
-				},
-			]
-		)
-	if not ProjectSettings.has_setting(get_choice_types_key()):
-		ProjectSettings.set_setting(
-			get_choice_types_key(),
-			[
-				{
-					"name": "choice",
-					"include_dialogue": false,
-					"skip_for_repeat": false,
-					"allowed_in_graph_types": [
-						"dialogue",
-						"cutscene",
-					],
-					"default_in_graph_types": [],
-				},
-				{
-					"name": "choice_with_dialogue",
-					"include_dialogue": true,
-					"skip_for_repeat": false,
-					"allowed_in_graph_types": [
-						"dialogue",
-						"cutscene",
-					],
-					"default_in_graph_types": [
-						"dialogue",
-						"cutscene",
-					],
-				},
-			]
-		)
-	if not ProjectSettings.has_setting(
-		get_editor_dialogue_line_length_guidelines_key()
-	):
-		ProjectSettings.set_setting(
-			get_editor_dialogue_line_length_guidelines_key(),
-			[80]
-		)
-	ProjectSettings.add_property_info(
-		{
-			"name": get_editor_dialogue_line_length_guidelines_key(),
-			"type": TYPE_ARRAY,
-			"hint": PROPERTY_HINT_ARRAY_TYPE,
-			"hint_string": "int",
-		}
-	)
-	if not ProjectSettings.has_setting(
-		get_editor_dialogue_node_initial_width_key()
-	):
-		ProjectSettings.set_setting(
-			get_editor_dialogue_node_initial_width_key(),
-			_NODE_DEFAULT_INITIAL_WIDTH
-		)
-	if not ProjectSettings.has_setting(
-		get_editor_choice_node_initial_width_key()
-	):
-		ProjectSettings.set_setting(
-			get_editor_choice_node_initial_width_key(),
-			_NODE_DEFAULT_INITIAL_WIDTH
-		)
-	if not ProjectSettings.has_setting(
-		get_editor_log_level_key()
-	):
-		ProjectSettings.set_setting(
-			get_editor_log_level_key(),
-			1
-		)
-	ProjectSettings.add_property_info(
-		{
-			"name": get_editor_log_level_key(),
-			"type": TYPE_INT,
-			"hint": PROPERTY_HINT_ENUM,
-			"hint_string": "Trace,Debug,Info,Warn,Error,Fatal",
-		}
-	)
-	if not ProjectSettings.has_setting(
-		get_previewer_log_level_key()
-	):
-		ProjectSettings.set_setting(
-			get_previewer_log_level_key(),
-			1
-		)
-	ProjectSettings.add_property_info(
-		{
-			"name": get_previewer_log_level_key(),
-			"type": TYPE_INT,
-			"hint": PROPERTY_HINT_ENUM,
-			"hint_string": "Trace,Debug,Info,Warn,Error,Fatal",
-		}
-	)
-	if not ProjectSettings.has_setting(
-		get_runtime_log_level_key()
-	):
-		ProjectSettings.set_setting(
-			get_runtime_log_level_key(),
-			1
-		)
-	ProjectSettings.add_property_info(
-		{
-			"name": get_runtime_log_level_key(),
-			"type": TYPE_INT,
-			"hint": PROPERTY_HINT_ENUM,
-			"hint_string": "Trace,Debug,Info,Warn,Error,Fatal",
-		}
-	)
-	ProjectSettings.save()
 
 
 static func get_setting(key: String, default: Variant) -> Variant:
@@ -405,3 +303,262 @@ static func save_property_definitions(collection: Array) -> void:
 		get_property_definitions_key(),
 		collection,
 	)
+
+
+static func configure_settings() -> void:
+	if not ProjectSettings.has_setting(get_theme_key()):
+		ProjectSettings.set_setting(
+			get_theme_key(),
+			_DEFAULT_THEME
+		)
+	ProjectSettings.add_property_info(
+		{
+			"name": get_theme_key(),
+			"type": TYPE_INT,
+			"hint": PROPERTY_HINT_ENUM,
+			"hint_string": "None,Default,High Contrast",
+		}
+	)
+	ProjectSettings.set_as_basic(get_theme_key(), true)
+	ProjectSettings.set_initial_value(get_theme_key(), _DEFAULT_THEME)
+	
+	if not ProjectSettings.has_setting(get_custom_theme_key()):
+		ProjectSettings.set_setting(
+			get_custom_theme_key(),
+			_DEFAULT_CUSTOM_THEME
+		)
+	ProjectSettings.add_property_info(
+		{
+			"name": get_custom_theme_key(),
+			"type": TYPE_STRING,
+			"hint": PROPERTY_HINT_FILE,
+			"hint_string": "*.tres"
+		}
+	)
+	ProjectSettings.set_as_basic(get_custom_theme_key(), false)
+	ProjectSettings.set_initial_value(
+		get_custom_theme_key(),
+		_DEFAULT_CUSTOM_THEME
+	)
+	
+	if not ProjectSettings.has_setting(get_graph_types_key()):
+		ProjectSettings.set_setting(
+			get_graph_types_key(),
+			_DEFAULT_GRAPH_TYPES
+		)
+	ProjectSettings.set_as_basic(get_graph_types_key(), false)
+	ProjectSettings.set_as_internal(get_graph_types_key(), _SCHEMA_INTERNAL)
+	ProjectSettings.set_initial_value(
+		get_graph_types_key(),
+		_DEFAULT_GRAPH_TYPES
+	)
+	
+	if not ProjectSettings.has_setting(get_dialogue_types_key()):
+		ProjectSettings.set_setting(
+			get_dialogue_types_key(),
+			_DEFAULT_DIALOGUE_TYPES
+		)
+	ProjectSettings.set_as_basic(get_dialogue_types_key(), false)
+	ProjectSettings.set_as_internal(get_dialogue_types_key(), _SCHEMA_INTERNAL)
+	ProjectSettings.set_initial_value(
+		get_dialogue_types_key(),
+		_DEFAULT_DIALOGUE_TYPES
+	)
+	
+	if not ProjectSettings.has_setting(get_choice_types_key()):
+		ProjectSettings.set_setting(
+			get_choice_types_key(),
+			_DEFAULT_CHOICE_TYPES
+		)
+	ProjectSettings.set_as_basic(get_choice_types_key(), false)
+	ProjectSettings.set_as_internal(get_choice_types_key(), _SCHEMA_INTERNAL)
+	ProjectSettings.set_initial_value(
+		get_choice_types_key(),
+		_DEFAULT_CHOICE_TYPES
+	)
+	
+	if not ProjectSettings.has_setting(
+		get_editor_dialogue_line_length_guidelines_key()
+	):
+		ProjectSettings.set_setting(
+			get_editor_dialogue_line_length_guidelines_key(),
+			_DEFAULT_LINE_LENGTH_GUIDELINES
+		)
+	ProjectSettings.add_property_info(
+		{
+			"name": get_editor_dialogue_line_length_guidelines_key(),
+			"type": TYPE_ARRAY,
+			"hint": PROPERTY_HINT_ARRAY_TYPE,
+			"hint_string": "int",
+		}
+	)
+	ProjectSettings.set_as_basic(
+		get_editor_dialogue_line_length_guidelines_key(),
+		true
+	)
+	ProjectSettings.set_initial_value(
+		get_editor_dialogue_line_length_guidelines_key(),
+		_DEFAULT_LINE_LENGTH_GUIDELINES
+	)
+	
+	if not ProjectSettings.has_setting(
+		get_editor_dialogue_node_initial_width_key()
+	):
+		ProjectSettings.set_setting(
+			get_editor_dialogue_node_initial_width_key(),
+			_NODE_DEFAULT_INITIAL_WIDTH
+		)
+	ProjectSettings.set_as_basic(
+		get_editor_dialogue_node_initial_width_key(),
+		true
+	)
+	ProjectSettings.set_initial_value(
+		get_editor_dialogue_node_initial_width_key(),
+		_NODE_DEFAULT_INITIAL_WIDTH
+	)
+	
+	if not ProjectSettings.has_setting(
+		get_editor_choice_node_initial_width_key()
+	):
+		ProjectSettings.set_setting(
+			get_editor_choice_node_initial_width_key(),
+			_NODE_DEFAULT_INITIAL_WIDTH
+		)
+	ProjectSettings.set_as_basic(
+		get_editor_choice_node_initial_width_key(),
+		true
+	)
+	ProjectSettings.set_initial_value(
+		get_editor_choice_node_initial_width_key(),
+		_NODE_DEFAULT_INITIAL_WIDTH
+	)
+	
+	if not ProjectSettings.has_setting(
+		get_editor_log_level_key()
+	):
+		ProjectSettings.set_setting(
+			get_editor_log_level_key(),
+			_DEFAULT_EDITOR_LOG_LEVEL
+		)
+	ProjectSettings.add_property_info(
+		{
+			"name": get_editor_log_level_key(),
+			"type": TYPE_INT,
+			"hint": PROPERTY_HINT_ENUM,
+			"hint_string": "Trace,Debug,Info,Warn,Error,Fatal",
+		}
+	)
+	ProjectSettings.set_as_basic(
+		get_editor_log_level_key(),
+		false
+	)
+	ProjectSettings.set_initial_value(
+		get_editor_log_level_key(),
+		_DEFAULT_EDITOR_LOG_LEVEL
+	)
+	
+	if not ProjectSettings.has_setting(
+		get_previewer_log_level_key()
+	):
+		ProjectSettings.set_setting(
+			get_previewer_log_level_key(),
+			_DEFAULT_PREVIEWER_LOG_LEVEL
+		)
+	ProjectSettings.add_property_info(
+		{
+			"name": get_previewer_log_level_key(),
+			"type": TYPE_INT,
+			"hint": PROPERTY_HINT_ENUM,
+			"hint_string": "Trace,Debug,Info,Warn,Error,Fatal",
+		}
+	)
+	ProjectSettings.set_as_basic(
+		get_previewer_log_level_key(),
+		false
+	)
+	ProjectSettings.set_initial_value(
+		get_previewer_log_level_key(),
+		_DEFAULT_PREVIEWER_LOG_LEVEL
+	)
+	
+	if not ProjectSettings.has_setting(
+		get_runtime_log_level_key()
+	):
+		ProjectSettings.set_setting(
+			get_runtime_log_level_key(),
+			_DEFAULT_RUNTIME_LOG_LEVEL
+		)
+	ProjectSettings.add_property_info(
+		{
+			"name": get_runtime_log_level_key(),
+			"type": TYPE_INT,
+			"hint": PROPERTY_HINT_ENUM,
+			"hint_string": "Trace,Debug,Info,Warn,Error,Fatal",
+		}
+	)
+	ProjectSettings.set_as_basic(
+		get_runtime_log_level_key(),
+		false
+	)
+	ProjectSettings.set_initial_value(
+		get_runtime_log_level_key(),
+		_DEFAULT_RUNTIME_LOG_LEVEL
+	)
+	
+	if not ProjectSettings.has_setting(
+		get_property_definitions_key()
+	):
+		ProjectSettings.set_setting(
+			get_property_definitions_key(),
+			_DEFAULT_PROPERTY_DEFINITIONS
+		)
+	ProjectSettings.add_property_info(
+		{
+			"name": get_property_definitions_key(),
+			"type": TYPE_ARRAY,
+			"hint": PROPERTY_HINT_ARRAY_TYPE,
+			"hint_string": "Dictionary",
+		}
+	)
+	ProjectSettings.set_as_basic(
+		get_property_definitions_key(),
+		false
+	)
+	ProjectSettings.set_as_internal(
+		get_property_definitions_key(),
+		_SCHEMA_INTERNAL
+	)
+	ProjectSettings.set_initial_value(
+		get_property_definitions_key(),
+		_DEFAULT_PROPERTY_DEFINITIONS
+	)
+	
+	if not ProjectSettings.has_setting(
+		get_variables_key()
+	):
+		ProjectSettings.set_setting(
+			get_variables_key(),
+			_DEFAULT_VARIABLES
+		)
+	ProjectSettings.add_property_info(
+		{
+			"name": get_variables_key(),
+			"type": TYPE_ARRAY,
+			"hint": PROPERTY_HINT_ARRAY_TYPE,
+			"hint_string": "Dictionary",
+		}
+	)
+	ProjectSettings.set_as_basic(
+		get_variables_key(),
+		false
+	)
+	ProjectSettings.set_as_internal(
+		get_variables_key(),
+		_SCHEMA_INTERNAL
+	)
+	ProjectSettings.set_initial_value(
+		get_variables_key(),
+		_DEFAULT_VARIABLES
+	)
+	
+	ProjectSettings.save()

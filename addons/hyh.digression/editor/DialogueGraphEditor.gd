@@ -1234,7 +1234,7 @@ func _editor_node_can_be_root(n) -> bool:
 func _on_settings_changed() -> void:
 	# The main thing we need to be looking for at the moment is if the theme
 	# was changed.
-	if DigressionTheme.theme_changed():
+	if DigressionTheme.has_theme_changed():
 		_logger.debug("Redrawing graph after theme update")
 		# TODO: Would be better to reapply the theme to all nodes here.
 		_draw_edited_graph(true)
