@@ -18,6 +18,23 @@ signal not_previewable()
 
 #region Enums
 
+enum GraphNodeTypes {
+	DIALOGUE,
+	MATCH_BRANCH,
+	IF_BRANCH,
+	CHOICE,
+	SET,
+	ACTION,
+	SUB_GRAPH,
+	RANDOM,
+	COMMENT,
+	JUMP,
+	ANCHOR,
+	ROUTING,
+	REPEAT,
+	EXIT,
+}
+
 enum GraphPopupMenuItems {
 	ADD_TEXT_NODE,
 	ADD_MATCH_BRANCH_NODE,
@@ -452,13 +469,47 @@ func _restore_maximised_node() -> void:
 #region Context menu signal handlers
 
 func _on_graph_popup_index_pressed(index):
-	var editor_node = _create_node(
-		index,
+	_create_node(
+		_node_type_for_menu_index(index),
 		_node_creation_mode,
 		_last_popup_position
 	)
 	_set_dirty(true)
 	perform_save()
+
+
+func _node_type_for_menu_index(index: GraphPopupMenuItems) -> GraphNodeTypes:
+	match index:
+		GraphPopupMenuItems.ADD_TEXT_NODE:
+			return GraphNodeTypes.DIALOGUE
+		GraphPopupMenuItems.ADD_MATCH_BRANCH_NODE:
+			return GraphNodeTypes.MATCH_BRANCH
+		GraphPopupMenuItems.ADD_IF_BRANCH_NODE:
+			return GraphNodeTypes.IF_BRANCH
+		GraphPopupMenuItems.ADD_CHOICE_NODE:
+			return GraphNodeTypes.CHOICE
+		GraphPopupMenuItems.ADD_SET_NODE:
+			return GraphNodeTypes.SET
+		GraphPopupMenuItems.ADD_ACTION_NODE:
+			return GraphNodeTypes.ACTION
+		GraphPopupMenuItems.ADD_SUB_GRAPH_NODE:
+			return GraphNodeTypes.SUB_GRAPH
+		GraphPopupMenuItems.ADD_RANDOM_NODE:
+			return GraphNodeTypes.RANDOM
+		GraphPopupMenuItems.ADD_COMMENT_NODE:
+			return GraphNodeTypes.COMMENT
+		GraphPopupMenuItems.ADD_JUMP_NODE:
+			return GraphNodeTypes.JUMP
+		GraphPopupMenuItems.ADD_ANCHOR_NODE:
+			return GraphNodeTypes.ANCHOR
+		GraphPopupMenuItems.ADD_ROUTING_NODE:
+			return GraphNodeTypes.ROUTING
+		GraphPopupMenuItems.ADD_REPEAT_NODE:
+			return GraphNodeTypes.REPEAT
+		GraphPopupMenuItems.ADD_EXIT_NODE:
+			return GraphNodeTypes.EXIT
+	_logger.error("Menu index did not correspond to graph node type: %s" % index)
+	return GraphNodeTypes.DIALOGUE
 
 
 func _on_graph_popup_hide():
@@ -734,11 +785,11 @@ func _set_default_choice_type_for_node(new_graph_node):
 #region Graph drawing, editing and saving
 
 func _create_node(
-	node_type,
-	node_creation_mode,
-	editor_position,
+	node_type: GraphNodeTypes,
+	node_creation_mode: NodeCreationMode,
+	editor_position: Vector2,
 	initial_state = {}
-):
+) -> GraphNode:
 	var new_editor_node
 	var new_graph_node
 	
@@ -772,12 +823,12 @@ func _create_node(
 	return new_editor_node
 
 
-func _create_node_objects(node_type):
+func _create_node_objects(node_type: GraphNodeTypes):
 	var new_editor_node
 	var new_graph_node
 	
 	match node_type:
-		GraphPopupMenuItems.ADD_TEXT_NODE:
+		GraphNodeTypes.DIALOGUE:
 			new_editor_node = EditorDialogueNode.instantiate()
 			new_graph_node = DialogueNode.new()
 			_set_default_dialogue_type_for_node(new_graph_node)
@@ -787,13 +838,13 @@ func _create_node_objects(node_type):
 					"dialogue",
 				)
 			)
-		GraphPopupMenuItems.ADD_MATCH_BRANCH_NODE:
+		GraphNodeTypes.MATCH_BRANCH:
 			new_editor_node = EditorMatchBranchNode.instantiate()
 			new_graph_node = MatchBranchNode.new()
-		GraphPopupMenuItems.ADD_IF_BRANCH_NODE:
+		GraphNodeTypes.IF_BRANCH:
 			new_editor_node = EditorIfBranchNode.instantiate()
 			new_graph_node = IfBranchNode.new()
-		GraphPopupMenuItems.ADD_CHOICE_NODE:
+		GraphNodeTypes.CHOICE:
 			new_editor_node = EditorChoiceNode.instantiate()
 			new_graph_node = DialogueChoiceNode.new()
 			_set_default_dialogue_type_for_node(new_graph_node.dialogue)
@@ -804,35 +855,35 @@ func _create_node_objects(node_type):
 					"choicedialogue",
 				)
 			)
-		GraphPopupMenuItems.ADD_SET_NODE:
+		GraphNodeTypes.SET:
 			new_editor_node = EditorSetNode.instantiate()
 			new_graph_node = VariableSetNode.new()
-		GraphPopupMenuItems.ADD_ACTION_NODE:
+		GraphNodeTypes.ACTION:
 			new_editor_node = EditorActionNode.instantiate()
 			new_graph_node = ActionNode.new()
-		GraphPopupMenuItems.ADD_SUB_GRAPH_NODE:
+		GraphNodeTypes.SUB_GRAPH:
 			new_editor_node = EditorSubGraphNode.instantiate()
 			new_graph_node = SubGraph.new()
-		GraphPopupMenuItems.ADD_RANDOM_NODE:
+		GraphNodeTypes.RANDOM:
 			new_editor_node = EditorRandomNode.instantiate()
 			new_graph_node = RandomNode.new()
-		GraphPopupMenuItems.ADD_COMMENT_NODE:
+		GraphNodeTypes.COMMENT:
 			new_editor_node = EditorCommentNode.instantiate()
 			new_graph_node = CommentNode.new()
-		GraphPopupMenuItems.ADD_JUMP_NODE:
+		GraphNodeTypes.JUMP:
 			new_editor_node = EditorJumpNode.instantiate()
 			new_graph_node = JumpNode.new()
-		GraphPopupMenuItems.ADD_ANCHOR_NODE:
+		GraphNodeTypes.ANCHOR:
 			new_editor_node = EditorAnchorNode.instantiate()
 			new_graph_node = AnchorNode.new()
 			new_graph_node.name = _generate_anchor_name()
-		GraphPopupMenuItems.ADD_ROUTING_NODE:
+		GraphNodeTypes.ROUTING:
 			new_editor_node = EditorRoutingNode.instantiate()
 			new_graph_node = RoutingNode.new()
-		GraphPopupMenuItems.ADD_REPEAT_NODE:
+		GraphNodeTypes.REPEAT:
 			new_editor_node = EditorRepeatNode.instantiate()
 			new_graph_node = RepeatNode.new()
-		GraphPopupMenuItems.ADD_EXIT_NODE:
+		GraphNodeTypes.EXIT:
 			new_editor_node = EditorExitNode.instantiate()
 			new_graph_node = ExitNode.new()
 	
@@ -1390,37 +1441,36 @@ func _get_node_state(node):
 	return initial_state
 
 
-# TODO: The enum used here is now misnamed or inappropriate.
-func _node_type_for_node(node):
+func _node_type_for_node(node: GraphNode) -> GraphNodeTypes:
 	if node is EditorActionNodeClass:
-		return GraphPopupMenuItems.ADD_ACTION_NODE
+		return GraphNodeTypes.ACTION
 	elif node is EditorMatchBranchNodeClass:
-		return GraphPopupMenuItems.ADD_MATCH_BRANCH_NODE
+		return GraphNodeTypes.MATCH_BRANCH
 	elif node is EditorIfBranchNodeClass:
-		return GraphPopupMenuItems.ADD_IF_BRANCH_NODE
+		return GraphNodeTypes.IF_BRANCH
 	elif node is EditorDialogueNodeClass:
-		return GraphPopupMenuItems.ADD_TEXT_NODE
+		return GraphNodeTypes.DIALOGUE
 	elif node is EditorSetNodeClass:
-		return GraphPopupMenuItems.ADD_SET_NODE
+		return GraphNodeTypes.SET
 	elif node is EditorSubGraphNodeClass:
-		return GraphPopupMenuItems.ADD_SUB_GRAPH_NODE
+		return GraphNodeTypes.SUB_GRAPH
 	elif node is EditorChoiceNodeClass:
-		return GraphPopupMenuItems.ADD_CHOICE_NODE
+		return GraphNodeTypes.CHOICE
 	elif node is EditorRandomNodeClass:
-		return GraphPopupMenuItems.ADD_RANDOM_NODE
+		return GraphNodeTypes.RANDOM
 	elif node is EditorCommentNodeClass:
-		return GraphPopupMenuItems.ADD_COMMENT_NODE
+		return GraphNodeTypes.COMMENT
 	elif node is EditorJumpNodeClass:
-		return GraphPopupMenuItems.ADD_JUMP_NODE
+		return GraphNodeTypes.JUMP
 	elif node is EditorAnchorNodeClass:
-		return GraphPopupMenuItems.ADD_ANCHOR_NODE
+		return GraphNodeTypes.ANCHOR
 	elif node is EditorRoutingNodeClass:
-		return GraphPopupMenuItems.ADD_ROUTING_NODE
+		return GraphNodeTypes.ROUTING
 	elif node is EditorRepeatNodeClass:
-		return GraphPopupMenuItems.ADD_REPEAT_NODE
+		return GraphNodeTypes.REPEAT
 	elif node is EditorExitNodeClass:
-		return GraphPopupMenuItems.ADD_EXIT_NODE
-	return GraphPopupMenuItems.ADD_TEXT_NODE
+		return GraphNodeTypes.EXIT
+	return GraphNodeTypes.DIALOGUE
 
 #endregion
 
