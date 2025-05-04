@@ -3,7 +3,7 @@ extends "EditorGraphNodeBase.gd"
 ## Editor node for managing Choice resources.
 
 
-const DigressionSettings = preload("../settings/DigressionSettings.gd")
+const DigressionSettings = preload("../../settings/DigressionSettings.gd")
 const TranslationKey = preload("../../utility/TranslationKey.gd")
 const ChoiceBranch = preload("../../resources/graph/branches/ChoiceBranch.gd")
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope

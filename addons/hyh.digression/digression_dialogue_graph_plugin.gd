@@ -10,11 +10,11 @@ enum ToolMenuItems {
 	EDIT_PROPERTY_DEFINITIONS,
 }
 
-const DigressionSettings = preload("editor/settings/DigressionSettings.gd")
+const DigressionSettings = preload("settings/DigressionSettings.gd")
 const DigressionTheme = preload("editor/themes/DigressionTheme.gd")
 const Logging = preload("utility/Logging.gd")
 const DialogueGraphEditor = preload("editor/DialogueGraphEditor.tscn")
-const DigressionDialogue = preload("editor/DigressionDialogue.gd")
+const DigressionDialogue = preload("runtime/DigressionDialogue.gd")
 const Dialogs = preload("editor/dialogs/Dialogs.gd")
 const CustomPropertyInspectorPlugin = preload("editor/inspector/custom_property_edit/CustomPropertyInspectorPlugin.gd")
 
@@ -34,19 +34,19 @@ func _enter_tree():
 	add_custom_type(
 		"DigressionDialogueController",
 		"Node",
-		preload("editor/DigressionDialogueController.gd"),
+		preload("runtime/DigressionDialogueController.gd"),
 		preload("icons/icon_dialogue_controller.svg")
 	)
 	add_custom_type(
 		"DigressionDialogue",
 		"Node",
-		preload("editor/DigressionDialogue.gd"),
+		preload("runtime/DigressionDialogue.gd"),
 		preload("icons/icon_chat.svg")
 	)
 	add_custom_type(
 		"DigressionDialogueVariableStore",
 		"Node",
-		preload("editor/DigressionDialogueVariableStore.gd"),
+		preload("runtime/DigressionDialogueVariableStore.gd"),
 		preload("icons/icon_datastore.svg")
 	)
 	

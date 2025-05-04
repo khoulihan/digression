@@ -16,7 +16,7 @@ enum PropertyDefinitionEditPopupMenuItem {
 }
 
 const Dialogs = preload("../../dialogs/Dialogs.gd")
-const DigressionSettings = preload("../../settings/DigressionSettings.gd")
+const DigressionSettings = preload("../../../settings/DigressionSettings.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const WARNING_ICON = preload("../../../icons/icon_node_warning.svg")
 const NEW_PROPERTY_NAME = "new_property"

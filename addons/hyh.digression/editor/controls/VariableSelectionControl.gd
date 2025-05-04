@@ -24,7 +24,7 @@ const GLOBAL_ICON = preload("../../icons/icon_scope_global.svg")
 const Dialogs = preload("../dialogs/Dialogs.gd")
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
-const VariablesHelper = preload("../helpers/VariablesHelper.gd")
+const VariablesHelper = preload("../../helpers/VariablesHelper.gd")
 
 var _popup: PopupMenu
 var _type_restriction = null

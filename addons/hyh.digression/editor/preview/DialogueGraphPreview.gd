@@ -52,7 +52,7 @@ const ChoiceEvent = preload("dialogue_events/ChoiceEvent.tscn")
 
 const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
-const Controller = preload("../DigressionDialogueController.gd")
+const Controller = preload("../../runtime/DigressionDialogueController.gd")
 const ProceedSignal = Controller.ProceedSignal
 const CharacterDetails = Controller.CharacterDetails
 const EditorEntryPointAnchorNode = preload("../../editor/nodes/EditorEntryPointAnchorNode.gd")

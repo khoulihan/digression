@@ -2,8 +2,8 @@
 extends RefCounted
 
 
-const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
-const VariableScope = preload("../../resources/graph/VariableSetNode.gd").VariableScope
+const VariableType = preload("../resources/graph/VariableSetNode.gd").VariableType
+const VariableScope = preload("../resources/graph/VariableSetNode.gd").VariableScope
 
 const _descriptions := {
 	'_last_return_value': "The last value returned from a choice, dialogue, or action.",

@@ -2,7 +2,7 @@
 extends RefCounted
 
 
-const DigressionSettings = preload("../settings/DigressionSettings.gd")
+const DigressionSettings = preload("../../settings/DigressionSettings.gd")
 
 static var _loaded_theme: Theme
 static var _last_custom_theme_path: Variant

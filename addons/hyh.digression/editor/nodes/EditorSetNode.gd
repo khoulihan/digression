@@ -3,7 +3,7 @@ extends "EditorGraphNodeBase.gd"
 ## Editor node for managing a Set node resource.
 
 
-const VariablesHelper = preload("../helpers/VariablesHelper.gd")
+const VariablesHelper = preload("../../helpers/VariablesHelper.gd")
 
 var _variable_name
 var _variable_scope

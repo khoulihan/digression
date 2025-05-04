@@ -14,8 +14,8 @@ enum MatchesTreeColumns {
 }
 
 const Dialogs = preload("../../dialogs/Dialogs.gd")
-const DigressionSettings = preload("../../settings/DigressionSettings.gd")
-const VariablesHelper = preload("../../helpers/VariablesHelper.gd")
+const DigressionSettings = preload("../../../settings/DigressionSettings.gd")
+const VariablesHelper = preload("../../../helpers/VariablesHelper.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const BOOL_ICON = preload("../../../icons/icon_type_bool.svg")
 const INT_ICON = preload("../../../icons/icon_type_int.svg")

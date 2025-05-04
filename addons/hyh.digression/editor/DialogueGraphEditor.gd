@@ -60,7 +60,7 @@ enum ConnectionTypes {
 
 # Utility classes.
 const Dialogs = preload("dialogs/Dialogs.gd")
-const DigressionSettings = preload("settings/DigressionSettings.gd")
+const DigressionSettings = preload("../settings/DigressionSettings.gd")
 const Logging = preload("../utility/Logging.gd")
 const TranslationKey = preload("../utility/TranslationKey.gd")
 const DigressionTheme = preload("./themes/DigressionTheme.gd")

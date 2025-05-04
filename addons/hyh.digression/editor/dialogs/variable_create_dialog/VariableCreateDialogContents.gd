@@ -8,7 +8,7 @@ signal canceled()
 signal created(variable)
 
 const Dialogs = preload("../../dialogs/Dialogs.gd")
-const DigressionSettings = preload("../../settings/DigressionSettings.gd")
+const DigressionSettings = preload("../../../settings/DigressionSettings.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const VariableType = preload("../../../resources/graph/VariableSetNode.gd").VariableType
 const TagControlScene = preload("../../controls/TagControl.tscn")

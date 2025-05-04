@@ -11,7 +11,7 @@ const DialogueNode = preload("res://addons/hyh.digression/resources/graph/Dialog
 const DialogueSection = preload("res://addons/hyh.digression/resources/graph/DialogueSection.gd")
 const EditorDialogueSection = preload("res://addons/hyh.digression/editor/text/EditorDialogueSection.gd")
 const EditorDialogueSectionScene = preload("res://addons/hyh.digression/editor/text/EditorDialogueSection.tscn")
-const DigressionSettings = preload("res://addons/hyh.digression/editor/settings/DigressionSettings.gd")
+const DigressionSettings = preload("../../settings/DigressionSettings.gd")
 
 
 var node_resource: DialogueNode

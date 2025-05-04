@@ -5,7 +5,7 @@ extends "EditorGraphNodeBase.gd"
 
 const Dialogs = preload("../dialogs/Dialogs.gd")
 const EditorDialogueSection = preload("res://addons/hyh.digression/editor/text/EditorDialogueSection.tscn")
-const DigressionSettings = preload("../settings/DigressionSettings.gd")
+const DigressionSettings = preload("../../settings/DigressionSettings.gd")
 
 var _characters
 var _dialogue_types

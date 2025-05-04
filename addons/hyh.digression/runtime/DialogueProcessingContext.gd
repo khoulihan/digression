@@ -16,7 +16,7 @@ const BuiltInVariable = {
 }
 
 const Logging = preload("../utility/Logging.gd")
-const VariableHelper = preload("./helpers/VariablesHelper.gd")
+const VariableHelper = preload("../helpers/VariablesHelper.gd")
 const VariableSetNode = preload("../resources/graph/VariableSetNode.gd")
 const VariableScope = VariableSetNode.VariableScope
 const AnchorNode = preload("res://addons/hyh.digression/resources/graph/AnchorNode.gd")

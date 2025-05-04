@@ -19,7 +19,7 @@ const DGE_PREVIEW_LOG_NAME = "Digression Dialogue Graph Previewer"
 const DGE_RUNTIME_LOG_NAME = "Digression Dialogue Graph Runtime"
 
 
-const DigressionSettings := preload("../editor/settings/DigressionSettings.gd")
+const DigressionSettings := preload("../settings/DigressionSettings.gd")
 
 
 static var _editor_logger: Logger

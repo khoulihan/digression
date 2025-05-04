@@ -14,7 +14,7 @@ enum DialogueMenuItems {
 }
 
 
-const DigressionSettings = preload("../settings/DigressionSettings.gd")
+const DigressionSettings = preload("../../settings/DigressionSettings.gd")
 const TranslationKey = preload("../../utility/TranslationKey.gd")
 const DialogueSection = preload("res://addons/hyh.digression/resources/graph/DialogueSection.gd")
 const HANDLE_ICON = preload("../../icons/icon_drag_light.svg")

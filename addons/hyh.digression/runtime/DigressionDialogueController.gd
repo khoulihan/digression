@@ -63,7 +63,7 @@ enum ProceedSignalReturnValues {
 #region Constants
 
 const Logging = preload("../utility/Logging.gd")
-const DigressionSettings = preload("../editor/settings/DigressionSettings.gd")
+const DigressionSettings = preload("../settings/DigressionSettings.gd")
 
 const DialogueNode = preload("../resources/graph/DialogueNode.gd")
 const MatchBranchNode = preload("../resources/graph/MatchBranchNode.gd")

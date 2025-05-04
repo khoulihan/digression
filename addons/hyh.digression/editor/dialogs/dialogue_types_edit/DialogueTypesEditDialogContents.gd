@@ -22,7 +22,7 @@ enum DialogueTypesPopupMenuItem {
 }
 
 const Dialogs = preload("../../dialogs/Dialogs.gd")
-const DigressionSettings = preload("../../settings/DigressionSettings.gd")
+const DigressionSettings = preload("../../../settings/DigressionSettings.gd")
 const Logging = preload("../../../utility/Logging.gd")
 const DEFAULT_ICON = preload("../../../icons/icon_favourites.svg")
 const WARNING_ICON = preload("../../../icons/icon_node_warning.svg")

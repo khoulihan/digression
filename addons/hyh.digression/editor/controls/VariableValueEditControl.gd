@@ -14,7 +14,7 @@ enum ValueSelectionMode {
 }
 
 const Logging = preload("../../utility/Logging.gd")
-const VariablesHelper = preload("../helpers/VariablesHelper.gd")
+const VariablesHelper = preload("../../helpers/VariablesHelper.gd")
 const VariableType = preload("../../resources/graph/VariableSetNode.gd").VariableType
 
 # TODO: Setting this in the inspector does not work because the controls are not

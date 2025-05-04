@@ -7,7 +7,7 @@ signal dialogue_graph_triggered(graph)
 
 const Logging = preload("../utility/Logging.gd")
 const DigressionDialogueController = preload("DigressionDialogueController.gd")
-const EditorEntryPointAnchorNode = preload("nodes/EditorEntryPointAnchorNode.gd")
+const EditorEntryPointAnchorNode = preload("../editor/nodes/EditorEntryPointAnchorNode.gd")
 
 @export var dialogue_graph: DigressionDialogueGraph
 
