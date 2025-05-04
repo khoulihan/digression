@@ -1235,9 +1235,13 @@ func _on_settings_changed() -> void:
 	# The main thing we need to be looking for at the moment is if the theme
 	# was changed.
 	if DigressionTheme.has_theme_changed():
-		_logger.debug("Redrawing graph after theme update")
-		# TODO: Would be better to reapply the theme to all nodes here.
-		_draw_edited_graph(true)
+		_logger.trace("Updating nodes after theme update")
+		_update_theme_on_nodes()
+
+
+func _update_theme_on_nodes() -> void:
+	for node: GraphNode in _get_graph_edit_children():
+		node.theme = DigressionTheme.get_theme()
 
 #endregion
 
@@ -1446,7 +1450,7 @@ func _convert_popup_position(release_position):
 		(_graph_edit.scroll_offset / _graph_edit.zoom)
 
 
-func _get_graph_edit_children():
+func _get_graph_edit_children() -> Array:
 	var c = _graph_edit.get_children()
 	# Should not be getting these, but in 4.3 a "_connection_layer" node is
 	# being returned and removing it crashes the editor, while other operations
