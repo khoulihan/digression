@@ -135,12 +135,6 @@ var _graph_stack
 var _current_graph_type
 var _resource_clipboard
 
-# Dialogs
-var _save_dialog
-var _open_graph_dialog
-var _open_sub_graph_dialog
-var _open_character_dialog
-
 # State variables for carrying out user actions.
 var _last_popup_position
 var _pending_connection_from
