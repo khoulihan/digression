@@ -187,6 +187,7 @@ var _logger := Logging.get_editor_logger()
 func _init():
 	_open_graphs = []
 	_graph_stack = Array()
+	ProjectSettings.settings_changed.connect(_on_settings_changed)
 
 
 func _ready():
@@ -425,6 +426,7 @@ func _on_graph_edit_focus_entered():
 
 #endregion
 
+
 #region Maximised node editor signal handlers
 
 func _on_maximised_node_editor_restore_requested() -> void:
@@ -451,6 +453,7 @@ func _restore_maximised_node() -> void:
 	_draw_edited_graph(true)
 
 #endregion
+
 
 #region Context menu signal handlers
 
@@ -512,6 +515,7 @@ func _set_all_graph_popup_disabled(state):
 		_graph_popup.set_item_disabled(option, state)
 
 #endregion
+
 
 #region Node signals
 
@@ -1207,6 +1211,7 @@ func _generate_anchor_name():
 		_edited.graph.get_next_anchor_number(),
 	]
 
+
 ## Sets the first Entry point node as root if there is currently no root node.
 ## This should be redundant now as there should only be one entry point, and
 ## it should not be possible to remove it...
@@ -1224,6 +1229,15 @@ func _ensure_graph_has_root() -> void:
 
 func _editor_node_can_be_root(n) -> bool:
 	return n is EditorEntryPointAnchorNodeClass
+
+
+func _on_settings_changed() -> void:
+	# The main thing we need to be looking for at the moment is if the theme
+	# was changed.
+	if DigressionTheme.theme_changed():
+		_logger.debug("Redrawing graph after theme update")
+		# TODO: Would be better to reapply the theme to all nodes here.
+		_draw_edited_graph(true)
 
 #endregion
 
