@@ -475,7 +475,7 @@ func _restore_maximised_node() -> void:
 #region Context menu signal handlers
 
 func _on_graph_popup_index_pressed(index):
-	_create_node(
+	_create_new_node_and_add(
 		_node_type_for_menu_index(index),
 		_node_creation_mode,
 		_last_popup_position
@@ -781,30 +781,22 @@ func _set_default_choice_type_for_node(new_graph_node):
 
 #region Graph drawing, editing and saving
 
-func _create_node(
+func _create_new_node_and_add(
 	node_type: GraphNodeTypes,
 	node_creation_mode: NodeCreationMode,
 	editor_position: Vector2,
 	initial_state = {}
 ) -> GraphNode:
 	var new_graph_node := _create_graph_node(node_type)
-	var new_editor_node := _instantiate_editor_node_for_graph_node(new_graph_node)
-		
 	_configure_graph_node_state(
 		new_graph_node,
 		initial_state,
 		editor_position,
 	)
 	
-	_graph_edit.add_child(new_editor_node)
-	
-	_configure_editor_node_state(
-		new_editor_node,
-		new_graph_node,
-	)
+	var new_editor_node := _instantiate_editor_node_and_add(new_graph_node)
 	
 	_edited.graph.nodes[new_graph_node.id] = new_graph_node
-	_connect_node_signals(new_editor_node)
 	
 	_anchor_manager.configure(_edited.graph)
 	_populate_anchor_destinations()
@@ -888,8 +880,6 @@ func _configure_editor_node_state(
 	new_graph_node
 ):
 	new_editor_node.theme = DigressionTheme.get_theme()
-	if _graph_edit.get_child_count() == 1:
-		new_editor_node.is_root = true
 	_populate_dependencies(new_editor_node)
 	new_editor_node.configure_for_node(_edited.graph, new_graph_node)
 
@@ -1013,14 +1003,7 @@ func _draw_edited_graph(retain_selection=false):
 
 	# Now create and configure the display nodes
 	for node in _edited.graph.nodes.values():
-		var editor_node = _instantiate_editor_node_for_graph_node(node)
-		
-		_graph_edit.add_child(editor_node)
-		_populate_dependencies(editor_node)
-		editor_node.configure_for_node(_edited.graph, node)
-		if node == _edited.graph.root_node:
-			editor_node.is_root = true
-		_connect_node_signals(editor_node)
+		var editor_node := _instantiate_editor_node_and_add(node)
 		
 		if node.id in selected_node_ids:
 			editor_node.selected = true
@@ -1043,6 +1026,16 @@ func _draw_edited_graph(retain_selection=false):
 				_edited.zoom
 			]
 		)
+
+
+func _instantiate_editor_node_and_add(graph_node: GraphNodeBase) -> EditorGraphNodeBase:
+	var editor_node := _instantiate_editor_node_for_graph_node(graph_node)
+	_graph_edit.add_child(editor_node)
+	_configure_editor_node_state(editor_node, graph_node)
+	if graph_node == _edited.graph.root_node:
+		editor_node.is_root = true
+	_connect_node_signals(editor_node)
+	return editor_node
 
 
 func _instantiate_editor_node_for_graph_node(node) -> EditorGraphNodeBase:
@@ -1083,7 +1076,7 @@ func _instantiate_editor_node_for_graph_node(node) -> EditorGraphNodeBase:
 	return editor_node
 
 
-func _populate_dependencies(editor_node):
+func _populate_dependencies(editor_node: EditorGraphNodeBase) -> void:
 	if editor_node.has_method('populate_characters'):
 		editor_node.populate_characters(_edited.graph.characters)
 	if editor_node.has_method('set_dialogue_types'):
@@ -1289,7 +1282,7 @@ func _create_duplicate_nodes(nodes_to_duplicate):
 		if n is EditorEntryPointAnchorNode:
 			continue
 		var node_state = _get_node_state(n)
-		var duplicated_node = _create_node(
+		var duplicated_node = _create_new_node_and_add(
 			node_state["_node_type"],
 			NodeCreationMode.DUPLICATION,
 			n.position_offset + Vector2(150, 150),
@@ -1314,7 +1307,7 @@ func _paste_nodes(nodes_to_paste):
 	var new_nodes = {}
 	for n in nodes_to_paste:
 		# TODO: Need a new way to determine position
-		var pasted_node = _create_node(
+		var pasted_node = _create_new_node_and_add(
 			n["_node_type"],
 			NodeCreationMode.PASTE,
 			n["offset"] + Vector2(200, 200),
