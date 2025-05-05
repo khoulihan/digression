@@ -108,40 +108,40 @@ const EntryPointAnchorNode = preload("../resources/graph/EntryPointAnchorNode.gd
 const ExitNode = preload("../resources/graph/ExitNode.gd")
 
 # Editor node classes.
-const EditorDialogueNodeClass = preload("./nodes/EditorDialogueNode.gd")
-const EditorMatchBranchNodeClass = preload("./nodes/EditorMatchBranchNode.gd")
-const EditorIfBranchNodeClass = preload("./nodes/EditorIfBranchNode.gd")
-const EditorChoiceNodeClass = preload("./nodes/EditorChoiceNode.gd")
-const EditorSetNodeClass = preload("./nodes/EditorSetNode.gd")
-const EditorGraphNodeBaseClass = preload("./nodes/EditorGraphNodeBase.gd")
-const EditorActionNodeClass = preload("./nodes/EditorActionNode.gd")
-const EditorSubGraphNodeClass = preload("./nodes/EditorSubGraphNode.gd")
-const EditorRandomNodeClass = preload("./nodes/EditorRandomNode.gd")
-const EditorCommentNodeClass = preload("./nodes/EditorCommentNode.gd")
-const EditorJumpNodeClass = preload("./nodes/EditorJumpNode.gd")
-const EditorAnchorNodeClass = preload("./nodes/EditorAnchorNode.gd")
-const EditorRoutingNodeClass = preload("./nodes/EditorRoutingNode.gd")
-const EditorRepeatNodeClass = preload("./nodes/EditorRepeatNode.gd")
-const EditorEntryPointAnchorNodeClass = preload("./nodes/EditorEntryPointAnchorNode.gd")
-const EditorExitNodeClass = preload("./nodes/EditorExitNode.gd")
+const EditorDialogueNode = preload("./nodes/EditorDialogueNode.gd")
+const EditorMatchBranchNode = preload("./nodes/EditorMatchBranchNode.gd")
+const EditorIfBranchNode = preload("./nodes/EditorIfBranchNode.gd")
+const EditorChoiceNode = preload("./nodes/EditorChoiceNode.gd")
+const EditorSetNode = preload("./nodes/EditorSetNode.gd")
+const EditorGraphNodeBase = preload("./nodes/EditorGraphNodeBase.gd")
+const EditorActionNode = preload("./nodes/EditorActionNode.gd")
+const EditorSubGraphNode = preload("./nodes/EditorSubGraphNode.gd")
+const EditorRandomNode = preload("./nodes/EditorRandomNode.gd")
+const EditorCommentNode = preload("./nodes/EditorCommentNode.gd")
+const EditorJumpNode = preload("./nodes/EditorJumpNode.gd")
+const EditorAnchorNode = preload("./nodes/EditorAnchorNode.gd")
+const EditorRoutingNode = preload("./nodes/EditorRoutingNode.gd")
+const EditorRepeatNode = preload("./nodes/EditorRepeatNode.gd")
+const EditorEntryPointAnchorNode = preload("./nodes/EditorEntryPointAnchorNode.gd")
+const EditorExitNode = preload("./nodes/EditorExitNode.gd")
 
 # Editor node scenes.
-const EditorDialogueNode = preload("./nodes/EditorDialogueNode.tscn")
-const EditorMatchBranchNode = preload("./nodes/EditorMatchBranchNode.tscn")
-const EditorIfBranchNode = preload("./nodes/EditorIfBranchNode.tscn")
-const EditorChoiceNode = preload("./nodes/EditorChoiceNode.tscn")
-const EditorSetNode = preload("./nodes/EditorSetNode.tscn")
-const EditorGraphNodeBase = preload("./nodes/EditorGraphNodeBase.tscn")
-const EditorActionNode = preload("./nodes/EditorActionNode.tscn")
-const EditorSubGraphNode = preload("./nodes/EditorSubGraphNode.tscn")
-const EditorRandomNode = preload("./nodes/EditorRandomNode.tscn")
-const EditorCommentNode = preload("./nodes/EditorCommentNode.tscn")
-const EditorJumpNode = preload("./nodes/EditorJumpNode.tscn")
-const EditorAnchorNode = preload("./nodes/EditorAnchorNode.tscn")
-const EditorRoutingNode = preload("./nodes/EditorRoutingNode.tscn")
-const EditorRepeatNode = preload("./nodes/EditorRepeatNode.tscn")
-const EditorEntryPointAnchorNode = preload("./nodes/EditorEntryPointAnchorNode.tscn")
-const EditorExitNode = preload("./nodes/EditorExitNode.tscn")
+const EditorDialogueNodeScene = preload("./nodes/EditorDialogueNode.tscn")
+const EditorMatchBranchNodeScene = preload("./nodes/EditorMatchBranchNode.tscn")
+const EditorIfBranchNodeScene = preload("./nodes/EditorIfBranchNode.tscn")
+const EditorChoiceNodeScene = preload("./nodes/EditorChoiceNode.tscn")
+const EditorSetNodeScene = preload("./nodes/EditorSetNode.tscn")
+const EditorGraphNodeBaseScene = preload("./nodes/EditorGraphNodeBase.tscn")
+const EditorActionNodeScene = preload("./nodes/EditorActionNode.tscn")
+const EditorSubGraphNodeScene = preload("./nodes/EditorSubGraphNode.tscn")
+const EditorRandomNodeScene = preload("./nodes/EditorRandomNode.tscn")
+const EditorCommentNodeScene = preload("./nodes/EditorCommentNode.tscn")
+const EditorJumpNodeScene = preload("./nodes/EditorJumpNode.tscn")
+const EditorAnchorNodeScene = preload("./nodes/EditorAnchorNode.tscn")
+const EditorRoutingNodeScene = preload("./nodes/EditorRoutingNode.tscn")
+const EditorRepeatNodeScene = preload("./nodes/EditorRepeatNode.tscn")
+const EditorEntryPointAnchorNodeScene = preload("./nodes/EditorEntryPointAnchorNode.tscn")
+const EditorExitNodeScene = preload("./nodes/EditorExitNode.tscn")
 
 # Resources required by UI controls
 const BACK_ARROW_ICON = preload("res://addons/hyh.digression/icons/icon_back.svg")
@@ -589,7 +589,7 @@ func _connect_node_signals(node):
 	node.maximise_requested.connect(
 		_on_node_maximise_requested.bind(node)
 	)
-	if node is EditorSubGraphNodeClass:
+	if node is EditorSubGraphNode:
 		node.sub_graph_open_requested.connect(
 			_on_sub_graph_node_open_requested.bind(
 				node
@@ -598,13 +598,13 @@ func _connect_node_signals(node):
 		node.display_filesystem_path_requested.connect(
 			_on_sub_graph_node_display_filesystem_path_requested
 		)
-	if node is EditorJumpNodeClass:
+	if node is EditorJumpNode:
 		node.destination_chosen.connect(
 			_on_jump_node_destination_chosen.bind(
 				node
 			)
 		)
-	if node is EditorAnchorNodeClass:
+	if node is EditorAnchorNode:
 		node.node_selected.connect(
 			_on_anchor_node_selected.bind(
 				node
@@ -648,7 +648,7 @@ func _on_node_delete_request(node_name):
 func _any_node_is_entry_point(nodes) -> bool:
 	for n in nodes:
 		var node = _graph_edit.get_node(NodePath(n))
-		if node is EditorEntryPointAnchorNodeClass:
+		if node is EditorEntryPointAnchorNode:
 			return true
 	return false
 
@@ -656,7 +656,7 @@ func _any_node_is_entry_point(nodes) -> bool:
 func _on_node_modified(node_name):
 	var editor_node = _graph_edit.get_node(NodePath(node_name))
 	if editor_node != null:
-		if editor_node is EditorAnchorNodeClass:
+		if editor_node is EditorAnchorNode:
 			_anchor_manager.configure(_edited.graph)
 			_populate_anchor_destinations()
 		var res = editor_node.node_resource
@@ -787,12 +787,8 @@ func _create_node(
 	editor_position: Vector2,
 	initial_state = {}
 ) -> GraphNode:
-	var new_editor_node
-	var new_graph_node
-	
-	var node_objects = _create_node_objects(node_type)
-	new_editor_node = node_objects[0]
-	new_graph_node = node_objects[1]
+	var new_graph_node := _create_graph_node(node_type)
+	var new_editor_node := _instantiate_editor_node_for_graph_node(new_graph_node)
 		
 	_configure_graph_node_state(
 		new_graph_node,
@@ -820,13 +816,11 @@ func _create_node(
 	return new_editor_node
 
 
-func _create_node_objects(node_type: GraphNodeTypes):
-	var new_editor_node
+func _create_graph_node(node_type: GraphNodeTypes) -> GraphNodeBase:
 	var new_graph_node
 	
 	match node_type:
 		GraphNodeTypes.DIALOGUE:
-			new_editor_node = EditorDialogueNode.instantiate()
 			new_graph_node = DialogueNode.new()
 			_set_default_dialogue_type_for_node(new_graph_node)
 			new_graph_node.set_initial_translation_key(
@@ -836,13 +830,10 @@ func _create_node_objects(node_type: GraphNodeTypes):
 				)
 			)
 		GraphNodeTypes.MATCH_BRANCH:
-			new_editor_node = EditorMatchBranchNode.instantiate()
 			new_graph_node = MatchBranchNode.new()
 		GraphNodeTypes.IF_BRANCH:
-			new_editor_node = EditorIfBranchNode.instantiate()
 			new_graph_node = IfBranchNode.new()
 		GraphNodeTypes.CHOICE:
-			new_editor_node = EditorChoiceNode.instantiate()
 			new_graph_node = DialogueChoiceNode.new()
 			_set_default_dialogue_type_for_node(new_graph_node.dialogue)
 			_set_default_choice_type_for_node(new_graph_node)
@@ -853,39 +844,28 @@ func _create_node_objects(node_type: GraphNodeTypes):
 				)
 			)
 		GraphNodeTypes.SET:
-			new_editor_node = EditorSetNode.instantiate()
 			new_graph_node = VariableSetNode.new()
 		GraphNodeTypes.ACTION:
-			new_editor_node = EditorActionNode.instantiate()
 			new_graph_node = ActionNode.new()
 		GraphNodeTypes.SUB_GRAPH:
-			new_editor_node = EditorSubGraphNode.instantiate()
 			new_graph_node = SubGraph.new()
 		GraphNodeTypes.RANDOM:
-			new_editor_node = EditorRandomNode.instantiate()
 			new_graph_node = RandomNode.new()
 		GraphNodeTypes.COMMENT:
-			new_editor_node = EditorCommentNode.instantiate()
 			new_graph_node = CommentNode.new()
 		GraphNodeTypes.JUMP:
-			new_editor_node = EditorJumpNode.instantiate()
 			new_graph_node = JumpNode.new()
 		GraphNodeTypes.ANCHOR:
-			new_editor_node = EditorAnchorNode.instantiate()
 			new_graph_node = AnchorNode.new()
 			new_graph_node.name = _generate_anchor_name()
 		GraphNodeTypes.ROUTING:
-			new_editor_node = EditorRoutingNode.instantiate()
 			new_graph_node = RoutingNode.new()
 		GraphNodeTypes.REPEAT:
-			new_editor_node = EditorRepeatNode.instantiate()
 			new_graph_node = RepeatNode.new()
 		GraphNodeTypes.EXIT:
-			new_editor_node = EditorExitNode.instantiate()
 			new_graph_node = ExitNode.new()
 	
-	new_editor_node.theme = DigressionTheme.get_theme()
-	return [new_editor_node, new_graph_node]
+	return new_graph_node
 
 
 func _configure_graph_node_state(
@@ -1065,39 +1045,39 @@ func _draw_edited_graph(retain_selection=false):
 		)
 
 
-func _instantiate_editor_node_for_graph_node(node):
+func _instantiate_editor_node_for_graph_node(node) -> EditorGraphNodeBase:
 	var editor_node
 	
 	if node is DialogueNode:
-		editor_node = EditorDialogueNode.instantiate()
+		editor_node = EditorDialogueNodeScene.instantiate()
 	elif node is MatchBranchNode:
-		editor_node = EditorMatchBranchNode.instantiate()
+		editor_node = EditorMatchBranchNodeScene.instantiate()
 	elif node is IfBranchNode:
-		editor_node = EditorIfBranchNode.instantiate()
+		editor_node = EditorIfBranchNodeScene.instantiate()
 	elif node is VariableSetNode:
-		editor_node = EditorSetNode.instantiate()
+		editor_node = EditorSetNodeScene.instantiate()
 	elif node is DialogueChoiceNode:
-		editor_node = EditorChoiceNode.instantiate()
+		editor_node = EditorChoiceNodeScene.instantiate()
 	elif node is ActionNode:
-		editor_node = EditorActionNode.instantiate()
+		editor_node = EditorActionNodeScene.instantiate()
 	elif node is SubGraph:
-		editor_node = EditorSubGraphNode.instantiate()
+		editor_node = EditorSubGraphNodeScene.instantiate()
 	elif node is RandomNode:
-		editor_node = EditorRandomNode.instantiate()
+		editor_node = EditorRandomNodeScene.instantiate()
 	elif node is CommentNode:
-		editor_node = EditorCommentNode.instantiate()
+		editor_node = EditorCommentNodeScene.instantiate()
 	elif node is JumpNode:
-		editor_node = EditorJumpNode.instantiate()
+		editor_node = EditorJumpNodeScene.instantiate()
 	elif node is RoutingNode:
-		editor_node = EditorRoutingNode.instantiate()
+		editor_node = EditorRoutingNodeScene.instantiate()
 	elif node is RepeatNode:
-		editor_node = EditorRepeatNode.instantiate()
+		editor_node = EditorRepeatNodeScene.instantiate()
 	elif node is EntryPointAnchorNode:
-		editor_node = EditorEntryPointAnchorNode.instantiate()
+		editor_node = EditorEntryPointAnchorNodeScene.instantiate()
 	elif node is AnchorNode:
-		editor_node = EditorAnchorNode.instantiate()
+		editor_node = EditorAnchorNodeScene.instantiate()
 	elif node is ExitNode:
-		editor_node = EditorExitNode.instantiate()
+		editor_node = EditorExitNodeScene.instantiate()
 	
 	editor_node.theme = DigressionTheme.get_theme()
 	return editor_node
@@ -1179,7 +1159,7 @@ func _set_dirty(val):
 
 func _get_editor_node_for_graph_node(n):
 	for node in _get_graph_edit_children():
-		if node is EditorGraphNodeBaseClass:
+		if node is EditorGraphNodeBase:
 			if node.node_resource == n:
 				return node
 	return null
@@ -1262,7 +1242,7 @@ func _ensure_graph_has_root() -> void:
 
 
 func _editor_node_can_be_root(n) -> bool:
-	return n is EditorEntryPointAnchorNodeClass
+	return n is EditorEntryPointAnchorNode
 
 
 func _on_settings_changed() -> void:
@@ -1296,7 +1276,7 @@ func _update_preview_button_state():
 func _get_selected_nodes():
 	var selected_nodes = []
 	for node in _get_graph_edit_children():
-		if node is EditorEntryPointAnchorNodeClass:
+		if node is EditorEntryPointAnchorNode:
 			continue
 		if node.selected:
 			selected_nodes.append(node)
@@ -1306,7 +1286,7 @@ func _get_selected_nodes():
 func _create_duplicate_nodes(nodes_to_duplicate):
 	var new_nodes = {}
 	for n in nodes_to_duplicate:
-		if n is EditorEntryPointAnchorNodeClass:
+		if n is EditorEntryPointAnchorNode:
 			continue
 		var node_state = _get_node_state(n)
 		var duplicated_node = _create_node(
@@ -1431,33 +1411,33 @@ func _get_node_state(node):
 
 
 func _node_type_for_node(node: GraphNode) -> GraphNodeTypes:
-	if node is EditorActionNodeClass:
+	if node is EditorActionNode:
 		return GraphNodeTypes.ACTION
-	elif node is EditorMatchBranchNodeClass:
+	elif node is EditorMatchBranchNode:
 		return GraphNodeTypes.MATCH_BRANCH
-	elif node is EditorIfBranchNodeClass:
+	elif node is EditorIfBranchNode:
 		return GraphNodeTypes.IF_BRANCH
-	elif node is EditorDialogueNodeClass:
+	elif node is EditorDialogueNode:
 		return GraphNodeTypes.DIALOGUE
-	elif node is EditorSetNodeClass:
+	elif node is EditorSetNode:
 		return GraphNodeTypes.SET
-	elif node is EditorSubGraphNodeClass:
+	elif node is EditorSubGraphNode:
 		return GraphNodeTypes.SUB_GRAPH
-	elif node is EditorChoiceNodeClass:
+	elif node is EditorChoiceNode:
 		return GraphNodeTypes.CHOICE
-	elif node is EditorRandomNodeClass:
+	elif node is EditorRandomNode:
 		return GraphNodeTypes.RANDOM
-	elif node is EditorCommentNodeClass:
+	elif node is EditorCommentNode:
 		return GraphNodeTypes.COMMENT
-	elif node is EditorJumpNodeClass:
+	elif node is EditorJumpNode:
 		return GraphNodeTypes.JUMP
-	elif node is EditorAnchorNodeClass:
+	elif node is EditorAnchorNode:
 		return GraphNodeTypes.ANCHOR
-	elif node is EditorRoutingNodeClass:
+	elif node is EditorRoutingNode:
 		return GraphNodeTypes.ROUTING
-	elif node is EditorRepeatNodeClass:
+	elif node is EditorRepeatNode:
 		return GraphNodeTypes.REPEAT
-	elif node is EditorExitNodeClass:
+	elif node is EditorExitNode:
 		return GraphNodeTypes.EXIT
 	return GraphNodeTypes.DIALOGUE
 
