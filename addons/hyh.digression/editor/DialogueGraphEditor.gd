@@ -75,6 +75,13 @@ enum ConnectionTypes {
 
 #region Constants
 
+# Manager classes
+const AnchorManager = preload("./open_graphs/AnchorManager.gd")
+const OpenGraphManager = preload("./open_graphs/OpenGraphManager.gd")
+
+# Control types
+const AnchorFilter = preload("./controls/anchor_list/AnchorFilter.gd")
+
 # Utility classes.
 const Dialogs = preload("dialogs/Dialogs.gd")
 const DigressionSettings = preload("../settings/DigressionSettings.gd")
@@ -145,7 +152,7 @@ const FORWARD_ARROW_ICON = preload("res://addons/hyh.digression/icons/icon_forwa
 #region Variable declarations
 
 var _open_graphs: Array[OpenGraph]
-var _edited
+var _edited: OpenGraph
 # This is for recording a stack of edited subgraphs
 # It is cleared when a graph is edited in the scene tree or filesystem
 var _graph_stack
@@ -161,10 +168,8 @@ var _node_for_popup
 var _sub_graph_editor_node_for_assignment
 var _sub_graph_edit_requested
 
-# Anchor maps
-# TODO: One of these is not actually required.
-var _anchors_by_name = {}
-var _anchor_names_by_id = {}
+# Anchor manager
+var _anchor_manager: AnchorManager
 
 # Dialogue types for the current graph
 var _dialogue_types
@@ -183,8 +188,7 @@ var _logger := Logging.get_editor_logger()
 @onready var _maximised_node_editor = $HS/MC/VB/MC/MaximisedNodeEditor
 @onready var _graph_popup = $GraphContextMenu
 @onready var _breadcrumbs = $HS/MC/VB/BottomBar/GraphBreadcrumbs
-@onready var _anchor_filter := $HS/LeftSidebar/AnchorVB/AnchorFilter
-@onready var _anchor_list := $HS/LeftSidebar/AnchorVB/MC/AnchorList
+@onready var _anchor_filter: AnchorFilter = $HS/LeftSidebar/AnchorFilter
 @onready var _graph_filter := $HS/LeftSidebar/GraphVB/GraphFilter
 @onready var _graph_list := $HS/LeftSidebar/GraphVB/MC/GraphList
 @onready var _left_sidebar := $HS/LeftSidebar
@@ -197,6 +201,7 @@ var _logger := Logging.get_editor_logger()
 
 func _init():
 	_open_graphs = []
+	_anchor_manager = AnchorManager.new()
 	_graph_stack = Array()
 	ProjectSettings.settings_changed.connect(_on_settings_changed)
 
@@ -205,6 +210,8 @@ func _ready():
 	_breadcrumbs.populate([])
 	
 	_update_preview_button_state()
+	
+	_anchor_filter.configure(_anchor_manager)
 	
 	# Create clipboard
 	_resource_clipboard = ResourceClipboard.new()
@@ -263,7 +270,7 @@ func edit_graph(object, path):
 	_choice_types = _get_choice_types_for_graph_type(
 		_edited.graph.graph_type
 	)
-	_refresh_anchor_maps()
+	_anchor_manager.configure(_edited.graph)
 	_graph_list.populate(_open_graphs)
 	_draw_edited_graph()
 	_breadcrumbs.populate(_graph_stack)
@@ -279,8 +286,7 @@ func clear():
 		)
 	_edited = null
 	_breadcrumbs.populate([])
-	_anchor_list.clear()
-	_anchor_filter.clear()
+	_anchor_manager.clear()
 	_update_preview_button_state()
 
 
@@ -607,7 +613,7 @@ func _connect_node_signals(node):
 
 
 func _on_anchor_node_selected(node):
-	_anchor_list.select_anchor(node.node_resource.name)
+	_anchor_filter.select_anchor(node.node_resource.name)
 
 
 func _on_node_removing_slot(slot, node_name):
@@ -651,7 +657,7 @@ func _on_node_modified(node_name):
 	var editor_node = _graph_edit.get_node(NodePath(node_name))
 	if editor_node != null:
 		if editor_node is EditorAnchorNodeClass:
-			_refresh_anchor_maps()
+			_anchor_manager.configure(_edited.graph)
 			_populate_anchor_destinations()
 		var res = editor_node.node_resource
 		# TODO: Would like to include a flag with this signal to indicate if
@@ -691,19 +697,10 @@ func _on_jump_node_destination_chosen(destination_id, node):
 
 #region UI Signals
 
-func _on_anchor_filter_text_changed(new_text: String) -> void:
-	_anchor_list.filter(new_text)
 
-
-func _on_anchor_filter_text_submitted(new_text: String) -> void:
-	if _anchor_list.item_count > 0:
-		_anchor_list.grab_focus()
-		_anchor_list.select_first_anchor()
-
-
-func _on_anchor_list_anchor_selected(name: Variant) -> void:
-	var id = _anchors_by_name[name]
-	var node = _get_editor_node_for_graph_node(_get_graph_node_by_id(id))
+func _on_anchor_filter_anchor_selected(name: String) -> void:
+	var anchor := _anchor_manager.get_anchor_by_name(name)
+	var node = _get_editor_node_for_graph_node(_get_graph_node_by_id(anchor.id))
 	_graph_edit.set_selected(node)
 	var offset_to_node = (node.position_offset * _graph_edit.zoom)
 	var centre_to_node = (_graph_edit.size / 2.0)
@@ -813,7 +810,7 @@ func _create_node(
 	_edited.graph.nodes[new_graph_node.id] = new_graph_node
 	_connect_node_signals(new_editor_node)
 	
-	_refresh_anchor_maps()
+	_anchor_manager.configure(_edited.graph)
 	_populate_anchor_destinations()
 	
 	_connect_new_editor_node_if_necessary(
@@ -981,7 +978,7 @@ func _remove_nodes(nodes):
 		_remove_node(n, connections)
 	_ensure_graph_has_root()
 	_set_dirty(true)
-	_refresh_anchor_maps()
+	_anchor_manager.configure(_edited.graph)
 	_populate_anchor_destinations()
 
 
@@ -1114,7 +1111,7 @@ func _populate_dependencies(editor_node):
 	if editor_node.has_method('set_choice_types'):
 		editor_node.set_choice_types(_choice_types)
 	if editor_node.has_method('populate_destinations'):
-		editor_node.populate_destinations(_anchor_names_by_id)
+		editor_node.populate_destinations(_anchor_manager.get_anchor_map_by_id())
 	if editor_node.has_method('set_resource_clipboard'):
 		editor_node.set_resource_clipboard(_resource_clipboard)
 
@@ -1238,16 +1235,8 @@ func _populate_anchor_destinations():
 	for node in _get_graph_edit_children():
 		if node.has_method("populate_destinations"):
 			node.populate_destinations(
-				_anchor_names_by_id
+				_anchor_manager.get_anchor_map_by_id()
 			)
-
-
-func _refresh_anchor_maps():
-	_logger.debug("Refreshing anchor maps")
-	var anchor_maps = _edited.graph.get_anchor_maps()
-	_anchors_by_name = anchor_maps[0]
-	_anchor_names_by_id = anchor_maps[1]
-	_anchor_list.populate(_anchors_by_name.keys())
 
 
 func _generate_anchor_name():
@@ -1329,7 +1318,7 @@ func _create_duplicate_nodes(nodes_to_duplicate):
 		new_nodes[node_state["_original_id"]] = duplicated_node
 	
 	_create_connections_for_copied_nodes(new_nodes)
-	_refresh_anchor_maps()
+	_anchor_manager.configure(_edited.graph)
 	_populate_anchor_destinations()
 		
 	_deselect_all()
@@ -1354,7 +1343,7 @@ func _paste_nodes(nodes_to_paste):
 		new_nodes[n["_original_id"]] = pasted_node
 	
 	_create_connections_for_copied_nodes(new_nodes)
-	_refresh_anchor_maps()
+	_anchor_manager.configure(_edited.graph)
 	_populate_anchor_destinations()
 	
 	_deselect_all()

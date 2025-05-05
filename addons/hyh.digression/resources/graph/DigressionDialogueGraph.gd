@@ -196,18 +196,15 @@ func get_next_anchor_number():
 	return number
 
 
-## Build maps of the anchor nodes
-## name -> id and id -> name
-func get_anchor_maps():
-	var by_name = {}
-	var by_id = {}
+## Return the anchors present in the graph as a dictionary mapping ids to names.
+func get_anchors() -> Dictionary[int, String]:
+	var by_id: Dictionary[int, String] = {}
 	
 	for n in nodes.values():
 		if n is AnchorNode:
-			by_name[n.name] = n.id
 			by_id[n.id] = n.name
 	
-	return [by_name, by_id]
+	return by_id
 
 
 ## Duplicate the graph, including all nodes.

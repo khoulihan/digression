@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://dmaxostmbo152"]
+
+[ext_resource type="Texture2D" uid="uid://dfvamw687u0qj" path="res://addons/hyh.digression/icons/icon_search.svg" id="1_0xb5k"]
+[ext_resource type="Script" uid="uid://cgyagu5u4yqng" path="res://addons/hyh.digression/editor/controls/anchor_list/AnchorFilter.gd" id="1_gyyt8"]
+[ext_resource type="Script" uid="uid://lymfjlvcrqoc" path="res://addons/hyh.digression/editor/controls/anchor_list/AnchorList.gd" id="2_gyyt8"]
+
+[node name="AnchorVB" type="VBoxContainer"]
+size_flags_vertical = 3
+script = ExtResource("1_gyyt8")
+
+[node name="AnchorFilter" type="LineEdit" parent="."]
+layout_mode = 2
+placeholder_text = "Filter Anchors..."
+right_icon = ExtResource("1_0xb5k")
+
+[node name="MC" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="AnchorList" type="ItemList" parent="MC"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+allow_reselect = true
+script = ExtResource("2_gyyt8")
+
+[connection signal="text_changed" from="AnchorFilter" to="." method="_on_anchor_filter_text_changed"]
+[connection signal="text_submitted" from="AnchorFilter" to="." method="_on_anchor_filter_text_submitted"]
+[connection signal="anchor_selected" from="MC/AnchorList" to="." method="_on_anchor_list_anchor_selected"]
