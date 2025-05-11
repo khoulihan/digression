@@ -1,14 +1,15 @@
-[gd_scene load_steps=12 format=3 uid="uid://dkdmsbw1ph825"]
+[gd_scene load_steps=13 format=3 uid="uid://dkdmsbw1ph825"]
 
 [ext_resource type="Texture2D" uid="uid://cphlblvt01plb" path="res://addons/hyh.digression/icons/icon_chat.svg" id="2_hackq"]
+[ext_resource type="PackedScene" uid="uid://co3rp65051c5y" path="res://addons/hyh.digression/editor/controls/graph_list/GraphFilter.tscn" id="2_hre3t"]
 [ext_resource type="PackedScene" uid="uid://dhubj3hnf0rxp" path="res://addons/hyh.digression/editor/controls/GraphBreadcrumbs.tscn" id="3_8v60q"]
-[ext_resource type="Script" uid="uid://b1ketkw46ckay" path="res://addons/hyh.digression/editor/controls/GraphList.gd" id="3_dents"]
 [ext_resource type="PackedScene" uid="uid://dmaxostmbo152" path="res://addons/hyh.digression/editor/controls/anchor_list/AnchorFilter.tscn" id="4_7kerl"]
 [ext_resource type="Texture2D" uid="uid://bf0nmtdddna15" path="res://addons/hyh.digression/icons/icon_back.svg" id="4_dpah6"]
-[ext_resource type="Texture2D" uid="uid://dfvamw687u0qj" path="res://addons/hyh.digression/icons/icon_search.svg" id="4_es86a"]
+[ext_resource type="Script" uid="uid://cn5q5beae68rm" path="res://addons/hyh.digression/editor/controls/DialogueGraphEditControl.gd" id="5_hre3t"]
 [ext_resource type="PackedScene" uid="uid://p71pge6v4nok" path="res://addons/hyh.digression/editor/maximised/MaximisedNodeEditor.tscn" id="5_iuupq"]
 [ext_resource type="Script" uid="uid://b0a8lsbjxe56m" path="res://addons/hyh.digression/editor/DialogueGraphEditor.gd" id="6"]
 [ext_resource type="Theme" uid="uid://1cbvg04l0616" path="res://addons/hyh.digression/editor/themes/default/node_theme.tres" id="6_7kerl"]
+[ext_resource type="Script" uid="uid://nbn4ox2ydn5w" path="res://addons/hyh.digression/editor/controls/GraphPopupMenu.gd" id="11_2kkf7"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_7kerl"]
 device = -1
@@ -45,22 +46,8 @@ split_offset = 200
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 
-[node name="GraphVB" type="VBoxContainer" parent="HS/LeftSidebar"]
+[node name="GraphFilter" parent="HS/LeftSidebar" instance=ExtResource("2_hre3t")]
 layout_mode = 2
-size_flags_vertical = 3
-
-[node name="GraphFilter" type="LineEdit" parent="HS/LeftSidebar/GraphVB"]
-layout_mode = 2
-placeholder_text = "Filter Graphs..."
-right_icon = ExtResource("4_es86a")
-
-[node name="MC" type="MarginContainer" parent="HS/LeftSidebar/GraphVB"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="GraphList" type="ItemList" parent="HS/LeftSidebar/GraphVB/MC"]
-layout_mode = 2
-script = ExtResource("3_dents")
 
 [node name="AnchorFilter" parent="HS/LeftSidebar" instance=ExtResource("4_7kerl")]
 layout_mode = 2
@@ -78,13 +65,15 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="GraphEdit" type="GraphEdit" parent="HS/MC/VB/MC"]
+[node name="GraphEdit" type="GraphEdit" parent="HS/MC/VB/MC" node_paths=PackedStringArray("graph_popup")]
 layout_mode = 2
 size_flags_vertical = 3
 right_disconnects = true
 zoom_min = 0.25
 zoom_max = 1.0
 show_zoom_label = true
+script = ExtResource("5_hre3t")
+graph_popup = NodePath("../../../../../GraphContextMenu")
 
 [node name="MaximisedNodeEditor" parent="HS/MC/VB/MC" instance=ExtResource("5_iuupq")]
 visible = false
@@ -153,6 +142,7 @@ item_14/text = "Add Repeat Last Choice Node"
 item_14/id = 13
 item_15/text = "Add Exit Node"
 item_15/id = 15
+script = ExtResource("11_2kkf7")
 
 [node name="NodePopupMenu" type="PopupMenu" parent="."]
 size = Vector2i(111, 44)
@@ -161,26 +151,23 @@ item_count = 1
 item_0/text = "Set as root"
 item_0/id = -1
 
-[connection signal="text_changed" from="HS/LeftSidebar/GraphVB/GraphFilter" to="." method="_on_graph_filter_text_changed"]
-[connection signal="text_submitted" from="HS/LeftSidebar/GraphVB/GraphFilter" to="." method="_on_graph_filter_text_submitted"]
-[connection signal="graph_selected" from="HS/LeftSidebar/GraphVB/MC/GraphList" to="." method="_on_graph_list_graph_selected"]
 [connection signal="anchor_selected" from="HS/LeftSidebar/AnchorFilter" to="." method="_on_anchor_filter_anchor_selected"]
-[connection signal="connection_request" from="HS/MC/VB/MC/GraphEdit" to="." method="_on_graph_edit_connection_request"]
-[connection signal="connection_to_empty" from="HS/MC/VB/MC/GraphEdit" to="." method="_on_graph_edit_connection_to_empty"]
-[connection signal="copy_nodes_request" from="HS/MC/VB/MC/GraphEdit" to="." method="_on_graph_edit_copy_nodes_request"]
-[connection signal="delete_nodes_request" from="HS/MC/VB/MC/GraphEdit" to="." method="_node_close_request"]
-[connection signal="disconnection_request" from="HS/MC/VB/MC/GraphEdit" to="." method="_on_graph_edit_disconnection_request"]
-[connection signal="duplicate_nodes_request" from="HS/MC/VB/MC/GraphEdit" to="." method="_on_graph_edit_duplicate_nodes_request"]
-[connection signal="end_node_move" from="HS/MC/VB/MC/GraphEdit" to="." method="_on_graph_edit_end_node_move"]
-[connection signal="focus_entered" from="HS/MC/VB/MC/GraphEdit" to="." method="_on_graph_edit_focus_entered"]
-[connection signal="paste_nodes_request" from="HS/MC/VB/MC/GraphEdit" to="." method="_on_graph_edit_paste_nodes_request"]
-[connection signal="popup_request" from="HS/MC/VB/MC/GraphEdit" to="." method="_on_graph_edit_popup_request"]
-[connection signal="scroll_offset_changed" from="HS/MC/VB/MC/GraphEdit" to="." method="_on_graph_edit_scroll_offset_changed"]
+[connection signal="anchor_node_selected" from="HS/MC/VB/MC/GraphEdit" to="." method="_on_graph_edit_anchor_node_selected"]
+[connection signal="connection_request" from="HS/MC/VB/MC/GraphEdit" to="HS/MC/VB/MC/GraphEdit" method="_on_connection_request"]
+[connection signal="connection_to_empty" from="HS/MC/VB/MC/GraphEdit" to="HS/MC/VB/MC/GraphEdit" method="_on_connection_to_empty"]
+[connection signal="copy_nodes_request" from="HS/MC/VB/MC/GraphEdit" to="HS/MC/VB/MC/GraphEdit" method="_on_copy_nodes_request"]
+[connection signal="disconnection_request" from="HS/MC/VB/MC/GraphEdit" to="HS/MC/VB/MC/GraphEdit" method="_on_disconnection_request"]
+[connection signal="display_filesystem_path_requested" from="HS/MC/VB/MC/GraphEdit" to="." method="_on_graph_edit_display_filesystem_path_requested"]
+[connection signal="duplicate_nodes_request" from="HS/MC/VB/MC/GraphEdit" to="HS/MC/VB/MC/GraphEdit" method="_on_duplicate_nodes_request"]
+[connection signal="end_node_move" from="HS/MC/VB/MC/GraphEdit" to="HS/MC/VB/MC/GraphEdit" method="_on_end_node_move"]
+[connection signal="graph_modified" from="HS/MC/VB/MC/GraphEdit" to="." method="_on_graph_edit_graph_modified"]
+[connection signal="node_maximise_requested" from="HS/MC/VB/MC/GraphEdit" to="." method="_on_graph_edit_node_maximise_requested"]
+[connection signal="paste_nodes_request" from="HS/MC/VB/MC/GraphEdit" to="HS/MC/VB/MC/GraphEdit" method="_on_paste_nodes_request"]
+[connection signal="popup_request" from="HS/MC/VB/MC/GraphEdit" to="HS/MC/VB/MC/GraphEdit" method="_on_popup_request"]
+[connection signal="save_requested" from="HS/MC/VB/MC/GraphEdit" to="." method="_on_graph_edit_save_requested"]
+[connection signal="scroll_offset_changed" from="HS/MC/VB/MC/GraphEdit" to="HS/MC/VB/MC/GraphEdit" method="_on_scroll_offset_changed"]
+[connection signal="sub_graph_edit_requested" from="HS/MC/VB/MC/GraphEdit" to="." method="_on_graph_edit_sub_graph_edit_requested"]
 [connection signal="delete_request" from="HS/MC/VB/MC/MaximisedNodeEditor" to="." method="_on_maximised_node_editor_delete_request"]
 [connection signal="modified" from="HS/MC/VB/MC/MaximisedNodeEditor" to="." method="_on_maximised_node_editor_modified"]
 [connection signal="restore_requested" from="HS/MC/VB/MC/MaximisedNodeEditor" to="." method="_on_maximised_node_editor_restore_requested"]
 [connection signal="toggled" from="HS/MC/VB/BottomBar/ToggleSidebarButton" to="." method="_on_toggle_sidebar_button_toggled"]
-[connection signal="graph_open_requested" from="HS/MC/VB/BottomBar/GraphBreadcrumbs" to="." method="_on_graph_breadcrumbs_graph_open_requested"]
-[connection signal="index_pressed" from="GraphContextMenu" to="." method="_on_graph_popup_index_pressed"]
-[connection signal="popup_hide" from="GraphContextMenu" to="." method="_on_graph_popup_hide"]
-[connection signal="index_pressed" from="NodePopupMenu" to="." method="_on_node_popup_index_pressed"]

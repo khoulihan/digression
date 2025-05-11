@@ -23,7 +23,7 @@ func select_anchor(name: String) -> void:
 	_list.select_anchor(name)
 
 
-## Clear the list of anchors.
+## Clear the list of anchors, and the filter.
 func clear_list() -> void:
 	_filter.clear()
 	_list.clear()

@@ -202,10 +202,28 @@ static func get_dialogue_types() -> Array:
 	)
 
 
+static func get_dialogue_types_for_graph_type(graph_type: String) -> Array:
+	var all_types := get_dialogue_types()
+	var allowed_types = []
+	for dt in all_types:
+		if graph_type in dt['allowed_in_graph_types']:
+			allowed_types.append(dt)
+	return allowed_types
+
+
 static func get_choice_types() -> Array:
 	return get_collection_setting(
 		get_choice_types_key()
 	)
+
+
+static func get_choice_types_for_graph_type(graph_type: String) -> Array:
+	var all_types := get_choice_types()
+	var allowed_types = []
+	for ct in all_types:
+		if graph_type in ct['allowed_in_graph_types']:
+			allowed_types.append(ct)
+	return allowed_types
 
 
 static func get_property_definitions() -> Array:

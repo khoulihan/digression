@@ -30,11 +30,13 @@ func clear_list():
 
 ## Select the anchor with the provided name.
 func select_anchor(name: String) -> void:
+	print("Hopefully selecting anchor %s" % name)
 	self.deselect_all()
 	if self.item_count == 0 or name == "":
 		return
 	for index in range(0, self.item_count):
 		if self.get_item_text(index) == name:
+			print("Selecting anchor index %s")
 			self.select(index)
 			return
 

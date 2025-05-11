@@ -3,7 +3,7 @@ extends "EditorGraphNodeBase.gd"
 ## Editor node for a Sub-Graph resource node.
 
 
-signal sub_graph_open_requested(path)
+signal sub_graph_open_requested(graph, path)
 signal display_filesystem_path_requested(path)
 
 enum SubGraphMenuItems {
@@ -117,9 +117,8 @@ func _configure_entry_point_options():
 	_entry_point_option.selected = 0
 	if node_resource.sub_graph == null:
 		return
-	var anchor_maps = node_resource.sub_graph.get_anchor_maps()
-	var by_name = anchor_maps[0]
-	var names = by_name.keys()
+	var anchor_map = node_resource.sub_graph.get_anchors()
+	var names = anchor_map.values()
 	names.sort()
 	for name in names:
 		if name == EditorEntryPointAnchorNode.ENTRY_POINT_ANCHOR_NAME:
@@ -249,7 +248,10 @@ func _on_gui_input(ev):
 func _on_resource_button_pressed():
 	if node_resource != null:
 		if node_resource.sub_graph != null:
-			sub_graph_open_requested.emit(node_resource.sub_graph)
+			sub_graph_open_requested.emit(
+				node_resource.sub_graph,
+				node_resource.sub_graph.resource_path
+			)
 			return
 	
 	_configure_popup()
@@ -266,7 +268,10 @@ func _on_popup_index_pressed(index):
 		SubGraphMenuItems.LOAD:
 			_display_load_dialog()
 		SubGraphMenuItems.EDIT:
-			sub_graph_open_requested.emit(node_resource.sub_graph)
+			sub_graph_open_requested.emit(
+				node_resource.sub_graph,
+				node_resource.sub_graph.resource_path
+			)
 		SubGraphMenuItems.CLEAR:
 			_clear()
 		SubGraphMenuItems.MAKE_UNIQUE:

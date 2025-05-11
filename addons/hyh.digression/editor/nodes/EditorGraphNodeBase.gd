@@ -55,12 +55,14 @@ func configure_for_node(g, n):
 	position_offset = n.offset
 
 
+# TODO: Rename to `persist_changes` or `persist_changes_to_resource`
 ## Persist changes from the editor node's controls into the graph node's properties
 func persist_changes_to_node():
-	_logger.debug("Persisting changes to node")
+	_logger.trace("Persisting changes to node")
 	node_resource.offset = position_offset
 
 
+# TODO: Rename to `clear_relationships`
 ## Clear the relationships of the underlying graph node.
 func clear_node_relationships():
 	node_resource.next = -1
