@@ -21,5 +21,38 @@ size_flags_vertical = 3
 layout_mode = 2
 script = ExtResource("2_488d4")
 
+[node name="PopupMenu" type="PopupMenu" parent="."]
+size = Vector2i(167, 313)
+item_count = 13
+item_0/text = "Save"
+item_0/id = 0
+item_1/text = "Save As..."
+item_1/id = 1
+item_2/text = "Close"
+item_2/id = 2
+item_3/text = "Close All"
+item_3/id = 3
+item_4/text = "Close Others"
+item_4/id = 4
+item_5/id = 5
+item_5/separator = true
+item_6/text = "Copy Path"
+item_6/id = 6
+item_7/text = "Show In Filesystem"
+item_7/id = 7
+item_8/id = 8
+item_8/separator = true
+item_9/text = "Move Up"
+item_9/id = 9
+item_10/text = "Move Down"
+item_10/id = 10
+item_11/text = "Sort"
+item_11/id = 11
+item_12/text = "Toggle Panel"
+item_12/id = 12
+
 [connection signal="text_changed" from="GraphFilter" to="." method="_on_graph_filter_text_changed"]
 [connection signal="text_submitted" from="GraphFilter" to="." method="_on_graph_filter_text_submitted"]
+[connection signal="item_clicked" from="MC/GraphList" to="MC/GraphList" method="_on_item_clicked"]
+[connection signal="toggle_panel_requested" from="MC/GraphList" to="." method="_on_graph_list_toggle_panel_requested"]
+[connection signal="popup_hide" from="PopupMenu" to="MC/GraphList" method="_on_popup_menu_popup_hide"]

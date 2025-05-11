@@ -231,6 +231,10 @@ func _on_graph_manager_graph_edited(graph: OpenGraph) -> void:
 	)
 	_update_preview_button_state()
 
+
+func _on_graph_filter_toggle_panel_requested() -> void:
+	_left_sidebar_toggle.button_pressed = !_left_sidebar_toggle.button_pressed
+
 #endregion
 
 

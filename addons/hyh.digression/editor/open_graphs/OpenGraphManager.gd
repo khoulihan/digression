@@ -8,6 +8,8 @@ signal graph_opened(graph: OpenGraph)
 signal graph_edited(graph: OpenGraph)
 ## Emitted when a graph is closed.
 signal graph_closed(graph: OpenGraph)
+## Emitted when the list of open graphs changes.
+signal list_changed()
 
 
 const OpenGraph = preload("OpenGraph.gd")
@@ -71,6 +73,7 @@ func open_graph(graph: DigressionDialogueGraph, path: String) -> OpenGraph:
 	_set_graph_as_current(o, as_subgraph)
 	graph_opened.emit(o)
 	graph_edited.emit(o)
+	list_changed.emit()
 	return o
 
 
@@ -85,6 +88,39 @@ func filter(f: String) -> Array[OpenGraph]:
 				filtered.append(g)
 	
 	return filtered
+
+
+func move_up(graph: OpenGraph) -> void:
+	var index := open_graphs.find(graph)
+	if index == 0:
+		return
+	open_graphs.remove_at(index)
+	open_graphs.insert(index - 1, graph)
+	list_changed.emit()
+
+
+func move_down(graph: OpenGraph) -> void:
+	var index := open_graphs.find(graph)
+	if index == len(open_graphs) - 1:
+		return
+	open_graphs.remove_at(index)
+	open_graphs.insert(index + 1, graph)
+	list_changed.emit()
+
+
+func sort() -> void:
+	open_graphs.sort_custom(_sort_by_name)
+	list_changed.emit()
+
+
+func _sort_by_name(a: OpenGraph, b: OpenGraph) -> bool:
+	if a.graph.name.is_empty() and b.graph.name.is_empty():
+		return true
+	if a.graph.name.is_empty() and not b.graph.name.is_empty():
+		return false
+	if not a.graph.name.is_empty() and b.graph.name.is_empty():
+		return true
+	return a.graph.name.naturalnocasecmp_to(b.graph.name) < 0
 
 
 func _set_graph_as_current(o: OpenGraph, as_subgraph: bool = false) -> void:

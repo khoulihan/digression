@@ -3,6 +3,7 @@ extends VBoxContainer
 
 
 signal graph_selected(graph: OpenGraph)
+signal toggle_panel_requested
 
 
 const GraphList = preload("./GraphList.gd")
@@ -33,3 +34,7 @@ func _on_graph_filter_text_submitted(new_text: String) -> void:
 	if _list.item_count > 0:
 		_list.grab_focus()
 		_list.select_first_graph()
+
+
+func _on_graph_list_toggle_panel_requested() -> void:
+	toggle_panel_requested.emit()

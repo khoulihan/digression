@@ -19,6 +19,7 @@ const RandomNode = preload("RandomNode.gd")
 const EntryPointAnchorNode = preload("EntryPointAnchorNode.gd")
 
 const NEW_ANCHOR_PREFIX = "destination_"
+const UNNAMED_GRAPH = "Unnamed Graph"
 
 
 ## An identifier for this graph to represent it in code.
@@ -260,6 +261,16 @@ func duplicate_with_nodes():
 	# work fine in the duplicate...
 	
 	return duplicate
+
+
+func get_combined_name() -> String:
+	var display_name = self.display_name
+	var name = self.name
+	if name == null or name == "":
+		name = "unnamed"
+	if display_name == null or display_name == "":
+		display_name = UNNAMED_GRAPH
+	return "%s (%s)" % [display_name, name]
 
 
 func _custom_properties_modified():
