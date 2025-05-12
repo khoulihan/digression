@@ -113,6 +113,42 @@ func sort() -> void:
 	list_changed.emit()
 
 
+func close_graph(graph: OpenGraph) -> void:
+	var index := open_graphs.find(graph)
+	open_graphs.remove_at(index)
+	if self.current == graph:
+		self.current = null
+	graph_closed.emit(graph)
+	list_changed.emit()
+
+
+func close_all() -> void:
+	if len(open_graphs) == 0:
+		return
+	self.current = null
+	for graph in open_graphs.duplicate():
+		open_graphs.remove_at(
+			open_graphs.find(graph)
+		)
+		graph_closed.emit(graph)
+	list_changed.emit()
+
+
+func close_others(exception: OpenGraph) -> void:
+	if len(open_graphs) == 1:
+		return
+	if self.current != exception:
+		self.current = null
+	for graph in open_graphs.duplicate():
+		if exception == graph:
+			continue
+		open_graphs.remove_at(
+			open_graphs.find(graph)
+		)
+		graph_closed.emit(graph)
+	list_changed.emit()
+
+
 func _sort_by_name(a: OpenGraph, b: OpenGraph) -> bool:
 	if a.graph.name.is_empty() and b.graph.name.is_empty():
 		return true
@@ -132,6 +168,9 @@ func _set_graph_as_current(o: OpenGraph, as_subgraph: bool = false) -> void:
 
 func _open_subgraph_parent(parent_index: int) -> OpenGraph:
 	var graph = graph_stack[parent_index]
+	if not graph in open_graphs:
+		open_graphs.append(graph)
+		list_changed.emit()
 	graph_stack.resize(parent_index + 1)
 	graph_edited.emit(graph)
 	return graph

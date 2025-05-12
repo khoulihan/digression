@@ -117,7 +117,17 @@ func _item_text_for_graph(graph: OpenGraph) -> String:
 
 
 func _close_graph(item_index: int) -> void:
-	pass
+	var graph: OpenGraph = get_item_metadata(item_index)
+	_manager.close_graph(graph)
+
+
+func _close_all() -> void:
+	_manager.close_all()
+
+
+func _close_others(item_index: int) -> void:
+	var graph: OpenGraph = get_item_metadata(item_index)
+	_manager.close_others(graph)
 
 
 func _copy_path(item_index: int) -> void:
@@ -167,7 +177,8 @@ func _on_manager_graph_edited(graph: Variant) -> void:
 
 func _on_manager_list_changed() -> void:
 	_refresh()
-	select_graph_by_resource_path(_manager.current.graph.resource_path)
+	if _manager.current != null:
+		select_graph_by_resource_path(_manager.current.graph.resource_path)
 
 
 func _on_item_selected(index: int) -> void:
@@ -193,6 +204,10 @@ func _on_popup_menu_index_pressed(index: int, item_index: int) -> void:
 	match index as GraphListPopupMenuIndices:
 		GraphListPopupMenuIndices.CLOSE:
 			_close_graph(item_index)
+		GraphListPopupMenuIndices.CLOSE_ALL:
+			_close_all()
+		GraphListPopupMenuIndices.CLOSE_OTHERS:
+			_close_others(item_index)
 		GraphListPopupMenuIndices.COPY_PATH:
 			_copy_path(item_index)
 		GraphListPopupMenuIndices.SHOW_IN_FILESYSTEM:
