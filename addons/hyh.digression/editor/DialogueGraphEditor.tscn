@@ -104,7 +104,16 @@ texture = ExtResource("2_hackq")
 
 [node name="GraphBreadcrumbs" parent="HS/MC/VB/BottomBar" instance=ExtResource("3_8v60q")]
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
+
+[node name="GraphTypeSeparator" type="VSeparator" parent="HS/MC/VB/BottomBar"]
+layout_mode = 2
+
+[node name="GraphTypeLabel" type="Label" parent="HS/MC/VB/BottomBar"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "type"
 
 [node name="GraphContextMenu" type="PopupMenu" parent="."]
 size = Vector2i(255, 424)

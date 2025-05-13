@@ -57,6 +57,8 @@ var _logger := Logging.get_editor_logger()
 @onready var _graph_filter: GraphFilter = $HS/LeftSidebar/GraphFilter
 @onready var _left_sidebar := $HS/LeftSidebar
 @onready var _left_sidebar_toggle := $HS/MC/VB/BottomBar/ToggleSidebarButton
+@onready var _graph_type_label: Label = $HS/MC/VB/BottomBar/GraphTypeLabel
+@onready var _graph_type_separator: VSeparator = $HS/MC/VB/BottomBar/GraphTypeSeparator
 
 #endregion
 
@@ -68,6 +70,7 @@ func _init():
 	_graph_manager.graph_closed.connect(_on_graph_manager_graph_closed)
 	_graph_manager.graph_opened.connect(_on_graph_manager_graph_opened)
 	_graph_manager.graph_edited.connect(_on_graph_manager_graph_edited)
+	_graph_manager.graph_changed.connect(_on_graph_manager_graph_changed)
 	_anchor_manager = AnchorManager.new()
 
 
@@ -77,6 +80,7 @@ func _ready():
 	_anchor_filter.configure(_anchor_manager)
 	_graph_edit.configure(_anchor_manager)
 	_breadcrumbs.configure(_graph_manager)
+	_set_graph_type_label()
 	# Create clipboard
 	_resource_clipboard = ResourceClipboard.new()
 
@@ -108,6 +112,7 @@ func clear():
 	_graph_edit.clear()
 	_graph_manager.current = null
 	_anchor_manager.clear()
+	_set_graph_type_label()
 	_update_preview_button_state()
 
 
@@ -255,7 +260,13 @@ func _on_graph_manager_graph_edited(graph: OpenGraph) -> void:
 		graph.scroll_offset,
 		graph.zoom
 	)
+	_set_graph_type_label()
 	_update_preview_button_state()
+
+
+func _on_graph_manager_graph_changed(graph: OpenGraph) -> void:
+	if graph == _graph_manager.current:
+		_set_graph_type_label()
 
 
 func _on_graph_filter_toggle_panel_requested() -> void:
@@ -276,6 +287,15 @@ func _update_preview_button_state():
 func _set_dirty(val):
 	_graph_manager.current.dirty = val
 	current_graph_modified.emit()
+
+
+func _set_graph_type_label():
+	if _graph_manager.current == null:
+		_graph_type_separator.visible = false
+		_graph_type_label.text = ""
+	else:
+		_graph_type_separator.visible = true
+		_graph_type_label.text = _graph_manager.current.graph.graph_type.capitalize()
 
 #endregion
 

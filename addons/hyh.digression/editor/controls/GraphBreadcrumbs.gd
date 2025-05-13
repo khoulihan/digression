@@ -26,6 +26,7 @@ var _graph_manager: OpenGraphManager
 
 ## Configure the control to use the provided OpenGraphManager.
 func configure(manager: OpenGraphManager) -> void:
+	clear()
 	_graph_manager = manager
 	_graph_manager.graph_closed.connect(_on_manager_graph_closed)
 	_graph_manager.graph_edited.connect(_on_manager_graph_edited)
