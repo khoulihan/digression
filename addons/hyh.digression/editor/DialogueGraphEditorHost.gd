@@ -1,6 +1,7 @@
 @tool
 extends MarginContainer
 
+
 @onready var editor = $VB/ModeContainer/Editor
 @onready var _preview = $VB/ModeContainer/Preview
 @onready var _edit_button = $VB/HB/ModeSwitch/EditButton

@@ -56,7 +56,6 @@ layout_mode = 2
 
 [connection signal="toggled" from="VB/HB/ModeSwitch/EditButton" to="." method="_on_edit_button_toggled"]
 [connection signal="toggled" from="VB/HB/ModeSwitch/PreviewButton" to="." method="_on_preview_button_toggled"]
-[connection signal="expand_button_toggled" from="VB/ModeContainer/Editor" to="." method="_on_expand_button_toggled"]
 [connection signal="not_previewable" from="VB/ModeContainer/Editor" to="." method="_on_editor_not_previewable"]
 [connection signal="previewable" from="VB/ModeContainer/Editor" to="." method="_on_editor_previewable"]
 [connection signal="starting_preview" from="VB/ModeContainer/Preview" to="." method="_on_preview_starting_preview"]
