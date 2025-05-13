@@ -44,16 +44,55 @@ const UNNAMED_GRAPH = "Unnamed Graph"
 			emit_changed()
 
 ## The characters that are involved in this dialogue.
-@export var characters: Array[Character]
+@export var characters: Array[Character]:
+	get:
+		return characters
+	set(value):
+		if characters != value:
+			characters = value
+			emit_changed()
 
 ## Optional notes.
-@export_multiline var notes = ""
+@export_multiline var notes = "":
+	get:
+		return notes
+	set(value):
+		if notes != value:
+			notes = value
+			emit_changed()
 
 ## An arbitrary identifier for the type of graph.
-var graph_type: String
-var nodes: Dictionary
-var root_node: Resource
-var custom_properties: Dictionary = {}
+var graph_type: String:
+	get:
+		return graph_type
+	set(value):
+		if graph_type != value:
+			graph_type = value
+			emit_changed()
+
+var nodes: Dictionary:
+	get:
+		return nodes
+	set(value):
+		if nodes != value:
+			nodes = value
+			emit_changed()
+
+var root_node: Resource:
+	get:
+		return root_node
+	set(value):
+		if root_node != value:
+			root_node = value
+			emit_changed()
+
+var custom_properties: Dictionary = {}:
+	get:
+		return custom_properties
+	set(value):
+		if custom_properties != value:
+			custom_properties = value
+			emit_changed()
 
 
 func _init():

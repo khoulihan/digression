@@ -94,9 +94,6 @@ func _init():
 func _ready() -> void:
 	# Create clipboard
 	_resource_clipboard = ResourceClipboard.new()
-	# This is currently required to reload the characters as there is no signal
-	# from the resource when characters are added and removed in the inspector.
-	focus_entered.connect(_on_graph_edit_focus_entered)
 
 
 #region Public interface
@@ -679,10 +676,6 @@ func _display_graph_popup(
 			from_node,
 			from_port
 		)
-
-
-func _on_graph_edit_focus_entered():
-	_on_edited_resource_changed()
 
 #endregion
 

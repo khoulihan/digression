@@ -135,6 +135,8 @@ func populate_characters(characters):
 	var selected = character_select.selected
 	character_select.clear()
 	for character in characters:
+		if not character:
+			continue
 		character_select.add_item(character.character_display_name)
 	# TODO: What happens here if previously selected index is out of range?
 	# Should determine name of selection beforehand and be sure to reselect that character, or null
