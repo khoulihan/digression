@@ -48,6 +48,7 @@ func configure(manager: OpenGraphManager) -> void:
 	_manager = manager
 	_manager.graph_edited.connect(_on_manager_graph_edited)
 	_manager.list_changed.connect(_on_manager_list_changed)
+	_manager.graph_changed.connect(_on_manager_graph_changed)
 
 
 ## Clear the list
@@ -191,6 +192,13 @@ func _on_manager_list_changed() -> void:
 	_refresh()
 	if _manager.current != null:
 		select_graph_by_resource_path(_manager.current.graph.resource_path)
+
+
+func _on_manager_graph_changed(graph: OpenGraph) -> void:
+	for index in range(0, self.item_count):
+		if self.get_item_metadata(index) == graph:
+			self.set_item_text(index, _item_text_for_graph(graph))
+			return
 
 
 func _on_item_selected(index: int) -> void:

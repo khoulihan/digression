@@ -29,6 +29,7 @@ func configure(manager: OpenGraphManager) -> void:
 	_graph_manager = manager
 	_graph_manager.graph_closed.connect(_on_manager_graph_closed)
 	_graph_manager.graph_edited.connect(_on_manager_graph_edited)
+	_graph_manager.graph_changed.connect(_on_manager_graph_changed)
 
 
 ## Clear all breadcrumbs.
@@ -110,3 +111,8 @@ func _on_manager_graph_closed(graph: OpenGraph) -> void:
 
 func _on_manager_graph_edited(graph: OpenGraph) -> void:
 	_refresh()
+
+
+func _on_manager_graph_changed(graph: OpenGraph) -> void:
+	if graph in _graph_manager.graph_stack:
+		_refresh()

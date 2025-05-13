@@ -26,10 +26,22 @@ const UNNAMED_GRAPH = "Unnamed Graph"
 
 
 ## An identifier for this graph to represent it in code.
-@export var name: String
+@export var name: String:
+	get:
+		return name
+	set(value):
+		if name != value:
+			name = value
+			emit_changed()
 
 ## An optional display name to represent the graph to the player.
-@export var display_name: String
+@export var display_name: String:
+	get:
+		return display_name
+	set(value):
+		if display_name != value:
+			display_name = value
+			emit_changed()
 
 ## The characters that are involved in this dialogue.
 @export var characters: Array[Character]
@@ -142,9 +154,10 @@ func _get(property):
 func _set(property, value):
 	if not property.begins_with("custom_"):
 		return false
-	custom_properties[
-		_strip_group(property)
-	]['value'] = value
+	var n := _strip_group(property)
+	if custom_properties[n]['value'] != value:
+		custom_properties[n]['value'] = value
+		emit_changed()
 	return true
 
 

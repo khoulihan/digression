@@ -10,6 +10,8 @@ signal graph_edited(graph: OpenGraph)
 signal graph_closed(graph: OpenGraph)
 ## Emitted when the list of open graphs changes.
 signal list_changed()
+## Emitted when a graph's properties change.
+signal graph_changed(graph: OpenGraph)
 
 
 const OpenGraph = preload("OpenGraph.gd")
@@ -71,6 +73,7 @@ func open_graph(graph: DigressionDialogueGraph, path: String) -> OpenGraph:
 	var o := OpenGraph.new(graph, path)
 	self.open_graphs.append(o)
 	_set_graph_as_current(o, as_subgraph)
+	o.graph.changed.connect(_on_graph_changed.bind(o))
 	graph_opened.emit(o)
 	graph_edited.emit(o)
 	list_changed.emit()
@@ -170,6 +173,7 @@ func close_graph(graph: OpenGraph) -> void:
 	open_graphs.remove_at(index)
 	if self.current == graph:
 		self.current = null
+	graph.graph.changed.disconnect(_on_graph_changed)
 	graph_closed.emit(graph)
 	list_changed.emit()
 
@@ -182,6 +186,7 @@ func close_all() -> void:
 		open_graphs.remove_at(
 			open_graphs.find(graph)
 		)
+		graph.graph.changed.disconnect(_on_graph_changed)
 		graph_closed.emit(graph)
 	list_changed.emit()
 
@@ -197,6 +202,7 @@ func close_others(exception: OpenGraph) -> void:
 		open_graphs.remove_at(
 			open_graphs.find(graph)
 		)
+		graph.graph.changed.disconnect(_on_graph_changed)
 		graph_closed.emit(graph)
 	list_changed.emit()
 
@@ -233,3 +239,7 @@ func _find_existing(graph: DigressionDialogueGraph) -> OpenGraph:
 		if og.graph == graph:
 			return og
 	return null
+
+
+func _on_graph_changed(graph: OpenGraph) -> void:
+	graph_changed.emit(graph)
