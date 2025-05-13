@@ -171,7 +171,7 @@ func _on_graph_edit_node_maximise_requested(node) -> void:
 	_graph_edit.visible = false
 	_maximised_node_editor.configure_for_node(
 		_graph_manager.current.graph as DigressionDialogueGraph,
-		node.node_resource
+		node
 	)
 
 
