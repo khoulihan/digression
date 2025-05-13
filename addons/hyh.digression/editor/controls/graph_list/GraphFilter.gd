@@ -2,6 +2,8 @@
 extends VBoxContainer
 
 
+signal save_requested(graph: OpenGraph)
+signal save_as_requested(graph: OpenGraph)
 signal graph_selected(graph: OpenGraph)
 signal toggle_panel_requested
 
@@ -38,3 +40,11 @@ func _on_graph_filter_text_submitted(new_text: String) -> void:
 
 func _on_graph_list_toggle_panel_requested() -> void:
 	toggle_panel_requested.emit()
+
+
+func _on_graph_list_save_requested(graph: OpenGraph) -> void:
+	save_requested.emit(graph)
+
+
+func _on_graph_list_save_as_requested(graph: OpenGraph) -> void:
+	save_as_requested.emit(graph)

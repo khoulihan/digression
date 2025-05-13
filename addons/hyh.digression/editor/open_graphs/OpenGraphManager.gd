@@ -77,6 +77,58 @@ func open_graph(graph: DigressionDialogueGraph, path: String) -> OpenGraph:
 	return o
 
 
+## Save the currently edited graph.
+func save_current() -> void:
+	if self.current == null:
+		_logger.error("No graph is currently being edited.")
+		return
+	save(self.current)
+
+
+## Save the provided graph.
+func save(graph: OpenGraph) -> void:
+	if graph == null:
+		_logger.error("Graph to be saved is null.")
+		return
+	var path := graph.path if not graph.path.is_empty() else graph.graph.resource_path
+	_logger.debug("Save requested to existing path %s" % path)
+	ResourceSaver.save(graph.graph, path)
+	graph.graph.emit_saved()
+
+
+## Save a graph to a new location on disk.
+func save_as(graph: OpenGraph, path: String) -> void:
+	if graph == null:
+		_logger.error("Graph to be saved is null.")
+		return
+	if path == "":
+		_logger.error("Save requested but no resource path is available.")
+		return
+	_logger.debug("Save requested to path %s" % path)
+	ResourceSaver.save(graph.graph, path)
+	graph.graph.take_over_path(path)
+	graph.path = graph.graph.resource_path
+	graph.graph.emit_saved()
+
+
+## Save a subgraph to a location on disk.
+## This method takes a DigressionDialogueGraph as it may or may not be open.
+func save_subgraph_as(graph: DigressionDialogueGraph, path: String) -> void:
+	if graph == null:
+		_logger.error("Graph to be saved is null.")
+		return
+	if path == "":
+		_logger.error("Save requested but no resource path is available.")
+		return
+	_logger.debug("Save subgraph requested to path %s" % path)
+	ResourceSaver.save(graph, path)
+	graph.take_over_path(path)
+	for o in open_graphs:
+		if o.graph == graph:
+			o.path = graph.resource_path
+	graph.emit_saved()
+
+
 ## Return a collection of the graphs matching the provided filter string.
 func filter(f: String) -> Array[OpenGraph]:
 	var filtered: Array[OpenGraph] = []

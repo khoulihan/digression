@@ -5,6 +5,7 @@ extends GraphEdit
 signal graph_modified
 signal display_filesystem_path_requested(path: String)
 signal sub_graph_edit_requested(graph: DigressionDialogueGraph, path: String)
+signal sub_graph_save_as_requested(graph: DigressionDialogueGraph)
 signal node_maximise_requested(node_resource: GraphNodeBase)
 signal anchor_node_selected(name: String)
 # TODO: Not sure we even want to be raising this really - the parent could
@@ -890,6 +891,9 @@ func _connect_node_signals(node):
 		node.display_filesystem_path_requested.connect(
 			_on_sub_graph_node_display_filesystem_path_requested
 		)
+		node.sub_graph_save_as_requested.connect(
+			_on_sub_graph_save_as_requested
+		)
 	if node is EditorJumpNode:
 		node.destination_chosen.connect(
 			_on_jump_node_destination_chosen.bind(
@@ -975,6 +979,12 @@ func _on_sub_graph_node_open_requested(
 	editor_node: EditorGraphNodeBase
 ) -> void:
 	sub_graph_edit_requested.emit(graph, path)
+
+
+func _on_sub_graph_save_as_requested(
+	graph: DigressionDialogueGraph,
+) -> void:
+	sub_graph_save_as_requested.emit(graph)
 
 
 func _on_sub_graph_node_display_filesystem_path_requested(path):

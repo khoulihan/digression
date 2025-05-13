@@ -5,6 +5,7 @@ extends "EditorGraphNodeBase.gd"
 
 signal sub_graph_open_requested(graph, path)
 signal display_filesystem_path_requested(path)
+signal sub_graph_save_as_requested(graph)
 
 enum SubGraphMenuItems {
 	CREATE_NEW,
@@ -53,6 +54,8 @@ func configure_for_node(g, n):
 	super.configure_for_node(g, n)
 	_display_sub_graph_on_button()
 	_configure_entry_point_options()
+	if node_resource.sub_graph:
+		node_resource.sub_graph.saved.connect(_on_sub_graph_saved)
 
 
 ## Persist changes from the editor node's controls into the graph node's properties
@@ -79,6 +82,11 @@ func _display_error_dialog(message):
 
 func _clear():
 	# TODO: This should definitely require confirmation
+	if not node_resource:
+		return
+	if not node_resource.sub_graph:
+		return
+	node_resource.sub_graph.saved.disconnect(_on_sub_graph_saved)
 	node_resource.sub_graph = null
 	_display_sub_graph_on_button()
 	modified.emit()
@@ -166,29 +174,21 @@ func _make_unique():
 	if node_resource.sub_graph == null:
 		return
 	
+	node_resource.sub_graph.saved.disconnect(_on_sub_graph_saved)
 	var duplicate = node_resource.sub_graph.duplicate_with_nodes()
 	node_resource.sub_graph = duplicate
+	node_resource.sub_graph.saved.connect(_on_sub_graph_saved)
 	modified.emit()
 	_display_sub_graph_on_button()
 
 
 func _save_to_disk():
-	var path := await Dialogs.select_file_for_save(
-		["*.tres", "Digression Graph Resource Files"],
-		self,
-		"Save Dialogue Graph Resource",
-		EditorFileDialog.ACCESS_RESOURCES,
-	)
-	if not path.is_empty():
-		_save_graph_to_file(path)
+	if not node_resource:
+		return
+	if not node_resource.sub_graph:
+		return
+	sub_graph_save_as_requested.emit(node_resource.sub_graph)
 
-
-func _save_graph_to_file(path):
-	ResourceSaver.save(node_resource.sub_graph, path)
-	# Does the reource also need to "take over" the path?
-	node_resource.sub_graph.take_over_path(path)
-	modified.emit()
-	_display_sub_graph_on_button()
 
 
 func _display_load_dialog():
@@ -239,6 +239,10 @@ func _clipboard_contents_pasteable():
 	if _resource_clipboard.contents == null:
 		return false
 	return _resource_clipboard.contents is DigressionDialogueGraph
+
+
+func _on_sub_graph_saved() -> void:
+	_display_sub_graph_on_button()
 
 
 func _on_gui_input(ev):

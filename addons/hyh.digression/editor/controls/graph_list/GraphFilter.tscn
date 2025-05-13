@@ -54,5 +54,7 @@ item_12/id = 12
 [connection signal="text_changed" from="GraphFilter" to="." method="_on_graph_filter_text_changed"]
 [connection signal="text_submitted" from="GraphFilter" to="." method="_on_graph_filter_text_submitted"]
 [connection signal="item_clicked" from="MC/GraphList" to="MC/GraphList" method="_on_item_clicked"]
+[connection signal="save_as_requested" from="MC/GraphList" to="." method="_on_graph_list_save_as_requested"]
+[connection signal="save_requested" from="MC/GraphList" to="." method="_on_graph_list_save_requested"]
 [connection signal="toggle_panel_requested" from="MC/GraphList" to="." method="_on_graph_list_toggle_panel_requested"]
 [connection signal="popup_hide" from="PopupMenu" to="MC/GraphList" method="_on_popup_menu_popup_hide"]

@@ -2,6 +2,8 @@
 extends ItemList
 
 
+signal save_requested(graph: OpenGraph)
+signal save_as_requested(graph: OpenGraph)
 signal toggle_panel_requested
 
 
@@ -116,6 +118,16 @@ func _item_text_for_graph(graph: OpenGraph) -> String:
 	return graph.graph.get_combined_name()
 
 
+func _save(item_index: int) -> void:
+	var graph: OpenGraph = get_item_metadata(item_index)
+	save_requested.emit(graph)
+
+
+func _save_as(item_index: int) -> void:
+	var graph: OpenGraph = get_item_metadata(item_index)
+	save_as_requested.emit(graph)
+
+
 func _close_graph(item_index: int) -> void:
 	var graph: OpenGraph = get_item_metadata(item_index)
 	_manager.close_graph(graph)
@@ -220,6 +232,10 @@ func _on_popup_menu_index_pressed(index: int, item_index: int) -> void:
 			_sort()
 		GraphListPopupMenuIndices.TOGGLE_PANEL:
 			_toggle_panel()
+		GraphListPopupMenuIndices.SAVE:
+			_save(item_index)
+		GraphListPopupMenuIndices.SAVE_AS:
+			_save_as(item_index)
 
 
 func _on_popup_menu_popup_hide() -> void:

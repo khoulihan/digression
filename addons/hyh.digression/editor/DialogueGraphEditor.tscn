@@ -151,6 +151,8 @@ item_count = 1
 item_0/text = "Set as root"
 item_0/id = -1
 
+[connection signal="save_as_requested" from="HS/LeftSidebar/GraphFilter" to="." method="_on_graph_filter_save_as_requested"]
+[connection signal="save_requested" from="HS/LeftSidebar/GraphFilter" to="." method="_on_graph_filter_save_requested"]
 [connection signal="toggle_panel_requested" from="HS/LeftSidebar/GraphFilter" to="." method="_on_graph_filter_toggle_panel_requested"]
 [connection signal="anchor_selected" from="HS/LeftSidebar/AnchorFilter" to="." method="_on_anchor_filter_anchor_selected"]
 [connection signal="anchor_node_selected" from="HS/MC/VB/MC/GraphEdit" to="." method="_on_graph_edit_anchor_node_selected"]
@@ -168,6 +170,7 @@ item_0/id = -1
 [connection signal="save_requested" from="HS/MC/VB/MC/GraphEdit" to="." method="_on_graph_edit_save_requested"]
 [connection signal="scroll_offset_changed" from="HS/MC/VB/MC/GraphEdit" to="HS/MC/VB/MC/GraphEdit" method="_on_scroll_offset_changed"]
 [connection signal="sub_graph_edit_requested" from="HS/MC/VB/MC/GraphEdit" to="." method="_on_graph_edit_sub_graph_edit_requested"]
+[connection signal="sub_graph_save_as_requested" from="HS/MC/VB/MC/GraphEdit" to="." method="_on_graph_edit_sub_graph_save_as_requested"]
 [connection signal="delete_request" from="HS/MC/VB/MC/MaximisedNodeEditor" to="." method="_on_maximised_node_editor_delete_request"]
 [connection signal="modified" from="HS/MC/VB/MC/MaximisedNodeEditor" to="." method="_on_maximised_node_editor_modified"]
 [connection signal="restore_requested" from="HS/MC/VB/MC/MaximisedNodeEditor" to="." method="_on_maximised_node_editor_restore_requested"]

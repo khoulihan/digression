@@ -70,13 +70,7 @@ func _exit_tree():
 	remove_custom_type("DigressionDialogueVariableStore")
 	remove_inspector_plugin(_custom_inspector)
 	if editor != null:
-		editor.save_requested.disconnect(
-			_save_requested
-		)
 		editor.graph_edited.disconnect(_on_editor_graph_edited)
-		editor.display_filesystem_path_requested.disconnect(
-			_on_editor_display_filesystem_path_requested
-		)
 		editor.current_graph_modified.disconnect(
 			_on_editor_current_graph_modified
 		)
@@ -145,12 +139,6 @@ func _create_editor_host():
 func _get_editor():
 	_logger.debug("Getting editor from host...")
 	editor = editor_host.editor
-	editor.save_requested.connect(
-		_save_requested
-	)
-	editor.display_filesystem_path_requested.connect(
-		_on_editor_display_filesystem_path_requested
-	)
 	editor.graph_edited.connect(
 		_on_editor_graph_edited
 	)
@@ -171,11 +159,6 @@ func _on_editor_current_graph_modified():
 		var interface = get_editor_interface()
 		if interface.has_method("mark_scene_as_unsaved"):
 			get_editor_interface().mark_scene_as_unsaved()
-
-
-func _on_editor_display_filesystem_path_requested(path):
-	_logger.debug("Navigating to path %s" % path)
-	get_editor_interface().get_file_system_dock().navigate_to_path(path)
 
 
 func _create_menu():
@@ -215,17 +198,6 @@ func _show_edit_choice_types_dialog():
 
 func _show_edit_property_definitions_dialog():
 	await Dialogs.edit_property_definitions()
-
-
-func _save_requested(object, path):
-	if path != "" and object.resource_path != "":
-		_logger.debug("Save requested to path %s" % path)
-		_logger.debug("Resource.resource_path is %s" % object.resource_path)
-		ResourceSaver.save(object, path)
-	else:
-		_logger.warn("Save requested but no resource path is available.")
-	# Not sure if/why this was necessary?
-	#ResourceLoader.load(path)
 
 
 func _request_edit(object, current_resource_path):

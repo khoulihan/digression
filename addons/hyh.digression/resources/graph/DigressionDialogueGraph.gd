@@ -4,6 +4,9 @@ class_name DigressionDialogueGraph extends Resource
 ## Dialogue graph resource.
 
 
+signal saved
+
+
 const PropertyUse = preload("../../editor/dialogs/property_select_dialog/PropertySelectDialog.gd").PropertyUse
 const VariableType = preload("VariableSetNode.gd").VariableType
 
@@ -271,6 +274,10 @@ func get_combined_name() -> String:
 	if display_name == null or display_name == "":
 		display_name = UNNAMED_GRAPH
 	return "%s (%s)" % [display_name, name]
+
+
+func emit_saved() -> void:
+	saved.emit()
 
 
 func _custom_properties_modified():

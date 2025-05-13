@@ -4,11 +4,6 @@ extends VBoxContainer
 
 #region Signals
 
-## Emitted when saving the graph has been requested.
-signal save_requested(object, path)
-signal expand_button_toggled(button_pressed)
-signal variable_select_dialog_state_changed(favourites, recent)
-signal display_filesystem_path_requested(path)
 signal graph_edited(graph)
 signal current_graph_modified()
 signal previewable()
@@ -30,6 +25,7 @@ const GraphFilter = preload("./controls/graph_list/GraphFilter.gd")
 const GraphBreadcrumbs = preload("./controls/GraphBreadcrumbs.gd")
 
 # Utility classes.
+const Dialogs = preload("./dialogs/Dialogs.gd")
 const Logging = preload("../utility/Logging.gd")
 
 # Resource graph nodes.
@@ -122,10 +118,7 @@ func perform_save():
 		return
 	
 	_graph_edit.update_edited_graph()
-	save_requested.emit(
-		_graph_manager.current.graph,
-		_graph_manager.current.path,
-	)
+	_graph_manager.save_current()
 	_set_dirty(false)
 
 #endregion
@@ -185,16 +178,23 @@ func _on_graph_edit_sub_graph_edit_requested(
 
 
 func _on_graph_edit_display_filesystem_path_requested(path):
-	display_filesystem_path_requested.emit(path)
+	EditorInterface.get_file_system_dock().navigate_to_path(
+		_strip_resource_id(
+			path
+		)
+	)
 
 
-# TODO: Need to implement this. The save process is a bit up in the air now.
+func _strip_resource_id(path: String) -> String:
+	if not path.contains("::"):
+		return path
+	var index := path.find("::")
+	return path.substr(0, index)
+
+
 func _on_graph_edit_save_requested() -> void:
 	if _graph_manager.current:
-		save_requested.emit(
-			_graph_manager.current.graph,
-			_graph_manager.current.path
-		)
+		_graph_manager.save_current()
 
 #endregion
 
@@ -219,6 +219,32 @@ func _on_graph_manager_graph_closed(graph: OpenGraph) -> void:
 func _on_graph_manager_graph_opened(graph: OpenGraph) -> void:
 	# Probably nothing to do here actually, the important signal is `graph_edited`
 	pass
+
+
+func _on_graph_filter_save_requested(graph: OpenGraph) -> void:
+	_graph_manager.save(graph)
+
+
+func _on_graph_filter_save_as_requested(graph: OpenGraph) -> void:
+	var path := await Dialogs.select_file_for_save(
+		["*.tres", "Digression Graph Resource Files"],
+		self,
+		"Save Dialogue Graph Resource",
+		EditorFileDialog.ACCESS_RESOURCES,
+	)
+	if not path.is_empty():
+		_graph_manager.save_as(graph, path)
+
+
+func _on_graph_edit_sub_graph_save_as_requested(graph: DigressionDialogueGraph) -> void:
+	var path := await Dialogs.select_file_for_save(
+		["*.tres", "Digression Graph Resource Files"],
+		self,
+		"Save Dialogue Graph Resource",
+		EditorFileDialog.ACCESS_RESOURCES,
+	)
+	if not path.is_empty():
+		_graph_manager.save_subgraph_as(graph, path)
 
 
 func _on_graph_manager_graph_edited(graph: OpenGraph) -> void:
