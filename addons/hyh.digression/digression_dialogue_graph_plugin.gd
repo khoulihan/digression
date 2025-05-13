@@ -20,8 +20,6 @@ const CustomPropertyInspectorPlugin = preload("editor/inspector/custom_property_
 
 var editor_host
 var editor
-var editor_button
-var expand_button
 var menu
 
 var _custom_inspector : CustomPropertyInspectorPlugin
